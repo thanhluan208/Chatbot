@@ -22,7 +22,7 @@ function MuiChip(props: IMuiChip) {
         padding: "4px 12px",
         borderRadius: "8px",
         height: "fit-content",
-        background: theme.palette.primary.light,
+        background: `${theme.palette.primary.light} !important`,
         color: theme.colors.custom.primaryColorTypo,
       }}
     />

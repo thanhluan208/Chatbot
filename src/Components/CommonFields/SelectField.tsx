@@ -1,24 +1,18 @@
 import {
   Box,
+  ListSubheader,
   MenuItem,
   Select,
-  SelectChangeEvent,
   SelectProps,
   useTheme,
 } from "@mui/material";
 import CommonStyles from "../CommonStyles";
 import { FieldProps, getIn } from "formik";
-import React, { useState } from "react";
+import React, { Fragment } from "react";
 
 interface IMuiSelectField {
-  onChangeCustomize: (
-    event: SelectChangeEvent<any>,
-    child: React.ReactNode
-  ) => void;
-  afterOnChange: (
-    event: SelectChangeEvent<any>,
-    child: React.ReactNode
-  ) => void;
+  onChangeCustomize: (value: any) => void;
+  afterOnChange: (value: any) => void;
   options: any[];
   renderOption: (options: any) => React.ReactNode;
   customRenderValue: (value: any) => React.ReactNode;
@@ -37,24 +31,21 @@ function MuiSelectField(props: IMuiSelectField & SelectProps & FieldProps) {
     ...otherProps
   } = props;
   const theme = useTheme();
-  const { setFieldValue, errors, touched } = form;
+  const { errors, touched, setFieldValue } = form;
   const { name, value, onBlur } = field;
-  const [focus, setFocus] = useState(false);
 
-  console.log("values", value);
   const isTouch = getIn(touched, name);
   const err = getIn(errors, name);
 
   const errMsg = isTouch && err ? err : "";
   //! Function
-  const handleChange = (
-    event: SelectChangeEvent<any>,
-    child: React.ReactNode
-  ) => {
+  const handleChange = (value: any) => {
     if (onChangeCustomize) {
-      onChangeCustomize(event, child);
+      onChangeCustomize(value);
     } else {
-      console.log("event", event.target.value);
+      setFieldValue(name, value);
+
+      afterOnChange && afterOnChange(value);
     }
   };
 
@@ -92,10 +83,6 @@ function MuiSelectField(props: IMuiSelectField & SelectProps & FieldProps) {
       <Select
         onBlur={(e) => {
           onBlur(e);
-          setFocus(false);
-        }}
-        onFocus={(e) => {
-          setFocus(true);
         }}
         {...otherProps}
         error={!!errMsg}
@@ -121,19 +108,28 @@ function MuiSelectField(props: IMuiSelectField & SelectProps & FieldProps) {
           if (customRenderValue) {
             return customRenderValue(value);
           } else {
-            return selectedValue;
+            return options.find((op) => op.value === selectedValue)?.label;
           }
         }}
         // input={<BootstrapInput />}
       >
-        {options.map((op: { value: string; label: string }) => {
+        {options.map((op: { value: string; label: string; group?: string }) => {
           if (renderOption) {
             return renderOption(op);
           }
           return (
-            <MenuItem value={op?.value} key={op?.value}>
-              {op?.label}
-            </MenuItem>
+            <Fragment>
+              {op?.group && <ListSubheader>{op?.group}</ListSubheader>}
+              <MenuItem
+                value={op?.value}
+                key={op?.value}
+                onClick={() => {
+                  handleChange(op.value);
+                }}
+              >
+                {op?.label}
+              </MenuItem>
+            </Fragment>
           );
         })}
       </Select>

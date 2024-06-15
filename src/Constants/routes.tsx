@@ -7,7 +7,7 @@ const Routes = {
       icon: <CommonIcons.Home />,
     },
     PERSONAL: {
-      path: "/personal",
+      path: "/workspace/:id",
       icon: <CommonIcons.Person />,
     },
   },
@@ -21,6 +21,10 @@ const Routes = {
       icon: <CommonIcons.Extension />,
     },
   },
+};
+
+export const ListRoutes = {
+  workspace: "/workspace/:id/bot/:botId",
 };
 
 export default Routes;

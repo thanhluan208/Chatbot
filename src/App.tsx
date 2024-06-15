@@ -2,7 +2,8 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Home from "./Pages/Home";
 import Users from "./Pages/Users";
 import DefaultLayout from "./Components/DefaultLayout";
-import Routes from "./Constants/routes";
+import Routes, { ListRoutes } from "./Constants/routes";
+import ChatbotConfigure from "./Pages/ChatbotConfigure";
 
 function App() {
   //! State
@@ -20,6 +21,11 @@ function App() {
           element: <Users />,
         },
       ],
+    },
+    {
+      path: ListRoutes.workspace,
+
+      element: <ChatbotConfigure />,
     },
   ]);
 

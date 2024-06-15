@@ -3,17 +3,29 @@ import {
   ButtonProps,
   CircularProgress,
   IconButton,
+  useTheme,
 } from "@mui/material";
+import { useMemo } from "react";
 
 interface IMuiButton {
   children: React.ReactNode;
   isIcon?: boolean;
   isLoading?: boolean;
+  isActive?: boolean;
 }
 
 function MuiButton(props: IMuiButton & ButtonProps) {
   //! State
-  const { children, isIcon, isLoading, ...otherProps } = props;
+  const { children, isIcon, isLoading, isActive, ...otherProps } = props;
+  const theme = useTheme();
+  const styleActive = useMemo(() => {
+    if (isActive) {
+      return {
+        border: `solid 1px ${theme.palette.primary.main} !important`,
+        background: theme.colors.custom.colorActive,
+      };
+    }
+  }, [isActive, theme]);
 
   //! Function
 
@@ -49,6 +61,7 @@ function MuiButton(props: IMuiButton & ButtonProps) {
         "&:focus": {
           outline: "none",
         },
+        ...styleActive,
         ...props.sx,
       }}
     >
