@@ -20,6 +20,10 @@ const Routes = {
       path: "/plugin-store",
       icon: <CommonIcons.Extension />,
     },
+    WORKFLOW_STORE: {
+      path: "/workflow-store",
+      icon: <CommonIcons.Extension />,
+    },
   },
 };
 

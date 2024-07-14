@@ -4,6 +4,7 @@ import Users from "./Pages/Users";
 import DefaultLayout from "./Components/DefaultLayout";
 import Routes, { ListRoutes } from "./Constants/routes";
 import ChatbotConfigure from "./Pages/ChatbotConfigure";
+import Workflow from "./Pages/Workflow";
 
 function App() {
   //! State
@@ -26,6 +27,10 @@ function App() {
       path: ListRoutes.workspace,
 
       element: <ChatbotConfigure />,
+    },
+    {
+      path: Routes.explore.WORKFLOW_STORE.path,
+      element: <Workflow />,
     },
   ]);
 
