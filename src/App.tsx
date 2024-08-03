@@ -1,4 +1,8 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  RouterProvider,
+  createBrowserRouter,
+  redirect,
+} from "react-router-dom";
 import Home from "./Pages/Home";
 import Users from "./Pages/Users";
 import DefaultLayout from "./Components/DefaultLayout";
@@ -10,10 +14,12 @@ import Login from "./Pages/Login";
 import SignUp from "./Pages/SignUp";
 import { Fragment } from "react/jsx-runtime";
 import { useEffect, useState } from "react";
+import { useAuth } from "./Providers/AuthenticationProvider";
 
 function App() {
   //! State
   const [baseUrl, setbaseUrl] = useState("");
+  const { userId } = useAuth();
   const router = createBrowserRouter([
     {
       element: <DefaultLayout />,
@@ -22,24 +28,49 @@ function App() {
           // path: Routes.common.HOME.path,
           path: "*",
           element: <Home />,
+          loader: () => {
+            if (!userId) return redirect("/login");
+
+            return null;
+          },
         },
         {
           path: Routes.common.PERSONAL.path,
           element: <Users />,
+          loader: () => {
+            if (!userId) return redirect("/login");
+
+            return null;
+          },
         },
       ],
     },
     {
       path: ListRoutes.workspace,
       element: <ChatbotConfigure />,
+      loader: () => {
+        if (!userId) return redirect("/login");
+
+        return null;
+      },
     },
     {
       path: Routes.explore.WORKFLOW_STORE.path,
       element: <Workflow />,
+      loader: () => {
+        if (!userId) return redirect("/login");
+
+        return null;
+      },
     },
     {
       path: ListRoutes.knowledgeDetail,
       element: <KnowledgeDetail />,
+      loader: () => {
+        if (!userId) return redirect("/login");
+
+        return null;
+      },
     },
     {
       path: ListRoutes.login,
