@@ -23,7 +23,7 @@ const Input = (props: IInput & TextFieldProps) => {
     props;
   const [value, setValue] = useState("");
 
-  const theme = useTheme();
+  const theme: any = useTheme();
   //! Function
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -106,7 +106,7 @@ const Input = (props: IInput & TextFieldProps) => {
               }}
             >
               <CommonStyles.Typography type="normal12">
-                {maxChar && `${props.value?.length || 0}/${maxChar}`}
+                {maxChar && `${value?.length || 0}/${maxChar}`}
               </CommonStyles.Typography>
             </InputAdornment>
           ) : null,

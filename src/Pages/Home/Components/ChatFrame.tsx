@@ -43,7 +43,7 @@ function ChatFrame(props: IChatFrame) {
       {!isEmpty(data) &&
         chatData?.map((item) => {
           return (
-            <ChatPaper key={item.id} {...item} setChatData={setChatData} />
+            <ChatPaper key={item.id} {...item} setChatData={setChatData as any} />
           );
         })}
     </Box>

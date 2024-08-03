@@ -4,7 +4,6 @@ import CommonIcons from "../../../../Components/CommonIcons";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
 import { useEffect, useState } from "react";
-import moment from "moment";
 
 const Total = ({ total }: { total: number }) => {
   //! State

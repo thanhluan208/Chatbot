@@ -3,7 +3,7 @@ import useToggleDialog from "../../../Hooks/useToggleDialog";
 import CommonIcons from "../../CommonIcons";
 import CommonStyles from "../../CommonStyles";
 import { Box, useTheme } from "@mui/material";
-import { FastField, Field, Form, Formik, FormikValues } from "formik";
+import { FastField, Field, Form, Formik,  } from "formik";
 import Team from "../../../assets/team.png";
 import * as yup from "yup";
 import { processDelay } from "../../../Helpers";
@@ -26,7 +26,7 @@ interface InitValues {
 const AddTeamDialog = (props: IAddTeamDialog) => {
   //! State
   const { toggle } = props;
-  const theme = useTheme();
+  const theme: any = useTheme();
   const save = useSave();
   const initialValues = useMemo(() => {
     return {

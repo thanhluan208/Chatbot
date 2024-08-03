@@ -15,7 +15,7 @@ interface IChatbotConfigure {}
 function ChatbotConfigure(props: IChatbotConfigure) {
   //! State
   const {} = props;
-  const theme = useTheme();
+  const theme: any = useTheme();
   const navigate = useNavigate();
   const params = useParams();
   const botId = params?.botId;

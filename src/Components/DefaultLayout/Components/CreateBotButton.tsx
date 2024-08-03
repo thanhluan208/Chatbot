@@ -32,7 +32,7 @@ interface InitValues {
 export const CreateBotDialog = (props: ICreateBotDialog) => {
   //! State
   const { toggle } = props;
-  const theme = useTheme();
+  const theme: any = useTheme();
   const save = useSave();
 
   const isDisabledAiGenerate = true;

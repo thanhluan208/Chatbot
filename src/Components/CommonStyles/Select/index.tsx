@@ -4,6 +4,7 @@ import {
   MenuItem,
   Select,
   SelectProps,
+  useTheme,
 } from "@mui/material";
 import CommonStyles from "..";
 import { Fragment } from "react/jsx-runtime";
@@ -27,6 +28,8 @@ const CommonSelect = (props: ISelect & SelectProps) => {
     ...otherProps
   } = props;
 
+  const theme: any = useTheme();
+
   //! Function
 
   //! Render
@@ -36,7 +39,7 @@ const CommonSelect = (props: ISelect & SelectProps) => {
         display: "flex",
         flexDirection: "column",
         width: otherProps.fullWidth ? "100%" : "fit-content",
-        padding:'1px',
+        padding: "1px",
         ".MuiInputBase-root": {
           padding: 0,
           display: "flex",

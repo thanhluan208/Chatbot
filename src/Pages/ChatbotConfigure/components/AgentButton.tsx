@@ -5,7 +5,7 @@ import { Box, Paper, Popover, useTheme } from "@mui/material";
 
 const AgentButton = () => {
   //! State
-  const theme = useTheme();
+  const theme: any = useTheme();
   const agentId = useId();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null

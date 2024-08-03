@@ -15,7 +15,6 @@ import { v4 as uuid } from "uuid";
 
 import "@xyflow/react/dist/style.css";
 import Toolbar from "./Toolbar";
-import LoadCheckPoint from "./CustomNodes/LoadCheckPoint";
 import { nodeTypes } from "./AddNodes";
 
 const initialNodes = [

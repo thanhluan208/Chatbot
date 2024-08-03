@@ -7,10 +7,7 @@ import { GlobalStyles } from "@mui/material";
 import cachedKeys from "../Constants/cachedKeys";
 import { useSave } from "../Stores/useStore";
 
-import SFProDisplay from "../Fonts/SFProDisplay/sf-pro-display_regular.woff2";
-import SFProDisplayBold from "../Fonts/SFProDisplay/sf-pro-display-bold.woff2";
-
-const lightTheme = createTheme({
+const lightTheme: any = createTheme({
   breakpoints: {
     values: {
       xs: 0,
@@ -87,6 +84,7 @@ const lightTheme = createTheme({
       light: "#4d53e826",
     },
   },
+  //disable es
   colors: {
     custom: {
       //* Main
@@ -113,8 +111,8 @@ const lightTheme = createTheme({
       //* Tab
       backgroundTab: "#4b4a580a",
     },
-  },
-});
+  } as any,
+} as any);
 
 const darkTheme = createTheme({
   typography: {

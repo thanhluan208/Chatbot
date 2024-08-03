@@ -38,7 +38,7 @@ const knowledgeSortByOptions = ["createdAt", "editAt"];
 const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
   //! State
   const { toggle } = props;
-  const theme = useTheme();
+  const theme: any = useTheme();
   const save = useSave();
   const [filters, setFilter] = useState({
     type: KnowledgeFilter.All,
@@ -198,13 +198,15 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
             maxHeight: "65vh",
             overflowY: "auto",
             padding: "0 20px",
+            position: "relative",
           }}
         >
+          {isLoading && <CommonStyles.LoadingOverlay isLoading={isLoading} />}
           {data?.map((item: IKnowledgeFolder, index: number) => {
             return (
-              <Fragment key={item}>
+              <Fragment key={item as any}>
                 <KnowledgeFolder
-                  title={item}
+                  title={item as any}
                   description={item.description}
                   size={item.size}
                   quantity={item.quantity}

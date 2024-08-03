@@ -1,7 +1,6 @@
-import { Fragment } from "react/jsx-runtime";
 import CommonIcons from "../../../../../Components/CommonIcons";
 import CommonStyles from "../../../../../Components/CommonStyles";
-import { Box, Fade, Paper, Popper, useTheme } from "@mui/material";
+import { Box,  Paper, Popper, useTheme } from "@mui/material";
 import React, { useState } from "react";
 import { useSave } from "../../../../../Stores/useStore";
 import cachedKeys from "../../../../../Constants/cachedKeys";
@@ -17,7 +16,7 @@ interface IMoreOption {
 function MoreOption(props: IMoreOption) {
   //! State
   const {} = props;
-  const theme = useTheme();
+  const theme: any = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
@@ -88,7 +87,7 @@ function MoreOption(props: IMoreOption) {
         keepMounted={false}
         onBlur={() => setAnchorEl(null)}
       >
-        {({ TransitionProps }) => (
+        {() => (
           <Paper
             sx={{
               padding: "8px ",

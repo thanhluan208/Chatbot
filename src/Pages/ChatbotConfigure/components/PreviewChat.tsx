@@ -8,7 +8,7 @@ import Coze from "../../../assets/coze.png";
 const PreviewChat = () => {
   //! State
   const [inputValue, setInputValue] = useState("");
-  const theme = useTheme();
+  const theme: any = useTheme();
   //! Function
 
   //! Render

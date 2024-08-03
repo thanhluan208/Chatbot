@@ -30,7 +30,7 @@ function MuiSelectField(props: IMuiSelectField & SelectProps & FieldProps) {
     customRenderValue,
     ...otherProps
   } = props;
-  const theme = useTheme();
+  const theme: any = useTheme();
   const { errors, touched, setFieldValue } = form || {};
   const { name, value, onBlur } = field || {};
 

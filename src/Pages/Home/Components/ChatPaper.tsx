@@ -15,7 +15,7 @@ export interface IChatPaper {
     React.SetStateAction<
       {
         id: number;
-        isBot: boolean;
+        isBot?: boolean;
         hint: string[];
         name: string;
         avatar: string;
@@ -27,8 +27,8 @@ export interface IChatPaper {
 
 function ChatPaper(props: IChatPaper) {
   //! State
-  const { avatar, content, hint, name, hasFooter, isBot, setChatData } = props;
-  const theme = useTheme();
+  const { avatar, content, hint, name, isBot, setChatData } = props;
+  const theme: any = useTheme();
 
   //! Function
   const handleClickHint = (item: string) => {
@@ -44,7 +44,7 @@ function ChatPaper(props: IChatPaper) {
     setChatData((prev) => {
       const newListChats = cloneDeep(prev);
       newListChats[newListChats.length - 1].hint = [];
-      newListChats.push(newChat);
+      newListChats.push(newChat as any);
 
       return newListChats;
     });

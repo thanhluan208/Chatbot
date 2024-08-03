@@ -1,4 +1,4 @@
-import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, Divider,  useTheme } from "@mui/material";
 import Logo from "./Components/Logo";
 import Name from "./Components/Name";
 import CommonStyles from "../CommonStyles";
@@ -18,7 +18,7 @@ export const sidebarWidth = 232;
 
 function DefaultLayout() {
   //! State
-  const theme = useTheme();
+  const theme: any = useTheme();
 
   //! Function
 

@@ -5,7 +5,6 @@ import SectionItem from "./SectionItem";
 interface ISection {
   title: string;
   items: {
-    name: string;
     title: string;
     content: string;
   }[];
@@ -14,7 +13,7 @@ interface ISection {
 function Section(props: ISection) {
   //! State
   const { title, items } = props;
-  const theme = useTheme();
+  const theme: any = useTheme();
   //! Function
 
   //! Render
@@ -31,10 +30,9 @@ function Section(props: ISection) {
         {items?.map((item) => {
           return (
             <SectionItem
-              name={item.name}
               title={item.title}
               content={item.content}
-              key={item.name}
+              key={item.title}
               sectionTitle={title}
             />
           );

@@ -17,7 +17,7 @@ interface IMuiButton {
 function MuiButton(props: IMuiButton & ButtonProps) {
   //! State
   const { children, isIcon, isLoading, isActive, ...otherProps } = props;
-  const theme = useTheme();
+  const theme: any = useTheme();
   const styleActive = useMemo(() => {
     if (isActive) {
       return {

@@ -12,7 +12,7 @@ interface IParams {
 
 const Params = (props: IParams) => {
   const { name, type, description, isRequired } = props;
-  const theme = useTheme();
+  const theme: any = useTheme();
   return (
     <Box>
       <CommonStyles.Typography type="bold14">
@@ -53,7 +53,7 @@ function InfoButton(props: IInfoButton) {
   //! State
   const { id } = props;
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const theme = useTheme();
+  const theme: any = useTheme();
   const open = Boolean(anchorEl);
 
   //! Function

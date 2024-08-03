@@ -6,7 +6,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { FieldProps, getIn } from "formik";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import CommonStyles from "../CommonStyles";
 
 interface IInputField {
@@ -30,10 +30,9 @@ function InputField(props: IInputField & FieldProps & TextFieldProps) {
     maxChar,
     ...otherProps
   } = props;
-  const theme = useTheme();
+  const theme: any = useTheme();
   const { setFieldValue, errors, touched } = form;
   const { name, value, onBlur } = field;
-  const [focus, setFocus] = useState(false);
 
   const isTouch = getIn(touched, name);
   const err = getIn(errors, name);
@@ -100,13 +99,7 @@ function InputField(props: IInputField & FieldProps & TextFieldProps) {
       <TextField
         name={name}
         value={value}
-        onBlur={(e) => {
-          onBlur(e);
-          setFocus(false);
-        }}
-        onFocus={(e) => {
-          setFocus(true);
-        }}
+        onBlur={onBlur}
         {...otherProps}
         error={errMsg}
         helperText={errMsg}

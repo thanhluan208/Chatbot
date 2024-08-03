@@ -10,7 +10,7 @@ interface ILoadCheckPointProps {
 }
 
 const LoadCheckPointHandle = (props: ILoadCheckPointProps) => {
-  const { label, style } = props;
+  const { label,  } = props;
   const id = uuid();
   return (
     <Box
@@ -36,14 +36,10 @@ const LoadCheckPointHandle = (props: ILoadCheckPointProps) => {
   );
 };
 
-interface IProps {
-  data: any;
-  isConnectable: boolean;
-}
 
-const LoadCheckPoint = (props: IProps) => {
+const LoadCheckPoint = () => {
   //! State
-  const { data } = props;
+
 
   //! Function
 

@@ -14,19 +14,18 @@ interface ISectionItem {
   content: string;
   title: string;
   isAutoAwesome?: boolean;
-  name: string;
   sectionTitle: string;
 }
 
 function SectionItem(props: ISectionItem) {
   //! State
-  const { content, title, isAutoAwesome, name, sectionTitle } = props;
+  const { content, title, isAutoAwesome, sectionTitle } = props;
   const [open, setOpen] = useState(false);
-  const theme = useTheme();
+  const theme: any = useTheme();
   const params = useParams();
   const { botId } = params as { botId: string };
 
-  const list = useGet(`${botId}/${name}` as AllQueryKeys);
+  const list = useGet(`${botId}/hihi` as AllQueryKeys);
   const { open: openDialog, shouldRender, toggle } = useToggleDialog();
 
   //! Function

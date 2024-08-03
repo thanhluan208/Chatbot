@@ -37,7 +37,6 @@ class Services {
         return config;
       },
       async (error) => {
-        const originalRequest = error.config;
         //! Handling retry when token expired
         // if (
         //   error.response.data?.statusCode === 401 &&

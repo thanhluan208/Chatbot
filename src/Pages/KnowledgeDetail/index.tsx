@@ -29,7 +29,7 @@ const KnowledgeDetail = () => {
 
     return undefined;
   }, [knowledgeId]);
-  const { data, isLoading, refetch } = useGetListKnowledgeFiles(
+  const {  isLoading, refetch } = useGetListKnowledgeFiles(
     payload,
     !!payload
   );

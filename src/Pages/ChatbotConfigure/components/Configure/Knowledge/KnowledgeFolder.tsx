@@ -2,7 +2,6 @@ import { Box } from "@mui/material";
 import CommonIcons from "../../../../../Components/CommonIcons";
 import CommonStyles from "../../../../../Components/CommonStyles";
 import moment from "moment";
-import { Background } from "@xyflow/react";
 import { useNavigate } from "react-router-dom";
 import { ListRoutes } from "../../../../../Constants/routes";
 

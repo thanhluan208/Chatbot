@@ -11,7 +11,7 @@ const sectionList = ["Bots", "Plugins", "Workflows", "Knowledge", "Cards"];
 function Users(props: IUsers) {
   //! State
   const {} = props;
-  const theme = useTheme();
+  const theme: any = useTheme();
   const [personalSection, setPersonalSection] = useState("Bots");
 
   //! Function

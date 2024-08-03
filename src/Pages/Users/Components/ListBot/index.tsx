@@ -9,7 +9,7 @@ import CommonIcons from "../../../../Components/CommonIcons";
 import moment from "moment";
 import MoreOption from "./components/MoreOption";
 import cachedKeys from "../../../../Constants/cachedKeys";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export interface IBotCard {
   id: string;
@@ -42,7 +42,7 @@ const BotCard = (props: IBotCard) => {
   } = props;
 
   const navigate = useNavigate();
-  const theme = useTheme();
+  const theme: any = useTheme();
   const save = useSave();
 
   //! Function
@@ -209,7 +209,7 @@ const BotCard = (props: IBotCard) => {
 
 function ListBot() {
   //! State
-  const theme = useTheme();
+  const theme: any = useTheme();
   const listBots: IBotCard[] = useGet("BOT") || [];
 
   //! Function

@@ -1,12 +1,9 @@
 import {
   Dialog,
-  DialogActions,
-  DialogContent,
   DialogProps,
   useTheme,
 } from "@mui/material";
 import React from "react";
-import CommonStyles from "..";
 
 interface IMUIDialog {
   children: React.ReactNode;
@@ -16,7 +13,7 @@ interface IMUIDialog {
 function MUIDialog(props: IMUIDialog & DialogProps) {
   //! State
   const { children, toggle } = props;
-  const theme = useTheme();
+  const theme: any = useTheme();
   //! Function
 
   //! Render

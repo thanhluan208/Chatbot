@@ -84,10 +84,10 @@ const HintContent = () => {
 const GenerationDiversity = () => {
   //! State
   const { values, setValues } = useFormikContext<initialValueEngine>();
-  const theme = useTheme();
+  const theme: any = useTheme();
 
   //! Function
-  const handleChange = (value) => {
+  const handleChange = (value: any) => {
     if (value === "precise") {
       setValues({
         ...values,

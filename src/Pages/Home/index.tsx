@@ -8,7 +8,7 @@ interface IHome {}
 function Home(props: IHome) {
   //! State
   const {} = props;
-  const theme = useTheme();
+  const theme: any = useTheme();
 
   //! Function
 

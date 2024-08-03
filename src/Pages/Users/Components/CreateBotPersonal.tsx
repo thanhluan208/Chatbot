@@ -11,7 +11,7 @@ function CreateBotPersonal(props: ICreateBotPersonal) {
   const {} = props;
   const { open, shouldRender, toggle } = useToggleDialog();
 
-  const theme = useTheme();
+  const theme: any = useTheme();
   //! Function
 
   //! Render

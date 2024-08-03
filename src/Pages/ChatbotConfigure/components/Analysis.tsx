@@ -53,7 +53,7 @@ for (let i = 0; i < 7; i++) {
 const Analysis = () => {
   //! State
   const [tab, setTab] = useState("overview");
-  const theme = useTheme();
+  const theme: any = useTheme();
 
   //! Function
 

@@ -40,7 +40,6 @@ function AutocompleteField(
     form,
     onChangeCustomize,
     afterOnChange,
-    ...otherProps
   } = props;
   const { setFieldValue, errors, touched } = form;
   const { name, value, onBlur } = field;
@@ -50,7 +49,7 @@ function AutocompleteField(
   const err = getIn(errors, name);
 
   const errMsg = isTouch && err ? err : "";
-  const theme = useTheme();
+  const theme:  any = useTheme();
 
   //! Function
   const handleChange = (
@@ -135,7 +134,7 @@ function AutocompleteField(
               onBlur(e);
               setFocus(false);
             }}
-            onFocus={(e) => {
+            onFocus={() => {
               setFocus(true);
             }}
             name={name}

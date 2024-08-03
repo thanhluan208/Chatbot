@@ -13,8 +13,8 @@ interface ISectionButtonItem {
 
 function SectionButtonItem(props: ISectionButtonItem) {
   //! State
-  const { avatar, id, subTitle, title } = props;
-  const theme = useTheme();
+  const { avatar, subTitle, title } = props;
+  const theme: any = useTheme();
 
   const [showAction, setShowAction] = useState(false);
   //! Function

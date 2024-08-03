@@ -7,7 +7,7 @@ interface IMuiChip {
 function MuiChip(props: IMuiChip) {
   //! State
   const { label } = props;
-  const theme = useTheme();
+  const theme: any = useTheme();
 
   //! Function
 
