@@ -4,8 +4,7 @@ import CommonIcons from "../../Components/CommonIcons";
 
 import Team from "../../assets/team.png";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGet, useSave } from "../../Stores/useStore";
-import { IBotCard } from "../Users/Components/ListBot";
+import {  useSave } from "../../Stores/useStore";
 import { useEffect, useState } from "react";
 import Develop from "./components/Develop";
 import Analysis from "./components/Analysis";
@@ -24,9 +23,8 @@ function ChatbotConfigure(props: IChatbotConfigure) {
   const botId = params?.botId;
 
   const [tab, setTab] = useState("develop");
-  const { data, isLoading, refetch } = useGetBotData(botId, !!botId);
+  const {  isLoading, refetch } = useGetBotData(botId, !!botId);
 
-  console.log("data", data);
 
   //! Function
   useEffect(() => {
@@ -36,6 +34,7 @@ function ChatbotConfigure(props: IChatbotConfigure) {
   //! Render
   return (
     <Box sx={{ height: "100vh", width: "100vw" }}>
+      <CommonStyles.LoadingOverlay isLoading={isLoading} />
       <Box
         sx={{
           height: "74px",

@@ -1,7 +1,7 @@
 import { Box, InputAdornment } from "@mui/material";
 import CommonStyles from "../../Components/CommonStyles";
 import useGetListKnowledgeFiles from "../../Hooks/Knowledges/useGetListKnowledgeFiles";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSave } from "../../Stores/useStore";
 import cachedKeys from "../../Constants/cachedKeys";
@@ -10,12 +10,12 @@ import AddContentButton from "./components/AddContentButton";
 import PerfectScrollBar from "react-perfect-scrollbar";
 import { useAuth } from "../../Providers/AuthenticationProvider";
 import { isEmpty } from "lodash";
-import Empty from "../../assets/empty.svg";
 
 const KnowledgeDetail = () => {
   //! State
   const params = useParams();
   const save = useSave();
+  const navigate = useNavigate();
   const { knowledgeId } = params || {};
   const [filters, setFilter] = useState({
     search: "",
@@ -79,7 +79,7 @@ const KnowledgeDetail = () => {
             }}
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: "16px" }}>
-              <CommonStyles.Button isIcon>
+              <CommonStyles.Button isIcon onClick={() => navigate(-1)}>
                 <CommonIcons.Clear />
               </CommonStyles.Button>
               <CommonIcons.Topic
@@ -144,10 +144,18 @@ const KnowledgeDetail = () => {
                   top: "50%",
                   left: "50%",
                   transform: "translate(-50%, -50%)",
+                  svg: {
+                    width: "100%",
+                    height: "100%",
+                  },
                 }}
               >
                 <CommonIcons.EmptyIcon />
-                <CommonStyles.Typography type="bold18" align="center" mt={'20px'}>
+                <CommonStyles.Typography
+                  type="bold18"
+                  align="center"
+                  mt={"20px"}
+                >
                   No segment found
                 </CommonStyles.Typography>
               </Box>

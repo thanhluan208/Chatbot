@@ -1,35 +1,33 @@
-import { useGet } from "../../../Stores/useStore";
-import NavItem from "./NavItem";
-import { Avatar, Box } from "@mui/material";
+
+import {  Box } from "@mui/material";
 import ReactPerfectScrollbar from "react-perfect-scrollbar";
 
 interface IListTeam {}
 
-type Team = {
-  id: string;
-  avatar: string;
-  name: string;
-  description: string;
-};
+// type Team = {
+//   id: string;
+//   avatar: string;
+//   name: string;
+//   description: string;
+// };
 
-const TeamAvatar = ({ src }: { src: string }) => {
-  if (!src) return null;
+// const TeamAvatar = ({ src }: { src: string }) => {
+//   if (!src) return null;
 
-  return (
-    <Avatar
-      src={src}
-      sx={{
-        height: "24px",
-        width: "24px",
-      }}
-    />
-  );
-};
+//   return (
+//     <Avatar
+//       src={src}
+//       sx={{
+//         height: "24px",
+//         width: "24px",
+//       }}
+//     />
+//   );
+// };
 
 function ListTeam(props: IListTeam) {
   //! State
   const {} = props;
-  const teams = useGet("TEAM") || [];
 
   //! Function
 
@@ -43,7 +41,7 @@ function ListTeam(props: IListTeam) {
       }}
     >
       <Box display={"flex"} flexDirection={"column"} gap={"8px"}>
-        {teams.map((elm: Team) => {
+        {/* {teams.map((elm: Team) => {
           return (
             <NavItem
               path="/home"
@@ -53,7 +51,7 @@ function ListTeam(props: IListTeam) {
               navActive
             />
           );
-        })}
+        })} */}
       </Box>
     </ReactPerfectScrollbar>
   );

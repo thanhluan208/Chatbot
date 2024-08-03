@@ -3,13 +3,10 @@ import useToggleDialog from "../../../Hooks/useToggleDialog";
 import CommonIcons from "../../CommonIcons";
 import CommonStyles from "../../CommonStyles";
 import { Box, useTheme } from "@mui/material";
-import { FastField, Field, Form, Formik,  } from "formik";
+import { FastField, Field, Form, Formik } from "formik";
 import Team from "../../../assets/team.png";
 import * as yup from "yup";
-import { processDelay } from "../../../Helpers";
-import { useSave } from "../../../Stores/useStore";
-import cachedKeys from "../../../Constants/cachedKeys";
-import { v4 as uuid } from "uuid";
+
 import CommonField from "../../CommonFields";
 import { toast } from "react-toastify";
 
@@ -27,7 +24,6 @@ const AddTeamDialog = (props: IAddTeamDialog) => {
   //! State
   const { toggle } = props;
   const theme: any = useTheme();
-  const save = useSave();
   const initialValues = useMemo(() => {
     return {
       avatar: Team,
@@ -51,25 +47,8 @@ const AddTeamDialog = (props: IAddTeamDialog) => {
       isLoading: true,
     });
 
-    const callback = () => {
-      const id = uuid();
-      save(
-        cachedKeys.TEAM,
-        (rootState: any) => {
-          const team = rootState?.[cachedKeys.TEAM];
-          if (team) {
-            const newTeam = [{ id, ...values }, ...team];
-            return newTeam;
-          } else {
-            return [{ id, ...values }];
-          }
-        },
-        true
-      );
-      toggle();
-    };
+    console.log("values", values);
 
-    await processDelay(callback);
     toast.update(toastId, {
       type: "success",
       render: "Team created successfully",
