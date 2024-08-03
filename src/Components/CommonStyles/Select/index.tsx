@@ -4,50 +4,30 @@ import {
   MenuItem,
   Select,
   SelectProps,
-  useTheme,
 } from "@mui/material";
-import CommonStyles from "../CommonStyles";
-import { FieldProps, getIn } from "formik";
-import React, { Fragment } from "react";
+import CommonStyles from "..";
+import { Fragment } from "react/jsx-runtime";
 
-interface IMuiSelectField {
-  onChangeCustomize?: (value: any) => void;
-  afterOnChange?: (value: any) => void;
+interface ISelect {
   options: any[];
+  value?: any;
   renderOption?: (options: any) => React.ReactNode;
   customRenderValue?: (value: any) => React.ReactNode;
+  handleChange?: (value: any) => void;
 }
 
-function MuiSelectField(props: IMuiSelectField & SelectProps & FieldProps) {
+const CommonSelect = (props: ISelect & SelectProps) => {
   //! State
   const {
-    field,
-    form,
     options,
     renderOption,
-    onChangeCustomize,
-    afterOnChange,
     customRenderValue,
+    handleChange,
+    value,
     ...otherProps
   } = props;
-  const theme = useTheme();
-  const { errors, touched, setFieldValue } = form || {};
-  const { name, value, onBlur } = field || {};
 
-  const isTouch = getIn(touched, name);
-  const err = getIn(errors, name);
-
-  const errMsg = isTouch && err ? err : "";
   //! Function
-  const handleChange = (value: any) => {
-    if (onChangeCustomize) {
-      onChangeCustomize(value);
-    } else {
-      setFieldValue(name, value);
-
-      afterOnChange && afterOnChange(value);
-    }
-  };
 
   //! Render
   return (
@@ -56,6 +36,7 @@ function MuiSelectField(props: IMuiSelectField & SelectProps & FieldProps) {
         display: "flex",
         flexDirection: "column",
         width: otherProps.fullWidth ? "100%" : "fit-content",
+        padding:'1px',
         ".MuiInputBase-root": {
           padding: 0,
           display: "flex",
@@ -81,13 +62,9 @@ function MuiSelectField(props: IMuiSelectField & SelectProps & FieldProps) {
         </CommonStyles.Typography>
       )}
       <Select
-        onBlur={(e) => {
-          onBlur(e);
-        }}
         {...otherProps}
-        error={!!errMsg}
         label=""
-        value={value || props.value}
+        value={value}
         onChange={handleChange}
         sx={{
           padding: "8px 16px",
@@ -124,7 +101,7 @@ function MuiSelectField(props: IMuiSelectField & SelectProps & FieldProps) {
                 value={op?.value}
                 key={op?.value}
                 onClick={() => {
-                  handleChange(op.value);
+                  handleChange && handleChange(op.value);
                 }}
               >
                 {op?.label}
@@ -135,6 +112,6 @@ function MuiSelectField(props: IMuiSelectField & SelectProps & FieldProps) {
       </Select>
     </Box>
   );
-}
+};
 
-export default MuiSelectField;
+export default CommonSelect;

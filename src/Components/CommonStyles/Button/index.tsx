@@ -25,7 +25,14 @@ function MuiButton(props: IMuiButton & ButtonProps) {
         background: theme.colors.custom.colorActive,
       };
     }
-  }, [isActive, theme]);
+    if (otherProps.variant === "outlined") {
+      return {
+        border: `none !important`,
+        color: theme.palette.primary.main,
+        background: "#fff",
+      };
+    }
+  }, [isActive, theme, otherProps.variant]);
 
   //! Function
 

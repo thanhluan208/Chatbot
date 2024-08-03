@@ -130,6 +130,11 @@ export const configures = [
         content:
           "Table supports matching appropriate rows according to a certain column of the table. It also supports querying and calculating the database based on natural language.",
       },
+      {
+        title: "Images",
+        content:
+          "After uploading the image, you can choose to automatically or manually add the semantic description. Then, the bot can match the most appropriate image based on its description.",
+      },
     ],
   },
   {

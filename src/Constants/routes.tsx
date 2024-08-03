@@ -28,7 +28,10 @@ const Routes = {
 };
 
 export const ListRoutes = {
+  login: "/login",
+  signup: "/signup",
   workspace: "/workspace/:id/bot/:botId",
+  knowledgeDetail: "/knowledge/:knowledgeId",
 };
 
 export default Routes;

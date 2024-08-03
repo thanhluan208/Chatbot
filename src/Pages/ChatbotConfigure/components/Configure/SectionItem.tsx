@@ -1,44 +1,54 @@
 import { Fragment } from "react/jsx-runtime";
 import CommonStyles from "../../../../Components/CommonStyles";
 import CommonIcons from "../../../../Components/CommonIcons";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Box, Collapse, useTheme } from "@mui/material";
 import { AllQueryKeys, useGet } from "../../../../Stores/useStore";
 import { useParams } from "react-router-dom";
 import SectionButtonItem from "./SectionButtonItem";
 import { isArray, isEmpty } from "lodash";
+import useToggleDialog from "../../../../Hooks/useToggleDialog";
+import KnowledgeListDialog from "./Knowledge/KnowledgeListDialog";
 
 interface ISectionItem {
   content: string;
   title: string;
   isAutoAwesome?: boolean;
   name: string;
-  handleAdd?: () => void;
+  sectionTitle: string;
 }
 
 function SectionItem(props: ISectionItem) {
   //! State
-  const { content, title, isAutoAwesome, name } = props;
+  const { content, title, isAutoAwesome, name, sectionTitle } = props;
   const [open, setOpen] = useState(false);
   const theme = useTheme();
   const params = useParams();
   const { botId } = params as { botId: string };
 
   const list = useGet(`${botId}/${name}` as AllQueryKeys);
+  const { open: openDialog, shouldRender, toggle } = useToggleDialog();
 
   //! Function
-  const onClickAdd = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    event.stopPropagation();
-    if (props.handleAdd) {
-      props.handleAdd();
+  const renderDialog = useCallback(() => {
+    if (sectionTitle.toLowerCase() === "knowledge") {
+      return (
+        <CommonStyles.Dialog
+          open={openDialog}
+          toggle={toggle}
+          maxWidth="lg"
+          fullWidth
+        >
+          <KnowledgeListDialog toggle={toggle} />
+        </CommonStyles.Dialog>
+      );
     }
-  };
+  }, [sectionTitle, openDialog, toggle]);
 
   //! Render
   return (
     <Fragment>
+      {shouldRender && renderDialog()}
       <CommonStyles.Button
         onClick={() => setOpen(!open)}
         fullWidth
@@ -81,7 +91,13 @@ function SectionItem(props: ISectionItem) {
                 <CommonIcons.AutoAwesome sx={{ height: 18, width: 18 }} />
               </CommonStyles.Button>
             )}
-            <CommonStyles.Button isIcon onClick={onClickAdd}>
+            <CommonStyles.Button
+              isIcon
+              onClick={(e) => {
+                e.stopPropagation();
+                toggle();
+              }}
+            >
               <CommonIcons.Add sx={{ height: 18, width: 18 }} />
             </CommonStyles.Button>
           </Box>

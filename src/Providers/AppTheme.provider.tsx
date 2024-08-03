@@ -102,7 +102,7 @@ const lightTheme = createTheme({
       colorErrorTypo: "#ff1515",
 
       //* Dialog
-      backgroundDialog: "#f5f7fa",
+      backgroundDialog: "#fff",
 
       //* Star
       colorStar: "#f7c52b",

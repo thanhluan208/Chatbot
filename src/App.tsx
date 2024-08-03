@@ -5,9 +5,15 @@ import DefaultLayout from "./Components/DefaultLayout";
 import Routes, { ListRoutes } from "./Constants/routes";
 import ChatbotConfigure from "./Pages/ChatbotConfigure";
 import Workflow from "./Pages/Workflow";
+import KnowledgeDetail from "./Pages/KnowledgeDetail";
+import Login from "./Pages/Login";
+import SignUp from "./Pages/SignUp";
+import { Fragment } from "react/jsx-runtime";
+import { useEffect, useState } from "react";
 
 function App() {
   //! State
+  const [baseUrl, setbaseUrl] = useState("");
   const router = createBrowserRouter([
     {
       element: <DefaultLayout />,
@@ -25,19 +31,47 @@ function App() {
     },
     {
       path: ListRoutes.workspace,
-
       element: <ChatbotConfigure />,
     },
     {
       path: Routes.explore.WORKFLOW_STORE.path,
       element: <Workflow />,
     },
+    {
+      path: ListRoutes.knowledgeDetail,
+      element: <KnowledgeDetail />,
+    },
+    {
+      path: ListRoutes.login,
+      element: <Login />,
+    },
+    {
+      path: ListRoutes.signup,
+      element: <SignUp />,
+    },
   ]);
 
   //! Function
+  useEffect(() => {
+    return () => localStorage.clear();
+  });
 
   //! Render
-  return <RouterProvider router={router} />;
+  return (
+    <Fragment>
+      <div style={{ position: "fixed", top: 0 }}>
+        <input onChange={(e) => setbaseUrl(e.target.value)} />
+        <button
+          onClick={() => {
+            localStorage.setItem("baseUrl", baseUrl);
+          }}
+        >
+          submit
+        </button>
+      </div>
+      <RouterProvider router={router} />
+    </Fragment>
+  );
 }
 
 export default App;

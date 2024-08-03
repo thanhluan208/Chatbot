@@ -35,6 +35,7 @@ function Section(props: ISection) {
               title={item.title}
               content={item.content}
               key={item.name}
+              sectionTitle={title}
             />
           );
         })}

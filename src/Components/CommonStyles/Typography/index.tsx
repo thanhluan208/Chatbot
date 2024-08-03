@@ -31,6 +31,10 @@ const Typography = (props: ITypography & TypographyProps) => {
       fontSize: "12px",
       fontWeight: 400,
     });
+    styles.set("normal20", {
+      fontSize: "20px",
+      fontWeight: 400,
+    });
 
     styles.set("bold14", {
       fontSize: "14px",
