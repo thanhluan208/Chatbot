@@ -17,6 +17,7 @@ interface IInputField {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   maxChar: number;
+  sxContainer?: {};
 }
 
 function InputField(props: IInputField & FieldProps & TextFieldProps) {
@@ -78,6 +79,7 @@ function InputField(props: IInputField & FieldProps & TextFieldProps) {
             },
           },
         },
+        ...props.sxContainer,
       }}
     >
       {otherProps?.label && (
@@ -119,6 +121,7 @@ function InputField(props: IInputField & FieldProps & TextFieldProps) {
           fieldset: {
             borderRadius: "10px",
           },
+          ...props.sx,
         }}
         inputProps={{
           style: {
@@ -126,7 +129,9 @@ function InputField(props: IInputField & FieldProps & TextFieldProps) {
           },
         }}
         InputProps={{
-          endAdornment: (
+          endAdornment: otherProps.InputProps?.endAdornment ? (
+            otherProps.InputProps?.endAdornment
+          ) : maxChar ? (
             <InputAdornment
               position="end"
               sx={{
@@ -140,7 +145,7 @@ function InputField(props: IInputField & FieldProps & TextFieldProps) {
                 {maxChar && `${value?.length || 0}/${maxChar}`}
               </CommonStyles.Typography>
             </InputAdornment>
-          ),
+          ) : null,
         }}
       />
     </Box>

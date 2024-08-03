@@ -7,7 +7,7 @@ const Routes = {
       icon: <CommonIcons.Home />,
     },
     PERSONAL: {
-      path: "/personal",
+      path: "/workspace/:id",
       icon: <CommonIcons.Person />,
     },
   },
@@ -20,7 +20,18 @@ const Routes = {
       path: "/plugin-store",
       icon: <CommonIcons.Extension />,
     },
+    WORKFLOW_STORE: {
+      path: "/workflow-store",
+      icon: <CommonIcons.Extension />,
+    },
   },
+};
+
+export const ListRoutes = {
+  login: "/login",
+  signup: "/signup",
+  workspace: "/workspace/:id/bot/:botId",
+  knowledgeDetail: "/knowledge/:knowledgeId",
 };
 
 export default Routes;

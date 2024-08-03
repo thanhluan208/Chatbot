@@ -11,6 +11,7 @@ import { useSave } from "../../../Stores/useStore";
 import cachedKeys from "../../../Constants/cachedKeys";
 import { v4 as uuid } from "uuid";
 import CommonField from "../../CommonFields";
+import { toast } from "react-toastify";
 
 interface IAddTeamDialog {
   toggle: () => void;
@@ -45,6 +46,11 @@ const AddTeamDialog = (props: IAddTeamDialog) => {
   //! Function
 
   const handleSubmit = useCallback(async (values: InitValues) => {
+    const toastId = toast.info("Creating team...", {
+      autoClose: false,
+      isLoading: true,
+    });
+
     const callback = () => {
       const id = uuid();
       save(
@@ -64,6 +70,12 @@ const AddTeamDialog = (props: IAddTeamDialog) => {
     };
 
     await processDelay(callback);
+    toast.update(toastId, {
+      type: "success",
+      render: "Team created successfully",
+      isLoading: false,
+      autoClose: 2000,
+    });
   }, []);
 
   //! Render
@@ -74,7 +86,7 @@ const AddTeamDialog = (props: IAddTeamDialog) => {
         justifyContent={"space-between"}
         alignItems={"center"}
       >
-        <CommonStyles.Typography type="normal18">
+        <CommonStyles.Typography type="semiBold18">
           Create team
         </CommonStyles.Typography>
         <CommonStyles.Button isIcon onClick={toggle}>

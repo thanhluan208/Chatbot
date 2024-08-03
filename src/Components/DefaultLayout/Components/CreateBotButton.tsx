@@ -10,9 +10,13 @@ import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { FastField, Field, Form, Formik } from "formik";
 import CommonField from "../../CommonFields";
 import Team from "../../../assets/team.png";
-import { isEmpty } from "lodash";
+import { cloneDeep, isEmpty } from "lodash";
 import WorkSpaceSelect from "./WorkSpaceSelect";
-import { WorkSpaceOption, workSpaceOptions } from "../../../Constants/options";
+import { WorkSpaceOption } from "../../../Constants/options";
+import { v4 as uuid } from "uuid";
+import cachedKeys from "../../../Constants/cachedKeys";
+import { processDelay } from "../../../Helpers";
+import { toast } from "react-toastify";
 
 interface ICreateBotDialog {
   toggle: () => void;
@@ -25,7 +29,7 @@ interface InitValues {
   profilePicture: string;
 }
 
-const CreateBotDialog = (props: ICreateBotDialog) => {
+export const CreateBotDialog = (props: ICreateBotDialog) => {
   //! State
   const { toggle } = props;
   const theme = useTheme();
@@ -36,10 +40,11 @@ const CreateBotDialog = (props: ICreateBotDialog) => {
   const initialValues = useMemo(() => {
     return {
       workspace: {
-        label: "Luan team",
-        avatar: Team,
+        label: "Thanh Luan",
+        avatar:
+          "https://lh3.googleusercontent.com/ogw/AF2bZyiUe-0HqdEyjNfKkkYM8ULbAwTiS0y9gqiDuJ8cvadeXw=s32-c-mo",
         type: "team",
-        value: "luanTeam",
+        value: "luan",
       },
       name: "",
       description: "",
@@ -56,7 +61,46 @@ const CreateBotDialog = (props: ICreateBotDialog) => {
   //! Function
 
   const handleSubmit = useCallback(async (values: InitValues) => {
-    // await processDelay();
+    const toastId = toast.info("Creating bot...", {
+      isLoading: true,
+      autoClose: false,
+    });
+
+    const callback = () => {
+      const id = uuid();
+      const newBot = {
+        id,
+        ...values,
+        lastEdit: new Date().toISOString(),
+        isFavourite: false,
+      };
+
+      save(
+        cachedKeys.BOT,
+        (rootState: any) => {
+          const bots = rootState?.[cachedKeys.BOT];
+
+          if (bots) {
+            const newBots = cloneDeep(bots);
+            newBots.push(newBot);
+
+            return newBots;
+          } else {
+            return [newBot];
+          }
+        },
+        true
+      );
+      toggle();
+    };
+    await processDelay(callback);
+
+    toast.update(toastId, {
+      render: "Bot created successfully!",
+      type: "success",
+      isLoading: false,
+      autoClose: 3000,
+    });
   }, []);
 
   //! Render
@@ -84,9 +128,9 @@ const CreateBotDialog = (props: ICreateBotDialog) => {
                   display={"flex"}
                   justifyContent={"space-between"}
                   alignItems={"center"}
-                  mb={5}
+                  mb={3}
                 >
-                  <CommonStyles.Typography type="normal18">
+                  <CommonStyles.Typography type="semiBold18">
                     Create Bot
                   </CommonStyles.Typography>
                   <CommonStyles.Button isIcon onClick={toggle}>

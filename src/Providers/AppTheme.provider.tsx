@@ -75,7 +75,7 @@ const lightTheme = createTheme({
             url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semibold/latest.woff2) format("woff2"),
             url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semibold/latest.woff) format("woff"),
             url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semibold/latest.ttf) format("truetype");
-        font-weight: 700;
+        font-weight: 500;
     }
       `,
     },
@@ -102,7 +102,16 @@ const lightTheme = createTheme({
       colorErrorTypo: "#ff1515",
 
       //* Dialog
-      backgroundDialog: "#f5f7fa",
+      backgroundDialog: "#fff",
+
+      //* Star
+      colorStar: "#f7c52b",
+
+      //* Button
+      colorActive: "#f1f2fd",
+
+      //* Tab
+      backgroundTab: "#4b4a580a",
     },
   },
 });
