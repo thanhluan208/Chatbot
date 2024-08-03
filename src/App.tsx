@@ -96,11 +96,10 @@ function App() {
 
   //! Function
 
-
   //! Render
   return (
     <Fragment>
-      <div style={{ position: "fixed", top: 0 }}>
+      <div style={{ position: "fixed", top: 0, zIndex: 1000000 }}>
         <input onChange={(e) => setbaseUrl(e.target.value)} />
         <button
           onClick={() => {
