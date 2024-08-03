@@ -14,6 +14,7 @@ import useToggleDialog from "../../../../../Hooks/useToggleDialog";
 import httpServices from "../../../../../Services/httpServices";
 import { createFolderKnowledge } from "../../../../../Constants/api";
 import { useGet } from "../../../../../Stores/useStore";
+import { useAuth } from "../../../../../Providers/AuthenticationProvider";
 
 interface IKnowledgeActionDialog {
   toggle: () => void;
@@ -34,6 +35,7 @@ interface InitValues {
 export const KnowledgeActionDialog = (props: IKnowledgeActionDialog) => {
   //! State
   const { toggle } = props;
+  const { userId } = useAuth();
 
   const refetchListFolder = useGet("REFETCH_FOLDER_KNOWLEDGE");
 
@@ -61,7 +63,7 @@ export const KnowledgeActionDialog = (props: IKnowledgeActionDialog) => {
 
     try {
       const response = await httpServices.axios.post(createFolderKnowledge, {
-        user_input: "a573f288-2dab-49ae-b3c6-bd84374a9bf5",
+        user_input: userId,
         knowledge_name_input: values.name,
         knowledge_description_input: values.description,
       });
@@ -79,6 +81,7 @@ export const KnowledgeActionDialog = (props: IKnowledgeActionDialog) => {
           isLoading: false,
           autoClose: 3000,
         });
+        toggle();
       } else {
         throw new Error(response.data.message);
       }

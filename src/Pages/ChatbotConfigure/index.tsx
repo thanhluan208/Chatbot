@@ -4,11 +4,13 @@ import CommonIcons from "../../Components/CommonIcons";
 
 import Team from "../../assets/team.png";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGet } from "../../Stores/useStore";
+import { useGet, useSave } from "../../Stores/useStore";
 import { IBotCard } from "../Users/Components/ListBot";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Develop from "./components/Develop";
 import Analysis from "./components/Analysis";
+import useGetBotData from "../../Hooks/Bot/useGetBotData";
+import cachedKeys from "../../Constants/cachedKeys";
 
 interface IChatbotConfigure {}
 
@@ -18,15 +20,18 @@ function ChatbotConfigure(props: IChatbotConfigure) {
   const theme: any = useTheme();
   const navigate = useNavigate();
   const params = useParams();
+  const save = useSave();
   const botId = params?.botId;
-  const listBots = useGet("BOT") || [];
-  const bot: IBotCard = listBots?.find((bot: IBotCard) => bot.id === botId);
 
   const [tab, setTab] = useState("develop");
+  const { data, isLoading, refetch } = useGetBotData(botId, !!botId);
 
-  const { name } = bot || {};
+  console.log("data", data);
 
   //! Function
+  useEffect(() => {
+    save(cachedKeys.REFETCH_BOT_DATA, refetch);
+  }, [refetch]);
 
   //! Render
   return (
@@ -75,7 +80,7 @@ function ChatbotConfigure(props: IChatbotConfigure) {
             <Box>
               <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <CommonStyles.Typography type="semiBold14">
-                  {name}
+                  hehe
                 </CommonStyles.Typography>
                 <CommonStyles.Button
                   isIcon

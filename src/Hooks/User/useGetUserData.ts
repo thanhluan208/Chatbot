@@ -1,21 +1,29 @@
 import { useCallback, useEffect, useState } from "react";
-import knowledgeService from "../../Services/knowledge.service";
-import { useAuth } from "../../Providers/AuthenticationProvider";
+import userService from "../../Services/user.service";
 
-const useGetListFolderKnowledge = (isTrigger = true) => {
-  const [data, setData] = useState([]);
+export interface UserData {
+  id: string;
+  user_name: string;
+  email: string;
+  address: string;
+  phone_num: string;
+}
+
+const useGetUserData = (userId: string | null, isTrigger = true) => {
+  const [data, setData] = useState<UserData | null>(null);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState();
-  const {userId} = useAuth()
 
   const callApi = useCallback(() => {
     if (!userId) return;
-    return knowledgeService.getListFolder(userId);
+    return userService.getUserData(userId);
   }, [userId]);
+
 
   const transformResponse = useCallback((response: any) => {
     if (response) {
-      setData(response.data.list_knowledges);
+      setData(response.data.user_data);
+      localStorage.setItem("userData", JSON.stringify(response.data.user_data));
     }
   }, []);
 
@@ -61,4 +69,4 @@ const useGetListFolderKnowledge = (isTrigger = true) => {
   };
 };
 
-export default useGetListFolderKnowledge;
+export default useGetUserData;

@@ -6,20 +6,22 @@ import {
 import Home from "./Pages/Home";
 import Users from "./Pages/Users";
 import DefaultLayout from "./Components/DefaultLayout";
-import Routes, { ListRoutes } from "./Constants/routes";
+import { ListRoutes } from "./Constants/routes";
 import ChatbotConfigure from "./Pages/ChatbotConfigure";
 import Workflow from "./Pages/Workflow";
 import KnowledgeDetail from "./Pages/KnowledgeDetail";
 import Login from "./Pages/Login";
 import SignUp from "./Pages/SignUp";
 import { Fragment } from "react/jsx-runtime";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "./Providers/AuthenticationProvider";
+import useRoutes from "./Constants/routes";
 
 function App() {
   //! State
   const [baseUrl, setbaseUrl] = useState("");
   const { userId } = useAuth();
+  const Routes = useRoutes();
   const router = createBrowserRouter([
     {
       element: <DefaultLayout />,
@@ -75,17 +77,25 @@ function App() {
     {
       path: ListRoutes.login,
       element: <Login />,
+      loader: () => {
+        if (userId) return redirect("/");
+
+        return null;
+      },
     },
     {
       path: ListRoutes.signup,
       element: <SignUp />,
+      loader: () => {
+        if (userId) return redirect("/");
+
+        return null;
+      },
     },
   ]);
 
   //! Function
-  useEffect(() => {
-    return () => localStorage.clear();
-  });
+
 
   //! Render
   return (

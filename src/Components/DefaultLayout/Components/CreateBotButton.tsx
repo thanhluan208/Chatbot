@@ -2,53 +2,41 @@ import { Fragment } from "react/jsx-runtime";
 import useToggleDialog from "../../../Hooks/useToggleDialog";
 import CommonIcons from "../../CommonIcons";
 import CommonStyles from "../../CommonStyles";
-import { useTheme } from "@emotion/react";
-import { useSave } from "../../../Stores/useStore";
 import { useCallback, useMemo } from "react";
 import * as yup from "yup";
 import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import { FastField, Field, Form, Formik } from "formik";
+import { FastField, Form, Formik } from "formik";
 import CommonField from "../../CommonFields";
-import Team from "../../../assets/team.png";
-import { cloneDeep, isEmpty } from "lodash";
-import WorkSpaceSelect from "./WorkSpaceSelect";
-import { WorkSpaceOption } from "../../../Constants/options";
-import { v4 as uuid } from "uuid";
-import cachedKeys from "../../../Constants/cachedKeys";
-import { processDelay } from "../../../Helpers";
+import { isEmpty } from "lodash";
+
 import { toast } from "react-toastify";
+import httpServices from "../../../Services/httpServices";
+import { createBot } from "../../../Constants/api";
+import { useGet } from "../../../Stores/useStore";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../../../Providers/AuthenticationProvider";
 
 interface ICreateBotDialog {
   toggle: () => void;
 }
 
 interface InitValues {
-  workspace: WorkSpaceOption;
   name: string;
   description: string;
-  profilePicture: string;
 }
 
 export const CreateBotDialog = (props: ICreateBotDialog) => {
   //! State
   const { toggle } = props;
-  const theme: any = useTheme();
-  const save = useSave();
-
-  const isDisabledAiGenerate = true;
-
+  const params = useParams();
+  const navigate = useNavigate();
+  const { userId } = useAuth();
+  const { id } = params;
+  const refetchListBot = useGet("REFETCH_LIST_BOT");
   const initialValues = useMemo(() => {
     return {
-      workspace: {
-        label: "Thanh Luan",
-        avatar:
-          "https://lh3.googleusercontent.com/ogw/AF2bZyiUe-0HqdEyjNfKkkYM8ULbAwTiS0y9gqiDuJ8cvadeXw=s32-c-mo",
-        type: "team",
-        value: "luan",
-      },
       name: "",
       description: "",
-      profilePicture: Team,
     };
   }, []);
 
@@ -60,48 +48,45 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
 
   //! Function
 
-  const handleSubmit = useCallback(async (values: InitValues) => {
-    const toastId = toast.info("Creating bot...", {
-      isLoading: true,
-      autoClose: false,
-    });
+  const handleSubmit = useCallback(
+    async (values: InitValues) => {
+      const toastId = toast.info("Creating bot...", {
+        isLoading: true,
+        autoClose: false,
+      });
 
-    const callback = () => {
-      const id = uuid();
-      const newBot = {
-        id,
-        ...values,
-        lastEdit: new Date().toISOString(),
-        isFavourite: false,
-      };
-
-      save(
-        cachedKeys.BOT,
-        (rootState: any) => {
-          const bots = rootState?.[cachedKeys.BOT];
-
-          if (bots) {
-            const newBots = cloneDeep(bots);
-            newBots.push(newBot);
-
-            return newBots;
-          } else {
-            return [newBot];
+      try {
+        const response = await httpServices.axios.post(createBot, {
+          user_id: userId,
+          bot_name: values.name,
+          bot_description: values.description,
+        });
+        await refetchListBot();
+        if (response.data.status_code === 200) {
+          toast.update(toastId, {
+            render: `Bot ${values.name} created successfully!`,
+            type: "success",
+            isLoading: false,
+            autoClose: 3000,
+          });
+          if (id && response.data.bot_id) {
+            navigate(`/workspace/${id}/bot/${response.data.bot_id}`);
           }
-        },
-        true
-      );
-      toggle();
-    };
-    await processDelay(callback);
-
-    toast.update(toastId, {
-      render: "Bot created successfully!",
-      type: "success",
-      isLoading: false,
-      autoClose: 3000,
-    });
-  }, []);
+        } else {
+          throw new Error(response.data.message);
+        }
+      } catch (error: any) {
+        console.log("Create bot error: ", error);
+        toast.update(toastId, {
+          render: error?.message || "Create bot failed",
+          type: "error",
+          autoClose: 2000,
+          isLoading: false,
+        });
+      }
+    },
+    [refetchListBot, id, userId, navigate]
+  );
 
   //! Render
   return (
@@ -140,7 +125,7 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
               </DialogTitle>
 
               <DialogContent>
-                <WorkSpaceSelect />
+                {/* <WorkSpaceSelect /> */}
 
                 <FastField
                   name="name"
@@ -162,7 +147,7 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
                   maxChar={2000}
                 />
 
-                <Box>
+                {/* <Box>
                   <CommonStyles.Typography type="bold14" my={1}>
                     Profile picture
                     <span
@@ -219,7 +204,7 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
                       </CommonStyles.Button>
                     </Box>
                   </Box>
-                </Box>
+                </Box> */}
               </DialogContent>
 
               <DialogActions>

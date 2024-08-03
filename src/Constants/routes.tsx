@@ -1,30 +1,35 @@
 import CommonIcons from "../Components/CommonIcons";
+import { useAuth } from "../Providers/AuthenticationProvider";
 
-const Routes = {
-  common: {
-    HOME: {
-      path: "/home",
-      icon: <CommonIcons.Home />,
+const useRoutes = () => {
+  const { userId } = useAuth();
+
+  return {
+    common: {
+      HOME: {
+        path: "/home",
+        icon: <CommonIcons.Home />,
+      },
+      PERSONAL: {
+        path: `/workspace/${userId}`,
+        icon: <CommonIcons.Person />,
+      },
     },
-    PERSONAL: {
-      path: "/workspace/:id",
-      icon: <CommonIcons.Person />,
+    explore: {
+      BOT_STORE: {
+        path: "/bot-store",
+        icon: <CommonIcons.SmartToy />,
+      },
+      PLUGIN_STORE: {
+        path: "/plugin-store",
+        icon: <CommonIcons.Extension />,
+      },
+      WORKFLOW_STORE: {
+        path: "/workflow-store",
+        icon: <CommonIcons.Extension />,
+      },
     },
-  },
-  explore: {
-    BOT_STORE: {
-      path: "/bot-store",
-      icon: <CommonIcons.SmartToy />,
-    },
-    PLUGIN_STORE: {
-      path: "/plugin-store",
-      icon: <CommonIcons.Extension />,
-    },
-    WORKFLOW_STORE: {
-      path: "/workflow-store",
-      icon: <CommonIcons.Extension />,
-    },
-  },
+  };
 };
 
 export const ListRoutes = {
@@ -34,4 +39,4 @@ export const ListRoutes = {
   knowledgeDetail: "/knowledge/:knowledgeId",
 };
 
-export default Routes;
+export default useRoutes;

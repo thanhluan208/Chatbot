@@ -8,6 +8,9 @@ import cachedKeys from "../../Constants/cachedKeys";
 import CommonIcons from "../../Components/CommonIcons";
 import AddContentButton from "./components/AddContentButton";
 import PerfectScrollBar from "react-perfect-scrollbar";
+import { useAuth } from "../../Providers/AuthenticationProvider";
+import { isEmpty } from "lodash";
+import Empty from "../../assets/empty.svg";
 
 const KnowledgeDetail = () => {
   //! State
@@ -18,18 +21,19 @@ const KnowledgeDetail = () => {
     search: "",
   });
   const debounceRef = useRef<any>(null);
+  const { userId } = useAuth();
 
   const payload = useMemo(() => {
-    if (knowledgeId) {
+    if (knowledgeId && userId) {
       return {
-        user_input: "a573f288-2dab-49ae-b3c6-bd84374a9bf5",
+        user_input: userId,
         knowledge_input: knowledgeId,
       };
     }
 
     return undefined;
-  }, [knowledgeId]);
-  const {  isLoading, refetch } = useGetListKnowledgeFiles(
+  }, [knowledgeId, userId]);
+  const { data, isLoading, refetch } = useGetListKnowledgeFiles(
     payload,
     !!payload
   );
@@ -128,8 +132,29 @@ const KnowledgeDetail = () => {
               height: "100%",
               width: "100%",
               borderRadius: "8px",
+              position: "relative",
             }}
-          ></Box>
+          >
+            {isEmpty(data) ? (
+              <Box
+                sx={{
+                  height: "300px",
+                  width: "300px",
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              >
+                <CommonIcons.EmptyIcon />
+                <CommonStyles.Typography type="bold18" align="center" mt={'20px'}>
+                  No segment found
+                </CommonStyles.Typography>
+              </Box>
+            ) : (
+              <Box />
+            )}
+          </Box>
         </PerfectScrollBar>
       </Box>
     </Box>

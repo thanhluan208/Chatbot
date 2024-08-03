@@ -1,4 +1,4 @@
-import { cloneDeep, isArray, isEmpty } from "lodash";
+import { isArray, isEmpty } from "lodash";
 import { useGet, useSave } from "../../../../Stores/useStore";
 import { Box, useTheme } from "@mui/material";
 import Empty from "./components/Empty";
@@ -9,66 +9,54 @@ import CommonIcons from "../../../../Components/CommonIcons";
 import moment from "moment";
 import MoreOption from "./components/MoreOption";
 import cachedKeys from "../../../../Constants/cachedKeys";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import useGetListBot from "../../../../Hooks/Bot/useGetListBot";
+import { useEffect, useMemo } from "react";
+import { useAuth } from "../../../../Providers/AuthenticationProvider";
 
 export interface IBotCard {
-  id: string;
-  workspace: Workspace;
-  name: string;
+  bot_id: string;
+  bot_name: string;
   description: string;
-  profilePicture: string;
-  lastEdit: Date;
   isFavourite?: boolean;
 }
 
 export interface Workspace {
   label: string;
-  avatar: string;
   type: string;
   value: string;
 }
 
+const listImg = [
+  "https://i.imgur.com/SYxkcfJ.jpeg",
+  "https://i.imgur.com/VUWXbmo.png",
+  "https://i.imgur.com/UpI9KQ1.jpeg",
+  "https://i.imgur.com/8SIRLa1.jpeg",
+];
+
 const BotCard = (props: IBotCard) => {
   //! State
-
-  const {
-    id,
-    workspace,
-    name,
-    description,
-    profilePicture,
-    lastEdit,
-    isFavourite,
-  } = props;
+  const { userData } = useAuth();
+  const { bot_id, bot_name, description, isFavourite } = props;
+  const openDialog = useGet("OPEN_DIALOG");
 
   const navigate = useNavigate();
+  const location = useLocation();
   const theme: any = useTheme();
-  const save = useSave();
+
+  const imgUrl = useMemo(() => {
+    return listImg[Math.floor(Math.random() * listImg.length)];
+  }, []);
 
   //! Function
   const handleClick = (e: any) => {
+    if (openDialog) return;
     e.stopPropagation();
-    navigate(`/workspace/${workspace.value}/bot/${id}`);
+    navigate(location.pathname + "/bot/" + bot_id);
   };
 
   const handleFav = (e: any) => {
     e.stopPropagation();
-    save(
-      cachedKeys.BOT,
-      (rootState: any) => {
-        const listBots = rootState?.[cachedKeys.BOT];
-        const newListBots = cloneDeep(listBots).map((bot: IBotCard) => {
-          if (bot.id === id) {
-            bot.isFavourite = !bot.isFavourite;
-            return bot;
-          }
-          return bot;
-        });
-
-        return newListBots;
-      },
-      true
-    );
   };
 
   //! Render
@@ -114,7 +102,7 @@ const BotCard = (props: IBotCard) => {
           }}
         >
           <CommonStyles.Typography type="semiBold16">
-            {name}
+            {bot_name}
           </CommonStyles.Typography>
           <CommonStyles.Typography
             color={theme.colors.custom.colorDisabledTypo}
@@ -124,8 +112,8 @@ const BotCard = (props: IBotCard) => {
         </Box>
         <Box>
           <img
-            src={profilePicture}
-            alt={name}
+            src={imgUrl}
+            alt={bot_name}
             style={{
               width: "75px",
               height: "75px",
@@ -155,24 +143,20 @@ const BotCard = (props: IBotCard) => {
               type="normal12"
               color={theme.colors.custom.colorDisabledTypo}
             >
-              Edited {moment(lastEdit).format("HH:mm")}
+              Edited {moment().format("HH:mm")}
             </CommonStyles.Typography>
           </Box>
           <Box
             mt={1}
             sx={{ display: "flex", gap: "8px", alignItems: "center" }}
           >
-            <img
-              src={workspace.avatar}
-              alt={workspace.label}
-              style={{ width: "16px", height: "16px", borderRadius: "50%" }}
-            />
-
-            <CommonStyles.Typography>{workspace.label}</CommonStyles.Typography>
+            <CommonStyles.Typography>
+              {userData?.user_name}
+            </CommonStyles.Typography>
             <CommonStyles.Typography
               color={theme.colors.custom.colorDisabledTypo}
             >
-              @luandang
+              {userData?.email ? `@${userData?.email}` : "-"}
             </CommonStyles.Typography>
           </Box>
         </Box>
@@ -200,7 +184,13 @@ const BotCard = (props: IBotCard) => {
               <CommonIcons.StarOutline />
             )}
           </CommonStyles.Button>
-          <MoreOption id={id} />
+          <MoreOption
+            bot={{
+              bot_id,
+              bot_name,
+              description,
+            }}
+          />
         </Box>
       </Box>
     </Box>
@@ -210,13 +200,25 @@ const BotCard = (props: IBotCard) => {
 function ListBot() {
   //! State
   const theme: any = useTheme();
-  const listBots: IBotCard[] = useGet("BOT") || [];
+  const save = useSave();
+  const { data, isLoading, refetch } = useGetListBot();
 
   //! Function
+  useEffect(() => {
+    if (refetch) {
+      save(cachedKeys.REFETCH_LIST_BOT, refetch);
+    }
+  }, [save, refetch]);
+
+  //! Effect
+
+  useEffect(() => {
+    save(cachedKeys.LOADING_APP, isLoading);
+  }, [isLoading]);
 
   //! Render
 
-  if (isEmpty(listBots)) {
+  if (isEmpty(data)) {
     return (
       <Box
         sx={{
@@ -274,9 +276,9 @@ function ListBot() {
         flexWrap: "wrap",
       }}
     >
-      {isArray(listBots) &&
-        listBots.map((bot) => {
-          return <BotCard key={bot.id} {...bot} />;
+      {isArray(data) &&
+        data.map((bot) => {
+          return <BotCard key={bot.bot_id} {...bot} />;
         })}
     </Box>
   );

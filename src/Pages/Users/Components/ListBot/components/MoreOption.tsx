@@ -1,63 +1,32 @@
 import CommonIcons from "../../../../../Components/CommonIcons";
 import CommonStyles from "../../../../../Components/CommonStyles";
-import { Box,  Paper, Popper, useTheme } from "@mui/material";
-import React, { useState } from "react";
-import { useSave } from "../../../../../Stores/useStore";
-import cachedKeys from "../../../../../Constants/cachedKeys";
-import { v4 as uuidv4 } from "uuid";
-import { cloneDeep } from "lodash";
-import { processDelay } from "../../../../../Helpers";
+import { Box, ClickAwayListener, Paper, Popper, useTheme } from "@mui/material";
+import React from "react";
+
 import { toast } from "react-toastify";
+import DeleteBotButton from "./DeleteBotButton";
+import { Bot } from "../../../../../Hooks/Bot/useGetListBot";
 
 interface IMoreOption {
-  id: string;
+  bot: Bot;
 }
 
 function MoreOption(props: IMoreOption) {
   //! State
-  const {} = props;
+  const { bot } = props;
   const theme: any = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
-  const [loading, setLoading] = useState(false);
-
-  const save = useSave();
 
   const open = !!anchorEl;
 
   //! Function
   const handleDuplicate = async () => {
-    setLoading(true);
     const toastId = toast.loading("Duplicating bot...", {
       isLoading: true,
       autoClose: false,
     });
-
-    const callback = () => {
-      save(
-        cachedKeys.BOT,
-        (rootState: any) => {
-          const listBots = rootState?.[cachedKeys.BOT];
-          const bot = listBots.find((bot: any) => bot.id === props.id);
-          const newId = uuidv4();
-          const newBot = {
-            ...bot,
-            id: newId,
-            name: `${bot.name} - Copy `,
-            lastEdit: new Date().toISOString(),
-          };
-
-          const newListBots = cloneDeep(listBots);
-          newListBots.push(newBot);
-
-          return newListBots;
-        },
-        true
-      );
-    };
-
-    await processDelay(callback);
 
     toast.update(toastId, {
       isLoading: false,
@@ -65,16 +34,17 @@ function MoreOption(props: IMoreOption) {
       type: "success",
       autoClose: 3000,
     });
-    setLoading(false);
   };
 
   //! Render
   return (
-    <Box onMouseLeave={() => setAnchorEl(null)}>
+    <ClickAwayListener onClickAway={() => setAnchorEl(null)}>
+      <Box>
       <CommonStyles.Button
         isIcon
         className={anchorEl ? "" : "btnGroup"}
-        onMouseEnter={(e) => {
+        onClick={(e) => {
+          e.stopPropagation();
           setAnchorEl(e.currentTarget);
         }}
       >
@@ -85,7 +55,6 @@ function MoreOption(props: IMoreOption) {
         anchorEl={anchorEl}
         placement={"bottom-end"}
         keepMounted={false}
-        onBlur={() => setAnchorEl(null)}
       >
         {() => (
           <Paper
@@ -99,7 +68,7 @@ function MoreOption(props: IMoreOption) {
               },
             }}
           >
-            <CommonStyles.Button disabled={loading}>
+            <CommonStyles.Button>
               <CommonStyles.Typography
                 type="semiBold14"
                 color={theme.colors.custom.semiColorTypo}
@@ -107,7 +76,7 @@ function MoreOption(props: IMoreOption) {
                 Statistic
               </CommonStyles.Typography>
             </CommonStyles.Button>
-            <CommonStyles.Button disabled={loading} onClick={handleDuplicate}>
+            <CommonStyles.Button onClick={handleDuplicate}>
               <CommonStyles.Typography
                 type="semiBold14"
                 color={theme.colors.custom.semiColorTypo}
@@ -115,18 +84,12 @@ function MoreOption(props: IMoreOption) {
                 Duplicate
               </CommonStyles.Typography>
             </CommonStyles.Button>
-            <CommonStyles.Button disabled={loading}>
-              <CommonStyles.Typography
-                type="semiBold14"
-                color={theme.colors.custom.colorErrorTypo}
-              >
-                Delete
-              </CommonStyles.Typography>
-            </CommonStyles.Button>
+            <DeleteBotButton bot={bot} />
           </Paper>
         )}
       </Popper>
     </Box>
+    </ClickAwayListener>
   );
 }
 

@@ -1,13 +1,8 @@
-import {
-  Avatar,
-  Box,
-  Fade,
-  Paper,
-  Popper,
-} from "@mui/material";
+import { Avatar, Box, Fade, Paper, Popper } from "@mui/material";
 import NavItem from "./NavItem";
 import React, { Fragment } from "react";
 import CommonStyles from "../../CommonStyles";
+import { useAuth } from "../../../Providers/AuthenticationProvider";
 
 interface IUserButton {}
 
@@ -19,7 +14,7 @@ function UserButton(props: IUserButton) {
   );
 
   const open = !!anchorEl;
-
+  const { logout, userData } = useAuth();
   //! Function
 
   //! Render
@@ -30,7 +25,7 @@ function UserButton(props: IUserButton) {
           icon={
             <Avatar src="https://lh3.googleusercontent.com/ogw/AF2bZyiUe-0HqdEyjNfKkkYM8ULbAwTiS0y9gqiDuJ8cvadeXw=s32-c-mo" />
           }
-          title="Thanh Luan"
+          title={userData?.user_name}
           navActive
           buttonSx={{
             mt: "12px",
@@ -64,10 +59,10 @@ function UserButton(props: IUserButton) {
                 },
               }}
             >
-              <CommonStyles.Button onClick={() => alert("hehe")}>
-                Settings
+              <CommonStyles.Button>Settings</CommonStyles.Button>
+              <CommonStyles.Button onClick={logout}>
+                Log out
               </CommonStyles.Button>
-              <CommonStyles.Button>Log out</CommonStyles.Button>
             </Paper>
           </Fade>
         )}

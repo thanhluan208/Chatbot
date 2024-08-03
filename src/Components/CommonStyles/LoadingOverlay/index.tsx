@@ -1,16 +1,19 @@
 import { Box, CircularProgress } from "@mui/material";
+import { useGet } from "../../../Stores/useStore";
 
 interface ILoadingOverlay {
-  isLoading: boolean;
+  isLoading?: boolean;
+  isLoadingApp?: boolean;
 }
 
 const LoadingOverlay = (props: ILoadingOverlay) => {
   const { isLoading } = props;
+  const isLoadingApp = useGet("LOADING_APP");
 
   return (
     <Box
       sx={{
-        display: isLoading ? "flex" : "none",
+        display: isLoading || isLoadingApp ? "flex" : "none",
         position: "absolute",
         width: "100%",
         height: "100%",

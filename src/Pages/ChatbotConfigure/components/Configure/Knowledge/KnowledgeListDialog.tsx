@@ -45,9 +45,7 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
     sortBy: "createdAt",
     search: "",
   });
-  const { data, isLoading, refetch } = useGetListFolderKnowledge(
-    "a573f288-2dab-49ae-b3c6-bd84374a9bf5"
-  );
+  const { data, isLoading, refetch } = useGetListFolderKnowledge();
 
   const debounceRef = useRef<any>(null);
 

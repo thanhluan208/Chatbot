@@ -1,5 +1,6 @@
 import MuiButton from "./Button";
 import MuiChip from "./Chip";
+import ConfirmDialog from "./ConfirmDialog";
 import MUIDialog from "./Dialog";
 import Input from "./Input";
 import LoadingOverlay from "./LoadingOverlay";
@@ -13,7 +14,8 @@ const CommonStyles = {
   Chip: MuiChip,
   Select: CommonSelect,
   Input: Input,
-  LoadingOverlay
+  LoadingOverlay,
+  ConfirmDialog
 };
 
 export default CommonStyles;

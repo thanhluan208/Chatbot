@@ -1,9 +1,8 @@
-import { Box, Divider,  useTheme } from "@mui/material";
+import { Box, Divider, useTheme } from "@mui/material";
 import Logo from "./Components/Logo";
 import Name from "./Components/Name";
 import CommonStyles from "../CommonStyles";
 import CommonIcons from "../CommonIcons";
-import Routes from "../../Constants/routes";
 import { processNavLabel } from "../../Helpers";
 import { Outlet } from "react-router-dom";
 import { capitalize } from "lodash";
@@ -13,13 +12,14 @@ import ListTeam from "./Components/ListTeam";
 import UserButton from "./Components/UserButton";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import CreateBotButton from "./Components/CreateBotButton";
+import useRoutes from "../../Constants/routes";
 
 export const sidebarWidth = 232;
 
 function DefaultLayout() {
   //! State
   const theme: any = useTheme();
-
+  const Routes = useRoutes();
   //! Function
 
   //! Render
@@ -161,8 +161,10 @@ function DefaultLayout() {
           height: "100vh",
           overflowY: "auto",
           backgroundColor: theme.colors.custom.backgroundSecondary,
+          position: "relative", 
         }}
       >
+        <CommonStyles.LoadingOverlay isLoadingApp/>
         <Outlet />
       </Box>
     </Box>
