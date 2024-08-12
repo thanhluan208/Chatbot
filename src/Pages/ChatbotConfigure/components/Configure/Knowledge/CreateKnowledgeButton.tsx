@@ -63,9 +63,9 @@ export const KnowledgeActionDialog = (props: IKnowledgeActionDialog) => {
 
     try {
       const response = await httpServices.axios.post(createFolderKnowledge, {
-        user_input: userId,
-        knowledge_name_input: values.name,
-        knowledge_description_input: values.description,
+        user_id: userId,
+        knowledge_storage_name_input: values.name,
+        knowledge_storage_description_input: values.description,
       });
 
       await refetchListFolder();

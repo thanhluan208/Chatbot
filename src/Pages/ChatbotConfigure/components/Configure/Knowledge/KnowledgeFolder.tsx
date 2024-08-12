@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { ListRoutes } from "../../../../../Constants/routes";
 
 export interface IKnowledgeFolder {
+  id?: string;
   title?: string;
   description?: string;
   size: string;

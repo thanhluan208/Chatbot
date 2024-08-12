@@ -2,14 +2,14 @@ import { getFolderKnowledge, getListKnowledgeFile } from "../Constants/api";
 import httpServices from "./httpServices";
 
 export interface PayloadKnowledgeDetail {
-  user_input: string;
-  knowledge_input: string;
+  user_id: string;
+  knowledge_storage_id: string;
 }
 
 class KnowledgeServices {
   getListFolder(id: string) {
     return httpServices.post(getFolderKnowledge, {
-      user_input: id,
+      user_id: id,
     });
   }
   getListFiles(payload: PayloadKnowledgeDetail) {

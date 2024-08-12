@@ -37,6 +37,7 @@ export const ListRoutes = {
   signup: "/signup",
   workspace: "/workspace/:id/bot/:botId",
   knowledgeDetail: "/knowledge/:knowledgeId",
+  knowledgeUpload: "/knowledge/:knowledgeId/upload",  
 };
 
 export default useRoutes;

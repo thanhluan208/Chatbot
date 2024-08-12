@@ -26,8 +26,8 @@ const KnowledgeDetail = () => {
   const payload = useMemo(() => {
     if (knowledgeId && userId) {
       return {
-        user_input: userId,
-        knowledge_input: knowledgeId,
+        user_id: userId,
+        knowledge_storage_id: knowledgeId,
       };
     }
 

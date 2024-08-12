@@ -16,6 +16,7 @@ import { Fragment } from "react/jsx-runtime";
 import { useState } from "react";
 import { useAuth } from "./Providers/AuthenticationProvider";
 import useRoutes from "./Constants/routes";
+import KnowledgeUpload from "./Pages/KnowledgeUpload";
 
 function App() {
   //! State
@@ -68,6 +69,15 @@ function App() {
     {
       path: ListRoutes.knowledgeDetail,
       element: <KnowledgeDetail />,
+      loader: () => {
+        if (!userId) return redirect("/login");
+
+        return null;
+      },
+    },
+    {
+      path: ListRoutes.knowledgeUpload,
+      element: <KnowledgeUpload />,
       loader: () => {
         if (!userId) return redirect("/login");
 
