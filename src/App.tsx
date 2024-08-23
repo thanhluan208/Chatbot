@@ -102,6 +102,10 @@ function App() {
         return null;
       },
     },
+    {
+      path: "/test",
+      element: <Workflow />,
+    },
   ]);
 
   //! Function

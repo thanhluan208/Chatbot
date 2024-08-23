@@ -1,5 +1,3 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "../../../../Providers/AuthenticationProvider";
 import React, { useCallback, useMemo } from "react";
 import { FastField, Form, Formik } from "formik";
 import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
@@ -29,10 +27,7 @@ const UploadLocalDialog = (props: IUploadLocalDialog) => {
     },
     maxFiles: 1,
   });
-  const params = useParams();
-  const navigate = useNavigate();
-  const { userId } = useAuth();
-  const { id } = params;
+
 
   const initialValues = useMemo(() => {
     return {

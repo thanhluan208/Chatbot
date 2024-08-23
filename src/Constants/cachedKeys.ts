@@ -15,5 +15,9 @@ export default {
   //! User
   REFETCH_USER_DATA: "REFETCH_USER_DATA",
 
+  //! React flow
+  FLOW_NODES: "FLOW_NODES",
+  FLOW_EDGES: "FLOW_EDGES",
+
 
 } as const;

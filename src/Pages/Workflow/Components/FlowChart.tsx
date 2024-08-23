@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import {
   ReactFlow,
   MiniMap,
@@ -10,27 +10,83 @@ import {
   Connection,
   BackgroundVariant,
   useReactFlow,
+  MarkerType,
 } from "@xyflow/react";
 import { v4 as uuid } from "uuid";
 
 import "@xyflow/react/dist/style.css";
 import Toolbar from "./Toolbar";
 import { nodeTypes } from "./AddNodes";
+import AnimatedSVGEdge from "./CustomEdges";
+import { Box } from "@mui/material";
+import { useSave } from "../../../Stores/useStore";
+import cachedKeys from "../../../Constants/cachedKeys";
 
-const initialNodes = [
-  { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
-  { id: "2", position: { x: 0, y: 100 }, data: { label: "2" } },
+const edgeTypes = {
+  animatedSvg: AnimatedSVGEdge,
+};
+
+const initNodes = [
+  {
+    id: "b7e48d14-235b-4238-bdac-cd54ae7796e2",
+    type: "customNode_startNode",
+    position: {
+      x: -320,
+      y: 241,
+    },
+    data: {
+      label: "customNode_startNode node",
+    },
+    measured: {
+      width: 1002,
+      height: 275,
+    },
+    selected: false,
+    dragging: false,
+  },
+  {
+    id: "c372a3b5-85fa-4b7d-a1e5-1913df8d6721",
+    type: "customNode_endNode",
+    position: {
+      x: 1301,
+      y: 175,
+    },
+    data: {
+      label: "customNode_endNode node",
+    },
+    measured: {
+      width: 500,
+      height: 367,
+    },
+    selected: true,
+    dragging: false,
+  },
 ];
 
-const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
-
 export default function App() {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { screenToFlowPosition } = useReactFlow();
+  const save = useSave();
 
   const onConnect = useCallback(
-    (connection: Connection) => setEdges((eds) => addEdge(connection, eds)),
+    (connection: Connection) =>
+      setEdges((eds: any) => {
+        return addEdge(
+          {
+            ...connection,
+            type: "animatedSvg",
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+              width: 20,
+              height: 20,
+              color: "#4e40e5",
+            },
+            deletable: true,
+          } as never,
+          eds
+        );
+      }),
     [setEdges]
   );
 
@@ -45,14 +101,10 @@ export default function App() {
 
       const type = event.dataTransfer.getData("application/reactflow");
 
-      // check if the dropped element is valid
       if (typeof type === "undefined" || !type) {
         return;
       }
 
-      // project was renamed to screenToFlowPosition
-      // and you don't need to subtract the reactFlowBounds.left/top anymore
-      // details: https://reactflow.dev/whats-new/2023-11-10
       const position = screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
@@ -64,14 +116,40 @@ export default function App() {
         data: { label: `${type} node` },
       };
 
-      setNodes((nds) => nds.concat(newNode));
+      setNodes((nds) => nds.concat(newNode as any));
     },
     [screenToFlowPosition]
   );
 
+  console.log("nodes", { nodes, edges });
+  useEffect(() => {
+    save(cachedKeys.FLOW_NODES, nodes);
+  }, [save, nodes]);
+
+  useEffect(() => {
+    save(cachedKeys.FLOW_EDGES, edges);
+  }, [edges, save]);
+
   return (
     <div>
-      <div style={{ width: "100vw", height: "100vh", position: "relative" }}>
+      <Box
+        sx={{
+          width: "100vw",
+          height: "100vh",
+          position: "relative",
+          "& .handle": {
+            height: "10px",
+            width: "10px",
+            borderRadius: "50%",
+            background: "#4e40e5",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              height: "20px",
+              width: "20px",
+            },
+          },
+        }}
+      >
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -82,13 +160,14 @@ export default function App() {
           onDragOver={onDragOver}
           fitView
           nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
         >
           <Controls />
           <MiniMap />
           <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
         </ReactFlow>
         <Toolbar />
-      </div>
+      </Box>
     </div>
   );
 }

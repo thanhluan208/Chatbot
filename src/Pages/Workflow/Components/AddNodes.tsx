@@ -2,10 +2,14 @@ import React from "react";
 import { Box, Fade, ClickAwayListener } from "@mui/material";
 import { Popper } from "@mui/base";
 import CommonStyles from "../../../Components/CommonStyles";
-import LoadCheckPoint from "./CustomNodes/LoadCheckPoint";
+import StartNode from "./CustomNodes/StartNode";
+import LLMNode from "./CustomNodes/LLMNode";
+import EndNode from "./CustomNodes/EndNode";
 
 export const nodeTypes = {
-  customNode_loadCheckPoint: LoadCheckPoint,
+  customNode_startNode: StartNode,
+  customNode_llmNode: LLMNode,
+  customNode_endNode: EndNode
 };
 
 export enum CustomNodeTypes {
@@ -68,11 +72,27 @@ const AddNodes = () => {
                 </CommonStyles.Typography>
                 <Box
                   onDragStart={(event) =>
-                    onDragStart(event, "customNode_loadCheckPoint")
+                    onDragStart(event, "customNode_startNode")
                   }
                   draggable
                 >
-                  Load Check Point
+                  StartNode
+                </Box>
+                <Box
+                  onDragStart={(event) =>
+                    onDragStart(event, "customNode_llmNode")
+                  }
+                  draggable
+                >
+                  LLM Node
+                </Box>
+                <Box
+                  onDragStart={(event) =>
+                    onDragStart(event, "customNode_endNode")
+                  }
+                  draggable
+                >
+                  End Node
                 </Box>
               </Box>
             </Fade>
