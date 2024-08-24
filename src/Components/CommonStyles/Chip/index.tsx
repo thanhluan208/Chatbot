@@ -1,12 +1,13 @@
-import { Chip, useTheme } from "@mui/material";
+import { Chip, SxProps, useTheme } from "@mui/material";
 
 interface IMuiChip {
   label: string;
+  sx?: SxProps;
 }
 
 function MuiChip(props: IMuiChip) {
   //! State
-  const { label } = props;
+  const { label, sx } = props;
   const theme: any = useTheme();
 
   //! Function
@@ -24,6 +25,7 @@ function MuiChip(props: IMuiChip) {
         height: "fit-content",
         background: `${theme.palette.primary.light} !important`,
         color: theme.colors.custom.primaryColorTypo,
+        ...sx,
       }}
     />
   );

@@ -1,21 +1,60 @@
 import { useCallback, useEffect, useState } from "react";
 import botService from "../../Services/bot.service";
+import { AxiosResponse } from "axios";
 
-const useGetBotData = (id?: string, isTrigger = true) => {
-  const [data, setData] = useState(null);
+export interface BotResponse {
+  status_code: number;
+  permission_level: string;
+  message: string;
+  bot_data: BotData;
+}
+
+export interface BotData {
+  user_id: string;
+  tools: any[];
+  system_prompt: string;
+  llm: Llm;
+  knowledge_storage_ids: any[];
+  mode: string;
+  bot_name: string;
+  description: string;
+  user_name: string;
+}
+
+export interface Llm {
+  class_name: string;
+  model: string;
+  temperature: number;
+  max_tokens: null;
+  additional_kwargs: AdditionalKwargs;
+}
+
+export interface AdditionalKwargs {}
+
+const useGetBotData = (
+  payload: {
+    bot_id: string;
+    user_id: string;
+  },
+  isTrigger = true
+) => {
+  const [data, setData] = useState<BotData | null>(null);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState();
 
   const callApi = useCallback(() => {
-    if (!id) return;
-    return botService.getBotData(id);
-  }, [id]);
+    if (!payload) return;
+    return botService.getBotData(payload);
+  }, [payload]);
 
-  const transformResponse = useCallback((response: any) => {
-    if (response) {
-      setData(response.data.bots);
-    }
-  }, []);
+  const transformResponse = useCallback(
+    (response?: AxiosResponse<BotResponse>) => {
+      if (response) {
+        setData(response.data.bot_data);
+      }
+    },
+    []
+  );
 
   const refetch = useCallback(async () => {
     try {

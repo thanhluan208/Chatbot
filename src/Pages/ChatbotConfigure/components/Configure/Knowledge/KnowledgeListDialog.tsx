@@ -47,7 +47,6 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
   });
   const { data, isLoading, refetch } = useGetListFolderKnowledge();
 
-
   const debounceRef = useRef<any>(null);
 
   //! Function
@@ -202,11 +201,11 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
         >
           {isLoading && <CommonStyles.LoadingOverlay isLoading={isLoading} />}
           {data?.map((item: IKnowledgeFolder, index: number) => {
-            console.log('item', item)
             return (
-              <Fragment key={item.id }>
+              <Fragment key={item.id}>
                 <KnowledgeFolder
-                  title={item.title }
+                  id={item.id}
+                  title={item.title}
                   description={item.description}
                   size={item.size}
                   quantity={item.quantity}

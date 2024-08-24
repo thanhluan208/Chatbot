@@ -2,8 +2,7 @@ import { Box } from "@mui/material";
 import CommonIcons from "../../../../../Components/CommonIcons";
 import CommonStyles from "../../../../../Components/CommonStyles";
 import moment from "moment";
-import { useNavigate } from "react-router-dom";
-import { ListRoutes } from "../../../../../Constants/routes";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export interface IKnowledgeFolder {
   id?: string;
@@ -16,8 +15,9 @@ export interface IKnowledgeFolder {
 
 const KnowledgeFolder = (props: IKnowledgeFolder) => {
   //! State
-  const { title, description, size, quantity, createdAt } = props;
+  const { title, description, size, quantity, createdAt, id } = props;
   const navigate = useNavigate();
+  const pathname = useLocation().pathname;
 
   //! Function
 
@@ -26,8 +26,8 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
   return (
     <Box
       onClick={() => {
-        if (title) {
-          navigate(ListRoutes.knowledgeDetail.replace(":knowledgeId", title));
+        if (id) {
+          navigate(`${pathname}/knowledge/${id}`);
         }
       }}
       sx={{
@@ -61,7 +61,7 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
           </CommonStyles.Typography>
           <Box sx={{ display: "flex", flexDirection: "row", gap: "8px" }}>
             <CommonStyles.Chip label={size || "0 Byte"} />
-            <CommonStyles.Chip label={`${quantity || 0} Data`} />
+            <CommonStyles.Chip label={`${quantity || 0} Data(s)`} />
           </Box>
           <CommonStyles.Typography type="normal12" color="#1c1f2366">
             Creation time {createdAt || moment().format("DD/MM/YYYY HH:mm")}

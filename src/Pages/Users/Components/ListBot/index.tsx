@@ -155,6 +155,11 @@ const BotCard = (props: IBotCard) => {
             </CommonStyles.Typography>
             <CommonStyles.Typography
               color={theme.colors.custom.colorDisabledTypo}
+              sx={{
+                maxWidth: "100px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
             >
               {userData?.email ? `@${userData?.email}` : "-"}
             </CommonStyles.Typography>

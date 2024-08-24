@@ -1,43 +1,85 @@
-import React, { useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { FastField, Form, Formik } from "formik";
 import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import CommonStyles from "../../../../Components/CommonStyles";
 import CommonIcons from "../../../../Components/CommonIcons";
 import CommonField from "../../../../Components/CommonFields";
 import { isEmpty } from "lodash";
-import Dropzone, { useDropzone } from "react-dropzone";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useGet } from "../../../../Stores/useStore";
+import cachedKeys from "../../../../Constants/cachedKeys";
+import httpServices from "../../../../Services/httpServices";
+import { uploadFile } from "../../../../Constants/api";
 
 interface IUploadLocalDialog {
   toggle: () => void;
 }
 
+interface UploadValue {
+  description: string;
+  file_input?: File[];
+}
+
 const UploadLocalDialog = (props: IUploadLocalDialog) => {
   //! State
   const { toggle } = props;
-  const [isDragOver, setIsDragOver] = React.useState(false);
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    onDragEnter: () => {
-      setIsDragOver(true);
-    },
-    onDragLeave: () => {
-      setIsDragOver(false);
-    },
-    onDrop: () => {
-      setIsDragOver(false);
-    },
-    maxFiles: 1,
-  });
+  const params = useParams();
+  const userId = params.id;
+  const knowledgeId = params.knowledgeId;
 
+  const refectListFile = useGet(cachedKeys.REFETCH_KNOWLEDGE_FILES);
 
-  const initialValues = useMemo(() => {
+  const initialValues = useMemo<UploadValue>(() => {
     return {
       description: "",
+      file_input: undefined,
     };
   }, []);
 
   //! Function
 
-  const handleSubmit = useCallback(async () => {}, []);
+  const handleSubmit = useCallback(
+    async (values: UploadValue) => {
+      if (!values.file_input?.[0]) return;
+
+      const toastId = toast.loading("Uploading knowledge...", {
+        isLoading: true,
+        autoClose: false,
+      });
+
+      try {
+        const formdata = new FormData();
+        formdata.append("user_id", userId as string);
+        formdata.append("knowledge_storage_id", knowledgeId as string);
+        formdata.append("description_input", values.description);
+        formdata.append("file_input", values.file_input[0]);
+        formdata.append("metadata_input", JSON.stringify({}));
+
+        const response = await httpServices.axios.post(uploadFile, formdata);
+
+        console.log("response", response);
+
+        refectListFile && (await refectListFile());
+
+        toast.update(toastId, {
+          render: "Upload knowledge successfully",
+          type: "success",
+          isLoading: false,
+          autoClose: 3000,
+        });
+      } catch (error) {
+        console.log("Error upload knowledge file:", error);
+        toast.update(toastId, {
+          render: "Upload knowledge failed",
+          type: "error",
+          isLoading: false,
+          autoClose: 3000,
+        });
+      }
+    },
+    [userId, knowledgeId, refectListFile]
+  );
 
   //! Render
   return (
@@ -48,7 +90,7 @@ const UploadLocalDialog = (props: IUploadLocalDialog) => {
       validateOnBlur
       validateOnMount
     >
-      {({ isSubmitting, errors }) => {
+      {({ isSubmitting, errors, values, setFieldValue }) => {
         return (
           <Form
             style={{
@@ -85,68 +127,16 @@ const UploadLocalDialog = (props: IUploadLocalDialog) => {
                   minRows={6}
                   maxChar={2000}
                 />
-                <Dropzone
-                  onDragOver={() => {
-                    console.log("hehe");
+                <CommonStyles.UploadFile
+                  label="Upload contract"
+                  files={values.file_input}
+                  dropzoneProps={{
+                    onDrop: (acceptedFiles) => {
+                      console.log("acceptedFiles", acceptedFiles);
+                      setFieldValue("file_input", acceptedFiles);
+                    },
                   }}
-                >
-                  {({}) => {
-                    return (
-                      <div
-                        onDragOver={() => {
-                          console.log("hehe");
-                        }}
-                        {...getRootProps({ className: "dropzone" })}
-                      >
-                        <input {...getInputProps()} />
-                        <Box
-                          sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            mt: "20px",
-                            border: `1px dashed ${
-                              isDragOver ? "#4e40e5" : "#ccc"
-                            }`,
-                            borderRadius: "8px",
-                            padding: "20px",
-                            backgroundColor: isDragOver ? "#4e40e50f" : "#fff",
-                            transition: "all 0.3s",
-                            svg: {
-                              width: "150px",
-                              height: "150px",
-                            },
-                            "&:hover": {
-                              border: "1px dashed #4e40e5",
-                              backgroundColor: "#4e40e50f",
-                            },
-                          }}
-                        >
-                          <CommonIcons.UploadUnDraw />
-                          <CommonStyles.Typography type="normal14">
-                            Click to upload or drag and drop files here
-                          </CommonStyles.Typography>
-                          {isDragOver && (
-                            <CommonStyles.Typography
-                              type="bold14"
-                              color={"#4e40e5"}
-                            >
-                              Release and start uploading
-                            </CommonStyles.Typography>
-                          )}
-                        </Box>
-                      </div>
-                    );
-                  }}
-                </Dropzone>
-                {acceptedFiles?.[0] && (
-                  <Box mt={4}>
-                    <CommonStyles.Chip
-                      label={`${acceptedFiles[0].name} - ${acceptedFiles[0].size} bytes`}
-                    />
-                  </Box>
-                )}
+                />
               </DialogContent>
 
               <DialogActions>
