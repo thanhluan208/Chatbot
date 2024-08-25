@@ -1,4 +1,4 @@
-const baseAPI = "https://6a14-42-114-248-186.ngrok-free.app";
+const baseAPI = localStorage.getItem('baseUrl') || "https://6a14-42-114-248-186.ngrok-free.app";
 
 export const getFolderKnowledge = baseAPI + "/knowledge/list_knowledge_storages";
 export const getListKnowledgeFile = baseAPI + "/knowledge/list_files";
