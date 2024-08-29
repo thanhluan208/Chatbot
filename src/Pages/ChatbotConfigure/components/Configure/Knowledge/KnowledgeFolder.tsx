@@ -3,6 +3,7 @@ import CommonIcons from "../../../../../Components/CommonIcons";
 import CommonStyles from "../../../../../Components/CommonStyles";
 import moment from "moment";
 import { useLocation, useNavigate } from "react-router-dom";
+import DeleteKnowledge from "./DeleteKnowledge";
 
 export interface IKnowledgeFolder {
   id?: string;
@@ -68,8 +69,14 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
           </CommonStyles.Typography>
         </Box>
       </Box>
-      <Box>
+      <Box
+        sx={{
+          display: "flex",
+          gap: "8px",
+        }}
+      >
         <CommonStyles.Button variant="outlined">Add</CommonStyles.Button>
+        <DeleteKnowledge data={props} />
       </Box>
     </Box>
   );

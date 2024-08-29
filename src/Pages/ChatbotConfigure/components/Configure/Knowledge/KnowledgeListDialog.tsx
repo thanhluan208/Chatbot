@@ -23,9 +23,8 @@ interface IKnowledgeListDialog {
 
 export const KnowledgeFilter = {
   All: "all",
-  Document: "document",
-  Table: "table",
-  Images: "images",
+  Owner: "owner",
+  Shared: "shared",
 };
 
 export const KnowledgeSortBy = {
@@ -41,11 +40,13 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
   const theme: any = useTheme();
   const save = useSave();
   const [filters, setFilter] = useState({
-    type: KnowledgeFilter.All,
+    visual_option: KnowledgeFilter.All,
     sortBy: "createdAt",
-    search: "",
+    search_input: "",
   });
-  const { data, isLoading, refetch } = useGetListFolderKnowledge();
+
+  console.log('filters', filters)
+  const { data, isLoading, refetch } = useGetListFolderKnowledge(filters);
 
   const debounceRef = useRef<any>(null);
 
@@ -90,7 +91,8 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
   ) => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
-      setFilter((prev) => ({ ...prev, search: e.target.value }));
+      setFilter((prev) => ({ ...prev, search_input: e.target.value }));
+      clearTimeout(debounceRef.current);
     }, 300);
   };
 
@@ -136,18 +138,18 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
                 <Box
                   sx={{
                     padding: "0 12px",
-                    borderRight: index < 3 ? "solid 1px #ccc" : "",
+                    borderRight: index < 2 ? "solid 1px #ccc" : "",
                     cursor: "pointer",
                   }}
                   key={value}
                   onClick={() =>
-                    setFilter((prev) => ({ ...prev, type: value }))
+                    setFilter((prev) => ({ ...prev, visual_option: value }))
                   }
                 >
                   <CommonStyles.Typography
                     type="bold14"
                     color={
-                      filters.type === value
+                      filters.visual_option === value
                         ? theme.palette.primary.main
                         : "#1d1c2399"
                     }
@@ -177,7 +179,7 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
 
             <CommonStyles.Input
               afterOnchange={handleChangeSearch}
-              value={filters.search}
+              value={filters.search_input}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start" sx={{ marginLeft: "10px" }}>

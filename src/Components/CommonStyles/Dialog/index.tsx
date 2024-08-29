@@ -19,7 +19,10 @@ function MUIDialog(props: IMUIDialog & DialogProps) {
   //! Render
   return (
     <Dialog
-      onClose={toggle}
+      onClose={(e: any) => {
+        e.stopPropagation();
+        toggle();
+      }}
       {...props}
       PaperProps={{
         sx: {

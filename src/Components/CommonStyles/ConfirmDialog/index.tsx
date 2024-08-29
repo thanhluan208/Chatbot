@@ -69,7 +69,10 @@ const ConfirmDialog = (props: IConfirmDialog) => {
                 background: "#fff",
               },
             }}
-            onClick={toggle}
+            onClick={(e) => {
+              e.stopPropagation();
+              toggle();
+            }}
             type="button"
           >
             Cancel
@@ -81,7 +84,10 @@ const ConfirmDialog = (props: IConfirmDialog) => {
             }}
             type="submit"
             color="error"
-            onClick={handleConfirm}
+            onClick={(e) => {
+              e.stopPropagation()
+              handleConfirm()
+            }}
           >
             Confirm
           </CommonStyles.Button>

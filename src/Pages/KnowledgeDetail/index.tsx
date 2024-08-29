@@ -11,6 +11,7 @@ import PerfectScrollBar from "react-perfect-scrollbar";
 import { useAuth } from "../../Providers/AuthenticationProvider";
 import { isEmpty } from "lodash";
 import SegmentList from "./components/SegmentList";
+import EditKnowledge from "./components/EditKnowledge";
 
 const KnowledgeDetail = () => {
   //! State
@@ -100,17 +101,25 @@ const KnowledgeDetail = () => {
               <Box
                 sx={{ display: "flex", flexDirection: "column", gap: "6px" }}
               >
-                <CommonStyles.Typography
-                  type="bold18"
+                <Box
                   sx={{
-                    maxWidth: "200px",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    textWrap: "nowrap",
+                    display: "flex",
+                    gap: "8px",
                   }}
                 >
-                  {knowledgeId || "Anonymous knowledge"}
-                </CommonStyles.Typography>
+                  <CommonStyles.Typography
+                    type="bold18"
+                    sx={{
+                      maxWidth: "200px",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      textWrap: "nowrap",
+                    }}
+                  >
+                    {knowledgeId || "Anonymous knowledge"}
+                  </CommonStyles.Typography>
+                  <EditKnowledge />
+                </Box>
                 <Box
                   sx={{
                     display: "flex",

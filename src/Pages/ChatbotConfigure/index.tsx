@@ -86,7 +86,10 @@ function ChatbotConfigure(props: IChatbotConfigure) {
             <CommonIcons.ArrowBackIosNew />
           </CommonStyles.Button>
 
-          <Box>
+          <Box sx={{
+            display:'flex',
+            alignItems:'center',
+          }}>
             <img
               src={Team}
               alt="Team"

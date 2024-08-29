@@ -31,7 +31,12 @@ export interface ListFile {
   n_points: number;
 }
 
-const useGetListFolderKnowledge = (isTrigger = true) => {
+interface Filters {
+  search_filter?: string;
+  visual_option?: string;
+}
+
+const useGetListFolderKnowledge = (filters: Filters , isTrigger = true) => {
   const [data, setData] = useState<IKnowledgeFolder[] | []>([]);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState();
@@ -39,8 +44,11 @@ const useGetListFolderKnowledge = (isTrigger = true) => {
 
   const callApi = useCallback(() => {
     if (!userId) return;
-    return knowledgeService.getListFolder(userId);
-  }, [userId]);
+    return knowledgeService.getListFolder({
+      user_id: userId,
+      ...filters,
+    });
+  }, [userId,filters]);
 
   const transformResponse = useCallback(
     (response?: AxiosResponse<KnowledgeFolderResponse>) => {
@@ -74,7 +82,7 @@ const useGetListFolderKnowledge = (isTrigger = true) => {
     } catch (error: any) {
       setError(error);
     }
-  }, []);
+  }, [callApi]);
 
   useEffect(() => {
     let shouldSetData = true;
@@ -99,7 +107,7 @@ const useGetListFolderKnowledge = (isTrigger = true) => {
         shouldSetData = false;
       };
     }
-  }, [isTrigger]);
+  }, [isTrigger, callApi]);
 
   return {
     data,

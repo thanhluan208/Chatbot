@@ -3,6 +3,7 @@ import { ListFile } from "../../../Hooks/Knowledges/useGetListFolderKnowledge";
 import { useState } from "react";
 import CommonStyles from "../../../Components/CommonStyles";
 import CommonIcons from "../../../Components/CommonIcons";
+import DeleteFileButton from "./DeleteFileButton";
 
 interface ISegmentList {
   data: ListFile[] | [];
@@ -14,6 +15,7 @@ const SegmentList = (props: ISegmentList) => {
   const [currentSegment, setCurrentSegment] = useState("All");
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
+  const currentFile = data.find((item) => item.name === currentSegment)
   //! Function
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -26,7 +28,10 @@ const SegmentList = (props: ISegmentList) => {
         <Box
           sx={{
             padding: "12px",
-            width: "fit-content",
+            width: "100%",
+            display:'flex',
+            justifyContent:'space-between',
+            alignItems:'center',
           }}
         >
           <CommonStyles.Button
@@ -60,6 +65,7 @@ const SegmentList = (props: ISegmentList) => {
                     padding: "8px",
                     display: "flex",
                     flexDirection: "column",
+                    background:"#fff"
                   }}
                 >
                   <CommonStyles.Button
@@ -119,6 +125,7 @@ const SegmentList = (props: ISegmentList) => {
               </Fade>
             )}
           </Popper>
+          {currentFile && <DeleteFileButton file={currentFile}/>}
         </Box>
       </ClickAwayListener>
       <Box

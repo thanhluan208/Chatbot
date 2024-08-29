@@ -6,22 +6,23 @@ import CommonIcons from "../../../../Components/CommonIcons";
 import CommonField from "../../../../Components/CommonFields";
 import { isEmpty } from "lodash";
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import { useGet } from "../../../../Stores/useStore";
 import cachedKeys from "../../../../Constants/cachedKeys";
+import * as yup from "yup";
+import { toast } from "react-toastify";
 import httpServices from "../../../../Services/httpServices";
-import { uploadFile } from "../../../../Constants/api";
+import { uploadYoutube } from "../../../../Constants/api";
 
-interface IUploadLocalDialog {
+interface IYoutubeDocument {
   toggle: () => void;
 }
 
 interface UploadValue {
-  description: string;
-  file_input?: File[];
+  description_input: string;
+  youtube_url_input: string;
 }
 
-const UploadLocalDialog = (props: IUploadLocalDialog) => {
+const YoutubeDocument = (props: IYoutubeDocument) => {
   //! State
   const { toggle } = props;
   const params = useParams();
@@ -32,31 +33,35 @@ const UploadLocalDialog = (props: IUploadLocalDialog) => {
 
   const initialValues = useMemo<UploadValue>(() => {
     return {
-      description: "",
-      file_input: undefined,
+      description_input: "",
+      youtube_url_input: "",
     };
+  }, []);
+
+  const validationSchema = useMemo(() => {
+    return yup.object().shape({
+      youtube_url_input: yup.string().required("Youtube url is required"),
+    });
   }, []);
 
   //! Function
 
   const handleSubmit = useCallback(
     async (values: UploadValue) => {
-      if (!values.file_input?.[0]) return;
-
       const toastId = toast.loading("Uploading knowledge...", {
         isLoading: true,
         autoClose: false,
       });
 
       try {
-        const formdata = new FormData();
-        formdata.append("user_id", userId as string);
-        formdata.append("knowledge_storage_id", knowledgeId as string);
-        formdata.append("description_input", values.description);
-        formdata.append("file_input", values.file_input[0]);
-        formdata.append("metadata_input", JSON.stringify({}));
+        const payload = {
+          user_id: userId,
+          knowledge_storage_id: knowledgeId,
+          description_input: values.description_input,
+          youtube_url_input: values.youtube_url_input,
+        };
 
-         await httpServices.axios.post(uploadFile, formdata);
+        await httpServices.axios.post(uploadYoutube, payload);
 
         refectListFile && (await refectListFile());
 
@@ -67,15 +72,16 @@ const UploadLocalDialog = (props: IUploadLocalDialog) => {
           autoClose: 3000,
         });
 
-        toggle()
+        toggle();
       } catch (error) {
-        console.log("Error upload knowledge file:", error);
         toast.update(toastId, {
           render: "Upload knowledge failed",
           type: "error",
           isLoading: false,
           autoClose: 3000,
         });
+
+        console.log("Error upload knowledge file:", error);
       }
     },
     [userId, knowledgeId, refectListFile]
@@ -89,8 +95,9 @@ const UploadLocalDialog = (props: IUploadLocalDialog) => {
       validateOnChange
       validateOnBlur
       validateOnMount
+      validationSchema={validationSchema}
     >
-      {({ isSubmitting, errors, values, setFieldValue }) => {
+      {({ isSubmitting, errors }) => {
         return (
           <Form
             style={{
@@ -108,7 +115,7 @@ const UploadLocalDialog = (props: IUploadLocalDialog) => {
                   mb={3}
                 >
                   <CommonStyles.Typography type="semiBold18">
-                    Upload knowledge from local
+                    Upload knowledge using youtube url
                   </CommonStyles.Typography>
                   <CommonStyles.Button isIcon onClick={toggle}>
                     <CommonIcons.Clear />
@@ -118,6 +125,14 @@ const UploadLocalDialog = (props: IUploadLocalDialog) => {
 
               <DialogContent>
                 <FastField
+                  name="youtube_url_input"
+                  component={CommonField.InputField}
+                  fullWidth
+                  label="Youtube url"
+                  placeholder="Enter youtube url"
+                  required
+                />
+                <FastField
                   name="description"
                   component={CommonField.InputField}
                   fullWidth
@@ -126,16 +141,6 @@ const UploadLocalDialog = (props: IUploadLocalDialog) => {
                   multiline
                   minRows={6}
                   maxChar={2000}
-                />
-                <CommonStyles.UploadFile
-                  label="Upload contract"
-                  files={values.file_input}
-                  dropzoneProps={{
-                    onDrop: (acceptedFiles) => {
-                      console.log("acceptedFiles", acceptedFiles);
-                      setFieldValue("file_input", acceptedFiles);
-                    },
-                  }}
                 />
               </DialogContent>
 
@@ -161,8 +166,8 @@ const UploadLocalDialog = (props: IUploadLocalDialog) => {
                       },
                     }}
                     onClick={(e) => {
-                      e.stopPropagation();
-                      toggle();
+                        e.stopPropagation();
+                        toggle();
                     }}
                     disabled={isSubmitting}
                     type="button"
@@ -190,4 +195,4 @@ const UploadLocalDialog = (props: IUploadLocalDialog) => {
   );
 };
 
-export default UploadLocalDialog;
+export default YoutubeDocument;

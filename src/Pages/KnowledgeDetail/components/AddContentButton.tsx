@@ -2,8 +2,9 @@ import { Fragment } from "react/jsx-runtime";
 import CommonStyles from "../../../Components/CommonStyles";
 import React, { useId } from "react";
 import { Box, Popover } from "@mui/material";
-import CommonIcons from "../../../Components/CommonIcons";
 import LocalUploadButton from "./LocalUploadButton";
+import YoutubeUploadButton from "./YoutubeUploadButton";
+import FileURLButton from "./FileURLButton";
 
 const AddContentButton = () => {
   //! State
@@ -72,11 +73,8 @@ const AddContentButton = () => {
           }}
         >
           <LocalUploadButton />
-          <CommonStyles.Button startIcon={<CommonIcons.CloudUpload />}>
-            <CommonStyles.Typography type="normal14">
-              Online document
-            </CommonStyles.Typography>
-          </CommonStyles.Button>
+          <YoutubeUploadButton />
+          <FileURLButton />
         </Box>
       </Popover>
     </Fragment>

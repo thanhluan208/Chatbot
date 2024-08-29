@@ -18,6 +18,7 @@ import { useAuth } from "../../../../../Providers/AuthenticationProvider";
 
 interface IKnowledgeActionDialog {
   toggle: () => void;
+  data?: InitValues
 }
 
 export enum KnowledgeTypes {
@@ -34,16 +35,20 @@ interface InitValues {
 
 export const KnowledgeActionDialog = (props: IKnowledgeActionDialog) => {
   //! State
-  const { toggle } = props;
+  const { toggle, data } = props;
   const { userId } = useAuth();
 
   const refetchListFolder = useGet("REFETCH_FOLDER_KNOWLEDGE");
+  const isEdit = useMemo(() => {
+    return !!data
+  },[])
 
   const initialValues = useMemo(() => {
     return {
       type: KnowledgeTypes.Document,
       name: "",
       description: "",
+      ...data
     };
   }, []);
 
@@ -127,7 +132,7 @@ export const KnowledgeActionDialog = (props: IKnowledgeActionDialog) => {
                   mb={3}
                 >
                   <CommonStyles.Typography type="semiBold18">
-                    Create Knowledge
+                    {isEdit ? "Edit knowledge" : "Create knowledge"}
                   </CommonStyles.Typography>
                   <CommonStyles.Button isIcon onClick={toggle}>
                     <CommonIcons.Clear />
