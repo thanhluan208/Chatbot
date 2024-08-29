@@ -8,10 +8,8 @@ class BotServices {
     });
   }
 
-  getBotData(id: string) {
-    return httpServices.post(getBotData, {
-      bot_id: id,
-    });
+  getBotData(payload: { bot_id: string; user_id: string }) {
+    return httpServices.post(getBotData, payload);
   }
 }
 

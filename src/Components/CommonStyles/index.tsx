@@ -6,6 +6,7 @@ import Input from "./Input";
 import LoadingOverlay from "./LoadingOverlay";
 import CommonSelect from "./Select";
 import Typography from "./Typography";
+import UploadFile from "./UploadFile";
 
 const CommonStyles = {
   Button: MuiButton,
@@ -15,7 +16,8 @@ const CommonStyles = {
   Select: CommonSelect,
   Input: Input,
   LoadingOverlay,
-  ConfirmDialog
+  ConfirmDialog,
+  UploadFile
 };
 
 export default CommonStyles;

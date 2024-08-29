@@ -3,20 +3,23 @@ import knowledgeService, {
   PayloadKnowledgeDetail,
 } from "../../Services/knowledge.service";
 import { AxiosResponse } from "axios";
+import { ListFile } from "./useGetListFolderKnowledge";
 
 export interface KnowledgeFile {
   status_code: number;
   message: string;
-  list_files: any[];
+  list_files: { [key: string]: ListFile };
 }
 
 const useGetListKnowledgeFiles = (
   payload?: PayloadKnowledgeDetail,
   isTrigger = true
 ) => {
-  const [data, setData] = useState<string[]>([]);
+  const [data, setData] = useState<ListFile[]>([]);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState();
+
+  console.log("data", data);
 
   const callApi = useCallback(() => {
     if (!payload) return;
@@ -26,7 +29,7 @@ const useGetListKnowledgeFiles = (
   const transformResponse = useCallback(
     (response?: AxiosResponse<KnowledgeFile>) => {
       if (response) {
-        setData(response.data.list_files);
+        setData(Object.values(response.data.list_files));
       }
     },
     []

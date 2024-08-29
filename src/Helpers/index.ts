@@ -17,3 +17,13 @@ export const processDelay = (callback: () => void) => {
     }, randomDelay);
   });
 };
+
+export const convertSize = (size: number) => {
+  if (size < 0.001) {
+    return `${Math.floor(size * 1048576)} bytes`;
+  } else if (size < 1) {
+    return `${Math.floor(size * 1024)} kb`;
+  } else {
+    return `${Math.floor(size * 1)} mb`;
+  }
+};

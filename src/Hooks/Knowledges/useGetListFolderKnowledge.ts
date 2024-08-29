@@ -3,14 +3,32 @@ import knowledgeService from "../../Services/knowledge.service";
 import { useAuth } from "../../Providers/AuthenticationProvider";
 import { IKnowledgeFolder } from "../../Pages/ChatbotConfigure/components/Configure/Knowledge/KnowledgeFolder";
 import moment from "moment";
+import { AxiosResponse } from "axios";
+import { convertSize } from "../../Helpers";
 
 export interface KnowledgeFolderResponse {
+  status_code: number;
+  message: string;
+  list_knowledges: ListKnowledge[];
+}
+
+export interface ListKnowledge {
   knowledge_storage_id: string;
   knowledge_storage_name: string;
   description: string;
+  owner_id: string;
   created_at: Date;
-  size: string;
-  quantity: string;
+  user_name: string;
+  list_files: { [key: string]: ListFile };
+}
+
+export interface ListFile {
+  name: string;
+  creation_date: Date;
+  last_modified_date: Date;
+  file_size: number;
+  file_type: string;
+  n_points: number;
 }
 
 const useGetListFolderKnowledge = (isTrigger = true) => {
@@ -24,22 +42,30 @@ const useGetListFolderKnowledge = (isTrigger = true) => {
     return knowledgeService.getListFolder(userId);
   }, [userId]);
 
-  const transformResponse = useCallback((response: any) => {
-    if (response) {
-      setData(
-        response.data.list_knowledges.map((item: KnowledgeFolderResponse) => {
+  const transformResponse = useCallback(
+    (response?: AxiosResponse<KnowledgeFolderResponse>) => {
+      if (response) {
+        const data = response.data.list_knowledges.map((item) => {
           return {
             id: item.knowledge_storage_id,
             title: item.knowledge_storage_name,
             description: item.description,
             createdAt: moment(item.created_at).format("DD/MM/YYYY HH:mm"),
-            size: item?.size || "0 Byte",
-            quantity: item?.quantity || 0,
+            size: convertSize(
+              Object.values(item.list_files).reduce(
+                (acc, cur) => acc + cur.file_size,
+                0
+              )
+            ),
+            quantity: `${Object.keys(item.list_files).length || 0}`,
           };
-        })
-      );
-    }
-  }, []);
+        });
+
+        setData(data);
+      }
+    },
+    []
+  );
 
   const refetch = useCallback(async () => {
     try {

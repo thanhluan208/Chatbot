@@ -4,8 +4,8 @@ import CommonIcons from "../../Components/CommonIcons";
 
 import Team from "../../assets/team.png";
 import { useNavigate, useParams } from "react-router-dom";
-import {  useSave } from "../../Stores/useStore";
-import { useEffect, useState } from "react";
+import { useSave } from "../../Stores/useStore";
+import { useEffect, useMemo, useState } from "react";
 import Develop from "./components/Develop";
 import Analysis from "./components/Analysis";
 import useGetBotData from "../../Hooks/Bot/useGetBotData";
@@ -21,15 +21,38 @@ function ChatbotConfigure(props: IChatbotConfigure) {
   const params = useParams();
   const save = useSave();
   const botId = params?.botId;
+  const userId = params?.id;
+
+  const payload = useMemo(() => {
+    return {
+      bot_id: botId,
+      user_id: userId,
+    };
+  }, [botId, userId]);
 
   const [tab, setTab] = useState("develop");
-  const {  isLoading, refetch } = useGetBotData(botId, !!botId);
-
+  const { data, isLoading, refetch } = useGetBotData(
+    payload as {
+      bot_id: string;
+      user_id: string;
+    },
+    !!botId && !!userId
+  );
 
   //! Function
   useEffect(() => {
     save(cachedKeys.REFETCH_BOT_DATA, refetch);
   }, [refetch]);
+
+  useEffect(() => {
+    save(cachedKeys.BOT_DATA, data);
+  }, [save, data]);
+
+  useEffect(() => {
+    return () => {
+      save(cachedKeys.BOT_DATA, null);
+    };
+  }, []);
 
   //! Render
   return (
@@ -79,7 +102,7 @@ function ChatbotConfigure(props: IChatbotConfigure) {
             <Box>
               <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <CommonStyles.Typography type="semiBold14">
-                  hehe
+                  {data?.bot_name}
                 </CommonStyles.Typography>
                 <CommonStyles.Button
                   isIcon

@@ -10,6 +10,7 @@ import AddContentButton from "./components/AddContentButton";
 import PerfectScrollBar from "react-perfect-scrollbar";
 import { useAuth } from "../../Providers/AuthenticationProvider";
 import { isEmpty } from "lodash";
+import SegmentList from "./components/SegmentList";
 
 const KnowledgeDetail = () => {
   //! State
@@ -37,6 +38,16 @@ const KnowledgeDetail = () => {
     payload,
     !!payload
   );
+
+  const numOfDocs = useMemo(() => {
+    return data.length;
+  }, [data]);
+
+  const numsOfSegments = useMemo(() => {
+    return data.reduce((acc, cur) => {
+      return acc + cur.n_points;
+    }, 0);
+  }, [data]);
 
   //! Function
   const handleChangeSearch = (
@@ -89,10 +100,27 @@ const KnowledgeDetail = () => {
               <Box
                 sx={{ display: "flex", flexDirection: "column", gap: "6px" }}
               >
-                <CommonStyles.Typography type="bold18">
+                <CommonStyles.Typography
+                  type="bold18"
+                  sx={{
+                    maxWidth: "200px",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    textWrap: "nowrap",
+                  }}
+                >
                   {knowledgeId || "Anonymous knowledge"}
                 </CommonStyles.Typography>
-                <CommonStyles.Chip label="Auto-segment" />
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: "8px",
+                  }}
+                >
+                  <CommonStyles.Chip label="Auto-segment" />
+                  <CommonStyles.Chip label={`${numOfDocs} document(s)`} />
+                  <CommonStyles.Chip label={`${numsOfSegments} segment(s)`} />
+                </Box>
               </Box>
             </Box>
             <Box sx={{ display: "flex", gap: "8px" }}>
@@ -160,7 +188,7 @@ const KnowledgeDetail = () => {
                 </CommonStyles.Typography>
               </Box>
             ) : (
-              <Box />
+              <SegmentList data={data} />
             )}
           </Box>
         </PerfectScrollBar>
