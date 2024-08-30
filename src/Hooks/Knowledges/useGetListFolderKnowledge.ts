@@ -19,10 +19,17 @@ export interface ListKnowledge {
   owner_id: string;
   created_at: Date;
   user_name: string;
-  list_files: { [key: string]: ListFile };
+  permission_level: string;
+  visibility: string;
+  sharing_with_bots: string[];
+  list_files: ListFiles;
 }
 
-export interface ListFile {
+export interface ListFiles {
+  [key: string]: TestPDF;
+}
+
+export interface TestPDF {
   name: string;
   creation_date: Date;
   last_modified_date: Date;
@@ -36,7 +43,7 @@ interface Filters {
   visual_option?: string;
 }
 
-const useGetListFolderKnowledge = (filters: Filters , isTrigger = true) => {
+const useGetListFolderKnowledge = (filters: Filters, isTrigger = true) => {
   const [data, setData] = useState<IKnowledgeFolder[] | []>([]);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState();
@@ -48,7 +55,7 @@ const useGetListFolderKnowledge = (filters: Filters , isTrigger = true) => {
       user_id: userId,
       ...filters,
     });
-  }, [userId,filters]);
+  }, [userId, filters]);
 
   const transformResponse = useCallback(
     (response?: AxiosResponse<KnowledgeFolderResponse>) => {
@@ -66,6 +73,7 @@ const useGetListFolderKnowledge = (filters: Filters , isTrigger = true) => {
               )
             ),
             quantity: `${Object.keys(item.list_files).length || 0}`,
+            sharingWithBots: item.sharing_with_bots,
           };
         });
 

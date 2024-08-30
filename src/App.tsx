@@ -3,7 +3,6 @@ import {
   createBrowserRouter,
   redirect,
 } from "react-router-dom";
-import Home from "./Pages/Home";
 import Users from "./Pages/Users";
 import DefaultLayout from "./Components/DefaultLayout";
 import { ListRoutes } from "./Constants/routes";
@@ -17,6 +16,9 @@ import { useState } from "react";
 import { useAuth } from "./Providers/AuthenticationProvider";
 import useRoutes from "./Constants/routes";
 import KnowledgeUpload from "./Pages/KnowledgeUpload";
+import BotStore from "./Pages/BotStore";
+import UserProfile from "./Pages/UserProfile";
+import KnowledgeStore from "./Pages/KnowledgeStore";
 
 function App() {
   //! State
@@ -30,7 +32,7 @@ function App() {
         {
           // path: Routes.common.HOME.path,
           path: "*",
-          element: <Home />,
+          element: <BotStore />,
           loader: () => {
             if (!userId) return redirect("/login");
 
@@ -46,6 +48,24 @@ function App() {
             return null;
           },
         },
+        {
+          path: ListRoutes.userProfile,
+          element: <UserProfile />,
+          loader: () => {
+            if (!userId) return redirect("/login");
+    
+            return null;
+          },
+        },
+        {
+          path: ListRoutes.knowledgeStore,
+          element: <KnowledgeStore />,
+          loader: () => {
+            if (!userId) return redirect("/login");
+    
+            return null;
+          },
+        },
       ],
     },
     {
@@ -58,7 +78,7 @@ function App() {
       },
     },
     {
-      path: Routes.explore.WORKFLOW_STORE.path,
+      path: Routes.common.WORKFLOW_STORE.path,
       element: <Workflow />,
       loader: () => {
         if (!userId) return redirect("/login");
@@ -84,6 +104,7 @@ function App() {
         return null;
       },
     },
+    
     {
       path: ListRoutes.login,
       element: <Login />,
@@ -102,6 +123,7 @@ function App() {
         return null;
       },
     },
+    
     {
       path: "/test",
       element: <Workflow />,
@@ -113,7 +135,7 @@ function App() {
   //! Render
   return (
     <Fragment>
-      {/* <div style={{ position: "fixed", top: 0, zIndex: 1000000 }}>
+      <div style={{ position: "fixed", top: 0, zIndex: 1000000 }}>
         <input onChange={(e) => setbaseUrl(e.target.value)} />
         <button
           onClick={() => {
@@ -122,7 +144,7 @@ function App() {
         >
           submit
         </button>
-      </div> */}
+      </div>
       <RouterProvider router={router} />
     </Fragment>
   );

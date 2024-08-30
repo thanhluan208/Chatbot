@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import CommonStyles from "../CommonStyles";
 import { FieldProps, getIn } from "formik";
-import React, { Fragment, useId } from "react";
+import React, {  useId } from "react";
 
 interface IMuiSelectField {
   onChangeCustomize?: (value: any) => void;
@@ -165,7 +165,7 @@ function MuiSelectField(props: IMuiSelectField & SelectProps & FieldProps) {
             return renderOption(op);
           }
           return (
-            <Fragment key={op?.value}>
+            <Box key={op?.value}>
               {op?.group && <ListSubheader>{op?.group}</ListSubheader>}
               <MenuItem
                 value={op?.value}
@@ -175,7 +175,7 @@ function MuiSelectField(props: IMuiSelectField & SelectProps & FieldProps) {
               >
                 {op?.label}
               </MenuItem>
-            </Fragment>
+            </Box>
           );
         })}
       </Select>

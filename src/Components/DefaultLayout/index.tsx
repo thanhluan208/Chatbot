@@ -156,6 +156,7 @@ function DefaultLayout() {
         </Box>
       </PerfectScrollbar>
       <Box
+        id="main-content"
         sx={{
           width: `calc(100vw - ${sidebarWidth}px)`,
           height: "100vh",

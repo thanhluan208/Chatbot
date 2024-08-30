@@ -40,6 +40,8 @@ function AutocompleteField(
     form,
     onChangeCustomize,
     afterOnChange,
+    onInputChange,
+    multiple,
   } = props;
   const { setFieldValue, errors, touched } = form;
   const { name, value, onBlur } = field;
@@ -108,6 +110,8 @@ function AutocompleteField(
         options={options || []}
         autoHighlight
         onChange={handleChange}
+        multiple={multiple}
+        onInputChange={onInputChange}
         fullWidth={textFieldProps.fullWidth}
         getOptionLabel={(option) => option?.label || ""}
         value={value}
@@ -128,6 +132,7 @@ function AutocompleteField(
           <TextField
             {...params}
             {...textFieldProps}
+            
             error={errMsg}
             helperText={errMsg}
             onBlur={(e) => {

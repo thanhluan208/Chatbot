@@ -7,22 +7,74 @@ import { FieldArray, Form, Formik } from "formik";
 import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { isArray, isEmpty } from "lodash";
 import { v4 as uuid } from "uuid";
-import UserPermission from "./UserPermission";
+import UserPermission, { PermissionOption } from "./UserPermission";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import httpServices from "../../../Services/httpServices";
+import { updateKnowledgePermission } from "../../../Constants/api";
+import { ListUser } from "../../../Hooks/User/useGetListUser";
+
+interface User {
+  id: string;
+  user?: ListUser;
+  permission: string;
+}
 
 const UpdatePriviledgeDialog = memo(({ toggle }: { toggle: () => void }) => {
   //! State
+  const params = useParams();
+  const userId = params?.id;
+  const knowledgeId = params?.knowledgeId;
   const initialValues = {
     users: [
       {
         id: uuid(),
-        user: "",
-        permission: "",
+        user: undefined,
+        permission: PermissionOption[0].value,
       },
     ],
   };
 
   //! Function
-  const handleSubmit = () => {};
+  const handleSubmit = async (values: { users: User[] }) => {
+    if (!userId || !knowledgeId) return;
+
+    const toastId = toast.loading("Updating permission...", {
+      isLoading: true,
+      autoClose: false,
+    });
+
+    try {
+      const listReq: any[] = [];
+      values.users.forEach((user) => {
+        const req = httpServices.axios.post(updateKnowledgePermission, {
+          user_id: userId,
+          knowledge_storage_id: knowledgeId,
+          dest_user_id: user.user?.user_id,
+          permission_level: user.permission,
+        });
+        listReq.push(req);
+      });
+
+      const response = await Promise.all(listReq);
+
+      console.log("response", response);
+
+      toast.update(toastId, {
+        isLoading: false,
+        render: "Update permission successfully!",
+        type: "success",
+        autoClose: 3000,
+      });
+    } catch (error) {
+      toast.update(toastId, {
+        isLoading: false,
+        render: "Update permission failed!",
+        type: "error",
+        autoClose: 3000,
+      });
+    }
+  };
 
   //! Render
   return (
@@ -58,7 +110,7 @@ const UpdatePriviledgeDialog = memo(({ toggle }: { toggle: () => void }) => {
                           gridTemplateColumns: "45% 45% 5%",
                           justifyContent: "space-between",
                           alignItems: "center",
-                          marginBottom:'20px'
+                          marginBottom: "20px",
                         }}
                       >
                         <CommonStyles.Typography
@@ -74,7 +126,6 @@ const UpdatePriviledgeDialog = memo(({ toggle }: { toggle: () => void }) => {
                           sx={{ width: "200px" }}
                           color="#bbbbbb"
                           type="bold14"
-
                         >
                           Permission
                         </CommonStyles.Typography>
@@ -104,7 +155,7 @@ const UpdatePriviledgeDialog = memo(({ toggle }: { toggle: () => void }) => {
                           });
                         }}
                         sx={{
-                            marginTop:'20px'
+                          marginTop: "20px",
                         }}
                       >
                         Add user

@@ -14,21 +14,16 @@ const useRoutes = () => {
         path: `/workspace/${userId}`,
         icon: <CommonIcons.Person />,
       },
-    },
-    explore: {
-      BOT_STORE: {
-        path: "/bot-store",
-        icon: <CommonIcons.SmartToy />,
-      },
       PLUGIN_STORE: {
-        path: "/plugin-store",
-        icon: <CommonIcons.Extension />,
+        path: "/knowledge-store",
+        icon: <CommonIcons.Article />,
       },
       WORKFLOW_STORE: {
         path: "/workflow-store",
         icon: <CommonIcons.Extension />,
       },
     },
+    
   };
 };
 
@@ -38,6 +33,8 @@ export const ListRoutes = {
   workspace: "/workspace/:id/bot/:botId",
   knowledgeDetail: "/workspace/:id/bot/:botId/knowledge/:knowledgeId",
   knowledgeUpload: "/workspace/:id/bot/:botId/knowledge/:knowledgeId/upload",
+  knowledgeStore: "/knowledge-store",
+  userProfile: "/user/:userId",
 };
 
 export default useRoutes;

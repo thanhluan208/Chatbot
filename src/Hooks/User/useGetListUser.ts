@@ -1,38 +1,34 @@
 import { useCallback, useEffect, useState } from "react";
-import knowledgeService, {
-  PayloadKnowledgeDetail,
-} from "../../Services/knowledge.service";
+import userService from "../../Services/user.service";
 import { AxiosResponse } from "axios";
-import { ListFiles, TestPDF } from "./useGetListFolderKnowledge";
 
-export interface KnowledgeFile {
-  status_code: number;
-  message: string;
-  list_files: ListFiles;
+export interface ListUserResponse {
+    status_code: number;
+    message:     string;
+    list_user:   ListUser[];
 }
 
-const useGetListKnowledgeFiles = (
-  payload?: PayloadKnowledgeDetail,
-  isTrigger = true
-) => {
-  const [data, setData] = useState<TestPDF[]>([]);
+export interface ListUser {
+    user_id:   string;
+    user_name: string;
+}
+
+
+const useGetListUser = (search?: string, isTrigger = true) => {
+  const [data, setData] = useState<ListUser[] | []>([]);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState();
 
-
   const callApi = useCallback(() => {
-    if (!payload) return;
-    return knowledgeService.getListFiles(payload);
-  }, [payload]);
+    return userService.getListUser(search);
+  }, [search]);
 
-  const transformResponse = useCallback(
-    (response?: AxiosResponse<KnowledgeFile>) => {
-      if (response) {
-        setData(Object.values(response.data.list_files));
-      }
-    },
-    []
-  );
+
+  const transformResponse = useCallback((response?: AxiosResponse<ListUserResponse>) => {
+    if (response) {
+      setData(response.data.list_user);
+    }
+  }, []);
 
   const refetch = useCallback(async () => {
     try {
@@ -41,7 +37,7 @@ const useGetListKnowledgeFiles = (
     } catch (error: any) {
       setError(error);
     }
-  }, []);
+  }, [callApi]);
 
   useEffect(() => {
     let shouldSetData = true;
@@ -66,7 +62,7 @@ const useGetListKnowledgeFiles = (
         shouldSetData = false;
       };
     }
-  }, [isTrigger]);
+  }, [isTrigger,callApi]);
 
   return {
     data,
@@ -76,4 +72,4 @@ const useGetListKnowledgeFiles = (
   };
 };
 
-export default useGetListKnowledgeFiles;
+export default useGetListUser;

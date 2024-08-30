@@ -1,6 +1,6 @@
 import { Fragment } from "react/jsx-runtime";
 import { toast } from "react-toastify";
-import { ListFile } from "../../../Hooks/Knowledges/useGetListFolderKnowledge";
+import { TestPDF } from "../../../Hooks/Knowledges/useGetListFolderKnowledge";
 import useToggleDialog from "../../../Hooks/useToggleDialog";
 import { useGet } from "../../../Stores/useStore";
 import CommonStyles from "../../../Components/CommonStyles";
@@ -11,7 +11,7 @@ import { deleteFile } from "../../../Constants/api";
 import { useParams } from "react-router-dom";
 
 interface IDeleteFileButton {
-  file: ListFile;
+  file: TestPDF;
 }
 
 function DeleteFileButton(props: IDeleteFileButton) {

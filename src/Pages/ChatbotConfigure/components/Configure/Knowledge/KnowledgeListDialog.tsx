@@ -4,7 +4,6 @@ import {
   DialogTitle,
   Divider,
   InputAdornment,
-  MenuItem,
   useTheme,
 } from "@mui/material";
 import CommonStyles from "../../../../../Components/CommonStyles";
@@ -22,8 +21,8 @@ interface IKnowledgeListDialog {
 }
 
 export const KnowledgeFilter = {
-  All: "all",
-  Owner: "owner",
+  Public: "all",
+  Owned: "owned",
   Shared: "shared",
 };
 
@@ -32,7 +31,6 @@ export const KnowledgeSortBy = {
   editAt: "Edit Time",
 };
 
-const knowledgeSortByOptions = ["createdAt", "editAt"];
 
 const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
   //! State
@@ -40,51 +38,16 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
   const theme: any = useTheme();
   const save = useSave();
   const [filters, setFilter] = useState({
-    visual_option: KnowledgeFilter.All,
-    sortBy: "createdAt",
+    visual_option: KnowledgeFilter.Public,
     search_input: "",
   });
 
-  console.log('filters', filters)
   const { data, isLoading, refetch } = useGetListFolderKnowledge(filters);
+  console.log('data', data)
 
   const debounceRef = useRef<any>(null);
 
   //! Function
-  const renderOption = (option: keyof typeof KnowledgeSortBy) => {
-    const isSelected = filters.sortBy === option;
-    return (
-      <MenuItem
-        value={option}
-        key={option}
-        onClick={() => {
-          setFilter((prev) => ({ ...prev, sortBy: option }));
-        }}
-      >
-        <Box sx={{ width: 16, height: 16, marginRight: "8px" }}>
-          {isSelected && (
-            <CommonIcons.CheckOutlined sx={{ width: 16, height: 16 }} />
-          )}
-        </Box>
-        <CommonStyles.Typography type={isSelected ? "bold12" : "normal12"}>
-          {KnowledgeSortBy[option]}
-        </CommonStyles.Typography>
-      </MenuItem>
-    );
-  };
-
-  const customRenderValue = (value: keyof typeof KnowledgeSortBy) => {
-    return (
-      <Box sx={{ display: "flex", gap: "8px" }}>
-        <CommonStyles.Typography type="bold14" color="#1c1f2366">
-          Sort:
-        </CommonStyles.Typography>
-        <CommonStyles.Typography type="bold14">
-          {KnowledgeSortBy[value]}
-        </CommonStyles.Typography>
-      </Box>
-    );
-  };
 
   const handleChangeSearch = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -170,12 +133,7 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
               },
             }}
           >
-            <CommonStyles.Select
-              value={filters.sortBy}
-              options={knowledgeSortByOptions}
-              renderOption={renderOption}
-              customRenderValue={customRenderValue}
-            />
+            
 
             <CommonStyles.Input
               afterOnchange={handleChangeSearch}
@@ -212,6 +170,7 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
                   size={item.size}
                   quantity={item.quantity}
                   createdAt={item.createdAt}
+                  sharingWithBots={item.sharingWithBots}
                 />
                 {index < data.length - 1 && <Divider />}
               </Fragment>

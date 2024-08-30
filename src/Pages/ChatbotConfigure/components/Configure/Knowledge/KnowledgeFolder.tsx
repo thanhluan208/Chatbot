@@ -2,8 +2,13 @@ import { Box } from "@mui/material";
 import CommonIcons from "../../../../../Components/CommonIcons";
 import CommonStyles from "../../../../../Components/CommonStyles";
 import moment from "moment";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import DeleteKnowledge from "./DeleteKnowledge";
+import { toast } from "react-toastify";
+import { useGet } from "../../../../../Stores/useStore";
+import httpServices from "../../../../../Services/httpServices";
+import { removeKnowledgeFromBot, updateKnowledgeToBot } from "../../../../../Constants/api";
+import { useMemo } from "react";
 
 export interface IKnowledgeFolder {
   id?: string;
@@ -12,15 +17,98 @@ export interface IKnowledgeFolder {
   size: string;
   quantity: string;
   createdAt: string;
+  sharingWithBots?: string[];
+
 }
 
 const KnowledgeFolder = (props: IKnowledgeFolder) => {
   //! State
-  const { title, description, size, quantity, createdAt, id } = props;
+  const { title, description, size, quantity, createdAt, id, sharingWithBots } = props;
   const navigate = useNavigate();
   const pathname = useLocation().pathname;
+  const params = useParams();
+  const botId = params.botId;
+  const userId = params.id;
+
+
+  const isSharing = useMemo(() => {
+    if(botId && sharingWithBots?.includes(botId)){
+      return true;
+    }
+
+    return false
+  },[botId, sharingWithBots])
+
+  const refetchListFolder = useGet("REFETCH_FOLDER_KNOWLEDGE");
 
   //! Function
+  const handleAddKnowledgeToBot = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.stopPropagation();
+    if (!botId || !id || !userId) return;
+
+    const toastId = toast.loading("Adding knowledge to bot...", {
+      isLoading: true,
+      autoClose: false,
+    });
+
+    try {
+      await httpServices.axios.post(updateKnowledgeToBot, {
+        user_id: userId,
+        bot_id: botId,
+        knowledge_storage_ids: [id],
+      });
+
+      await refetchListFolder?.();
+
+      toast.update(toastId, {
+        render: "Added knowledge to bot successfully!",
+        type: "success",
+        isLoading: false,
+        autoClose: 2000,
+      });
+    } catch (error) {
+      toast.update(toastId, {
+        render: "Failed to add knowledge to bot!",
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+      });
+    }
+  };
+
+  const handleRemoveKnowledgeFromBot = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.stopPropagation();
+    if(!botId || !id || !userId) return;
+
+    const toastId = toast.loading("Removing knowledge from bot...", {
+      isLoading: true,
+      autoClose: false,
+    });
+
+    try {
+      await httpServices.axios.post(removeKnowledgeFromBot, {
+        user_id: userId,
+        bot_id: botId,
+        knowledge_storage_ids: [id],
+      });
+
+      await refetchListFolder?.();
+
+      toast.update(toastId, {
+        render: "Removed knowledge from bot successfully!",
+        type: "success",
+        isLoading: false,
+        autoClose: 2000,
+      });
+    } catch (error) {
+      toast.update(toastId, {
+        render: "Failed to remove knowledge from bot!",
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+      });
+    }
+  }
 
   //! Render
 
@@ -75,7 +163,12 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
           gap: "8px",
         }}
       >
-        <CommonStyles.Button variant="outlined">Add</CommonStyles.Button>
+        <CommonStyles.Button
+          variant="outlined"
+          onClick={isSharing ? handleRemoveKnowledgeFromBot : handleAddKnowledgeToBot}
+        >
+          {isSharing ? "Remove" : "Add"}
+        </CommonStyles.Button>
         <DeleteKnowledge data={props} />
       </Box>
     </Box>

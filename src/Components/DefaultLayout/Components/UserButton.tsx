@@ -3,12 +3,11 @@ import NavItem from "./NavItem";
 import React, { Fragment } from "react";
 import CommonStyles from "../../CommonStyles";
 import { useAuth } from "../../../Providers/AuthenticationProvider";
+import { useNavigate } from "react-router-dom";
 
-interface IUserButton {}
-
-function UserButton(props: IUserButton) {
+function UserButton() {
   //! State
-  const {} = props;
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
@@ -59,7 +58,13 @@ function UserButton(props: IUserButton) {
                 },
               }}
             >
-              <CommonStyles.Button>Settings</CommonStyles.Button>
+              <CommonStyles.Button
+                onClick={() => {
+                  navigate("/user/123123");
+                }}
+              >
+                My profile
+              </CommonStyles.Button>
               <CommonStyles.Button onClick={logout}>
                 Log out
               </CommonStyles.Button>

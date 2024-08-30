@@ -1,8 +1,9 @@
 import { Box } from "@mui/material";
-import { FastField, Field } from "formik";
+import { FastField } from "formik";
 import CommonField from "../../../Components/CommonFields";
 import CommonStyles from "../../../Components/CommonStyles";
 import CommonIcons from "../../../Components/CommonIcons";
+import UserSelectField from "./UserSelect";
 
 interface IUserPermission {
   name: string;
@@ -10,10 +11,6 @@ interface IUserPermission {
 }
 
 export const PermissionOption = [
-  {
-    value: "owner",
-    label: "Owner",
-  },
   {
     value: "editor",
     label: "Editor",
@@ -45,18 +42,7 @@ const UserPermission = ({ name, remove }: IUserPermission) => {
       }}
     >
       
-      <Field
-        name={`${name}.user`}
-        component={CommonField.MuiSelectField}
-        placeholder="Select user"
-        options={PermissionOption}
-        fullWidth
-        sxContainer={{
-            textAlign:'right'
-        }}
-        variant="standard"
-
-      />
+      <UserSelectField name={`${name}.user`} />
       <FastField
         name={`${name}.permission`}
         component={CommonField.MuiSelectField}
