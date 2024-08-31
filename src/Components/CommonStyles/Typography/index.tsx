@@ -90,6 +90,10 @@ const Typography = (props: ITypography & TypographyProps) => {
       fontSize: "24px",
       fontWeight: 500,
     });
+    styles.set("semiBold28", {
+      fontSize: "28px",
+      fontWeight: 500,
+    });
 
     styles.set("bold56", {
       fontSize: "56px",

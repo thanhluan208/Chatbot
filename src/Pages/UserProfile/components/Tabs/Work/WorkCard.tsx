@@ -112,10 +112,10 @@ const WorkCard = (props: WorkCard) => {
         </p>
       </Box>
       <Box sx={{ marginTop: "12px", display: "flex", gap: "16px" }}>
-        <Stats label="Users" value={users.toString()} />
-        <Stats label="Collect" value={collect.toString()} />
+        <Stats value="Users" label={users.toString()} />
+        <Stats value="Collect" label={collect.toString()} />
       </Box>
-      <Box sx={{ marginTop: "12px", display: "flex", gap: "16px" }}>
+      <Box sx={{ marginTop: "12px", display: "flex", gap: "4px", flexWrap: 'wrap'}}>
         {(category ?? []).map((cate) => {
           return <CommonStyles.Chip label={cate} />;
         })}

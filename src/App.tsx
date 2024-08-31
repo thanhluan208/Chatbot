@@ -19,6 +19,7 @@ import KnowledgeUpload from "./Pages/KnowledgeUpload";
 import BotStore from "./Pages/BotStore";
 import UserProfile from "./Pages/UserProfile";
 import KnowledgeStore from "./Pages/KnowledgeStore";
+import ChatBot from "./Pages/ChatBot";
 
 function App() {
   //! State
@@ -30,7 +31,6 @@ function App() {
       element: <DefaultLayout />,
       children: [
         {
-          // path: Routes.common.HOME.path,
           path: "*",
           element: <BotStore />,
           loader: () => {
@@ -104,7 +104,15 @@ function App() {
         return null;
       },
     },
-    
+    {
+      path: ListRoutes.chatBot,
+      element: <ChatBot />,
+      loader: () => {
+        if (!userId) return redirect("/login");
+
+        return null;
+      },
+    },
     {
       path: ListRoutes.login,
       element: <Login />,

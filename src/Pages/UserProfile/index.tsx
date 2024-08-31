@@ -38,12 +38,12 @@ export enum UserProfileTab {
 
 const UserProfile = () => {
   //! State
-  const isOwner = true;
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
 
   const tabQuery = queryParams.get("tab");
+  const isOwner = queryParams.get('isOwner')
 
   //! Function
   const renderTab = useCallback(() => {
@@ -92,14 +92,14 @@ const UserProfile = () => {
             }}
           >
             <Box sx={{ display: "flex", gap: "8px", alignItems: "center" }}>
-              <CommonStyles.Typography type="semiBold24">
+              <CommonStyles.Typography type="semiBold28">
                 Username
               </CommonStyles.Typography>
               <CommonStyles.Typography color="#06070980">
                 @luandang123
               </CommonStyles.Typography>
             </Box>
-            <UserDescription description="This user is lazy and has not written anything yet." />
+            <UserDescription description="This user is lazy and has not written anything yet." ableToEdit={!isOwner}/>
             <Box sx={{ display: "flex", gap: "16px" }}>
               <Stats label="Follow" value="100" />
               <Stats label="Fans" value="100" />

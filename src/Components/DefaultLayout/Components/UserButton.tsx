@@ -60,7 +60,7 @@ function UserButton() {
             >
               <CommonStyles.Button
                 onClick={() => {
-                  navigate("/user/123123");
+                  navigate("/user/123123?isOwner=true");
                 }}
               >
                 My profile

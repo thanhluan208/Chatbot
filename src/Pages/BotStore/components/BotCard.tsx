@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import CommonStyles from "../../../Components/CommonStyles";
 import { ReactNode } from "react";
 import CommonIcons from "../../../Components/CommonIcons";
+import { useNavigate } from "react-router-dom";
 
 const Stats = (props: { icon: ReactNode; value: number }) => {
   return (
@@ -10,7 +11,6 @@ const Stats = (props: { icon: ReactNode; value: number }) => {
         display: "flex",
         gap: "4px",
         alignItems: "center",
-
       }}
     >
       {props.icon}
@@ -41,16 +41,9 @@ interface BotCardProps {
 
 const BotCard = (props: BotCardProps) => {
   //! State
-  const {
-    creator,
-    avatar,
-    name,
-    space,
-    description,
-    users,
-    star,
-    comments,
-  } = props;
+  const { creator, avatar, name, space, description, users, star, comments } =
+    props;
+  const navigate = useNavigate();
 
   //! Function
 
@@ -62,6 +55,14 @@ const BotCard = (props: BotCardProps) => {
         background: "#fff",
         boxShadow: "0 6px 8px 0 rgba(28, 31, 35, 0.06)",
         borderRadius: "8px",
+        cursor: "pointer",
+        transition: "all 0.3s",
+        "&:hover": {
+          boxShadow: "0 6px 8px 0 rgba(28, 31, 35, 0.12)",
+        },
+      }}
+      onClick={() => {
+        navigate("/bot-store/123123123");
       }}
     >
       <Box
@@ -98,7 +99,18 @@ const BotCard = (props: BotCardProps) => {
           >
             {name}
           </CommonStyles.Typography>
-          <Box sx={{ display: "flex", gap: "4px", alignItems: "center" }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: "4px",
+              alignItems: "center",
+              cursor: "pointer",
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate("/user/123123123");
+            }}
+          >
             {space.avatar && (
               <img
                 src={space.avatar}
@@ -163,9 +175,7 @@ const BotCard = (props: BotCardProps) => {
           <Stats icon={<CommonIcons.Comment />} value={comments} />
           <Stats icon={<CommonIcons.StarOutline />} value={star} />
         </Box>
-        <CommonStyles.Button>
-            Try it now
-        </CommonStyles.Button>
+        <CommonStyles.Button>Try it now</CommonStyles.Button>
       </Box>
     </Box>
   );

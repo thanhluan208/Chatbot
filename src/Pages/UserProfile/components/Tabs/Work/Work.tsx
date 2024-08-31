@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { Fragment } from "react/jsx-runtime";
 import CommonStyles from "../../../../../Components/CommonStyles";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -17,6 +17,7 @@ const Work = () => {
   //! State
   const location = useLocation();
   const navigate = useNavigate();
+  const theme = useTheme();
   const queryParams = new URLSearchParams(location.search);
 
   const subTabQuery = queryParams.get("subTab");
@@ -51,13 +52,32 @@ const Work = () => {
         })}
       </Box>
 
-      <Box sx={{ marginTop: "20px", overflow:'hidden' }}>
-        <Masonry columns={3} spacing={2}>
-          {Array.from({ length: 10 }).map((_, index) => {
+      <Box
+        sx={{
+          marginTop: "20px",
+          overflow: "hidden",
+          [theme.breakpoints.down("md")]: {
+            padding:'0 25px'
+          },
+
+          "& .MuiMasonry-root": {
+            margin:0
+          }
+        }}
+      >
+        <Masonry
+          columns={{
+            xs: 1,
+            md: 2,
+            lg: 3,
+          }}
+          spacing={2}
+        >
+          {Array.from({ length: 30 }).map((_, index) => {
             return (
               <WorkCard
                 key={index}
-                avatar="https://p16-flow-product-sign-sg.ibyteimg.com/tos-alisg-i-bfte7mpw5s-sg/2b7506f1031c4ecc9a828bde1391285b~tplv-bfte7mpw5s-resize:128:128.image?rk3s=2e2596fd&x-expires=1727600185&x-signature=FnSjQncrVRzg9K27GlHn5GJonVI%3D"
+                avatar="https://p16-flow-product-sPign-sg.ibyteimg.com/tos-alisg-i-bfte7mpw5s-sg/2b7506f1031c4ecc9a828bde1391285b~tplv-bfte7mpw5s-resize:128:128.image?rk3s=2e2596fd&x-expires=1727600185&x-signature=FnSjQncrVRzg9K27GlHn5GJonVI%3D"
                 collect={Math.floor(Math.random() * 20)}
                 creator={{
                   name: "@luandang123",
@@ -70,7 +90,9 @@ const Work = () => {
                     "https://sf16-passport-sg.ibytedtos.com/img/user-avatar-alisg/4d26373f2eedfe14710becde336c2450~300x300.image",
                 }}
                 users={Math.floor(Math.random() * 100)}
-                category={["Category 1", "Category 2"]}
+                category={Array.from({
+                  length: Math.floor(Math.random() * 5),
+                }).map((_, index) => "Category " + (index + 1))}
               />
             );
           })}

@@ -7,7 +7,7 @@ const useRoutes = () => {
   return {
     common: {
       HOME: {
-        path: "/home",
+        path: "/bot-store",
         icon: <CommonIcons.Home />,
       },
       PERSONAL: {
@@ -30,11 +30,13 @@ const useRoutes = () => {
 export const ListRoutes = {
   login: "/login",
   signup: "/signup",
+  botStore: "/bot-store",
   workspace: "/workspace/:id/bot/:botId",
   knowledgeDetail: "/workspace/:id/bot/:botId/knowledge/:knowledgeId",
   knowledgeUpload: "/workspace/:id/bot/:botId/knowledge/:knowledgeId/upload",
   knowledgeStore: "/knowledge-store",
   userProfile: "/user/:userId",
+  chatBot: "/bot-store/:botId",
 };
 
 export default useRoutes;
