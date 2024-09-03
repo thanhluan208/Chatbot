@@ -72,3 +72,37 @@ export function formatNumber(num: number) {
     return num.toString();
   }
 }
+
+export const removeNestedById = (
+  array: any[],
+  id: string,
+  childrenKey: string
+) => {
+  return array.filter((item) => {
+    if (item.id === id) return false;
+    if (item[childrenKey]) {
+      item.replys = removeNestedById(item.replys, id, childrenKey);
+    }
+    return true;
+  });
+};
+
+export const insertNested = (
+  array: any[],
+  id: string,
+  childrenKey: string,
+  data: any
+) => {
+  return array.map((item) => {
+    if(item.id === id) {
+      if(item[childrenKey]) {
+        item[childrenKey].push(data);
+      } else {
+        item[childrenKey] = [data];
+      }
+    } else {
+      insertNested(item[childrenKey], id, childrenKey, data);
+    }
+    return item
+  });
+};

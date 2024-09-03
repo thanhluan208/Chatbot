@@ -12,4 +12,5 @@ const CommonIcons = {
   Logo
 };
 
+
 export default CommonIcons;

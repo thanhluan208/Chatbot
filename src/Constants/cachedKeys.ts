@@ -21,4 +21,8 @@ export default {
   FLOW_EDGES: "FLOW_EDGES",
 
 
+  //! Mock
+  COMMUNITY_REACTION: "COMMUNITY_REACTION",
+  COMMUNITY_COMMENT: "COMMUNITY_COMMENT",
+
 } as const;
