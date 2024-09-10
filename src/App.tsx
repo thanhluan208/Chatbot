@@ -148,11 +148,6 @@ function App() {
   ]);
 
   //! Function
-  useEffect(() => {
-    return () => {
-      localStorage.removeItem("baseUrl");
-    };
-  }, []);
 
   //! Render
   return (
