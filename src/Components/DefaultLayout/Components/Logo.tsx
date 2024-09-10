@@ -11,9 +11,9 @@ const Logo = () => {
       <g filter="url(#icon-menu-logo_svg__a)">
         <path
           fill="#fff"
-          fill-rule="evenodd"
+          fillRule="evenodd"
           d="M20.15 7.672c-5.204 0-9.423 4.22-9.423 9.427v3.954H8.464c-2.597 0-3.184 3.643-.719 4.46l2.982.988v1.707c0 1.687 1.775 2.784 3.283 2.03l1.651-.826a.14.14 0 0 1 .196.082c1.338 4.179 7.248 4.179 8.587 0a.14.14 0 0 1 .195-.082l1.652.826c1.508.754 3.283-.343 3.283-2.03v-1.707l2.981-.988c2.466-.817 1.879-4.46-.719-4.46h-2.262v-3.954c0-5.206-4.22-9.427-9.424-9.427Z"
-          clip-rule="evenodd"
+          clipRule="evenodd"
         ></path>
       </g>
       <g filter="url(#icon-menu-logo_svg__b)">
@@ -41,10 +41,10 @@ const Logo = () => {
           height="27.956"
           x="4.975"
           y="6.472"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
           filterUnits="userSpaceOnUse"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+          <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
           <feColorMatrix
             in="SourceAlpha"
             result="hardAlpha"
@@ -134,10 +134,10 @@ const Logo = () => {
           height="3.925"
           x="22.442"
           y="20.302"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
           filterUnits="userSpaceOnUse"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+          <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
           <feColorMatrix
             in="SourceAlpha"
             result="hardAlpha"
@@ -176,10 +176,10 @@ const Logo = () => {
           height="4.86"
           x="16.081"
           y="23.016"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
           filterUnits="userSpaceOnUse"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+          <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
           <feColorMatrix
             in="SourceAlpha"
             result="hardAlpha"
@@ -218,10 +218,10 @@ const Logo = () => {
           height="5.749"
           x="14.235"
           y="19.39"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
           filterUnits="userSpaceOnUse"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+          <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
           <feColorMatrix
             in="SourceAlpha"
             result="hardAlpha"
@@ -262,8 +262,8 @@ const Logo = () => {
           y2="27.204"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#272DCC"></stop>
-          <stop offset="1" stop-color="#9A9DF2"></stop>
+          <stop stopColor="#272DCC"></stop>
+          <stop offset="1" stopColor="#9A9DF2"></stop>
         </linearGradient>
         <linearGradient
           id="icon-menu-logo_svg__e"
@@ -273,8 +273,8 @@ const Logo = () => {
           y2="26.9"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#2B33E6"></stop>
-          <stop offset="1" stop-color="#A19AF2"></stop>
+          <stop stopColor="#2B33E6"></stop>
+          <stop offset="1" stopColor="#A19AF2"></stop>
         </linearGradient>
         <linearGradient
           id="icon-menu-logo_svg__g"
@@ -284,8 +284,8 @@ const Logo = () => {
           y2="32.422"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#272DCC"></stop>
-          <stop offset="1" stop-color="#9A9DF2"></stop>
+          <stop stopColor="#272DCC"></stop>
+          <stop offset="1" stopColor="#9A9DF2"></stop>
         </linearGradient>
       </defs>
     </svg>

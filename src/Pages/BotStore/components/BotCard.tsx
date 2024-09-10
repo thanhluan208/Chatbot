@@ -3,6 +3,7 @@ import CommonStyles from "../../../Components/CommonStyles";
 import { ReactNode } from "react";
 import CommonIcons from "../../../Components/CommonIcons";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/Providers/AuthenticationProvider";
 
 const Stats = (props: { icon: ReactNode; value: number }) => {
   return (
@@ -37,6 +38,8 @@ interface BotCardProps {
   users: number;
   star: number;
   comments: number;
+  id: string;
+  owner_id: string;
 }
 
 const BotCard = (props: BotCardProps) => {
@@ -44,7 +47,10 @@ const BotCard = (props: BotCardProps) => {
   const { creator, avatar, name, space, description, users, star, comments } =
     props;
   const navigate = useNavigate();
+  const { userId } = useAuth();
 
+  const isOwner = userId === props.owner_id;
+  console.log('isOwner', isOwner);
   //! Function
 
   //! Render

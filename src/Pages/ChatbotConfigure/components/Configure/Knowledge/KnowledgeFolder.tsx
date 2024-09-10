@@ -7,7 +7,10 @@ import DeleteKnowledge from "./DeleteKnowledge";
 import { toast } from "react-toastify";
 import { useGet } from "../../../../../Stores/useStore";
 import httpServices from "../../../../../Services/httpServices";
-import { removeKnowledgeFromBot, updateKnowledgeToBot } from "../../../../../Constants/api";
+import {
+  removeKnowledgeFromBot,
+  updateKnowledgeToBot,
+} from "../../../../../Constants/api";
 import { useMemo } from "react";
 
 export interface IKnowledgeFolder {
@@ -18,31 +21,50 @@ export interface IKnowledgeFolder {
   quantity: string;
   createdAt: string;
   sharingWithBots?: string[];
-
+  userName?: string;
+  owner_id?: string;
 }
 
 const KnowledgeFolder = (props: IKnowledgeFolder) => {
   //! State
-  const { title, description, size, quantity, createdAt, id, sharingWithBots } = props;
+  const {
+    title,
+    description,
+    size,
+    quantity,
+    createdAt,
+    id,
+    sharingWithBots,
+    owner_id,
+  } = props;
   const navigate = useNavigate();
   const pathname = useLocation().pathname;
   const params = useParams();
   const botId = params.botId;
   const userId = params.id;
 
-
-  const isSharing = useMemo(() => {
-    if(botId && sharingWithBots?.includes(botId)){
+  const isOwner = useMemo(() => {
+    if (userId === owner_id) {
       return true;
     }
 
-    return false
-  },[botId, sharingWithBots])
+    return false;
+  }, [userId, owner_id]);
+
+  const isSharing = useMemo(() => {
+    if (botId && sharingWithBots?.includes(botId)) {
+      return true;
+    }
+
+    return false;
+  }, [botId, sharingWithBots]);
 
   const refetchListFolder = useGet("REFETCH_FOLDER_KNOWLEDGE");
 
   //! Function
-  const handleAddKnowledgeToBot = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleAddKnowledgeToBot = async (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     event.stopPropagation();
     if (!botId || !id || !userId) return;
 
@@ -76,9 +98,11 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
     }
   };
 
-  const handleRemoveKnowledgeFromBot = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleRemoveKnowledgeFromBot = async (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     event.stopPropagation();
-    if(!botId || !id || !userId) return;
+    if (!botId || !id || !userId) return;
 
     const toastId = toast.loading("Removing knowledge from bot...", {
       isLoading: true,
@@ -108,7 +132,7 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
         autoClose: 2000,
       });
     }
-  }
+  };
 
   //! Render
 
@@ -116,7 +140,7 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
     <Box
       onClick={() => {
         if (id) {
-          navigate(`${pathname}/knowledge/${id}`);
+          navigate(`${pathname}/knowledge/${id}?isOwner=${isOwner}`);
         }
       }}
       sx={{
@@ -165,7 +189,9 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
       >
         <CommonStyles.Button
           variant="outlined"
-          onClick={isSharing ? handleRemoveKnowledgeFromBot : handleAddKnowledgeToBot}
+          onClick={
+            isSharing ? handleRemoveKnowledgeFromBot : handleAddKnowledgeToBot
+          }
         >
           {isSharing ? "Remove" : "Add"}
         </CommonStyles.Button>

@@ -12,7 +12,7 @@ import KnowledgeDetail from "./Pages/KnowledgeDetail";
 import Login from "./Pages/Login";
 import SignUp from "./Pages/SignUp";
 import { Fragment } from "react/jsx-runtime";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "./Providers/AuthenticationProvider";
 import useRoutes from "./Constants/routes";
 import KnowledgeUpload from "./Pages/KnowledgeUpload";
@@ -53,7 +53,7 @@ function App() {
           element: <UserProfile />,
           loader: () => {
             if (!userId) return redirect("/login");
-    
+
             return null;
           },
         },
@@ -62,7 +62,7 @@ function App() {
           element: <KnowledgeStore />,
           loader: () => {
             if (!userId) return redirect("/login");
-    
+
             return null;
           },
         },
@@ -88,6 +88,15 @@ function App() {
     },
     {
       path: ListRoutes.knowledgeDetail,
+      element: <KnowledgeDetail />,
+      loader: () => {
+        if (!userId) return redirect("/login");
+
+        return null;
+      },
+    },
+    {
+      path: ListRoutes.knowledgeDetailFromStore,
       element: <KnowledgeDetail />,
       loader: () => {
         if (!userId) return redirect("/login");
@@ -131,7 +140,7 @@ function App() {
         return null;
       },
     },
-    
+
     {
       path: "/test",
       element: <Workflow />,
@@ -139,6 +148,11 @@ function App() {
   ]);
 
   //! Function
+  useEffect(() => {
+    return () => {
+      localStorage.removeItem("baseUrl");
+    };
+  }, []);
 
   //! Render
   return (

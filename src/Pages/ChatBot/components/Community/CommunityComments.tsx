@@ -111,6 +111,7 @@ const CommentItems = (props: ICommentItems) => {
         sx={{
           display: "flex",
           flexDirection: "column",
+          width:'100%'
         }}
       >
         <Box

@@ -33,6 +33,7 @@ export const ListRoutes = {
   botStore: "/bot-store",
   workspace: "/workspace/:id/bot/:botId",
   knowledgeDetail: "/workspace/:id/bot/:botId/knowledge/:knowledgeId",
+  knowledgeDetailFromStore: "/knowledge-store/:knowledgeId",
   knowledgeUpload: "/workspace/:id/bot/:botId/knowledge/:knowledgeId/upload",
   knowledgeStore: "/knowledge-store",
   userProfile: "/user/:userId",

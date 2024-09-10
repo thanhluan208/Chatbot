@@ -94,8 +94,8 @@ export const insertNested = (
   data: any
 ) => {
   return array.map((item) => {
-    if(item.id === id) {
-      if(item[childrenKey]) {
+    if (item.id === id) {
+      if (item[childrenKey]) {
         item[childrenKey].push(data);
       } else {
         item[childrenKey] = [data];
@@ -103,6 +103,11 @@ export const insertNested = (
     } else {
       insertNested(item[childrenKey], id, childrenKey, data);
     }
-    return item
+    return item;
   });
+};
+
+export const boolean = (value: string) => {
+  if (value === "true") return true;
+  else return false;
 };

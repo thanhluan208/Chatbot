@@ -21,7 +21,7 @@ interface IKnowledgeListDialog {
 }
 
 export const KnowledgeFilter = {
-  Public: "all",
+  All: "all",
   Owned: "owned",
   Shared: "shared",
 };
@@ -38,12 +38,11 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
   const theme: any = useTheme();
   const save = useSave();
   const [filters, setFilter] = useState({
-    visual_option: KnowledgeFilter.Public,
+    visual_option: KnowledgeFilter.All,
     search_input: "",
   });
 
   const { data, isLoading, refetch } = useGetListFolderKnowledge(filters);
-  console.log('data', data)
 
   const debounceRef = useRef<any>(null);
 
@@ -171,6 +170,7 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
                   quantity={item.quantity}
                   createdAt={item.createdAt}
                   sharingWithBots={item.sharingWithBots}
+                  owner_id={item.owner_id}
                 />
                 {index < data.length - 1 && <Divider />}
               </Fragment>

@@ -20,6 +20,9 @@ export default {
   FLOW_NODES: "FLOW_NODES",
   FLOW_EDGES: "FLOW_EDGES",
 
+  //! Community
+  OPEN_DRAWER: "OPEN_DRAWER",
+
 
   //! Mock
   COMMUNITY_REACTION: "COMMUNITY_REACTION",

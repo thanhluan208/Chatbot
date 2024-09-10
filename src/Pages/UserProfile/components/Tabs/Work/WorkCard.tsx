@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import { commonBotCard } from "../../../../../Interfaces/common";
 import CommonStyles from "../../../../../Components/CommonStyles";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface WorkCard extends commonBotCard {
   users: number;
@@ -40,6 +41,7 @@ const WorkCard = (props: WorkCard) => {
     collect,
   } = props;
   const [isReadMore, setIsReadMore] = useState(false);
+  const navigate = useNavigate()
   //! Function
 
   //! Render
@@ -49,7 +51,13 @@ const WorkCard = (props: WorkCard) => {
         padding: "16px",
         background: "#fff",
         borderRadius: "12px",
+        cursor: "pointer",
+        transition: "all 0.3s",
+        "&:hover": {
+          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+        }
       }}
+      onClick={() => navigate('/bot-store/123123')}
     >
       <Box
         sx={{

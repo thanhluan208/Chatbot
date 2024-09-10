@@ -43,7 +43,7 @@ interface Filters {
   visual_option?: string;
 }
 
-const useGetListFolderKnowledge = (filters: Filters, isTrigger = true) => {
+const useGetListFolderKnowledge = (filters?: Filters, isTrigger = true) => {
   const [data, setData] = useState<IKnowledgeFolder[] | []>([]);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState();
@@ -53,6 +53,7 @@ const useGetListFolderKnowledge = (filters: Filters, isTrigger = true) => {
     if (!userId) return;
     return knowledgeService.getListFolder({
       user_id: userId,
+      visual_option: "public",
       ...filters,
     });
   }, [userId, filters]);
@@ -74,6 +75,8 @@ const useGetListFolderKnowledge = (filters: Filters, isTrigger = true) => {
             ),
             quantity: `${Object.keys(item.list_files).length || 0}`,
             sharingWithBots: item.sharing_with_bots,
+            userName: item.user_name,
+            owner_id: item.owner_id,
           };
         });
 

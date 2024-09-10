@@ -1,11 +1,11 @@
 import { Box, InputAdornment } from "@mui/material";
 import CommonStyles from "../../Components/CommonStyles";
 import { useLayoutEffect, useState } from "react";
-import { capitalize } from "lodash";
+import { capitalize, isArray } from "lodash";
 import Mansory from "@mui/lab/Masonry";
 import CommonIcons from "../../Components/CommonIcons";
 import Knowledgecard from "./components/KnowledgeCard";
-import { formatNumber, mockDescription } from "../../Helpers";
+import useGetListFolderKnowledge from "@/Hooks/Knowledges/useGetListFolderKnowledge";
 
 export enum BotStoreCategory {
   RECOMENDED = "recomended",
@@ -25,6 +25,9 @@ const KnowledgeStore = () => {
   const [filters, setFilters] = useState({
     category: "recomended",
   });
+
+  const { data } = useGetListFolderKnowledge();
+
 
   //! Function
   useLayoutEffect(() => {
@@ -149,31 +152,35 @@ const KnowledgeStore = () => {
           padding: "24px",
         }}
       >
-        <Mansory columns={3} spacing={2}>
-          {Array.from({ length: 30 }).map((_, index) => {
-            return (
-              <Knowledgecard
-                key={index}
-                title="How to create a good design"
-                description={mockDescription()}
-                publisher={{
-                  name: "Luan Dang",
-                  avatar: "https://i.pravatar.cc/300",
-                  email: "@luandang123",
-                }}
-                avatar="https://p19-flow-product-sign-sg.ibyteimg.com/tos-alisg-i-bfte7mpw5s-sg/ee3cb1c8af2d4f478c54fab5d1f0282c~tplv-bfte7mpw5s-resize:128:128.image?rk3s=2e2596fd&x-expires=1727614368&x-signature=7F9a7ywdqP%2FddcqJwNtnmQOM4XM%3D"
-                botUsed={formatNumber(
-                  Math.floor(Math.random() * 345678 + 800000)
-                )}
-                favorite={formatNumber(
-                  Math.floor(Math.random() * 34567 + 80000)
-                )}
-                isOfficial={Math.random() > 0.3}
-                isFavorite={Math.random() > 0.5}
-              />
-            );
-          })}
-        </Mansory>
+        {data && isArray(data) && (
+          <Mansory columns={3} spacing={2}>
+            {data.map((item) => {
+               return (
+                <Knowledgecard
+                  owner_id={item.owner_id as string}
+                  id={item.id as string}
+                  key={item.id}
+                  title={item.title || "Anonymous knowledge"}
+                  description={item.description || ""}
+                  publisher={{
+                    name: item.userName || "Anonymous",
+                    avatar: "https://i.pravatar.cc/300",
+                    email: "@luandang123",
+                  }}
+                  avatar="https://p19-flow-product-sign-sg.ibyteimg.com/tos-alisg-i-bfte7mpw5s-sg/ee3cb1c8af2d4f478c54fab5d1f0282c~tplv-bfte7mpw5s-resize:128:128.image?rk3s=2e2596fd&x-expires=1727614368&x-signature=7F9a7ywdqP%2FddcqJwNtnmQOM4XM%3D"
+                  // botUsed={formatNumber(
+                  //   Math.floor(Math.random() * 345678 + 800000)
+                  // )}
+                  // favorite={formatNumber(
+                  //   Math.floor(Math.random() * 34567 + 80000)
+                  // )}
+                  // isOfficial={Math.random() > 0.3}
+                  isFavorite={Math.random() > 0.5}
+                />
+              );
+            })}
+          </Mansory>
+        )}
       </Box>
     </Box>
   );

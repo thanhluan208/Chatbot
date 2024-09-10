@@ -1,8 +1,8 @@
-import { Box, InputAdornment } from "@mui/material";
+import { Box } from "@mui/material";
 import CommonStyles from "../../Components/CommonStyles";
 import useGetListKnowledgeFiles from "../../Hooks/Knowledges/useGetListKnowledgeFiles";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo } from "react";
 import { useSave } from "../../Stores/useStore";
 import cachedKeys from "../../Constants/cachedKeys";
 import CommonIcons from "../../Components/CommonIcons";
@@ -12,6 +12,8 @@ import { useAuth } from "../../Providers/AuthenticationProvider";
 import { isEmpty } from "lodash";
 import SegmentList from "./components/SegmentList";
 import EditKnowledge from "./components/EditKnowledge";
+import PublicButton from "./components/PublicButton";
+import { boolean } from "@/Helpers";
 
 const KnowledgeDetail = () => {
   //! State
@@ -19,10 +21,11 @@ const KnowledgeDetail = () => {
   const save = useSave();
   const navigate = useNavigate();
   const { knowledgeId } = params || {};
-  const [filters, setFilter] = useState({
-    search: "",
-  });
-  const debounceRef = useRef<any>(null);
+  const queryParams = new URLSearchParams(location.search);
+
+  const isOwner = boolean(queryParams.get("isOwner") as string);
+
+
   const { userId } = useAuth();
 
   const payload = useMemo(() => {
@@ -51,14 +54,14 @@ const KnowledgeDetail = () => {
   }, [data]);
 
   //! Function
-  const handleChangeSearch = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      setFilter((prev) => ({ ...prev, search: e.target.value }));
-    }, 300);
-  };
+  // const handleChangeSearch = (
+  //   e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  // ) => {
+  //   if (debounceRef.current) clearTimeout(debounceRef.current);
+  //   debounceRef.current = setTimeout(() => {
+  //     setFilter((prev) => ({ ...prev, search: e.target.value }));
+  //   }, 300);
+  // };
 
   //! Effect
   useEffect(() => {
@@ -133,24 +136,15 @@ const KnowledgeDetail = () => {
               </Box>
             </Box>
             <Box sx={{ display: "flex", gap: "8px" }}>
-              <CommonStyles.Input
-                afterOnchange={handleChangeSearch}
-                value={filters.search}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment
-                      position="start"
-                      sx={{ marginLeft: "10px" }}
-                    >
-                      <CommonIcons.Search />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <AddContentButton />
-              <CommonStyles.Button variant="contained">
-                Add to bot
-              </CommonStyles.Button>
+              {isOwner && (
+                <Fragment>
+                  <PublicButton />
+                  <AddContentButton />
+                  <CommonStyles.Button variant="contained">
+                    Add to bot
+                  </CommonStyles.Button>
+                </Fragment>
+              )}
             </Box>
           </Box>
         </Box>

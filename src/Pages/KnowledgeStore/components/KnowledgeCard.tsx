@@ -1,7 +1,9 @@
 import CommonIcons from "@/Components/CommonIcons";
 import CommonStyles from "@/Components/CommonStyles/index";
+import { useAuth } from "@/Providers/AuthenticationProvider";
 import { Box, Tooltip } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface KnowledgeCardProps {
   avatar: string;
@@ -16,6 +18,8 @@ interface KnowledgeCardProps {
   botUsed?: string;
   favorite?: string;
   isFavorite?: boolean;
+  id: string;
+  owner_id: string;
 }
 
 const MaxChar = 60;
@@ -23,6 +27,8 @@ const MaxChar = 60;
 const Knowledgecard = (props: KnowledgeCardProps) => {
   //! State
   const {
+    owner_id,
+    id,
     avatar,
     isOfficial,
     title,
@@ -33,17 +39,24 @@ const Knowledgecard = (props: KnowledgeCardProps) => {
     isFavorite,
   } = props;
   const [isReadMore, setIsReadMore] = useState(false);
-
+  const { userId } = useAuth();
+  const navigate = useNavigate();
   //! Function
+  console.log("asdasd", props)
+  const handleNavigate = () => {
+    navigate(`/knowledge-store/${id}?isOwner=${owner_id === userId}`);
+  };
 
   //! Render
   return (
     <Box
+      onClick={handleNavigate}
       sx={{
         padding: "16px",
         background: "#FFFFFF",
         border: "solid 1px #0607091a",
         borderRadius: "8px",
+        cursor: "pointer",
         "&:hover": {
           boxShadow: "0 6px 8px 0 rgba(28,31,35,.06)",
           "& .favorite": {
@@ -106,9 +119,12 @@ const Knowledgecard = (props: KnowledgeCardProps) => {
             </Tooltip>
           )}
         </Box>
-        <CommonStyles.Typography type="semiBold16" sx={{
+        <CommonStyles.Typography
+          type="semiBold16"
+          sx={{
             marginTop: "16px",
-        }}>
+          }}
+        >
           {title}
         </CommonStyles.Typography>
         <Box sx={{ display: "flex", gap: "4px", alignItems: "center" }}>

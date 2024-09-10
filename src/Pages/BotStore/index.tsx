@@ -2,12 +2,12 @@ import { Box, InputAdornment } from "@mui/material";
 import CommonStyles from "../../Components/CommonStyles";
 import HighlightCard from "./components/HightlightCard";
 import { useLayoutEffect, useState } from "react";
-import { capitalize } from "lodash";
+import { capitalize, isArray } from "lodash";
 import BotCard from "./components/BotCard";
 import Mansory from "@mui/lab/Masonry";
 import { mockDescription } from "../../Helpers";
 import CommonIcons from "../../Components/CommonIcons";
-
+import useGetBotsStore from "@/Hooks/Bot/useGetBotsStore";
 
 export enum BotStoreCategory {
   RECOMENDED = "recomended",
@@ -26,6 +26,8 @@ const BotStore = () => {
   const [filters, setFilters] = useState({
     category: "recomended",
   });
+
+  const { data } = useGetBotsStore();
 
   //! Function
   useLayoutEffect(() => {
@@ -74,15 +76,17 @@ const BotStore = () => {
           fullWidth
           placeholder="Search"
           InputProps={{
-            startAdornment: <InputAdornment position="start" sx={{marginLeft:'16px'}}>
+            startAdornment: (
+              <InputAdornment position="start" sx={{ marginLeft: "16px" }}>
                 <CommonIcons.Search />
-            </InputAdornment>,
+              </InputAdornment>
+            ),
           }}
           sx={{
             fieldset: {
               border: "none",
               boxShadow:
-              "0 4px 12px 0px rgba(0,0,0,0.08), 0px 8px 24px 0px rgba(0,0,0,0.04)",
+                "0 4px 12px 0px rgba(0,0,0,0.08), 0px 8px 24px 0px rgba(0,0,0,0.04)",
             },
           }}
         />
@@ -206,34 +210,45 @@ const BotStore = () => {
           padding: "24px",
         }}
       >
-        <Mansory columns={3} spacing={2}>
-          {Array.from({ length: 30 }).map((_, index) => {
-            return (
-              <BotCard
-                key={index}
-                avatar="https://p16-flow-product-sign-sg.ibyteimg.com/tos-alisg-i-bfte7mpw5s-sg/9c9ef4e4c6f147339c0cae1408bb1f46~tplv-bfte7mpw5s-resize:128:128.image?rk3s=2e2596fd&x-expires=1727594320&x-signature=VTZfu6FleEdw6gvUsvvssaBeyLg%3D"
-                category=""
-                name="Black Myth: Wukong Master"
-                space={{
-                  avatar:
-                    "https://sf16-passport-sg.ibytedtos.com/img/user-avatar-alisg/4d26373f2eedfe14710becde336c2450~300x300.image",
-                  name: "BuilderPro",
-                }}
-                comments={Math.floor(Math.random() * 100)}
-                creator={{
-                  name: "@Luandang123",
-                  avatar:
-                    Math.floor(Math.random()) % 2 === 0
-                      ? "https://sf16-bot-platform-tos-sign.coze.com/obj/bot-studio-bot-platform-sg/FileBizType.BIZ_LABEL_ICON/0_1721634266433275972_F2UPYqurVT.image/png?lk3s=50ccb0c5&x-expires=1725088720&x-signature=9B3UH8Ry%2BD1HFPjjfU39rzLDFiM%3D"
-                      : "",
-                }}
-                description={mockDescription()}
-                star={Math.floor(Math.random() * 50 + 100)}
-                users={Math.floor(Math.random() * 1000 + 3000)}
-              />
-            );
-          })}
-        </Mansory>
+        {isArray(data) && (
+          <Mansory
+            columns={{
+              sm: 1,
+              md: 2,
+              lg: 3,
+            }}
+            spacing={2}
+          >
+            {data.map((item) => {
+              return (
+                <BotCard
+                  id={item.bot_id}
+                  key={item.bot_id}
+                  avatar="https://p16-flow-product-sign-sg.ibyteimg.com/tos-alisg-i-bfte7mpw5s-sg/9c9ef4e4c6f147339c0cae1408bb1f46~tplv-bfte7mpw5s-resize:128:128.image?rk3s=2e2596fd&x-expires=1727594320&x-signature=VTZfu6FleEdw6gvUsvvssaBeyLg%3D"
+                  category=""
+                  name={item.bot_name}
+                  space={{
+                    avatar:
+                      "https://sf16-passport-sg.ibytedtos.com/img/user-avatar-alisg/4d26373f2eedfe14710becde336c2450~300x300.image",
+                    name: item.user_name,
+                  }}
+                  comments={Math.floor(Math.random() * 100)}
+                  creator={{
+                    name: `@${item.user_name}`,
+                    avatar:
+                      Math.floor(Math.random()) % 2 === 0
+                        ? "https://sf16-bot-platform-tos-sign.coze.com/obj/bot-studio-bot-platform-sg/FileBizType.BIZ_LABEL_ICON/0_1721634266433275972_F2UPYqurVT.image/png?lk3s=50ccb0c5&x-expires=1725088720&x-signature=9B3UH8Ry%2BD1HFPjjfU39rzLDFiM%3D"
+                        : "",
+                  }}
+                  description={item.description || mockDescription()}
+                  star={Math.floor(Math.random() * 50 + 100)}
+                  users={Math.floor(Math.random() * 1000 + 3000)}
+                  owner_id={item.owner_id}
+                />
+              );
+            })}
+          </Mansory>
+        )}
       </Box>
     </Box>
   );

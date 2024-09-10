@@ -64,9 +64,9 @@ const EmptyCard = () => {
           width="57.1429"
           height="57.1429"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+          <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -100,8 +100,8 @@ const EmptyCard = () => {
           y2="102"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#38415A"></stop>
-          <stop offset="1" stop-color="#2B3245" stop-opacity="0.4"></stop>
+          <stop stopColor="#38415A"></stop>
+          <stop offset="1" stopColor="#2B3245" stop-opacity="0.4"></stop>
         </linearGradient>
         <linearGradient
           id="paint1_linear_4513_102766"
@@ -111,8 +111,8 @@ const EmptyCard = () => {
           y2="56"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#F45D68"></stop>
-          <stop offset="1" stop-color="#FFCA00"></stop>
+          <stop stopColor="#F45D68"></stop>
+          <stop offset="1" stopColor="#FFCA00"></stop>
         </linearGradient>
       </defs>
     </svg>

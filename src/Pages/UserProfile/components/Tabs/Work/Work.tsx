@@ -77,7 +77,7 @@ const Work = () => {
             return (
               <WorkCard
                 key={index}
-                avatar="https://p16-flow-product-sPign-sg.ibyteimg.com/tos-alisg-i-bfte7mpw5s-sg/2b7506f1031c4ecc9a828bde1391285b~tplv-bfte7mpw5s-resize:128:128.image?rk3s=2e2596fd&x-expires=1727600185&x-signature=FnSjQncrVRzg9K27GlHn5GJonVI%3D"
+                avatar="https://p19-flow-product-sign-sg.ibyteimg.com/tos-alisg-i-bfte7mpw5s-sg/0afef35ae2244193bdf62a52a86a8b6b~tplv-bfte7mpw5s-resize:128:128.image?rk3s=2e2596fd&x-expires=1727956105&x-signature=Jz6Ikq6ZINtDl6qb1Jtsp6kxY3U%3D"
                 collect={Math.floor(Math.random() * 20)}
                 creator={{
                   name: "@luandang123",

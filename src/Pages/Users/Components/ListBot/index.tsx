@@ -52,7 +52,7 @@ const BotCard = (props: IBotCard) => {
   const handleClick = (e: any) => {
     if (openDialog) return;
     e.stopPropagation();
-    navigate(location.pathname + "/bot/" + bot_id);
+    navigate(location.pathname + "/bot/" + bot_id + "?isOwner=true");
   };
 
   const handleFav = (e: any) => {
@@ -208,6 +208,7 @@ function ListBot() {
   const save = useSave();
   const { data, isLoading, refetch } = useGetListBot();
 
+  console.log("data", data);
   //! Function
   useEffect(() => {
     if (refetch) {

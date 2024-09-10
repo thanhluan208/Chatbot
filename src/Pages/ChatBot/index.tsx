@@ -10,11 +10,15 @@ import { RightSide } from "./components/RightSide";
 import { ConfigurationItemEnum } from "./components/ConfigurationItem";
 import Options from "./components/Options";
 import Memory from "./components/Memory";
+import { useSave } from "@/Stores/useStore";
+import cachedKeys from "@/Constants/cachedKeys";
+import CommunityDrawer from "./components/Community/CommunityDrawer";
 
 const Chatbot = () => {
   //! State
   const theme: any = useTheme();
   const navigate = useNavigate();
+  const save = useSave();
   const isBrandNew = true;
 
   //! Function
@@ -23,6 +27,7 @@ const Chatbot = () => {
   return (
     <Box sx={{ height: "100vh", width: "100vw" }}>
       {/* <CommonStyles.LoadingOverlay isLoading={isLoading} /> */}
+      <CommunityDrawer />
       <Box
         sx={{
           height: "74px",
@@ -76,7 +81,15 @@ const Chatbot = () => {
                   𓃑 5-Minutes READING
                 </CommonStyles.Typography>
               </Box>
-              <Box display="flex" alignItems="center">
+              <Box
+                display="flex"
+                alignItems="center"
+                sx={{
+                  [theme.breakpoints.down("sm")]: {
+                    display: "none",
+                  },
+                }}
+              >
                 <Box sx={{ display: "flex", gap: "4px", alignItems: "center" }}>
                   <img
                     src="https://sf16-passport-sg.ibytedtos.com/img/user-avatar-alisg/4d26373f2eedfe14710becde336c2450~300x300.image"
@@ -129,6 +142,9 @@ const Chatbot = () => {
               width: "96px",
               background: "#fff",
             },
+            [theme.breakpoints.down("sm")]: {
+              display: "none",
+            },
           }}
         >
           <CommonStyles.Button>
@@ -139,6 +155,35 @@ const Chatbot = () => {
             <CommonStyles.Typography type="semiBold14">
               Share
             </CommonStyles.Typography>
+          </CommonStyles.Button>
+        </Box>
+        <Box
+          sx={{
+            display: "none",
+            [theme.breakpoints.down("sm")]: {
+              display: "flex",
+              gap: "12px",
+            },
+            button: {
+              padding: "8px 16px",
+              borderRadius: "8px",
+              border: "solid 1px #e6e8ea",
+              display: "flex",
+              gap: "4px",
+              alignItems: "center",
+              background: "#fff",
+              svg: {
+                width: 16,
+                height: 16,
+              }
+            },
+          }}
+        >
+          <CommonStyles.Button isIcon>
+            <CommonIcons.Star />
+          </CommonStyles.Button>
+          <CommonStyles.Button isIcon>
+            <CommonIcons.Share />
           </CommonStyles.Button>
         </Box>
       </Box>
@@ -154,6 +199,9 @@ const Chatbot = () => {
             padding: "20px 14px 105px 14px",
             height: "calc(100vh - 74px)",
             position: "relative",
+            [theme.breakpoints.down("lg")]: {
+              flex: 1,
+            },
           }}
         >
           <Box
@@ -168,6 +216,24 @@ const Chatbot = () => {
           >
             <Memory />
             <Options />
+            <CommonStyles.Button
+              isIcon
+              sx={{
+                background: "#fff",
+                padding: "8px",
+                borderRadius: "8px",
+                boxShadow:
+                  "0 2px 4px 0 rgba(0,0,0,.04),0 0 1px 0 rgba(0,0,0,.08)",
+                [theme.breakpoints.up("lg")]: {
+                  display: "none",
+                },
+              }}
+              onClick={() => {
+                save(cachedKeys.OPEN_DRAWER, true);
+              }}
+            >
+              <CommonIcons.Menu />
+            </CommonStyles.Button>
           </Box>
           <PerfectScrollBar
             id="scrollbar"
@@ -265,18 +331,29 @@ const Chatbot = () => {
             </Box>
           </Box>
         </Box>
-        <RightSide
-          configuration={{
-            model: "GPT-3 (16K)",
-            items: [
-              ConfigurationItemEnum.PRIVATE_KNOWLEDGE,
-              ConfigurationItemEnum.PRIVATE_PLUGIN,
-            ],
+
+        <Box
+          sx={{
+            maxWidth: "500px",
+            flex: 1,
+            [theme.breakpoints.down("lg")]: {
+              display: "none",
+            },
           }}
-          conversation={Math.floor(Math.random() * 456789 + 3000000)}
-          user={Math.floor(Math.random() * 34567 + 100000)}
-          like={Math.floor(Math.random() * 1000)}
-        />
+        >
+          <RightSide
+            configuration={{
+              model: "GPT-3 (16K)",
+              items: [
+                ConfigurationItemEnum.PRIVATE_KNOWLEDGE,
+                ConfigurationItemEnum.PRIVATE_PLUGIN,
+              ],
+            }}
+            conversation={Math.floor(Math.random() * 456789 + 3000000)}
+            user={Math.floor(Math.random() * 34567 + 100000)}
+            like={Math.floor(Math.random() * 1000)}
+          />
+        </Box>
       </Box>
     </Box>
   );

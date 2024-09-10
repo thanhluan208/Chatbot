@@ -10,6 +10,7 @@ import Develop from "./components/Develop";
 import Analysis from "./components/Analysis";
 import useGetBotData from "../../Hooks/Bot/useGetBotData";
 import cachedKeys from "../../Constants/cachedKeys";
+import { boolean } from "@/Helpers";
 
 interface IChatbotConfigure {}
 
@@ -22,6 +23,10 @@ function ChatbotConfigure(props: IChatbotConfigure) {
   const save = useSave();
   const botId = params?.botId;
   const userId = params?.id;
+
+  const queryParams = new URLSearchParams(location.search);
+
+  const isOwner = boolean(queryParams.get("isOwner") as string);
 
   const payload = useMemo(() => {
     return {
@@ -86,10 +91,12 @@ function ChatbotConfigure(props: IChatbotConfigure) {
             <CommonIcons.ArrowBackIosNew />
           </CommonStyles.Button>
 
-          <Box sx={{
-            display:'flex',
-            alignItems:'center',
-          }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
             <img
               src={Team}
               alt="Team"
@@ -143,9 +150,11 @@ function ChatbotConfigure(props: IChatbotConfigure) {
           >
             <CommonIcons.Restore />
           </CommonStyles.Button>
-          <CommonStyles.Button variant="contained" sx={{ width: "96px" }}>
-            Publish
-          </CommonStyles.Button>
+          {isOwner && (
+            <CommonStyles.Button variant="contained" sx={{ width: "96px" }}>
+              Publish
+            </CommonStyles.Button>
+          )}
         </Box>
         <Box
           display={"flex"}
