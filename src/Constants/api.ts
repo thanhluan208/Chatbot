@@ -1,6 +1,6 @@
 const baseAPI =
   localStorage.getItem("baseUrl") ||
-  "https://835e-2001-ee0-442d-8ef0-31b4-3c50-4dd0-a15f.ngrok-free.app";
+  "https://0156-2001-ee0-442d-8ef0-709d-18ea-80c4-ee5b.ngrok-free.app";
 
 export const getFolderKnowledge =
   baseAPI + "/knowledge/list_knowledge_storages";

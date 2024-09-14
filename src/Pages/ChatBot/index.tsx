@@ -5,8 +5,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Fragment } from "react/jsx-runtime";
 import PerfectScrollBar from "react-perfect-scrollbar";
 import InputBox from "./components/InputBox";
-import { RightSide } from "./components/RightSide";
-import { ConfigurationItemEnum } from "./components/ConfigurationItem";
 import Options from "./components/Options";
 import Memory from "./components/Memory";
 import { useSave } from "@/Stores/useStore";
@@ -15,6 +13,7 @@ import CommunityDrawer from "./components/Community/CommunityDrawer";
 import { useEffect, useMemo, useState } from "react";
 import useGetBotData from "@/Hooks/Bot/useGetBotData";
 import ChatField from "./components/ChatField";
+import LeftSide from "./components/LeftSide";
 
 const Chatbot = () => {
   //! State
@@ -22,6 +21,7 @@ const Chatbot = () => {
   const navigate = useNavigate();
   const save = useSave();
   const [isBrandNew, setIsBrandNew] = useState(false);
+  const [openConversation, setOpenConversation] = useState(true);
 
   const params = useParams();
   const botId = params?.botId;
@@ -212,15 +212,31 @@ const Chatbot = () => {
       <Box
         sx={{
           display: "flex",
+          width: "100vw",
         }}
       >
         <Box
+          sx={{
+            maxWidth: "300px",
+            width: openConversation ? "300px" : "0px",
+            transition: "all 0.5s ease",
+            [theme.breakpoints.down("lg")]: {
+              display: "none",
+            },
+            overflow: "hidden",
+          }}
+        >
+          <LeftSide setOpenConversation={setOpenConversation} />
+        </Box>
+
+        <Box
           id="wrapper"
           sx={{
-            flex: 2,
             padding: "20px 14px 105px 14px",
             height: "calc(100vh - 74px)",
             position: "relative",
+            width: "100vw",
+            transition: "all 0.5s ease",
             [theme.breakpoints.down("lg")]: {
               flex: 1,
             },
@@ -238,25 +254,48 @@ const Chatbot = () => {
           >
             <Memory />
             <Options />
-            <CommonStyles.Button
-              isIcon
+              <CommonStyles.Button
+                isIcon
+                sx={{
+                  background: "#fff",
+                  padding: "8px",
+                  borderRadius: "8px",
+                  boxShadow:
+                    "0 2px 4px 0 rgba(0,0,0,.04),0 0 1px 0 rgba(0,0,0,.08)",
+                }}
+                onClick={() => {
+                  save(cachedKeys.OPEN_DRAWER,true);
+                }}
+              >
+                <CommonIcons.Menu />
+              </CommonStyles.Button>
+          </Box>
+          {!openConversation && (
+            <Box
               sx={{
-                background: "#fff",
-                padding: "8px",
-                borderRadius: "8px",
-                boxShadow:
-                  "0 2px 4px 0 rgba(0,0,0,.04),0 0 1px 0 rgba(0,0,0,.08)",
-                [theme.breakpoints.up("lg")]: {
-                  display: "none",
-                },
-              }}
-              onClick={() => {
-                save(cachedKeys.OPEN_DRAWER, true);
+                position: "absolute",
+                top: "20px",
+                left: "20px",
+                zIndex: 100,
               }}
             >
-              <CommonIcons.Menu />
-            </CommonStyles.Button>
-          </Box>
+              <CommonStyles.Button
+                isIcon
+                sx={{
+                  background: "#fff",
+                  padding: "8px",
+                  borderRadius: "8px",
+                  boxShadow:
+                    "0 2px 4px 0 rgba(0,0,0,.04),0 0 1px 0 rgba(0,0,0,.08)",
+                }}
+                onClick={() => {
+                  setOpenConversation(true);
+                }}
+              >
+                <CommonIcons.Note />
+              </CommonStyles.Button>
+            </Box>
+          )}
           <PerfectScrollBar
             id="scrollbar"
             style={{
@@ -331,10 +370,11 @@ const Chatbot = () => {
           </Box>
         </Box>
 
-        <Box
+        {/* <Box
           sx={{
             maxWidth: "500px",
-            flex: 1,
+            width: openComment ? "500px" : "0px",
+            transition: "all 0.5s ease",
             [theme.breakpoints.down("lg")]: {
               display: "none",
             },
@@ -352,7 +392,7 @@ const Chatbot = () => {
             user={Math.floor(Math.random() * 34567 + 100000)}
             like={Math.floor(Math.random() * 1000)}
           />
-        </Box>
+        </Box> */}
       </Box>
     </Box>
   );

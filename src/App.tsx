@@ -11,8 +11,6 @@ import Workflow from "./Pages/Workflow";
 import KnowledgeDetail from "./Pages/KnowledgeDetail";
 import Login from "./Pages/Login";
 import SignUp from "./Pages/SignUp";
-import { Fragment } from "react/jsx-runtime";
-import {  useState } from "react";
 import { useAuth } from "./Providers/AuthenticationProvider";
 import useRoutes from "./Constants/routes";
 import KnowledgeUpload from "./Pages/KnowledgeUpload";
@@ -23,7 +21,6 @@ import ChatBot from "./Pages/ChatBot";
 
 function App() {
   //! State
-  const [baseUrl, setbaseUrl] = useState("");
   const { userId } = useAuth();
   const Routes = useRoutes();
   const router = createBrowserRouter([
@@ -151,19 +148,7 @@ function App() {
 
   //! Render
   return (
-    <Fragment>
-      <div style={{ position: "fixed", top: 0, zIndex: 1000000 }}>
-        <input onChange={(e) => setbaseUrl(e.target.value)} />
-        <button
-          onClick={() => {
-            localStorage.setItem("baseUrl", baseUrl);
-          }}
-        >
-          submit
-        </button>
-      </div>
       <RouterProvider router={router} />
-    </Fragment>
   );
 }
 

@@ -61,7 +61,7 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
           bot_name: values.name,
           bot_description: values.description,
         });
-        await refetchListBot();
+        refetchListBot && (await refetchListBot());
         if (response.data.status_code === 200) {
           toast.update(toastId, {
             render: `Bot ${values.name} created successfully!`,

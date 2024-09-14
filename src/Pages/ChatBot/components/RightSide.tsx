@@ -9,6 +9,8 @@ import ViewmoreConfig from "./ViewmoreConfig";
 import AddComment from "./AddComment";
 import Community from "./Community/Community";
 import CommunityDetail from "./Community/CommunityDetail";
+import { useSave } from "@/Stores/useStore";
+import cachedKeys from "@/Constants/cachedKeys";
 
 const Description = ({ text }: { text: string }) => {
   //! State
@@ -55,25 +57,28 @@ export const RightSide = ({
   configuration,
 }: RightSideProps) => {
   //! State
+  const save = useSave()
+
   const queryParams = new URLSearchParams(location.search);
 
   const community = queryParams.get("community");
 
-  const theme = useTheme()
-
+  const theme = useTheme();
 
   //! Function
 
   //! Render
   return (
-    <Box sx={{
-      [theme.breakpoints.down('lg')]: {
-        "& .main-scrollbar": {
-          maxHeight: "calc(100vh) !important",
-          minHeight: "calc(100vh) !important",
-        }
-      }
-    }}>
+    <Box
+      sx={{
+        [theme.breakpoints.down("lg")]: {
+          "& .main-scrollbar": {
+            maxHeight: "calc(100vh) !important",
+            minHeight: "calc(100vh) !important",
+          },
+        },
+      }}
+    >
       <PerfectScrollbar
         className="main-scrollbar"
         style={{
@@ -87,98 +92,120 @@ export const RightSide = ({
           <CommunityDetail />
         ) : (
           <Fragment>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                position: "relative",
+                justifyContent: "space-between",
+              }}
+            >
               <Box
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  padding: "4px",
-                  border: "1px solid #0607090a",
-                  borderRadius: "8px",
-                  svg: {
-                    width: 12,
-                    height: 12,
-                    border: "1px solid #0607090a",
-                    borderRadius: "8px",
-                  },
                 }}
               >
-                <CommonStyles.Button
-                  sx={{
-                    color: "unset",
-                    padding: "4px 10px",
-                    gap: "8px",
-                    minWidth: "unset",
-                    borderRadius: "8px",
-                  }}
-                >
-                  <CommonIcons.ThumbUp />
-                  <CommonStyles.Typography type="normal12">
-                    {like}
-                  </CommonStyles.Typography>
-                </CommonStyles.Button>
                 <Box
                   sx={{
-                    height: "12px",
+                    display: "flex",
+                    alignItems: "center",
+                    padding: "4px",
+                    border: "1px solid #0607090a",
+                    borderRadius: "8px",
+                    svg: {
+                      width: 12,
+                      height: 12,
+                      border: "1px solid #0607090a",
+                      borderRadius: "8px",
+                    },
+                  }}
+                >
+                  <CommonStyles.Button
+                    sx={{
+                      color: "unset",
+                      padding: "4px 10px",
+                      gap: "8px",
+                      minWidth: "unset",
+                      borderRadius: "8px",
+                    }}
+                  >
+                    <CommonIcons.ThumbUp />
+                    <CommonStyles.Typography type="normal12">
+                      {like}
+                    </CommonStyles.Typography>
+                  </CommonStyles.Button>
+                  <Box
+                    sx={{
+                      height: "12px",
+                      width: "1px",
+                      background: "#0607091a",
+                      margin: "0 4px",
+                    }}
+                  />
+                  <CommonStyles.Button
+                    sx={{
+                      color: "unset",
+                      padding: "4px 10px",
+                      gap: "4px",
+                      minWidth: "unset",
+                      borderRadius: "8px",
+                    }}
+                  >
+                    <CommonIcons.ThumbDown />
+                  </CommonStyles.Button>
+                </Box>
+                <Box
+                  sx={{
+                    height: "24px",
                     width: "1px",
                     background: "#0607091a",
-                    margin: "0 4px",
+                    margin: "0 12px",
                   }}
                 />
-                <CommonStyles.Button
+                <Box sx={{ display: "flex", gap: "4px" }}>
+                  <CommonStyles.Typography type="semiBold20">
+                    {formatNumber(user)}
+                  </CommonStyles.Typography>
+                  <CommonStyles.Typography
+                    type="normal12"
+                    sx={{
+                      padding: "11px 0 4px",
+                    }}
+                  >
+                    users
+                  </CommonStyles.Typography>
+                </Box>
+                <Box
                   sx={{
-                    color: "unset",
-                    padding: "4px 10px",
-                    gap: "4px",
-                    minWidth: "unset",
-                    borderRadius: "8px",
+                    height: "24px",
+                    width: "1px",
+                    background: "#0607091a",
+                    margin: "0 12px",
                   }}
-                >
-                  <CommonIcons.ThumbDown />
-                </CommonStyles.Button>
+                />
+                <Box sx={{ display: "flex", gap: "4px" }}>
+                  <CommonStyles.Typography type="semiBold20">
+                    {formatNumber(conversation)}
+                  </CommonStyles.Typography>
+                  <CommonStyles.Typography
+                    type="normal12"
+                    sx={{
+                      padding: "11px 0 4px",
+                    }}
+                  >
+                    conversations
+                  </CommonStyles.Typography>
+                </Box>
               </Box>
-              <Box
-                sx={{
-                  height: "24px",
-                  width: "1px",
-                  background: "#0607091a",
-                  margin: "0 12px",
+              <CommonStyles.Button
+                isIcon
+                onClick={() => {
+                  save(cachedKeys.OPEN_DRAWER, false)
                 }}
-              />
-              <Box sx={{ display: "flex", gap: "4px" }}>
-                <CommonStyles.Typography type="semiBold20">
-                  {formatNumber(user)}
-                </CommonStyles.Typography>
-                <CommonStyles.Typography
-                  type="normal12"
-                  sx={{
-                    padding: "11px 0 4px",
-                  }}
-                >
-                  users
-                </CommonStyles.Typography>
-              </Box>
-              <Box
-                sx={{
-                  height: "24px",
-                  width: "1px",
-                  background: "#0607091a",
-                  margin: "0 12px",
-                }}
-              />
-              <Box sx={{ display: "flex", gap: "4px" }}>
-                <CommonStyles.Typography type="semiBold20">
-                  {formatNumber(conversation)}
-                </CommonStyles.Typography>
-                <CommonStyles.Typography
-                  type="normal12"
-                  sx={{
-                    padding: "11px 0 4px",
-                  }}
-                >
-                  conversations
-                </CommonStyles.Typography>
-              </Box>
+              >
+                <CommonIcons.Close />
+              </CommonStyles.Button>
             </Box>
             <Box
               sx={{
