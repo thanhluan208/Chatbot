@@ -4,20 +4,34 @@ import Hint from "./Hint";
 import { FastField, useFormikContext } from "formik";
 import CommonField from "../../../../../Components/CommonFields";
 import CustomAdornment from "./CustomAdornment";
+import { memo, useMemo } from "react";
 
 interface ISlideAndNumField {
   hintContent: React.ReactNode;
-  marks: { value: number; label: string }[];
   title: string;
   min: number;
   max: number;
   name: string;
+  step?: number;
 }
 
-function SlideAndNumField(props: ISlideAndNumField) {
+const SlideAndNumField = (props: ISlideAndNumField) => {
   //! State
-  const { hintContent, marks, max, min, name, title } = props;
+  const { hintContent,  max, min, name, title, step } = props;
   const { setFieldValue } = useFormikContext();
+
+  const marks = useMemo(() => {
+    return [
+      {
+        value: min,
+        label: min.toString(),
+      },
+      {
+        value: max,
+        label: max.toString(),
+      },
+    ];
+  }, [min, max]);
 
   //! Function
   const handleChangeAdvance = (
@@ -70,16 +84,18 @@ function SlideAndNumField(props: ISlideAndNumField) {
               transform: "translateY(-50%)",
             },
           }}
-          step={0.01}
+          step={step || 0.01}
           valueLabelDisplay="auto"
         />
         <FastField
           name={name}
           component={CommonField.InputField}
           type="number"
-          sxContainer={{ width: "120px" }}
+          sxContainer={{ width: "160px" }}
           InputProps={{
-            endAdornment: <CustomAdornment name={name} min={min} max={max} />,
+            endAdornment: (
+              <CustomAdornment name={name} min={min} max={max} step={step} />
+            ),
           }}
           onChangeCustomize={(
             event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -88,6 +104,6 @@ function SlideAndNumField(props: ISlideAndNumField) {
       </Box>
     </Box>
   );
-}
+};
 
-export default SlideAndNumField;
+export default memo(SlideAndNumField);

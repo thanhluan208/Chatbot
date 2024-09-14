@@ -68,13 +68,14 @@ export const RightSide = ({
   return (
     <Box sx={{
       [theme.breakpoints.down('lg')]: {
-        "& .scrollbar-container": {
+        "& .main-scrollbar": {
           maxHeight: "calc(100vh) !important",
           minHeight: "calc(100vh) !important",
         }
       }
     }}>
       <PerfectScrollbar
+        className="main-scrollbar"
         style={{
           background: "#f9f9f9",
           padding: "24px",

@@ -35,52 +35,30 @@ export const workSpaceOptions = [
 ];
 
 export interface ModelOption {
+  name: string;
+  history_turn: FrequencyPenalty;
+  max_tokens: FrequencyPenalty;
+  temperature: FrequencyPenalty;
+  top_p?: FrequencyPenalty;
+  frequency_penalty?: FrequencyPenalty;
+  presence_penalty?: FrequencyPenalty;
+  img: string;
   label: string;
-  avatar: string;
-  group: string;
   value: string;
-  tag: string;
+  group?: Group;
 }
 
-export const modelOptions = [
-  {
-    label: "GPT-4",
-    avatar:
-      "https://sf-coze-web-cdn.coze.com/obj/coze-web-sg/MODEL_ICON/GPT-4.png",
-    group: "OpenAI",
-    value: "gpt-4",
-    tag: "4k",
-  },
-  {
-    label: "GPT-4o",
-    avatar:
-      "https://sf-coze-web-cdn.coze.com/obj/coze-web-sg/MODEL_ICON/GPT-4.png",
-    value: "gpt-4o",
-    tag: "128k",
-  },
-  {
-    label: "GPT-4 Turbo",
-    avatar:
-      "https://sf-coze-web-cdn.coze.com/obj/coze-web-sg/MODEL_ICON/GPT-4.png",
-    value: "gpt-4-turbo",
-    tag: "128k",
-  },
-  {
-    label: "Gemini 1.5 Pro",
-    avatar:
-      "https://sf-coze-web-cdn.coze.com/obj/coze-web-sg/MODEL_ICON/gemini.png",
-    group: "Google",
-    value: "gemini-1.5-pro",
-    tag: "200k",
-  },
-  {
-    label: "Gemini 1.5 Flash",
-    avatar:
-      "https://sf-coze-web-cdn.coze.com/obj/coze-web-sg/MODEL_ICON/gemini.png",
-    value: "gemini-1.5-flash",
-    tag: "200k",
-  },
-];
+export interface FrequencyPenalty {
+  default: number;
+  min: number;
+  max: number;
+}
+
+export enum Group {
+  AnthropicAI = "Anthropic_LLM",
+  Google = "Google",
+  OpenAI = "OpenAI",
+}
 
 export const outputFormatOptions = [
   {
@@ -241,3 +219,112 @@ export const chartData = {
     },
   ],
 };
+
+export const botModel = {
+  "gpt-3.5-turbo": {
+    name: "GPT-3.5 Turbo",
+    history_turn: { default: 5, min: 0, max: 100 },
+    max_tokens: { default: 256, min: 5, max: 16384 },
+    temperature: { default: 0.5, min: 0.0, max: 2.0 },
+    top_p: { default: 1.0, min: 0.0, max: 1.0 },
+    frequency_penalty: { default: 0, min: -2.0, max: 2.0 },
+    presence_penalty: { default: 0, min: -2.0, max: 2.0 },
+    img: "https://sf-coze-web-cdn.coze.com/obj/coze-web-sg/MODEL_ICON/GPT-4.png",
+  },
+  "gpt-4-turbo": {
+    name: "GPT-4 Turbo",
+    history_turn: { default: 5, min: 0, max: 100 },
+    max_tokens: { default: 256, min: 5, max: 4096 },
+    temperature: { default: 0.5, min: 0.0, max: 2.0 },
+    top_p: { default: 1.0, min: 0.0, max: 1.0 },
+    frequency_penalty: { default: 0, min: -2.0, max: 2.0 },
+    presence_penalty: { default: 0, min: -2.0, max: 2.0 },
+    img: "https://sf-coze-web-cdn.coze.com/obj/coze-web-sg/MODEL_ICON/GPT-4.png",
+  },
+  "gpt-4o": {
+    name: "GPT-4o",
+    history_turn: { default: 5, min: 0, max: 100 },
+    max_tokens: { default: 256, min: 5, max: 4096 },
+    temperature: { default: 0.5, min: 0.0, max: 2.0 },
+    top_p: { default: 1.0, min: 0.0, max: 1.0 },
+    frequency_penalty: { default: 0, min: -2.0, max: 2.0 },
+    presence_penalty: { default: 0, min: -2.0, max: 2.0 },
+    img: "https://sf-coze-web-cdn.coze.com/obj/coze-web-sg/MODEL_ICON/GPT-4.png",
+  },
+  "gpt-4o-mini": {
+    name: "GPT-4o Mini",
+    history_turn: { default: 5, min: 0, max: 100 },
+    max_tokens: { default: 256, min: 5, max: 8192 },
+    temperature: { default: 0.5, min: 0.0, max: 2.0 },
+    top_p: { default: 1.0, min: 0.0, max: 1.0 },
+    frequency_penalty: { default: 0, min: -2.0, max: 2.0 },
+    presence_penalty: { default: 0, min: -2.0, max: 2.0 },
+    img: "https://sf-coze-web-cdn.coze.com/obj/coze-web-sg/MODEL_ICON/GPT-4.png",
+  },
+  "models/gemini-1.5-flash": {
+    name: "Gemini 1.5 Flash",
+    history_turn: { default: 5, min: 0, max: 100 },
+    max_tokens: { default: 256, min: 5, max: 8192 },
+    temperature: { default: 0.5, min: 0.0, max: 2.0 },
+    img: "https://sf-coze-web-cdn.coze.com/obj/coze-web-sg/MODEL_ICON/gemini.png",
+  },
+  "models/gemini-1.5-pro": {
+    name: "Gemini 1.5 Pro",
+    history_turn: { default: 5, min: 0, max: 100 },
+    max_tokens: { default: 256, min: 5, max: 8192 },
+    temperature: { default: 0.5, min: 0.0, max: 2.0 },
+    img: "https://sf-coze-web-cdn.coze.com/obj/coze-web-sg/MODEL_ICON/gemini.png",
+  },
+  "claude-3-5-sonnet-20240620": {
+    name: "Claude 3.5 Sonnet",
+    history_turn: { default: 5, min: 0, max: 100 },
+    max_tokens: { default: 256, min: 5, max: 8192 },
+    temperature: { default: 0.5, min: 0.0, max: 2.0 },
+    img: "https://foxfio.com/wp-content/uploads/2023/09/4682316783575_bbab0cdcdb3685eb5c87_512.png",
+  },
+  "claude-3-opus-20240229": {
+    name: "Claude 3 Opus",
+    history_turn: { default: 5, min: 0, max: 100 },
+    max_tokens: { default: 256, min: 5, max: 4096 },
+    temperature: { default: 0.5, min: 0.0, max: 2.0 },
+    img: "https://foxfio.com/wp-content/uploads/2023/09/4682316783575_bbab0cdcdb3685eb5c87_512.png",
+  },
+  "claude-3-sonnet-20240229": {
+    name: "Claude 3 Sonnet",
+    history_turn: { default: 5, min: 0, max: 100 },
+    max_tokens: { default: 256, min: 5, max: 4096 },
+    temperature: { default: 0.5, min: 0.0, max: 2.0 },
+    img: "https://foxfio.com/wp-content/uploads/2023/09/4682316783575_bbab0cdcdb3685eb5c87_512.png",
+  },
+  "claude-3-haiku-20240307": {
+    name: "Claude 3 Haiku",
+    history_turn: { default: 5, min: 0, max: 100 },
+    max_tokens: { default: 256, min: 5, max: 4096 },
+    temperature: { default: 0.5, min: 0.0, max: 2.0 },
+    img: "https://foxfio.com/wp-content/uploads/2023/09/4682316783575_bbab0cdcdb3685eb5c87_512.png",
+  },
+};
+
+const attachedGroup: string[] = [];
+
+export const modelOptions = Object.entries(botModel).map(([key, value]) => {
+  let group = "OpenAI";
+  if (key.includes("gemini")) {
+    group = "Google";
+  }
+  if (key.includes("claude")) {
+    group = "Anthropic_LLM";
+  }
+  const option: ModelOption = {
+    ...value,
+    label: value.name,
+    value: key,
+  };
+
+  if (!attachedGroup.includes(group)) {
+    option.group = group as Group;
+    attachedGroup.push(group);
+  }
+
+  return option;
+});

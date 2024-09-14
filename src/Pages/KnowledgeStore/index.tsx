@@ -26,8 +26,7 @@ const KnowledgeStore = () => {
     category: "recomended",
   });
 
-  const { data } = useGetListFolderKnowledge();
-
+  const { data, isLoading } = useGetListFolderKnowledge();
 
   //! Function
   useLayoutEffect(() => {
@@ -60,6 +59,7 @@ const KnowledgeStore = () => {
         width: "100%",
       }}
     >
+      <CommonStyles.LoadingOverlay isLoading={isLoading} />
       <Box
         sx={{
           display: "grid",
@@ -155,7 +155,7 @@ const KnowledgeStore = () => {
         {data && isArray(data) && (
           <Mansory columns={3} spacing={2}>
             {data.map((item) => {
-               return (
+              return (
                 <Knowledgecard
                   owner_id={item.owner_id as string}
                   id={item.id as string}

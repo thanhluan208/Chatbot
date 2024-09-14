@@ -1,11 +1,4 @@
-import {
-  Box,
-  ListSubheader,
-  MenuItem,
-  Paper,
-  Popper,
-  SelectChangeEvent,
-} from "@mui/material";
+import { Box, ListSubheader, MenuItem, Paper, Popper } from "@mui/material";
 import React, { Fragment, useId } from "react";
 import CommonStyles from "../../../Components/CommonStyles";
 import { ModelOption, modelOptions } from "../../../Constants/options";
@@ -25,7 +18,7 @@ const EngineOption = ({
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
-  const { values, setFieldValue } = useFormikContext<initialValueEngine>();
+  const { values, setValues } = useFormikContext<initialValueEngine>();
   const id = useId();
 
   const isSelected = values?.model?.value === option?.value;
@@ -49,7 +42,14 @@ const EngineOption = ({
           padding: isValue ? "0 12px 0 16px" : "12px 16px",
         }}
         onClick={() => {
-          setFieldValue("model", option);
+          setValues({
+            ...values,
+            model: option,
+            max_tokens: option.max_tokens.default,
+            top_p: option.top_p?.default ?? 0.9,
+            temperature: option.temperature?.default ?? 1.21,
+            history_turn: option.history_turn?.default ?? 3,
+          });
         }}
       >
         <Box
@@ -60,7 +60,7 @@ const EngineOption = ({
           }}
         >
           {!isValue && (
-            <Box sx={{ width: 16, height: 16, marginRight: "8px" }}>
+            <Box sx={{ width: 16, height: 16, marginRight: "8px", display:'flex' }}>
               {isSelected && (
                 <CommonIcons.CheckOutlined sx={{ width: 16, height: 16 }} />
               )}
@@ -72,13 +72,12 @@ const EngineOption = ({
             width={16}
             height={16}
             style={{ borderRadius: "12px" }}
-            src={`${option.avatar}`}
+            src={`${option.img}`}
             alt=""
           />
           <CommonStyles.Typography type="bold14" mx={2}>
             {option.label}
           </CommonStyles.Typography>
-          <CommonStyles.Chip label={option.tag} />
         </Box>
         <Box
           sx={{
@@ -86,14 +85,14 @@ const EngineOption = ({
           }}
           onMouseLeave={() => setAnchorEl(null)}
         >
-          <CommonStyles.Button
+          {/* <CommonStyles.Button
             isIcon
             onMouseEnter={(e) => {
               setAnchorEl(e.currentTarget);
             }}
           >
             <CommonIcons.InfoOutlined sx={{ height: 16, width: 16 }} />
-          </CommonStyles.Button>
+          </CommonStyles.Button> */}
           <Popper
             open={open}
             id={id}
@@ -102,7 +101,6 @@ const EngineOption = ({
               borderRadius: "12px",
               zIndex: 9999,
             }}
-            //   onClose={()}
           >
             <Paper
               sx={{
@@ -147,7 +145,6 @@ const EngineOption = ({
 
 const EngineSelect = () => {
   //! State
-  const { setFieldValue } = useFormikContext();
 
   //! Function
   const renderOption = (option: ModelOption) => {
@@ -156,10 +153,6 @@ const EngineSelect = () => {
 
   const customRenderValue = (value: ModelOption) => {
     return <EngineOption option={value} isValue />;
-  };
-
-  const onChangeCustomize = (event: SelectChangeEvent<string>) => {
-    setFieldValue("model", JSON.parse(event?.target?.value));
   };
 
   //! Render
@@ -181,7 +174,6 @@ const EngineSelect = () => {
         fullWidth
         options={modelOptions}
         renderOption={renderOption}
-        onChangeCustomize={onChangeCustomize}
         required
         customRenderValue={customRenderValue}
         MenuProps={{

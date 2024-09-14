@@ -11,6 +11,7 @@ import {
   BackgroundVariant,
   useReactFlow,
   MarkerType,
+  Node,
 } from "@xyflow/react";
 import { v4 as uuid } from "uuid";
 
@@ -21,53 +22,28 @@ import AnimatedSVGEdge from "./CustomEdges";
 import { Box } from "@mui/material";
 import { useSave } from "../../../Stores/useStore";
 import cachedKeys from "../../../Constants/cachedKeys";
+import reactFlowService from "@/Services/reactFlowService";
+import { useAuth } from "@/Providers/AuthenticationProvider";
 
 const edgeTypes = {
   animatedSvg: AnimatedSVGEdge,
 };
 
-const initNodes = [
-  {
-    id: "b7e48d14-235b-4238-bdac-cd54ae7796e2",
-    type: "customNode_startNode",
-    position: {
-      x: -320,
-      y: 241,
-    },
-    data: {
-      label: "customNode_startNode node",
-    },
-    measured: {
-      width: 1002,
-      height: 275,
-    },
-    selected: false,
-    dragging: false,
-  },
-  {
-    id: "c372a3b5-85fa-4b7d-a1e5-1913df8d6721",
-    type: "customNode_endNode",
-    position: {
-      x: 1301,
-      y: 175,
-    },
-    data: {
-      label: "customNode_endNode node",
-    },
-    measured: {
-      width: 500,
-      height: 367,
-    },
-    selected: true,
-    dragging: false,
-  },
-];
+interface IFlowChart {
+  initNodes: Node[];
+  listNode: { name: string; label: string }[];
+  botId?: string;
+}
 
-export default function App() {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initNodes);
+export default function FlowChart(props: IFlowChart) {
+  const [nodes, setNodes, onNodesChange] = useNodesState(
+    (props?.initNodes as Node[]) ?? []
+  );
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const { screenToFlowPosition } = useReactFlow();
+  const { screenToFlowPosition, updateNode } = useReactFlow();
   const save = useSave();
+
+  const { userId } = useAuth();
 
   const onConnect = useCallback(
     (connection: Connection) =>
@@ -117,11 +93,31 @@ export default function App() {
       };
 
       setNodes((nds) => nds.concat(newNode as any));
+
+      const onSuccess = (id: string) => {
+        updateNode(newNode.id, {
+          data: {
+            label: `Agent ${id}`,
+          },
+        });
+      };
+
+      const onFailed = () => {
+        save(`${newNode.id}_remove`, true);
+      };
+
+      if (props.botId) {
+        reactFlowService.createFlow(
+          props.botId,
+          userId as string,
+          onSuccess,
+          onFailed
+        );
+      }
     },
     [screenToFlowPosition]
   );
 
-  console.log("nodes", { nodes, edges });
   useEffect(() => {
     save(cachedKeys.FLOW_NODES, nodes);
   }, [save, nodes]);
@@ -131,43 +127,42 @@ export default function App() {
   }, [edges, save]);
 
   return (
-    <div>
-      <Box
-        sx={{
-          width: "100vw",
-          height: "100vh",
-          position: "relative",
-          "& .handle": {
-            height: "10px",
-            width: "10px",
-            borderRadius: "50%",
-            background: "#4e40e5",
-            transition: "all 0.3s ease",
-            "&:hover": {
-              height: "20px",
-              width: "20px",
-            },
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%s",
+        position: "relative",
+        "& .handle": {
+          height: "10px",
+          width: "10px",
+          borderRadius: "50%",
+          background: "#4e40e5",
+          transition: "all 0.3s ease",
+          "&:hover": {
+            height: "20px",
+            width: "20px",
           },
-        }}
+        },
+      }}
+    >
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+        fitView
+        nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
+        minZoom={0.1}
       >
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          onDrop={onDrop}
-          onDragOver={onDragOver}
-          fitView
-          nodeTypes={nodeTypes}
-          edgeTypes={edgeTypes}
-        >
-          <Controls />
-          <MiniMap />
-          <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
-        </ReactFlow>
-        <Toolbar />
-      </Box>
-    </div>
+        <Controls />
+        <MiniMap />
+        <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+      </ReactFlow>
+      <Toolbar listNode={props.listNode} />
+    </Box>
   );
 }

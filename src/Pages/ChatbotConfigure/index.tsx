@@ -10,13 +10,12 @@ import Develop from "./components/Develop";
 import Analysis from "./components/Analysis";
 import useGetBotData from "../../Hooks/Bot/useGetBotData";
 import cachedKeys from "../../Constants/cachedKeys";
-import { boolean } from "@/Helpers";
+import { toast } from "react-toastify";
+import httpServices from "@/Services/httpServices";
+import { publishBot, removeBotFromStore } from "@/Constants/api";
 
-interface IChatbotConfigure {}
-
-function ChatbotConfigure(props: IChatbotConfigure) {
+function ChatbotConfigure() {
   //! State
-  const {} = props;
   const theme: any = useTheme();
   const navigate = useNavigate();
   const params = useParams();
@@ -24,9 +23,7 @@ function ChatbotConfigure(props: IChatbotConfigure) {
   const botId = params?.botId;
   const userId = params?.id;
 
-  const queryParams = new URLSearchParams(location.search);
-
-  const isOwner = boolean(queryParams.get("isOwner") as string);
+  const [loading, setLoading] = useState(false);
 
   const payload = useMemo(() => {
     return {
@@ -44,7 +41,79 @@ function ChatbotConfigure(props: IChatbotConfigure) {
     !!botId && !!userId
   );
 
+  const isOwner = data?.permission_level === "owner";
+  const isPublished = data?.visibility === "public";
+
   //! Function
+
+  const handlePublish = async () => {
+    setLoading(true);
+    const toastId = toast.loading("Publishing...", {
+      isLoading: true,
+      autoClose: false,
+    });
+
+    try {
+      const response = await httpServices.post(publishBot, {
+        user_id: userId,
+        bot_id: botId,
+      });
+
+      await refetch();
+
+      toast.update(toastId, {
+        render: response?.data?.message ?? "Published successfully",
+        type: "success",
+        isLoading: false,
+        autoClose: 2000,
+      });
+      setLoading(false);
+    } catch (error) {
+      console.log("err", error);
+      toast.update(toastId, {
+        render: "Publish failed",
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+      });
+      setLoading(false);
+    }
+  };
+
+  const handleRemove = async () => {
+    setLoading(true);
+    const toastId = toast.loading("Removing...", {
+      isLoading: true,
+      autoClose: false,
+    });
+
+    try {
+      await httpServices.post(removeBotFromStore, {
+        user_id: userId,
+        bot_id: botId,
+      });
+
+      await refetch();
+
+      toast.update(toastId, {
+        render: "Removed successfully",
+        type: "success",
+        isLoading: false,
+        autoClose: 2000,
+      });
+      setLoading(false);
+    } catch (error) {
+      console.log("err", error);
+      toast.update(toastId, {
+        render: "Remove failed",
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+      });
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     save(cachedKeys.REFETCH_BOT_DATA, refetch);
   }, [refetch]);
@@ -62,7 +131,7 @@ function ChatbotConfigure(props: IChatbotConfigure) {
   //! Render
   return (
     <Box sx={{ height: "100vh", width: "100vw" }}>
-      <CommonStyles.LoadingOverlay isLoading={isLoading} />
+      <CommonStyles.LoadingOverlay isLoading={isLoading || loading} />
       <Box
         sx={{
           height: "74px",
@@ -151,8 +220,11 @@ function ChatbotConfigure(props: IChatbotConfigure) {
             <CommonIcons.Restore />
           </CommonStyles.Button>
           {isOwner && (
-            <CommonStyles.Button variant="contained" sx={{ width: "96px" }}>
-              Publish
+            <CommonStyles.Button
+              variant="contained"
+              onClick={isPublished ? handleRemove : handlePublish}
+            >
+              {isPublished ? "Remove from store" : "Publish to store"}
             </CommonStyles.Button>
           )}
         </Box>

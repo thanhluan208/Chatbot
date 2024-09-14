@@ -7,11 +7,12 @@ interface ICustomAdornment {
   name: string;
   max: number;
   min: number;
+  step?: number;
 }
 
 const CustomAdornment = (props: ICustomAdornment) => {
   //! State
-  const { max, min, name } = props;
+  const { max, min, name, step = 0.01} = props;
   const { values, setFieldValue } = useFormikContext();
   const value = getIn(values, name);
 
@@ -39,15 +40,15 @@ const CustomAdornment = (props: ICustomAdornment) => {
     >
       <CommonStyles.Button
         isIcon
-        disabled={value - 0.01 < min}
-        onClick={() => handleChange(value ? value - 0.01 : max - 0.01)}
+        disabled={value - step < min}
+        onClick={() => handleChange(value ? value - step : max - step)}
       >
         <CommonIcons.Remove />
       </CommonStyles.Button>
       <CommonStyles.Button
         isIcon
-        disabled={value + 0.01 > max}
-        onClick={() => handleChange(value ? value + 0.01 : min + 0.01)}
+        disabled={value + step > max}
+        onClick={() => handleChange(value ? value + step : min + step)}
       >
         <CommonIcons.Add />
       </CommonStyles.Button>

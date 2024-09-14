@@ -6,7 +6,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { FieldProps, getIn } from "formik";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import CommonStyles from "../CommonStyles";
 
 interface IInputField {
@@ -18,6 +18,10 @@ interface IInputField {
   ) => void;
   maxChar: number;
   sxContainer?: {};
+  customOnClick?: (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    setShouldMaxRow: React.Dispatch<React.SetStateAction<boolean>>
+  ) => void;
 }
 
 function InputField(props: IInputField & FieldProps & TextFieldProps) {
@@ -33,6 +37,8 @@ function InputField(props: IInputField & FieldProps & TextFieldProps) {
   const theme: any = useTheme();
   const { setFieldValue, errors, touched } = form;
   const { name, value, onBlur } = field;
+
+  const [shouldMaxRow, setShouldMaxRow] = useState(true);
 
   const isTouch = getIn(touched, name);
   const err = getIn(errors, name);
@@ -99,8 +105,17 @@ function InputField(props: IInputField & FieldProps & TextFieldProps) {
       <TextField
         name={name}
         value={value}
-        onBlur={onBlur}
+        onBlur={(e) => {
+          onBlur(e);
+          setShouldMaxRow(true);
+        }}
+        onFocus={() => {
+          setShouldMaxRow(false);
+        }}
         {...otherProps}
+        maxRows={
+          shouldMaxRow && otherProps.maxRows ? otherProps.maxRows : undefined
+        }
         error={errMsg}
         helperText={errMsg}
         label=""
@@ -110,7 +125,13 @@ function InputField(props: IInputField & FieldProps & TextFieldProps) {
             borderRadius: "10px",
             background: "#fff",
           },
-
+          textarea: {
+            display: !shouldMaxRow ? undefined : "-webkit-box",
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            transition: "all .5s",
+          },
           fieldset: {
             borderRadius: "10px",
           },

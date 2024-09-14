@@ -1,7 +1,11 @@
 import { Box } from "@mui/material";
 import AddNodes from "./AddNodes";
 
-const Toolbar = () => {
+const Toolbar = ({
+  listNode,
+}: {
+  listNode: { name: string; label: string }[];
+}) => {
   //! State
 
   //! Function
@@ -19,7 +23,7 @@ const Toolbar = () => {
         borderRadius: "12px",
       }}
     >
-      <AddNodes />
+      <AddNodes listNode={listNode ?? []} />
     </Box>
   );
 };

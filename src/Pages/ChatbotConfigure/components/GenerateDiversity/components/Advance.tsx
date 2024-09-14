@@ -55,28 +55,6 @@ const TopPHInt = () => {
   );
 };
 
-const marks = [
-  {
-    value: 0,
-    label: "0",
-  },
-
-  {
-    value: 2,
-    label: "2",
-  },
-];
-
-const topPMarks = [
-  {
-    value: 0,
-    label: "0",
-  },
-  {
-    value: 1,
-    label: "1",
-  },
-];
 const Advance = () => {
   //! State
   const [open, setOpen] = useState(true);
@@ -114,16 +92,14 @@ const Advance = () => {
           hintContent={<TemperatureHint />}
           name="temperature"
           title="Temperature"
-          marks={marks}
           min={0}
           max={2}
         />
 
         <SlideAndNumField
           hintContent={<TopPHInt />}
-          name="topP"
+          name="top_p"
           title="Top P"
-          marks={topPMarks}
           min={0}
           max={1}
         />

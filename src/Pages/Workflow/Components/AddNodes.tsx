@@ -5,18 +5,37 @@ import CommonStyles from "../../../Components/CommonStyles";
 import StartNode from "./CustomNodes/StartNode";
 import LLMNode from "./CustomNodes/LLMNode";
 import EndNode from "./CustomNodes/EndNode";
+import MultiAgentStartNode from "./CustomNodes/MultiAgentStartNode";
+import MultiAgentNode from "./CustomNodes/MultiAgentNode";
+
+export enum NodeTypes {
+  startNode = "startNode",
+  llmNode = "llmNode",
+  endNode = "endNode",
+  multiAgentStartNode = "multiAgentStartNode",
+  multiAgentNode = "multiAgentNode",
+}
 
 export const nodeTypes = {
   customNode_startNode: StartNode,
   customNode_llmNode: LLMNode,
-  customNode_endNode: EndNode
+  customNode_endNode: EndNode,
+  customNode_mutliAgentStartNode: MultiAgentStartNode,
+  customNode_multiAgentNode: MultiAgentNode,
 };
 
 export enum CustomNodeTypes {
   initNode = "initNode",
 }
 
-const AddNodes = () => {
+interface IAddNodes {
+  listNode: {
+    name: string;
+    label: string;
+  }[];
+}
+
+const AddNodes = ({ listNode = [] }: IAddNodes) => {
   //! State
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
@@ -35,6 +54,7 @@ const AddNodes = () => {
     event.dataTransfer.effectAllowed = "move";
   };
 
+  
   //! Render
   const open = Boolean(anchorEl);
 
@@ -70,30 +90,19 @@ const AddNodes = () => {
                   Drag the node to the canvas, or double click on the canvas to
                   add a node
                 </CommonStyles.Typography>
-                <Box
-                  onDragStart={(event) =>
-                    onDragStart(event, "customNode_startNode")
-                  }
-                  draggable
-                >
-                  StartNode
-                </Box>
-                <Box
-                  onDragStart={(event) =>
-                    onDragStart(event, "customNode_llmNode")
-                  }
-                  draggable
-                >
-                  LLM Node
-                </Box>
-                <Box
-                  onDragStart={(event) =>
-                    onDragStart(event, "customNode_endNode")
-                  }
-                  draggable
-                >
-                  End Node
-                </Box>
+                {listNode.map((node) => {
+                  return (
+                    <Box
+                      key={node.name}
+                      onDragStart={(event) =>
+                        onDragStart(event, node.name as keyof typeof nodeTypes)
+                      }
+                      draggable
+                    >
+                      {node.label}
+                    </Box>
+                  );
+                })}
               </Box>
             </Fade>
           )}

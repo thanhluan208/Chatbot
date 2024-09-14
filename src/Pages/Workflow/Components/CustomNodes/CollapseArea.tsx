@@ -5,7 +5,7 @@ import React from "react";
 
 interface ICollapseArea {
   children?: React.ReactNode;
-  label: string;
+  label: string | React.ReactNode;
 }
 
 const CollapseArea = (props: ICollapseArea) => {

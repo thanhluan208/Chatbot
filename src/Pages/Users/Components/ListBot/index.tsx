@@ -208,7 +208,6 @@ function ListBot() {
   const save = useSave();
   const { data, isLoading, refetch } = useGetListBot();
 
-  console.log("data", data);
   //! Function
   useEffect(() => {
     if (refetch) {

@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import botService from "../../Services/bot.service";
 import { AxiosResponse } from "axios";
+import { useAuth } from "@/Providers/AuthenticationProvider";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export interface BotResponse {
   status_code: number;
@@ -19,38 +22,66 @@ export interface BotData {
   bot_name: string;
   description: string;
   user_name: string;
+  permission_level: string;
+  visibility: string;
 }
 
 export interface Llm {
-  class_name: string;
-  model: string;
-  temperature: number;
-  max_tokens: null;
+  class_name:        string;
+  model:             string;
+  temperature:       number;
+  max_tokens:        number;
   additional_kwargs: AdditionalKwargs;
+  history_turn:      number;
+  top_p:             number;
+  frequency_penalty: number;
+  presence_penalty:  number;
 }
+
+export interface AdditionalKwargs {
+}
+
 
 export interface AdditionalKwargs {}
 
 const useGetBotData = (
   payload: {
     bot_id: string;
-    user_id: string;
+    user_id?: string;
   },
   isTrigger = true
 ) => {
   const [data, setData] = useState<BotData | null>(null);
   const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState();
+  const [error, setError] = useState<string>();
+  const { userId } = useAuth();
+  const navigate = useNavigate();
 
   const callApi = useCallback(() => {
-    if (!payload) return;
-    return botService.getBotData(payload);
-  }, [payload]);
+    if (!payload.bot_id || !userId) return;
+
+    return botService.getBotData({
+      bot_id: payload.bot_id,
+      user_id: userId as string,
+    });
+  }, [payload, userId]);
 
   const transformResponse = useCallback(
     (response?: AxiosResponse<BotResponse>) => {
+      if (response?.data.permission_level === "no permission") {
+        toast.error(
+          response.data.message ?? "No permission to access this bot"
+        );
+        setError(response.data.message ?? "No permission to access this bot");
+
+        navigate(-1);
+        return;
+      }
       if (response) {
-        setData(response.data.bot_data);
+        setData({
+          ...response.data.bot_data,
+          permission_level: response.data.permission_level,
+        });
       }
     },
     []

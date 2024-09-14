@@ -1,5 +1,6 @@
 import CommonStyles from "@/Components/CommonStyles";
 import { deleteFromStore, publishKnowledge } from "@/Constants/api";
+import { useAuth } from "@/Providers/AuthenticationProvider";
 import httpServices from "@/Services/httpServices";
 import { useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
@@ -9,13 +10,13 @@ import { Fragment } from "react/jsx-runtime";
 const PublicButton = () => {
   //! State
   const pathName = useLocation().pathname;
+  const { userId } = useAuth();
 
   const [isPublic, setIsPublic] = useState(
-    pathName.includes("knowledge-store")
+    pathName.includes("knowledge-store") 
   );
   const params = useParams();
 
-  const userId = params.id;
   const knowledgeId = params.knowledgeId;
 
   //! Function

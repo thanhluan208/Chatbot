@@ -1,9 +1,8 @@
 import CommonIcons from "@/Components/CommonIcons";
 import CommonStyles from "@/Components/CommonStyles";
 import { Box, useTheme } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Fragment } from "react/jsx-runtime";
-import TextBox, { TextBoxType } from "./components/TextBox";
 import PerfectScrollBar from "react-perfect-scrollbar";
 import InputBox from "./components/InputBox";
 import { RightSide } from "./components/RightSide";
@@ -13,20 +12,43 @@ import Memory from "./components/Memory";
 import { useSave } from "@/Stores/useStore";
 import cachedKeys from "@/Constants/cachedKeys";
 import CommunityDrawer from "./components/Community/CommunityDrawer";
+import { useEffect, useMemo, useState } from "react";
+import useGetBotData from "@/Hooks/Bot/useGetBotData";
+import ChatField from "./components/ChatField";
 
 const Chatbot = () => {
   //! State
   const theme: any = useTheme();
   const navigate = useNavigate();
   const save = useSave();
-  const isBrandNew = true;
+  const [isBrandNew, setIsBrandNew] = useState(false);
+
+  const params = useParams();
+  const botId = params?.botId;
+
+  const payload = useMemo(() => {
+    return {
+      bot_id: botId as string,
+    };
+  }, [botId]);
+
+  const { data, isLoading } = useGetBotData(payload);
 
   //! Function
+  useEffect(() => {
+    if (data) {
+      save(cachedKeys.BOT_DATA, data);
+    }
+
+    return () => {
+      save(cachedKeys.BOT_DATA, null);
+    };
+  }, [data]);
 
   //! Render
   return (
     <Box sx={{ height: "100vh", width: "100vw" }}>
-      {/* <CommonStyles.LoadingOverlay isLoading={isLoading} /> */}
+      <CommonStyles.LoadingOverlay isLoading={isLoading} />
       <CommunityDrawer />
       <Box
         sx={{
@@ -78,7 +100,7 @@ const Chatbot = () => {
             <Box>
               <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <CommonStyles.Typography type="semiBold14">
-                  𓃑 5-Minutes READING
+                  {data?.bot_name}
                 </CommonStyles.Typography>
               </Box>
               <Box
@@ -175,7 +197,7 @@ const Chatbot = () => {
               svg: {
                 width: 16,
                 height: 16,
-              }
+              },
             },
           }}
         >
@@ -248,51 +270,26 @@ const Chatbot = () => {
                 maxWidth: "640px",
                 display: "flex",
                 alignItems: "center",
-                paddingTop: isBrandNew && "50px",
+                paddingTop: isBrandNew ? "50px" : "0",
                 flexDirection: "column",
                 margin: "auto",
               }}
             >
-              <Fragment>
-                <img
-                  src="https://lf16-alice-tos-sign.oceanapi-i18n.com/obj/ocean-cloud-tos-sg/FileBizType.BIZ_BOT_ICON/7324531881696740353_1709446935623746040_NTTNr8Qd9X.png?lk3s=50ccb0c5&x-expires=1725787903&x-signature=m2YstH4Ioil36NxAz5lMbggcUKU%3D"
-                  style={{
-                    width: 48,
-                    height: 48,
-                    borderRadius: "8px",
-                    marginBottom: "12px",
-                  }}
-                />
-                <CommonStyles.Typography type="semiBold20">
-                  Korean Master
-                </CommonStyles.Typography>
-                <Box
-                  sx={{
-                    marginTop: "12px",
-                    display: "flex",
-                    gap: "8px",
-                    flexDirection: "column",
-                  }}
-                >
-                  <TextBox text="안녕하세요! (Annyeonghaseyo! - Hello!) I'm your dedicated Korean teacher, designed to guide you on your journey to mastering Korean in a fun and efficient way. Whether you're starting from scratch, looking to practice daily conversations, or seeking to refine your grammar, I'm here to support your learning every step of the way." />
-                  <TextBox
-                    text="I'm familiar with Korean characters and basic expressions. Can we practice some everyday dialogues to improve my conversational skills?"
-                    type={TextBoxType.BOT_HINT_CHAT}
+              {isBrandNew ? (
+                <Fragment>
+                  <img
+                    src="https://lf16-alice-tos-sign.oceanapi-i18n.com/obj/ocean-cloud-tos-sg/FileBizType.BIZ_BOT_ICON/7342794110727701510_1724933118523505822_yxm0POQ2JJ.gif?lk3s=50ccb0c5&x-expires=1726843125&x-signature=33gB0Q3PT8%2FCKhBm3paQslW%2Fvzo%3D"
+                    style={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: "8px",
+                      marginBottom: "12px",
+                    }}
                   />
-                  <TextBox
-                    text="I'm familiar with Korean characters and basic expressions. Can we practice some everyday dialogues to improve my conversational skills?"
-                    type={TextBoxType.BOT_HINT_CHAT}
-                  />
-                  <TextBox
-                    text="As a complete beginner, I'm eager to learn about Hangul. Could you guide me through the basics of Korean characters?"
-                    type={TextBoxType.BOT_HINT_CHAT}
-                  />
-                  <TextBox
-                    text="I've been studying Korean for a while and would like to deepen my understanding of Korean grammar. Can you provide guidance or exercises on specific grammatical concepts?"
-                    type={TextBoxType.BOT_HINT_CHAT}
-                  />
-                </Box>
-              </Fragment>
+                </Fragment>
+              ) : (
+                <ChatField />
+              )}
             </Box>
           </PerfectScrollBar>
           <Box
@@ -327,7 +324,9 @@ const Chatbot = () => {
               >
                 <CommonIcons.Message />
               </CommonStyles.Button>
-              <InputBox onSubmit={(text) => console.log(text)} />
+              {data && (
+                <InputBox setIsBrandNew={setIsBrandNew} botData={data} />
+              )}
             </Box>
           </Box>
         </Box>

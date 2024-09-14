@@ -1,5 +1,8 @@
 import { ReactFlowInstance } from "@xyflow/react";
 import { FormikProps } from "formik";
+import httpServices from "./httpServices";
+import { createNode } from "@/Constants/api";
+import { AxiosResponse } from "axios";
 
 class reactFlowServices {
   flows: {
@@ -36,6 +39,33 @@ class reactFlowServices {
     if (this?.flows?.[flowsId]?.ref) {
       delete this?.flows?.[flowsId]?.ref;
     }
+  }
+
+  createFlow(
+    botId: string,
+    userId: string,
+    onSuccess: (id: string) => void,
+    onFailed: () => void
+  ) {
+    if (!botId || !userId) {
+      onFailed();
+    }
+    httpServices
+      .post(createNode, {
+        bot_id: botId,
+        user_id: userId,
+      })
+      .then((res: AxiosResponse<any>) => {
+        if (res.data?.status === "success") {
+          onSuccess(res.data.id);
+        } else {
+          onFailed();
+        }
+      })
+      .catch((err) => {
+        console.log("err", err);
+        onFailed();
+      });
   }
 }
 

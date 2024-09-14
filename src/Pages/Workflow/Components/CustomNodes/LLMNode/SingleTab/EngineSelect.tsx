@@ -72,13 +72,13 @@ const EngineOption = ({
             width={16}
             height={16}
             style={{ borderRadius: "12px" }}
-            src={`${option.avatar}`}
+            src={`${option.img}`}
             alt=""
           />
           <CommonStyles.Typography type="bold14" mx={2}>
             {option.label}
           </CommonStyles.Typography>
-          <CommonStyles.Chip label={option.tag} />
+          {/* <CommonStyles.Chip label={option.tag} /> */}
         </Box>
         <Box
           sx={{

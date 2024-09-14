@@ -156,9 +156,9 @@ function MuiSelectField(props: IMuiSelectField & SelectProps & FieldProps) {
               id: `paper-${id}`,
               ...otherProps.MenuProps?.slotProps?.paper,
             },
+
           },
         }}
-        // input={<BootstrapInput />}
       >
         {options.map((op: { value: string; label: string; group?: string }) => {
           if (renderOption) {

@@ -42,7 +42,7 @@ const Knowledgecard = (props: KnowledgeCardProps) => {
   const { userId } = useAuth();
   const navigate = useNavigate();
   //! Function
-  console.log("asdasd", props)
+  console.log("asdasd", props);
   const handleNavigate = () => {
     navigate(`/knowledge-store/${id}?isOwner=${owner_id === userId}`);
   };
@@ -69,6 +69,9 @@ const Knowledgecard = (props: KnowledgeCardProps) => {
       <CommonStyles.Button
         isIcon
         className="favorite"
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
         sx={{
           position: "absolute",
           top: "20px",
@@ -127,19 +130,44 @@ const Knowledgecard = (props: KnowledgeCardProps) => {
         >
           {title}
         </CommonStyles.Typography>
-        <Box sx={{ display: "flex", gap: "4px", alignItems: "center" }}>
+        <Box
+          sx={{
+            display: "flex",
+            gap: "4px",
+            alignItems: "center",
+            flexWrap: "wrap",
+          }}
+        >
           {publisher?.avatar && (
             <img
               src={publisher.avatar}
               style={{ width: 16, height: 16, borderRadius: "50%" }}
             />
           )}
-          <CommonStyles.Typography>{publisher?.name}</CommonStyles.Typography>
-          <CommonStyles.Typography type="normal12" color="#06070980">
+          <CommonStyles.Typography
+            sx={{
+              maxWidth: "100px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {publisher?.name}
+          </CommonStyles.Typography>
+          <CommonStyles.Typography
+            sx={{
+              maxWidth: "100px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+            type="normal12"
+            color="#06070980"
+          >
             {publisher?.email}
           </CommonStyles.Typography>
         </Box>
-        <p>
+        <p style={{ marginTop: "20px" }}>
           <CommonStyles.Typography type="normal12" color="#06070980">
             {description.length <= MaxChar || isReadMore
               ? description
@@ -168,7 +196,9 @@ const Knowledgecard = (props: KnowledgeCardProps) => {
             marginTop: "16px",
           }}
         >
-          <CommonStyles.Typography>{botUsed} bots used</CommonStyles.Typography>
+          <CommonStyles.Typography>
+            {botUsed ?? 0} bots used
+          </CommonStyles.Typography>
           <Box
             sx={{
               width: "3px",
@@ -177,7 +207,7 @@ const Knowledgecard = (props: KnowledgeCardProps) => {
             }}
           />
           <CommonStyles.Typography>
-            {favorite} bots used
+            {favorite ?? 0} favourites
           </CommonStyles.Typography>
         </Box>
       </Box>

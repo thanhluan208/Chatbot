@@ -2,8 +2,15 @@ import React, { Fragment, useId } from "react";
 import CommonIcons from "../../../Components/CommonIcons";
 import CommonStyles from "../../../Components/CommonStyles";
 import { Box, Paper, Popover, useTheme } from "@mui/material";
+import { Mode } from "./Develop";
 
-const AgentButton = () => {
+const AgentButton = ({
+  setMode,
+  mode
+}: {
+  setMode: React.Dispatch<React.SetStateAction<Mode>>
+  mode: Mode
+}) => {
   //! State
   const theme: any = useTheme();
   const agentId = useId();
@@ -21,6 +28,7 @@ const AgentButton = () => {
 
   const open = Boolean(anchorEl);
   const id = open ? agentId : undefined;
+  const isSingle = mode === Mode.Single_agent
 
   //! Function
 
@@ -36,7 +44,7 @@ const AgentButton = () => {
       >
         <CommonIcons.LooksOne sx={{ width: 16, height: 16 }} />
         <CommonStyles.Typography type="normal12">
-          Single agent mode
+          {isSingle ? "Single agent mode" : "Multi agent mode"}
         </CommonStyles.Typography>
       </CommonStyles.Button>
       <Popover
@@ -79,7 +87,7 @@ const AgentButton = () => {
             }}
           >
             <CommonStyles.Button
-              isActive
+              isActive={isSingle}
               sx={{
                 flexDirection: "column",
                 textAlign: "left",
@@ -89,7 +97,11 @@ const AgentButton = () => {
                 width: "315px",
                 minHeight: "unset",
                 height: "fit-content",
+                border: !isSingle ? `1px solid ${theme.colors.custom.colorDisabledTypo}` : "unset",
               }}
+              onClick={() => {
+                handleClose()
+                setMode(Mode.Single_agent)}}
             >
               <CommonStyles.Typography>
                 Single agent mode
@@ -100,6 +112,7 @@ const AgentButton = () => {
               </CommonStyles.Typography>
             </CommonStyles.Button>
             <CommonStyles.Button
+              isActive={!isSingle}
               sx={{
                 flexDirection: "column",
                 textAlign: "left",
@@ -109,7 +122,11 @@ const AgentButton = () => {
                 width: "315px",
                 minHeight: "unset",
                 height: "fit-content",
-                border: `1px solid ${theme.colors.custom.colorDisabledTypo}`,
+                border: isSingle ? `1px solid ${theme.colors.custom.colorDisabledTypo}` : "unset",
+              }}
+              onClick={() => {
+                handleClose()
+                setMode(Mode.Multi_agent)
               }}
             >
               <CommonStyles.Typography>

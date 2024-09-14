@@ -1,6 +1,4 @@
 import { Box, Divider, useTheme } from "@mui/material";
-import Logo from "./Components/Logo";
-import Name from "./Components/Name";
 import CommonStyles from "../CommonStyles";
 import CommonIcons from "../CommonIcons";
 import { processNavLabel } from "../../Helpers";
@@ -13,6 +11,9 @@ import UserButton from "./Components/UserButton";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import CreateBotButton from "./Components/CreateBotButton";
 import useRoutes from "../../Constants/routes";
+
+import logo from '@/assets/logo.png'
+import PriceTableDialog from "./Components/PriceTableDialog";
 
 export const sidebarWidth = 232;
 
@@ -58,8 +59,8 @@ function DefaultLayout() {
                 alignItems: "center",
               }}
             >
-              <Logo />
-              <Name />
+              <img src={logo} style={{ width: "40px", height: "40px" }} />
+              <CommonStyles.Typography type="semiBold24">Alphii</CommonStyles.Typography>
             </Box>
             <Box sx={{ height: "40px" }}>
               <CreateBotButton />
@@ -135,15 +136,10 @@ function DefaultLayout() {
               mt: "8px",
             }}
           >
-            <NavItem
-              icon={<CommonIcons.SettingsInputHdmi />}
-              title="Coze API"
-              path="/api"
-              navActive
-            />
+            <PriceTableDialog />
             <NavItem
               icon={<CommonIcons.Token />}
-              title="Coze Token"
+              title="Alphii Token"
               path="/token"
               navActive
               endNum={10}

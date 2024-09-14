@@ -1,16 +1,31 @@
 import { Box } from "@mui/material";
 import AgentButton from "./AgentButton";
 import EngineButton from "./EngineButton";
-import PersonaAndPrompt from "./PersonaAndPrompt";
-import PreviewChat from "./PreviewChat";
-import Configure from "./Configure";
+import { useState } from "react";
+import SingleAgent from "./Develop/SingleAgent";
+import MultiAgent from "./Develop/MultiAgent";
+
+export enum Mode {
+  Single_agent = "Single_agent",
+  Multi_agent = "Multi_agent",
+}
 
 const Develop = () => {
   //! State
+  const [mode, setMode] = useState(Mode.Single_agent);
 
   //! Function
 
   //! Render
+  const renderContent = () => {
+    switch (mode) {
+      case Mode.Single_agent:
+        return <SingleAgent />;
+      case Mode.Multi_agent:
+        return <MultiAgent />;
+    }
+  }
+
   return (
     <Box
       sx={{
@@ -29,19 +44,11 @@ const Develop = () => {
           background: "#f9f9f9",
         }}
       >
-        <AgentButton />
+        <AgentButton setMode={setMode} mode={mode}/>
         <EngineButton />
       </Box>
       <Box display="flex" paddingTop="8px" height="calc(100vh - 138px)">
-        <Box flex={2} paddingRight="10px">
-          <PersonaAndPrompt />
-        </Box>
-        <Box flex={3} position="relative" paddingBottom="80px">
-          <PreviewChat />
-        </Box>
-        <Box flex={2} padding="8px 10px 0 20px">
-          <Configure />
-        </Box>
+        {renderContent && renderContent()}
       </Box>
     </Box>
   );

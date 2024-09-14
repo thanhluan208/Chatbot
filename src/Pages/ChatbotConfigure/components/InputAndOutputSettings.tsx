@@ -1,10 +1,8 @@
 import { Box } from "@mui/material";
 import CommonStyles from "../../../Components/CommonStyles";
 import SlideAndNumField from "./GenerateDiversity/components/SlideAndNumField";
-import Hint from "./GenerateDiversity/components/Hint";
-import { FastField } from "formik";
-import CommonField from "../../../Components/CommonFields";
-import { outputFormatOptions } from "../../../Constants/options";
+import {  useFormikContext } from "formik";
+import { initialValueEngine } from "./EngineButton";
 
 const HintDialogRound = () => {
   return (
@@ -23,60 +21,39 @@ const HintReponseMaxLength = () => {
   );
 };
 
-const HintOutputFormat = () => {
-  return (
-    <div>
-      <div>
-        <strong>Output Format</strong>:
-      </div>
-      <ul>
-        <li>
-          <CommonStyles.Typography>
-            <strong>Text</strong>: Replies in plain text format
-          </CommonStyles.Typography>
-        </li>
-        <li>
-          <CommonStyles.Typography>
-            <strong>Markdown</strong>: Uses Markdown format for replies
-          </CommonStyles.Typography>
-        </li>
-        <li>
-          <CommonStyles.Typography>
-            <strong>JSON</strong>: Uses JSON format for replies
-          </CommonStyles.Typography>
-        </li>
-      </ul>
-    </div>
-  );
-};
+// const HintOutputFormat = () => {
+//   return (
+//     <div>
+//       <div>
+//         <strong>Output Format</strong>:
+//       </div>
+//       <ul>
+//         <li>
+//           <CommonStyles.Typography>
+//             <strong>Text</strong>: Replies in plain text format
+//           </CommonStyles.Typography>
+//         </li>
+//         <li>
+//           <CommonStyles.Typography>
+//             <strong>Markdown</strong>: Uses Markdown format for replies
+//           </CommonStyles.Typography>
+//         </li>
+//         <li>
+//           <CommonStyles.Typography>
+//             <strong>JSON</strong>: Uses JSON format for replies
+//           </CommonStyles.Typography>
+//         </li>
+//       </ul>
+//     </div>
+//   );
+// };
 
-const DialogRoundMarks = [
-  {
-    value: 1,
-    label: "1",
-  },
-  {
-    value: 100,
-    label: "100",
-  },
-];
-
-const ResponseLengthMarks = [
-  {
-    value: 1,
-    label: "1",
-  },
-  {
-    value: 8192,
-    label: "8192",
-  },
-];
 
 const InputAndOutputSettings = () => {
   //! State
-
+  const { values } = useFormikContext<initialValueEngine>();
+  const { model } = values || {};
   //! Function
-
   //! Render
   return (
     <Box>
@@ -84,25 +61,27 @@ const InputAndOutputSettings = () => {
         Input and output settings
       </CommonStyles.Typography>
 
-      <Box>
+      <Box sx={{
+        paddingBottom:"20px"
+      }}>
         <SlideAndNumField
           title="Dialog round"
           hintContent={<HintDialogRound />}
-          marks={DialogRoundMarks}
-          min={1}
-          max={100}
-          name="dialogRound"
+          min={model.history_turn.min ?? 1}
+          max={model.history_turn.max ?? 100}
+          step={1}  
+          name="history_turn"
         />
         <SlideAndNumField
           title="Response max length"
           hintContent={<HintReponseMaxLength />}
-          marks={ResponseLengthMarks}
-          min={1}
-          max={8192}
-          name="responseLength"
+          min={model.max_tokens.min ?? 1}
+          max={model.max_tokens.max ?? 8192}
+          name="max_tokens"
+          step={1}
         />
 
-        <Box
+        {/* <Box
           display="flex"
           justifyContent={"space-between"}
           alignItems={"center"}
@@ -126,7 +105,7 @@ const InputAndOutputSettings = () => {
               fullWidth
             />
           </Box>
-        </Box>
+        </Box> */}
       </Box>
     </Box>
   );

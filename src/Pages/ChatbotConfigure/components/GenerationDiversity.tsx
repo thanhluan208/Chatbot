@@ -93,7 +93,7 @@ const GenerationDiversity = () => {
         ...values,
         generationDiversity: value,
         temperature: 0.1,
-        topP: 1,
+        top_p: 1,
       });
     }
     if (value === "balanced") {
@@ -101,7 +101,7 @@ const GenerationDiversity = () => {
         ...values,
         generationDiversity: value,
         temperature: 0.5,
-        topP: 1,
+        top_p: 1,
       });
     }
     if (value === "creative") {
@@ -109,7 +109,7 @@ const GenerationDiversity = () => {
         ...values,
         generationDiversity: value,
         temperature: 0.8,
-        topP: 1,
+        top_p: 1,
       });
     }
     if (value === "customize") {
@@ -117,7 +117,7 @@ const GenerationDiversity = () => {
         ...values,
         generationDiversity: value,
         temperature: 2,
-        topP: 0.96,
+        top_p: 0.96,
       });
     }
   };
