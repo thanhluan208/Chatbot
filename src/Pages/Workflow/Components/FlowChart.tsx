@@ -12,6 +12,7 @@ import {
   useReactFlow,
   MarkerType,
   Node,
+  Edge,
 } from "@xyflow/react";
 import { v4 as uuid } from "uuid";
 
@@ -33,21 +34,56 @@ interface IFlowChart {
   initNodes: Node[];
   listNode: { name: string; label: string }[];
   botId?: string;
+  isMultiAgent?: boolean;
+  initEdges?: Edge[];
 }
 
 export default function FlowChart(props: IFlowChart) {
+  const { isMultiAgent, initEdges } = props;
   const [nodes, setNodes, onNodesChange] = useNodesState(
     (props?.initNodes as Node[]) ?? []
   );
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initEdges ?? []);
   const { screenToFlowPosition, updateNode } = useReactFlow();
   const save = useSave();
 
   const { userId } = useAuth();
 
+  const onDragStop = async (_: React.MouseEvent, node: Node) => {
+    if (isMultiAgent) {
+      const info = {
+        position: node.position,
+        data: node.data,
+        measured: node.measured,
+      };
+      reactFlowService.updateFlow(
+        props.botId as string,
+        node.id,
+        JSON.stringify(info)
+      );
+    }
+  };
+
   const onConnect = useCallback(
-    (connection: Connection) =>
-      setEdges((eds: any) => {
+    (connection: Connection) => {
+      const onFailed = () => {
+        setEdges((eds: any) => {
+          return eds.filter((edge: Edge) => {
+            return edge.source !== connection.source || edge.target !== connection.target;
+          });
+        });
+      }
+
+      return setEdges((eds: any) => {
+        const newEdges = [...eds, connection].map((edge) => {
+          return {
+            src_node: edge.source as string,
+            dest_node: edge.target as string,
+          }
+        });
+
+        reactFlowService.updateEdges(props.botId as string, userId as string, newEdges, onFailed);
+
         return addEdge(
           {
             ...connection,
@@ -62,7 +98,10 @@ export default function FlowChart(props: IFlowChart) {
           } as never,
           eds
         );
-      }),
+      });
+
+    },
+
     [setEdges]
   );
 
@@ -94,28 +133,32 @@ export default function FlowChart(props: IFlowChart) {
 
       setNodes((nds) => nds.concat(newNode as any));
 
-      const onSuccess = (id: string) => {
-        updateNode(newNode.id, {
-          data: {
-            label: `Agent ${id}`,
-          },
-        });
-      };
+      if (isMultiAgent) {
+        const onSuccess = (id: string) => {
+          updateNode(newNode.id, {
+            id: id,
+            data: {
+              label: `Agent ${id}`,
+            },
+          });
+        };
 
-      const onFailed = () => {
-        save(`${newNode.id}_remove`, true);
-      };
+        const onFailed = () => {
+          save(`${newNode.id}_remove`, true);
+        };
 
-      if (props.botId) {
-        reactFlowService.createFlow(
-          props.botId,
-          userId as string,
-          onSuccess,
-          onFailed
-        );
+        if (props.botId) {
+          reactFlowService.createFlow(
+            props.botId,
+            userId as string,
+            onSuccess,
+            onFailed,
+            JSON.stringify(newNode)
+          );
+        }
       }
     },
-    [screenToFlowPosition]
+    [screenToFlowPosition, isMultiAgent, setNodes, updateNode, props.botId]
   );
 
   useEffect(() => {
@@ -153,6 +196,7 @@ export default function FlowChart(props: IFlowChart) {
         onConnect={onConnect}
         onDrop={onDrop}
         onDragOver={onDragOver}
+        onNodeDragStop={onDragStop}
         fitView
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}

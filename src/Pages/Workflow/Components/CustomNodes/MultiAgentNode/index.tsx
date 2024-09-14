@@ -9,6 +9,7 @@ import { FastField, Formik } from "formik";
 import CommonField from "@/Components/CommonFields";
 import { useGet } from "@/Stores/useStore";
 import { toast } from "react-toastify";
+import DeleteAgentButton from "./DeleteAgentButton";
 
 const MultiAgentNode = (props: NodeProps) => {
   //! State
@@ -20,9 +21,6 @@ const MultiAgentNode = (props: NodeProps) => {
       source: uuid(),
       target: uuid(),
     };
-  }, []);
-  const id = useMemo(() => {
-    return Math.random().toString(36).substring(7);
   }, []);
 
   const initialValue = useMemo(() => {
@@ -36,6 +34,8 @@ const MultiAgentNode = (props: NodeProps) => {
     };
   }, []);
   //! Function
+
+
   useEffect(() => {
     const node = document.getElementById(props.id);
     if (node && shouldRemove) {
@@ -82,8 +82,13 @@ const MultiAgentNode = (props: NodeProps) => {
           }}
         >
           <CommonIcons.Logo />
-          <CommonStyles.Typography type="semiBold16">
-            {`Agent ${id}`}
+          <CommonStyles.Typography type="semiBold16" sx={{
+            maxWidth: "200px",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}>
+            {`Agent ${props.id}`}
           </CommonStyles.Typography>
         </Box>
         <Box
@@ -99,7 +104,7 @@ const MultiAgentNode = (props: NodeProps) => {
             </div>
           </Tooltip>
 
-          <CommonIcons.MoreHoriz />
+          <DeleteAgentButton id={props.id} />
         </Box>
       </Box>
 

@@ -16,6 +16,7 @@ class Services {
       function (config) {
         config.headers["x-timezone"] =
           Intl.DateTimeFormat().resolvedOptions().timeZone;
+        config.headers["ngrok-skip-browser-warning"] = "69420"; // This is a temporary solution to bypass the ngrok warning. For more information, please visit https://ngrok.com/docs#http-headers. The value of
         const token = localStorage.getItem(TOKEN_KEY) || "";
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;

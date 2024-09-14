@@ -1,6 +1,6 @@
 const baseAPI =
   localStorage.getItem("baseUrl") ||
-  "https://0156-2001-ee0-442d-8ef0-709d-18ea-80c4-ee5b.ngrok-free.app";
+  "https://800a-2405-4802-1c9c-ce80-3c83-cada-1077-cd0b.ngrok-free.app";
 
 export const getFolderKnowledge =
   baseAPI + "/knowledge/list_knowledge_storages";
@@ -34,9 +34,17 @@ export const getBotData = baseAPI + "/bot/get_bot_data";
 export const getBotsStore = baseAPI + "/bot/list_bots";
 export const publishBot = baseAPI + "/bot/update_on_store";
 export const chatBot = baseAPI + "/bot/chat_stream_completion";
-export const removeBotFromStore = baseAPI + "/bot/delete_from_store";  
+export const removeBotFromStore = baseAPI + "/bot/delete_from_store";
 export const updateBotModel = baseAPI + "/bot/change_model_for_bot";
 export const updateBotParams = baseAPI + "/bot/update_model_params_for_bot";
-export const botChatHistory = baseAPI + '/bot/get_all_chat_history'
+export const botChatHistory = baseAPI + "/bot/get_all_chat_history";
+export const getBotListConversation = baseAPI + "/bot/list_conversation";
+export const newConversation = baseAPI + "/bot/new_conversation";
+export const deleteConversation = baseAPI + "/bot/delete_conversation";
+export const switchMultiAgent = baseAPI + "/bot/create_multi_agent";
+export const updateBotEdge = baseAPI + '/bot/update_agent_detail_data'
 
+export const getBotNode = baseAPI + "/node/get_node_data";
+export const deleteBotNode = baseAPI + "/node/delete_node";
 export const createNode = baseAPI + "/node/create_node";
+export const updateBotNode = baseAPI + "/node/update_node_metadata";

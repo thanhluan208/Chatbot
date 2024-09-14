@@ -22,20 +22,44 @@ const EachPlan = (props: EachPlanProps) => {
   const { model, isCurrentPlan, shouldHighlight } = props;
   return (
     <Box
+      className="each-plan"
       sx={{
-        padding: "20px",
         borderRadius: "16px",
         border: "1px solid #06070920",
         background: "#fff",
+        overflow: "hidden",
+        maxHeight: "600px",
+        overflowY: "auto",
+        "&::-webkit-scrollbar": {
+          display: "none",
+        },
+        paddingBottom: "20px",
+      }}
+      onScroll={(e: any) => {
+        const eachPlan = document.getElementsByClassName("each-plan");
+        const eachPlanHeader =
+          document.getElementsByClassName("each-plan-header");
+        for (let i = 0; i < eachPlan.length; i++) {
+          const element = eachPlanHeader[i] as any;
+          eachPlan[i].scrollTop = e.target.scrollTop;
+          if (e.target.scrollTop > 0) {
+            element.style.boxShadow = "0px 4px 4px rgba(0, 0, 0, 0.05)";
+          }
+          if (e.target.scrollTop === 0) {
+            element.style.boxShadow = "none";
+          }
+        }
       }}
     >
       <Box
+        className="each-plan-header"
         sx={{
           background: "#fff",
           position: "sticky",
           top: 0,
           zIndex: 100,
-          paddingBottom: "20px",
+          padding: "20px",
+          transition: "all 0.3s",
         }}
       >
         <Box
@@ -80,6 +104,7 @@ const EachPlan = (props: EachPlanProps) => {
           variant={shouldHighlight ? "contained" : "outlined"}
           sx={{
             marginTop: "12px",
+            border: shouldHighlight ? "" : "1px solid #000",
             color: isCurrentPlan
               ? "#000"
               : shouldHighlight
@@ -98,7 +123,14 @@ const EachPlan = (props: EachPlanProps) => {
           </CommonStyles.Typography>
         </CommonStyles.Button>
       </Box>
-      <CommonStyles.Typography type="normal12" color={"#06070980"}>
+      <CommonStyles.Typography
+        type="normal12"
+        color={"#06070980"}
+        sx={{
+          padding: "0 20px",
+          marginBottom: "20px",
+        }}
+      >
         Models
       </CommonStyles.Typography>
       <Box
@@ -106,6 +138,7 @@ const EachPlan = (props: EachPlanProps) => {
           display: "flex",
           flexDirection: "column",
           gap: "24px",
+          padding: "0 20px",
         }}
       >
         {model.map((item) => {
@@ -131,6 +164,31 @@ const plans = [
     price: 0,
     limit: 10,
     model: [
+      {
+        name: "GPT-3.5 (16K)",
+        limitCredit: 0.1,
+        limitMsg: 100,
+      },
+      {
+        name: "GPT-3.5 (16K)",
+        limitCredit: 0.1,
+        limitMsg: 100,
+      },
+      {
+        name: "GPT-3.5 (16K)",
+        limitCredit: 0.1,
+        limitMsg: 100,
+      },
+      {
+        name: "GPT-3.5 (16K)",
+        limitCredit: 0.1,
+        limitMsg: 100,
+      },
+      {
+        name: "GPT-3.5 (16K)",
+        limitCredit: 0.1,
+        limitMsg: 100,
+      },
       {
         name: "GPT-3.5 (16K)",
         limitCredit: 0.1,

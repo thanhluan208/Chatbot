@@ -74,25 +74,33 @@ const TextBox = ({
   //! Function
 
   const renderContent = () => {
-    if (!data) return <CommonStyles.Typography>{text}</CommonStyles.Typography>;
+    if (!data) return <CommonStyles.Typography sx={{
+      whiteSpace: "pre-line"
+    }}>{text}</CommonStyles.Typography>;
     switch (data.status) {
       case "pending":
         return <CircularProgress size={14} />;
       case "responding":
         return (
-          <CommonStyles.Typography>
+          <CommonStyles.Typography sx={{
+            whiteSpace: "pre-line"
+          }}>
             <span id={data.id}></span>{" "}
             <CircularProgress size={14} sx={{ marginLeft: "4px" }} />
           </CommonStyles.Typography>
         );
       case "responded":
         return (
-          <CommonStyles.Typography>
+          <CommonStyles.Typography sx={{
+            whiteSpace: "pre-line"
+          }}>
             <span id={data.id}></span>
           </CommonStyles.Typography>
         );
       default:
-        return <CommonStyles.Typography>{text}</CommonStyles.Typography>;
+        return <CommonStyles.Typography sx={{
+          whiteSpace: "pre-line"
+        }}>{text}</CommonStyles.Typography>;
     }
   };
 

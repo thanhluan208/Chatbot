@@ -3,7 +3,6 @@ import CommonStyles from "@/Components/CommonStyles";
 import { Box, useTheme } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { Fragment } from "react/jsx-runtime";
-import PerfectScrollBar from "react-perfect-scrollbar";
 import InputBox from "./components/InputBox";
 import Options from "./components/Options";
 import Memory from "./components/Memory";
@@ -14,6 +13,7 @@ import { useEffect, useMemo, useState } from "react";
 import useGetBotData from "@/Hooks/Bot/useGetBotData";
 import ChatField from "./components/ChatField";
 import LeftSide from "./components/LeftSide";
+import ConversationDrawer from "./components/ConversationDrawer";
 
 const Chatbot = () => {
   //! State
@@ -21,10 +21,15 @@ const Chatbot = () => {
   const navigate = useNavigate();
   const save = useSave();
   const [isBrandNew, setIsBrandNew] = useState(false);
-  const [openConversation, setOpenConversation] = useState(true);
+  const [openConversation, setOpenConversation] = useState(
+    window.innerWidth > 900
+  );
 
   const params = useParams();
   const botId = params?.botId;
+
+  const query = new URLSearchParams(window.location.search);
+  const conversationId = query.get("conversation");
 
   const payload = useMemo(() => {
     return {
@@ -33,6 +38,8 @@ const Chatbot = () => {
   }, [botId]);
 
   const { data, isLoading } = useGetBotData(payload);
+  console.log('isBrandNew', isBrandNew);
+
 
   //! Function
   useEffect(() => {
@@ -50,6 +57,7 @@ const Chatbot = () => {
     <Box sx={{ height: "100vh", width: "100vw" }}>
       <CommonStyles.LoadingOverlay isLoading={isLoading} />
       <CommunityDrawer />
+      <ConversationDrawer />
       <Box
         sx={{
           height: "74px",
@@ -220,7 +228,7 @@ const Chatbot = () => {
             maxWidth: "300px",
             width: openConversation ? "300px" : "0px",
             transition: "all 0.5s ease",
-            [theme.breakpoints.down("lg")]: {
+            [theme.breakpoints.down("md")]: {
               display: "none",
             },
             overflow: "hidden",
@@ -254,21 +262,21 @@ const Chatbot = () => {
           >
             <Memory />
             <Options />
-              <CommonStyles.Button
-                isIcon
-                sx={{
-                  background: "#fff",
-                  padding: "8px",
-                  borderRadius: "8px",
-                  boxShadow:
-                    "0 2px 4px 0 rgba(0,0,0,.04),0 0 1px 0 rgba(0,0,0,.08)",
-                }}
-                onClick={() => {
-                  save(cachedKeys.OPEN_DRAWER,true);
-                }}
-              >
-                <CommonIcons.Menu />
-              </CommonStyles.Button>
+            <CommonStyles.Button
+              isIcon
+              sx={{
+                background: "#fff",
+                padding: "8px",
+                borderRadius: "8px",
+                boxShadow:
+                  "0 2px 4px 0 rgba(0,0,0,.04),0 0 1px 0 rgba(0,0,0,.08)",
+              }}
+              onClick={() => {
+                save(cachedKeys.OPEN_DRAWER, true);
+              }}
+            >
+              <CommonIcons.Menu />
+            </CommonStyles.Button>
           </Box>
           {!openConversation && (
             <Box
@@ -289,19 +297,27 @@ const Chatbot = () => {
                     "0 2px 4px 0 rgba(0,0,0,.04),0 0 1px 0 rgba(0,0,0,.08)",
                 }}
                 onClick={() => {
-                  setOpenConversation(true);
+                  if (window.innerWidth < 900) {
+                    save(cachedKeys.OPEN_CONVERSATION, true);
+                  } else {
+                    setOpenConversation(true);
+                  }
                 }}
               >
                 <CommonIcons.Note />
               </CommonStyles.Button>
             </Box>
           )}
-          <PerfectScrollBar
-            id="scrollbar"
-            style={{
+          <Box
+            id="scrollbar-chatbot"
+            sx={{
               maxHeight: "100%",
               mask: "linear-gradient(180deg,#fff 91.89%,hsla(0,0%,100%,0))",
               paddingBottom: "30px",
+              overflowY: "auto",
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
             }}
           >
             <Box
@@ -314,7 +330,7 @@ const Chatbot = () => {
                 margin: "auto",
               }}
             >
-              {isBrandNew ? (
+              {isBrandNew && (
                 <Fragment>
                   <img
                     src="https://lf16-alice-tos-sign.oceanapi-i18n.com/obj/ocean-cloud-tos-sg/FileBizType.BIZ_BOT_ICON/7342794110727701510_1724933118523505822_yxm0POQ2JJ.gif?lk3s=50ccb0c5&x-expires=1726843125&x-signature=33gB0Q3PT8%2FCKhBm3paQslW%2Fvzo%3D"
@@ -326,11 +342,14 @@ const Chatbot = () => {
                     }}
                   />
                 </Fragment>
-              ) : (
-                <ChatField />
               )}
+              <ChatField
+                setIsBrandNew={setIsBrandNew}
+                isBrandNew={isBrandNew}
+                key={conversationId}
+              />
             </Box>
-          </PerfectScrollBar>
+          </Box>
           <Box
             id="textbox"
             sx={{

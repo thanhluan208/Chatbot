@@ -9,11 +9,11 @@ import MultiAgentStartNode from "./CustomNodes/MultiAgentStartNode";
 import MultiAgentNode from "./CustomNodes/MultiAgentNode";
 
 export enum NodeTypes {
-  startNode = "startNode",
-  llmNode = "llmNode",
-  endNode = "endNode",
-  multiAgentStartNode = "multiAgentStartNode",
-  multiAgentNode = "multiAgentNode",
+  startNode = "customNode_startNode",
+  llmNode = "customNode_llmNode",
+  endNode = "customNode_endNode",
+  multiAgentStartNode = "customNode_mutliAgentStartNode",
+  multiAgentNode = "customNode_multiAgentNode",
 }
 
 export const nodeTypes = {

@@ -1,7 +1,7 @@
 import CommonIcons from "@/Components/CommonIcons";
 import CommonStyles from "@/Components/CommonStyles";
 import { Box } from "@mui/material";
-import { useId, useRef, useState } from "react";
+import {  useId,  useRef, useState } from "react";
 import PerfectScrollBar from "react-perfect-scrollbar";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { chatBot } from "@/Constants/api";
@@ -16,7 +16,7 @@ import { modelOptions } from "@/Constants/options";
 
 interface InputBoxProps {
   setIsBrandNew: React.Dispatch<React.SetStateAction<boolean>>;
-  botData: BotData
+  botData: BotData;
 }
 
 export interface BotResponse {
@@ -83,7 +83,9 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
           },
           {
             id: id,
-            avatar: modelOptions.find((elm) => elm.value === botData.llm.model)?.img || "https://www.w3schools.com/w3images/avatar2.png",
+            avatar:
+              modelOptions.find((elm) => elm.value === botData.llm.model)
+                ?.img || "https://www.w3schools.com/w3images/avatar2.png",
             name: botData.bot_name,
           },
         ];
@@ -105,6 +107,18 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
     let count = 0;
     let isFinished = false;
     let interval: NodeJS.Timeout;
+    let shouldScrollToBottom = true;
+    const scrollChatbot = document.getElementById("scrollbar-chatbot");
+
+    const checkScrollUp = (e: any) => {
+      if (e.target.scrollTop < e.target.scrollHeight - e.target.clientHeight) {
+        shouldScrollToBottom = false;
+      } else {
+        shouldScrollToBottom = true;
+      }
+    };
+
+    scrollChatbot?.addEventListener("scroll", checkScrollUp);
 
     fetchEventSource(chatBot, {
       method: "POST",
@@ -119,13 +133,10 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
       }),
       signal: controller.signal,
 
-      async onopen(response) {
+      async onopen() {
         clearTimeout(requestTimeoutId);
-        const contentType = response.headers.get("content-type");
-        console.log("success get resp", contentType, response);
       },
       onmessage(msg: BotResponse) {
-        console.log(msg);
         if (msg.event === "done") {
           isFinished = true;
           return;
@@ -149,7 +160,15 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
                 type: TextBoxType.BOT_CHAT,
                 msg: botResponse,
               });
+              scrollChatbot?.removeEventListener("scroll", checkScrollUp);
             }
+            const scollbarChatbot =
+              document.getElementById("scrollbar-chatbot");
+            shouldScrollToBottom &&
+              scollbarChatbot?.scrollTo({
+                top: scollbarChatbot.scrollHeight,
+                behavior: "smooth",
+              });
           }, 20);
         }
       },
@@ -162,6 +181,7 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
           type: TextBoxType.BOT_CHAT,
           msg: botResponse,
         });
+        scrollChatbot?.removeEventListener("scroll", checkScrollUp);
         // You may want to handle cleanup here
       },
       onerror(err) {

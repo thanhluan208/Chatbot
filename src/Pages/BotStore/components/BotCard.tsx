@@ -69,6 +69,7 @@ const BotCard = (props: BotCardProps) => {
         cursor: "pointer",
         position: "relative",
         maxWidth: "400px",
+        width: "100%",
         "&:before": {
           content: '""',
           position: "absolute",

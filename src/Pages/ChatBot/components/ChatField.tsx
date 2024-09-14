@@ -1,10 +1,11 @@
-import { useGet } from "@/Stores/useStore";
+import { useGet, useSave } from "@/Stores/useStore";
 import ChatBox from "./ChatBox";
 import { Box } from "@mui/material";
 import useGetBotChatHistory from "@/Hooks/Bot/useGetBotChatHistory";
 import { useParams } from "react-router-dom";
 import { TextBoxType } from "./TextBox";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import cachedKeys from "@/Constants/cachedKeys";
 
 export interface Chat {
   id: string;
@@ -15,23 +16,66 @@ export interface Chat {
   isByRole?: boolean;
 }
 
-const ChatField = () => {
+interface IChatField {
+  setIsBrandNew: React.Dispatch<React.SetStateAction<boolean>>;
+  isBrandNew: boolean;
+}
+
+const ChatField = (props: IChatField) => {
   //! State
+  const { setIsBrandNew, isBrandNew } = props;
   const listChat: Chat[] = useGet("LIST_CHAT") || [];
   const params = useParams();
-  const botId = params.botId;
+  const botId = params?.botId;
 
-  const { data } = useGetBotChatHistory(botId as string, !!botId);
+  const query = new URLSearchParams(window.location.search);
+  const conversationId = query.get("conversation");
+  const save = useSave();
 
+  const payload = useMemo(() => {
+    if (!botId) return;
+    return {
+      botId,
+      conversationId,
+    };
+  }, [botId, conversationId]);
 
-console.log('data',data)
+  const { data, refetch } = useGetBotChatHistory(
+    payload as {
+      botId: string;
+      conversationId: string;
+    },
+    !!payload?.botId
+  );
+
   const renderChats = useMemo(() => {
     return [...(data || []), ...listChat];
   }, [data, listChat]);
 
   //! Function
+  useEffect(() => {
+    if (!isBrandNew && data?.length === 0) {
+      setIsBrandNew(true);
+      return;
+    }
+    if (isBrandNew && data?.length > 0) {
+      setIsBrandNew(false);
+    }
+  }, [data, isBrandNew]);
+
+  useEffect(() => {
+    save(cachedKeys.REFETCH_LIST_CHAT, refetch);
+  }, [save]);
+
+  useEffect(() => {
+    return () => {
+      save(cachedKeys.LIST_CHAT, null);
+    }
+  },[])
 
   //! Render
+  if (isBrandNew) return null;
+
   return (
     <Box
       sx={{

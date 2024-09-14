@@ -5,7 +5,6 @@ import { useLayoutEffect, useState } from "react";
 import { capitalize, isArray } from "lodash";
 import BotCard from "./components/BotCard";
 import Mansory from "@mui/lab/Masonry";
-import { mockDescription } from "../../Helpers";
 import CommonIcons from "../../Components/CommonIcons";
 import useGetBotsStore from "@/Hooks/Bot/useGetBotsStore";
 
@@ -223,7 +222,10 @@ const BotStore = () => {
             {data.map((item: any) => {
               return (
                 <Box key={item?.bot_id} sx={{
-                  padding:'30px 0'
+                  padding:'30px 0',
+                  display:'flex',
+                  justifyContent:'center',
+                  alignItems:'center'
                 }}>
                   <BotCard
                     id={item?.bot_id}
@@ -243,7 +245,7 @@ const BotStore = () => {
                           ? "https://sf16-bot-platform-tos-sign.coze.com/obj/bot-studio-bot-platform-sg/FileBizType.BIZ_LABEL_ICON/0_1721634266433275972_F2UPYqurVT.image/png?lk3s=50ccb0c5&x-expires=1725088720&x-signature=9B3UH8Ry%2BD1HFPjjfU39rzLDFiM%3D"
                           : "",
                     }}
-                    description={item?.description || mockDescription()}
+                    description={item?.description || ""}
                     star={Math.floor(Math.random() * 50 + 100)}
                     users={Math.floor(Math.random() * 1000 + 3000)}
                     owner_id={item?.owner_id}

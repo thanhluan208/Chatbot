@@ -25,20 +25,25 @@ interface Response {
   status: number;
 }
 
-const useGetBotChatHistory = (botId: string, isTrigger = true) => {
+const useGetBotChatHistory = (
+  payload: { botId: string; conversationId?: string },
+  isTrigger = true
+) => {
   const [data, setData] = useState<Chat[]>([]);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState();
   const { userId } = useAuth();
 
   const callApi = useCallback(() => {
-    if (!userId) return;
+    if (!userId || !payload?.botId) return;
+
     return botService.getBotChatHistory({
-      bot_id: botId,
+      bot_id: payload?.botId,
       user_id: userId,
       platform: "Alphii",
+      conversation_id: payload?.conversationId || undefined,
     });
-  }, [userId, botId]);
+  }, [userId, payload?.botId, payload?.conversationId]);
 
   const transformResponse = useCallback(
     (response?: AxiosResponse<Response>) => {

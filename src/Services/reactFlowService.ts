@@ -1,8 +1,10 @@
 import { ReactFlowInstance } from "@xyflow/react";
 import { FormikProps } from "formik";
 import httpServices from "./httpServices";
-import { createNode } from "@/Constants/api";
+import { createNode, updateBotEdge, updateBotNode } from "@/Constants/api";
 import { AxiosResponse } from "axios";
+import { toast } from "react-toastify";
+
 
 class reactFlowServices {
   flows: {
@@ -45,7 +47,8 @@ class reactFlowServices {
     botId: string,
     userId: string,
     onSuccess: (id: string) => void,
-    onFailed: () => void
+    onFailed: () => void,
+    nodeInfo?: string
   ) {
     if (!botId || !userId) {
       onFailed();
@@ -54,10 +57,12 @@ class reactFlowServices {
       .post(createNode, {
         bot_id: botId,
         user_id: userId,
+        info: nodeInfo,
       })
       .then((res: AxiosResponse<any>) => {
-        if (res.data?.status === "success") {
-          onSuccess(res.data.id);
+        console.log("res", res);
+        if (res.data?.status_code === 200) {
+          onSuccess(res.data.node_id);
         } else {
           onFailed();
         }
@@ -66,6 +71,56 @@ class reactFlowServices {
         console.log("err", err);
         onFailed();
       });
+  }
+
+  updateFlow(botId: string, id: string, data: string) {
+    if (!botId || !id) {
+      return;
+    }
+    console.log("data", data);
+    httpServices
+      .post(updateBotNode, {
+        bot_id: botId,
+        node_id: id,
+        info: data,
+      })
+      .then((res: AxiosResponse<any>) => {
+        if (res.data?.status_code !== 200) {
+          toast.error("Failed to update node");
+        }
+      })
+      .catch((err) => {
+        console.log("err", err);
+        toast.error("Failed to update node");
+      });
+  }
+
+  updateEdges(
+    botId: string,
+    userId: string,
+    edges: {
+      src_node: string;
+      dest_node: string;
+    }[],
+    onFailed?: () => void
+  ) {
+    try {
+      httpServices
+        .post(updateBotEdge, {
+          bot_id: botId,
+          user_id: userId,
+          bot_mode: "multi_agent",
+          data: { edges },
+        })
+        .then((res: AxiosResponse<any>) => {
+          if (res.data?.status_code !== 200) {
+            onFailed && onFailed();
+          }
+        });
+    } catch (error) {
+      console.log("error", error);
+      onFailed && onFailed();
+    }
   }
 }
 

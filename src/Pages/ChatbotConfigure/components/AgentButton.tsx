@@ -3,13 +3,18 @@ import CommonIcons from "../../../Components/CommonIcons";
 import CommonStyles from "../../../Components/CommonStyles";
 import { Box, Paper, Popover, useTheme } from "@mui/material";
 import { Mode } from "./Develop";
+import httpServices from "@/Services/httpServices";
+import { switchMultiAgent } from "@/Constants/api";
+import { useParams } from "react-router-dom";
+import { useAuth } from "@/Providers/AuthenticationProvider";
+import { toast } from "react-toastify";
 
 const AgentButton = ({
   setMode,
-  mode
+  mode,
 }: {
-  setMode: React.Dispatch<React.SetStateAction<Mode>>
-  mode: Mode
+  setMode: React.Dispatch<React.SetStateAction<Mode>>;
+  mode: Mode;
 }) => {
   //! State
   const theme: any = useTheme();
@@ -17,6 +22,9 @@ const AgentButton = ({
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
+  const { userId } = useAuth();
+  const params = useParams();
+  const botId = params.botId;
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -28,10 +36,39 @@ const AgentButton = ({
 
   const open = Boolean(anchorEl);
   const id = open ? agentId : undefined;
-  const isSingle = mode === Mode.Single_agent
+  const isSingle = mode === Mode.Single_agent;
 
   //! Function
+  const handleSelectMultiAgent = async () => {
+    const toastId = toast.loading("Switching to multi-agent mode...", {
+      isLoading: true,
+      autoClose: false,
+    });
+    try {
+      const response = await httpServices.post(switchMultiAgent, {
+        bot_id: botId,
+        user_id: userId,
+      });
 
+      console.log(response);
+      toast.update(toastId, {
+        render: "Switched to multi-agent mode successfully",
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
+      });
+
+      setMode(Mode.Multi_agent);
+      handleClose();
+    } catch (error) {
+      toast.update(toastId, {
+        render: "Failed to switch mode",
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      });
+    }
+  };
   //! Render
   return (
     <Fragment>
@@ -97,11 +134,14 @@ const AgentButton = ({
                 width: "315px",
                 minHeight: "unset",
                 height: "fit-content",
-                border: !isSingle ? `1px solid ${theme.colors.custom.colorDisabledTypo}` : "unset",
+                border: !isSingle
+                  ? `1px solid ${theme.colors.custom.colorDisabledTypo}`
+                  : "unset",
               }}
               onClick={() => {
-                handleClose()
-                setMode(Mode.Single_agent)}}
+                handleClose();
+                setMode(Mode.Single_agent);
+              }}
             >
               <CommonStyles.Typography>
                 Single agent mode
@@ -122,12 +162,11 @@ const AgentButton = ({
                 width: "315px",
                 minHeight: "unset",
                 height: "fit-content",
-                border: isSingle ? `1px solid ${theme.colors.custom.colorDisabledTypo}` : "unset",
+                border: isSingle
+                  ? `1px solid ${theme.colors.custom.colorDisabledTypo}`
+                  : "unset",
               }}
-              onClick={() => {
-                handleClose()
-                setMode(Mode.Multi_agent)
-              }}
+              onClick={handleSelectMultiAgent}
             >
               <CommonStyles.Typography>
                 Multi agent mode

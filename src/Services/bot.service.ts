@@ -1,4 +1,4 @@
-import { botChatHistory, getBotData, getBotsStore, getListBot } from "../Constants/api";
+import { botChatHistory, getBotData, getBotListConversation, getBotNode, getBotsStore, getListBot } from "../Constants/api";
 import httpServices from "./httpServices";
 
 export interface BotStoreFilter {
@@ -26,9 +26,19 @@ class BotServices {
     bot_id: string;
     user_id: string;
     platform: string;
+    conversation_id?: string;
   }) {
     return httpServices.post(botChatHistory, payload);
   }
+
+  getListConversation(payload: { bot_id: string; user_id: string }) {
+    return httpServices.post(getBotListConversation, payload);
+  }
+
+  getNode(payload: { bot_id: string; node_id: string }) {
+    return httpServices.post(getBotNode, payload)
+  }
+
 }
 
 export default new BotServices();

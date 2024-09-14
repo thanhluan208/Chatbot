@@ -45,10 +45,10 @@ const EngineButton = () => {
     return {
       model: foundModel ?? modelOptions[5],
       generationDiversity: "precise",
-      temperature: botData?.llm.temperature ?? 1.21,
-      top_p: botData?.llm.top_p ?? 0.9,
-      history_turn: botData?.llm.history_turn ?? 3,
-      max_tokens: botData?.llm.max_tokens ?? 2048,
+      temperature: botData?.llm?.temperature ?? 1.21,
+      top_p: botData?.llm?.top_p ?? 0.9,
+      history_turn: botData?.llm?.history_turn ?? 3,
+      max_tokens: botData?.llm?.max_tokens ?? 2048,
       outputFormat: "text",
     };
   }, [botData]);
@@ -85,10 +85,10 @@ const EngineButton = () => {
         user_id: userId,
         bot_id: params.botId,
         model_params: {
-          temperature: values.temperature ?? values.model.temperature.default,
-          top_p: values.top_p ?? values.model.top_p?.default ?? 1,
-          history_turn: values.history_turn ?? values.model.history_turn.default,
-          max_tokens: values.max_tokens ?? values.model.max_tokens.default,
+          temperature: values?.temperature ?? values?.model?.temperature.default,
+          top_p: values?.top_p ?? values.model.top_p?.default ?? 1,
+          history_turn: values?.history_turn ?? values.model.history_turn.default,
+          max_tokens: values?.max_tokens ?? values.model.max_tokens.default,
         },
       });
 
