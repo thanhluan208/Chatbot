@@ -17,10 +17,10 @@ const SingleAgent = () => {
   const save = useSave();
 
   const data = useGet("BOT_DATA");
+  console.log('data', data)
 
   const query = new URLSearchParams(window.location.search);
   const conversationId = query.get("conversation");
-
 
   //! Function
 
@@ -30,15 +30,16 @@ const SingleAgent = () => {
       <ConversationDrawer />
 
       <Box flex={2} paddingRight="10px">
-        <PersonaAndPrompt />
+        <PersonaAndPrompt systemPrompt={data?.system_prompt}/>
       </Box>
       <Box
         id="wrapper"
         sx={{
-          padding: "20px 14px 105px 14px",
+          padding: "60px 14px 105px 14px",
           height: "calc(100vh - 74px - 64)",
           position: "relative",
           width: "60vw",
+          minWidth: "500px",
           transition: "all 0.5s ease",
           [theme.breakpoints.down("lg")]: {
             flex: 1,

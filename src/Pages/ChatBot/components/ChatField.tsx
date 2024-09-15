@@ -54,14 +54,14 @@ const ChatField = (props: IChatField) => {
 
   //! Function
   useEffect(() => {
-    if (!isBrandNew && data?.length === 0) {
+    if (!isBrandNew && data?.length === 0 && listChat.length === 0) {
       setIsBrandNew(true);
       return;
     }
     if (isBrandNew && data?.length > 0) {
       setIsBrandNew(false);
     }
-  }, [data, isBrandNew]);
+  }, [data, isBrandNew, listChat]);
 
   useEffect(() => {
     save(cachedKeys.REFETCH_LIST_CHAT, refetch);

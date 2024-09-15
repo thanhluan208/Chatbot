@@ -40,6 +40,7 @@ const AgentButton = ({
 
   //! Function
   const handleSelectMultiAgent = async () => {
+    return
     const toastId = toast.loading("Switching to multi-agent mode...", {
       isLoading: true,
       autoClose: false,

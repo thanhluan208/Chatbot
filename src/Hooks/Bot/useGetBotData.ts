@@ -9,7 +9,7 @@ export interface BotResponse {
   status_code: number;
   permission_level: string;
   message: string;
-  data: BotData;
+  bot_data: BotData;
 }
 
 export interface BotData {
@@ -79,7 +79,7 @@ const useGetBotData = (
       }
       if (response) {
         setData({
-          ...response.data.data,
+          ...response.data.bot_data,
           permission_level: response.data.permission_level,
         });
       }

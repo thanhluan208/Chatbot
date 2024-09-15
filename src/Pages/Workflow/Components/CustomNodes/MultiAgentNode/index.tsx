@@ -18,9 +18,8 @@ import DeleteAgentButton from "./DeleteAgentButton";
 
 const MultiAgentNode = (props: NodeProps) => {
   //! State
-  console.log("props", props?.data, props.id);
   const shouldRemove = useGet(`${props.id}_remove` as any);
-  const { setNodes, setEdges, updateNode, updateEdge} = useReactFlow();
+  const { setNodes, setEdges, updateNode, updateEdge } = useReactFlow();
   const [isAdding, setIsAdding] = React.useState(false);
   const placeholderId = useRef<string | null>(uuid());
   const save = useSave();
@@ -52,7 +51,10 @@ const MultiAgentNode = (props: NodeProps) => {
       id: newId,
       type: props.type,
       position: {
-        x: props.positionAbsoluteX + (props?.width ?? 500) + Math.floor(Math.random() * 200 + 300),
+        x:
+          props.positionAbsoluteX +
+          (props?.width ?? 500) +
+          Math.floor(Math.random() * 200 + 300),
         y: props.positionAbsoluteY + Math.floor(Math.random() * 1000 - 500),
       },
       data: {
@@ -97,20 +99,19 @@ const MultiAgentNode = (props: NodeProps) => {
   };
 
   const handleAddNode = () => {
-    if(!placeholderId.current) return;
+    if (!placeholderId.current) return;
     updateNode(placeholderId.current, {
       data: {
-        isPlaceholder: false
-      }
-    })
-
+        isPlaceholder: false,
+      },
+    });
 
     updateEdge(`${props.id}-${placeholderId.current}`, {
       data: {
-        isPlaceholder: false
+        isPlaceholder: false,
       },
-      animated: false
-    })
+      animated: false,
+    });
 
     placeholderId.current = null;
     setIsAdding(false);
@@ -128,6 +129,30 @@ const MultiAgentNode = (props: NodeProps) => {
       }
     }, 500);
   }, [shouldRemove, props.id]);
+
+  useEffect(() => {
+    if (props.selected) {
+      setEdges((edges) => {
+        return edges.map((edge) => {
+          if (edge.source === props.id || edge.target === props.id) {
+            return {
+              ...edge,
+              animated: true,
+            };
+          }
+          return {
+            ...edge,
+            animated: false,
+          };
+        });
+      });
+    } else {
+      setEdges(edge => edge.map(item => ({
+        ...item,
+        animated: false
+      })))
+    }
+  }, [props?.selected, props?.id]);
 
   //! Render
   return (

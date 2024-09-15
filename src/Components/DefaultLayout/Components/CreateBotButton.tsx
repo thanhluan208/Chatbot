@@ -75,6 +75,8 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
         } else {
           throw new Error(response.data.message);
         }
+
+        toggle()
       } catch (error: any) {
         console.log("Create bot error: ", error);
         toast.update(toastId, {

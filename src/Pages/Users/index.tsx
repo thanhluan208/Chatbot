@@ -6,7 +6,7 @@ import ListBot from "./Components/ListBot";
 
 interface IUsers {}
 
-const sectionList = ["Bots", "Plugins", "Workflows", "Knowledge", "Cards"];
+const sectionList = ["Bots", ];
 
 function Users(props: IUsers) {
   //! State

@@ -3,9 +3,9 @@ import { useAuth } from "../../Providers/AuthenticationProvider";
 import botService from "../../Services/bot.service";
 
 export interface Bot {
-    bot_id: string;
-    bot_name: string;
-    description: string;
+  bot_id: string;
+  bot_name: string;
+  description: string;
 }
 
 const useGetListBot = (isTrigger = true) => {
@@ -16,12 +16,15 @@ const useGetListBot = (isTrigger = true) => {
 
   const callApi = useCallback(() => {
     if (!userId) return;
-    return botService.getListBot(userId);
+    return botService.getBotStore({
+      user_id: userId,
+      visual_option: "shared",
+    });
   }, [userId]);
 
   const transformResponse = useCallback((response: any) => {
     if (response) {
-      setData(response.data.bots);
+      setData(response.data.list_bots);
     }
   }, []);
 

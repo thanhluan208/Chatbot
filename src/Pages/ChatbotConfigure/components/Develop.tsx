@@ -12,7 +12,7 @@ export enum Mode {
 
 const Develop = () => {
   //! State
-  const [mode, setMode] = useState(Mode.Multi_agent);
+  const [mode, setMode] = useState(Mode.Single_agent);
 
   //! Function
 
