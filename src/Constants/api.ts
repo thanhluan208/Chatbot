@@ -1,6 +1,4 @@
-const baseAPI =
-  localStorage.getItem("baseUrl") ||
-  "https://chatbot-api.alphiiai.com";
+const baseAPI = "https://chatbot-api.alphiiai.com";
 
 export const getFolderKnowledge =
   baseAPI + "/knowledge/list_knowledge_storages";
@@ -42,8 +40,8 @@ export const getBotListConversation = baseAPI + "/bot/list_conversation";
 export const newConversation = baseAPI + "/bot/new_conversation";
 export const deleteConversation = baseAPI + "/bot/delete_conversation";
 export const switchMultiAgent = baseAPI + "/bot/create_multi_agent";
-export const updateBotEdge = baseAPI + '/bot/update_agent_detail_data'
-export const updatePrompt = baseAPI + '/bot/update_system_prompt_to_bot'
+export const updateBotEdge = baseAPI + "/bot/update_agent_detail_data";
+export const updatePrompt = baseAPI + "/bot/update_system_prompt_to_bot";
 
 export const getBotNode = baseAPI + "/node/get_node_data";
 export const deleteBotNode = baseAPI + "/node/delete_node";
