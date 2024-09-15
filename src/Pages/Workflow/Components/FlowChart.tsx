@@ -18,7 +18,7 @@ import { v4 as uuid } from "uuid";
 
 import "@xyflow/react/dist/style.css";
 import Toolbar from "./Toolbar";
-import { nodeTypes } from "./AddNodes";
+import { NodeTypes, nodeTypes } from "./AddNodes";
 import AnimatedSVGEdge from "./CustomEdges";
 import { Box } from "@mui/material";
 import { useSave } from "../../../Stores/useStore";
@@ -46,6 +46,7 @@ export default function FlowChart(props: IFlowChart) {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initEdges ?? []);
   const { screenToFlowPosition, updateNode } = useReactFlow();
   const save = useSave();
+
 
   const { userId } = useAuth();
 
@@ -131,7 +132,7 @@ export default function FlowChart(props: IFlowChart) {
         data: { label: `${type} node` },
       };
 
-      setNodes((nds) => nds.concat(newNode as any));
+      setNodes((nds) => nds.filter(node => node.type !== NodeTypes.helperNode).concat(newNode as any));
 
       if (isMultiAgent) {
         const onSuccess = (id: string) => {
@@ -160,6 +161,29 @@ export default function FlowChart(props: IFlowChart) {
     },
     [screenToFlowPosition, isMultiAgent, setNodes, updateNode, props.botId]
   );
+
+  const onDoubleClick = useCallback((event: React.MouseEvent<Element, MouseEvent>) => {
+    if(nodes.some((node) => node.type === NodeTypes.helperNode)) {
+      return;
+    }
+
+    const id = uuid()
+    const position = screenToFlowPosition({
+      x: event.clientX,
+      y: event.clientY,
+    });
+
+    const newNode = {
+      id: id,
+      type: NodeTypes.helperNode,
+      position,
+      data: {
+        listnode: props.listNode
+      }
+    }
+
+    setNodes((nds) => nds.concat(newNode as any));
+  },[props?.listNode, nodes])
 
   useEffect(() => {
     save(cachedKeys.FLOW_NODES, nodes);
@@ -201,6 +225,12 @@ export default function FlowChart(props: IFlowChart) {
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         minZoom={0.1}
+        onPaneClick={(e) => {
+          if(e.detail === 2) {
+            onDoubleClick(e)
+          }
+        }}
+        zoomOnDoubleClick={false}
       >
         <Controls />
         <MiniMap />

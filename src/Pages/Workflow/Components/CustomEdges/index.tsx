@@ -13,6 +13,7 @@ const AnimatedSVGEdge = ({
   sourcePosition,
   targetPosition,
   markerEnd,
+  data
 }: EdgeProps) => {
   const [edgePath] = getSmoothStepPath({
     sourceX,
@@ -30,6 +31,7 @@ const AnimatedSVGEdge = ({
         path={edgePath}
         markerEnd={markerEnd}
         style={{
+          opacity: data?.isPlaceholder ? 0.5 : 1,
           strokeWidth: 2,
           stroke: "#4e40e5",
         }}

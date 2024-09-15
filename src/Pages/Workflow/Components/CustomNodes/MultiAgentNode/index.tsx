@@ -1,5 +1,11 @@
-import React, { Fragment, useEffect, useMemo } from "react";
-import { Handle, NodeProps, Position, useReactFlow } from "@xyflow/react";
+import React, { Fragment, useEffect, useMemo, useRef } from "react";
+import {
+  Handle,
+  MarkerType,
+  NodeProps,
+  Position,
+  useReactFlow,
+} from "@xyflow/react";
 import { Box, Tooltip } from "@mui/material";
 import { v4 as uuid } from "uuid";
 import CommonIcons from "@/Components/CommonIcons";
@@ -7,14 +13,17 @@ import CommonStyles from "@/Components/CommonStyles";
 import CollapseArea from "../CollapseArea";
 import { FastField, Formik } from "formik";
 import CommonField from "@/Components/CommonFields";
-import { useGet } from "@/Stores/useStore";
-import { toast } from "react-toastify";
+import { useGet, useSave } from "@/Stores/useStore";
 import DeleteAgentButton from "./DeleteAgentButton";
 
 const MultiAgentNode = (props: NodeProps) => {
   //! State
+  console.log("props", props?.data, props.id);
   const shouldRemove = useGet(`${props.id}_remove` as any);
-  const { setNodes } = useReactFlow();
+  const { setNodes, setEdges, updateNode, updateEdge} = useReactFlow();
+  const [isAdding, setIsAdding] = React.useState(false);
+  const placeholderId = useRef<string | null>(uuid());
+  const save = useSave();
 
   const handleid = useMemo(() => {
     return {
@@ -34,12 +43,82 @@ const MultiAgentNode = (props: NodeProps) => {
     };
   }, []);
   //! Function
+  const handleAddPlaceholder = () => {
+    if (isAdding) return;
+    setIsAdding(true);
+    const newId = uuid();
+    placeholderId.current = newId;
+    const newNode = {
+      id: newId,
+      type: props.type,
+      position: {
+        x: props.positionAbsoluteX + (props?.width ?? 500) + Math.floor(Math.random() * 200 + 300),
+        y: props.positionAbsoluteY + Math.floor(Math.random() * 1000 - 500),
+      },
+      data: {
+        isPlaceholder: true,
+      },
+    };
 
+    setNodes((nodes) => nodes.concat(newNode));
+    setEdges((edges) =>
+      edges.concat({
+        id: `${props.id}-${newId}`,
+        source: props.id,
+        target: newId,
+        animated: true,
+        type: "animatedSvg",
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+          width: 20,
+          height: 20,
+          color: "#4e40e5",
+        },
+        data: {
+          isPlaceholder: true,
+        },
+        deletable: true,
+      })
+    );
+  };
+
+  const handleRemovePlaceholder = () => {
+    if (!placeholderId.current) return;
+    save(`${placeholderId.current}_remove`, true);
+    setIsAdding(false);
+    setEdges((edges) => {
+      const newEdges = edges.filter((edge) => {
+        return !edge.data?.isPlaceholder;
+      });
+
+      console.log("newEdges", newEdges);
+      return newEdges;
+    });
+  };
+
+  const handleAddNode = () => {
+    if(!placeholderId.current) return;
+    updateNode(placeholderId.current, {
+      data: {
+        isPlaceholder: false
+      }
+    })
+
+
+    updateEdge(`${props.id}-${placeholderId.current}`, {
+      data: {
+        isPlaceholder: false
+      },
+      animated: false
+    })
+
+    placeholderId.current = null;
+    setIsAdding(false);
+  };
 
   useEffect(() => {
     const node = document.getElementById(props.id);
     if (node && shouldRemove) {
-      toast.error("Create new agent failed");
       node.style.opacity = "0";
     }
 
@@ -55,9 +134,10 @@ const MultiAgentNode = (props: NodeProps) => {
     <Box
       id={props.id}
       sx={{
+        opacity: props.data?.isPlaceholder ? 0.5 : 1,
         borderRadius: "8px",
         background: "#fff",
-        border: "solid 2px transparent",
+        border: props?.selected ? "solid 2px #4e40e5" : "solid 2px transparent",
         minWidth: "380px",
         boxShadow: "0 0 8px 0 rgba(29,28,35,.06),0 0 2px 0 rgba(29,28,35,.18)",
         "&:hover": {
@@ -65,6 +145,30 @@ const MultiAgentNode = (props: NodeProps) => {
         },
         padding: "12px",
         transition: "all 0.5s ease",
+        "& .handle": {
+          "&::before": {
+            content: '"+"',
+            color: "#fff",
+            fontWeight: "bold",
+            width: "100%",
+            height: "100%",
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%,-50%)",
+            opacity: 0,
+            transition: "all 0.3s ease",
+          },
+          "&:hover": {
+            "&::before": {
+              opacity: 1,
+            },
+          },
+        },
       }}
     >
       <Box
@@ -82,12 +186,15 @@ const MultiAgentNode = (props: NodeProps) => {
           }}
         >
           <CommonIcons.Logo />
-          <CommonStyles.Typography type="semiBold16" sx={{
-            maxWidth: "200px",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          }}>
+          <CommonStyles.Typography
+            type="semiBold16"
+            sx={{
+              maxWidth: "200px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
             {`Agent ${props.id}`}
           </CommonStyles.Typography>
         </Box>
@@ -171,6 +278,9 @@ const MultiAgentNode = (props: NodeProps) => {
         id={handleid.source}
         isConnectable={true}
         className="handle"
+        onMouseEnter={handleAddPlaceholder}
+        onMouseLeave={handleRemovePlaceholder}
+        onClick={handleAddNode}
       />
       <Handle
         type="target"

@@ -13,11 +13,11 @@ const MultiAgent = () => {
     {
       name: "customNode_multiAgentNode",
       label: "Multi Agent Node",
+      description: "Create an agent"
     },
   ];
 
   const botData: any = useGet("BOT_DATA");
-  console.log("data", botData);
 
   const initNodes = useMemo(() => {
     const nodes: Node[] = [

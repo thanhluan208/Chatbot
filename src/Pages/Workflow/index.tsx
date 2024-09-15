@@ -46,6 +46,7 @@ const listNode = [
   {
     name: "customNode_multiAgentNode",
     label: "Multi Agent Node",
+    description: "Create an agent",
   },
 ];
 
