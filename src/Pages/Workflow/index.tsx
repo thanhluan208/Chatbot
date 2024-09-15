@@ -5,7 +5,6 @@ import CommonIcons from "../../Components/CommonIcons";
 import FlowChart from "./Components/FlowChart";
 import { ReactFlowProvider } from "@xyflow/react";
 
-
 const initNodes = [
   {
     id: "b7e48d14-235b-4238-bdac-cd54ae7796e2",
@@ -43,6 +42,13 @@ const initNodes = [
   },
 ];
 
+const listNode = [
+  {
+    name: "customNode_multiAgentNode",
+    label: "Multi Agent Node",
+  },
+];
+
 const Workflow = () => {
   //! State
 
@@ -50,9 +56,14 @@ const Workflow = () => {
 
   //! Render
   return (
-    <ReactFlowProvider>
-      <FlowChart initNodes={initNodes} listNode={[]}/>
-    </ReactFlowProvider>
+    <Box sx={{
+      width:'100vw',
+      height:"100vh"
+    }}>
+      <ReactFlowProvider>
+        <FlowChart initNodes={initNodes} listNode={listNode} />
+      </ReactFlowProvider>
+    </Box>
   );
 
   return (

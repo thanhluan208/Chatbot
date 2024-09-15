@@ -173,7 +173,7 @@ export default function FlowChart(props: IFlowChart) {
     <Box
       sx={{
         width: "100%",
-        height: "100%s",
+        height: "100%",
         position: "relative",
         "& .handle": {
           height: "10px",
