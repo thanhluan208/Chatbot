@@ -24,10 +24,10 @@ import DeleteAgentButton from "./DeleteAgentButton";
 import logo from "@/assets/logo.png";
 import { modelOptions } from "@/Constants/options";
 import { BotData } from "@/Hooks/Bot/useGetBotData";
-import EngineSelect from "@/Pages/ChatbotConfigure/components/EngineSelect";
 import GenerationDiversity from "@/Pages/ChatbotConfigure/components/GenerationDiversity";
 import Advance from "@/Pages/ChatbotConfigure/components/GenerateDiversity/components/Advance";
 import InputAndOutputSettings from "@/Pages/ChatbotConfigure/components/InputAndOutputSettings";
+import EngineSelect from "../LLMNode/SingleTab/EngineSelect";
 
 const MultiAgentNode = (props: NodeProps) => {
   //! State
@@ -312,7 +312,7 @@ const MultiAgentNode = (props: NodeProps) => {
                   }
                   
                 >
-                  <EngineSelect />
+                  <EngineSelect name="model"/>
                   <GenerationDiversity />
                   <Advance />
                   <InputAndOutputSettings />

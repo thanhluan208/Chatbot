@@ -111,7 +111,7 @@ const lightTheme = createTheme({
       borderColor: "#69696933",
 
       //* Main
-      backgroundSecondary: "#f4f4f6",
+      backgroundSecondary: "#f5f5f5",
 
       //* Button
       backgroundButtonHover: "#1976d214",

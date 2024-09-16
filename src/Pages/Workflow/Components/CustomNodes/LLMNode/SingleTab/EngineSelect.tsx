@@ -17,9 +17,11 @@ import CommonField from "../../../../../../Components/CommonFields";
 const EngineOption = ({
   option,
   isValue,
+  name
 }: {
   option: ModelOption;
   isValue?: boolean;
+  name?:string
 }) => {
   //! State
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
@@ -28,7 +30,7 @@ const EngineOption = ({
   const { values, setFieldValue } = useFormikContext<any>();
   const id = useId();
 
-  const isSelected = values?.llm?.value === option?.value;
+  const isSelected = values?.[name ?? "llm"]?.value === option?.value;
 
   const open = Boolean(anchorEl);
 
@@ -49,7 +51,7 @@ const EngineOption = ({
           padding: isValue ? "0 12px 0 16px" : "12px 16px",
         }}
         onClick={() => {
-          setFieldValue("llm", option);
+          setFieldValue(name ?? "llm", option);
         }}
       >
         <Box
@@ -145,22 +147,22 @@ const EngineOption = ({
   );
 };
 
-const EngineSelect = () => {
+const EngineSelect = ({name}: {name?:string}) => {
   //! State
   const { setFieldValue } = useFormikContext();
   const [open, setOpen] = React.useState(true);
 
   //! Function
   const renderOption = (option: ModelOption) => {
-    return <EngineOption option={option} key={option.value} />;
+    return <EngineOption option={option} name={name} key={option.value} />;
   };
 
   const customRenderValue = (value: ModelOption) => {
-    return <EngineOption option={value} isValue />;
+    return <EngineOption option={value} name={name} isValue />;
   };
 
   const onChangeCustomize = (event: SelectChangeEvent<string>) => {
-    setFieldValue("llm", JSON.parse(event?.target?.value));
+    setFieldValue(name ?? "llm", JSON.parse(event?.target?.value));
   };
 
   //! Render
@@ -200,7 +202,7 @@ const EngineSelect = () => {
       </Box>
       <Collapse in={open}>
         <FastField
-          name="llm"
+          name={name ?? "llm"}
           component={CommonField.MuiSelectField}
           fullWidth
           options={modelOptions}
