@@ -263,10 +263,10 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
               const wrapper = document.getElementById("wrapper");
 
               if (textBox && wrapper) {
-                wrapper.style.padding = `60px 14px ${Math.min(
+                wrapper.style.padding = `20px 35px ${Math.min(
                   textBox.getBoundingClientRect().height,
                   155
-                )}px 14px`;
+                )}px 20px`;
               }
 
               if (!e.target.value) {

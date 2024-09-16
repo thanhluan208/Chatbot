@@ -83,7 +83,7 @@ const PersonaAndPrompt = ({ systemPrompt }: { systemPrompt: string }) => {
             <Form>
               <Box
                 sx={{
-                  padding: "20px 12px",
+                  padding: "20px 0",
                   fieldset: {
                     border: "none",
                   },

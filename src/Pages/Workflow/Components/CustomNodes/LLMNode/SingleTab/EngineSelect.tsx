@@ -6,6 +6,7 @@ import {
   Paper,
   Popper,
   SelectChangeEvent,
+  useTheme,
 } from "@mui/material";
 import React, { Fragment, memo, useId } from "react";
 import { FastField, useFormikContext } from "formik";
@@ -151,6 +152,7 @@ const EngineSelect = ({name}: {name?:string}) => {
   //! State
   const { setFieldValue } = useFormikContext();
   const [open, setOpen] = React.useState(true);
+  const theme  = useTheme()
 
   //! Function
   const renderOption = (option: ModelOption) => {
@@ -176,7 +178,7 @@ const EngineSelect = ({name}: {name?:string}) => {
         },
         marginTop: "20px",
         padding: "8px",
-        background: "#f9f9f9",
+        background: theme.colors.custom.backgroundSecondary,
       }}
     >
       <Box

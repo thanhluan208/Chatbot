@@ -1,10 +1,22 @@
 import CommonStyles from "@/Components/CommonStyles";
-import { Box, Fade, Popper, PopperPlacementType, SxProps, useTheme } from "@mui/material";
+import {
+  Box,
+  Fade,
+  Popper,
+  PopperPlacementType,
+  SxProps,
+  useTheme,
+} from "@mui/material";
 import React from "react";
 import { NodeTypes, nodeTypes } from "./AddNodes";
 import logo from "@/assets/agent.png";
 import CommonIcons from "@/Components/CommonIcons";
 import { Node, useReactFlow } from "@xyflow/react";
+import { v4 as uuid } from "uuid";
+import { useSave } from "@/Stores/useStore";
+import reactFlowService from "@/Services/reactFlowService";
+import { useParams } from "react-router-dom";
+import { useAuth } from "@/Providers/AuthenticationProvider";
 
 interface IAddNodePopper {
   open?: boolean;
@@ -31,8 +43,13 @@ const AddNodePopper = (props: IAddNodePopper) => {
     isHelperNode,
     helperPosition,
   } = props;
-  const { setNodes } = useReactFlow();
-  const theme = useTheme()
+  const { setNodes, updateNode } = useReactFlow();
+  const theme = useTheme();
+  const save = useSave();
+
+  const params = useParams();
+  const botId = params?.botId;
+  const { userId } = useAuth();
 
   //! Function
   const onDragStart = (
@@ -49,6 +66,22 @@ const AddNodePopper = (props: IAddNodePopper) => {
     description?: string;
   }) => {
     if (!setNodes) return;
+    const nodeId = uuid();
+
+    const onSuccess = (id: string) => {
+      console.log(nodeId)
+      updateNode(nodeId, {
+        id: id,
+        data: {
+          label: `Agent ${id}`,
+        },
+      });
+    };
+
+    const onFailed = () => {
+      save(`${nodeId}_remove`, true);
+    };
+
     setNodes((nodes) => {
       const newNodes = nodes.filter(
         (node) => node.type !== NodeTypes.helperNode
@@ -60,15 +93,23 @@ const AddNodePopper = (props: IAddNodePopper) => {
           y: lastnode.position.y,
         };
         const newNode = {
-          id: `${node.name}-${newNodes.length}`,
+          id: nodeId,
           type: node.name,
           position,
           data: { label: `${node.label} node` },
         };
         newNodes.push(newNode);
+
+        reactFlowService.createFlow(
+          botId as string,
+          userId as string,
+          onSuccess,
+          onFailed,
+          JSON.stringify(newNode)
+        );
       } else {
         const newNode = {
-          id: `${node.name}-${newNodes.length}`,
+          id: nodeId,
           type: node.name,
           position: helperPosition ?? {
             x: 0,
@@ -77,6 +118,13 @@ const AddNodePopper = (props: IAddNodePopper) => {
           data: { label: `${node.label} node` },
         };
         newNodes.push(newNode);
+        reactFlowService.createFlow(
+          botId as string,
+          userId as string,
+          onSuccess,
+          onFailed,
+          JSON.stringify(newNode)
+        );
       }
       console.log("newNodes", newNodes);
       return newNodes;

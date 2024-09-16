@@ -4,15 +4,21 @@ import EngineButton from "./EngineButton";
 import { useState } from "react";
 import SingleAgent from "./Develop/SingleAgent";
 import MultiAgent from "./Develop/MultiAgent";
+import { BotData } from "@/Hooks/Bot/useGetBotData";
 
 export enum Mode {
-  Single_agent = "Single_agent",
-  Multi_agent = "Multi_agent",
+  Single_agent = "single_agent",
+  Multi_agent = "multi_agent",
 }
 
-const Develop = () => {
+interface IDevelop {
+  data: BotData
+}
+
+const Develop = (props : IDevelop) => {
   //! State
-  const [mode, setMode] = useState(Mode.Multi_agent);
+  const {data} = props
+  const [mode, setMode] = useState(data.mode ?? Mode.Multi_agent);
   const theme = useTheme()
   //! Function
 
@@ -40,14 +46,13 @@ const Develop = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.25)",
           background: theme.colors.custom.backgroundSecondary,
           height:'64px',
           borderBottom:`solid 0.5px ${theme.colors.custom.borderColor}`
         }}
       >
-        <AgentButton setMode={setMode} mode={mode}/>
-        <EngineButton />
+        <AgentButton setMode={setMode} mode={mode} hasMultiAgent={data.has_multi_agent} key={mode + data.has_multi_agent}/>
+        {mode === Mode.Single_agent && (<EngineButton />)}
       </Box>
       <Box display="flex" height="calc(100vh - 138px)">
         {renderContent && renderContent()}

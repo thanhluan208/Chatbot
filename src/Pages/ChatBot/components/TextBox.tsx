@@ -48,10 +48,7 @@ const TextBox = ({
         };
       case TextBoxType.BOT_CHAT:
         return {
-          background: theme.colors.custom.backgroundCard,
-          "&:hover": {
-            background: theme.colors.custom.backgroundCardHover
-          }
+          background: theme.colors.custom.backgroundSecondary,
         };
       case TextBoxType.USER_CHAT:
         return {

@@ -28,24 +28,27 @@ import GenerationDiversity from "@/Pages/ChatbotConfigure/components/GenerationD
 import Advance from "@/Pages/ChatbotConfigure/components/GenerateDiversity/components/Advance";
 import InputAndOutputSettings from "@/Pages/ChatbotConfigure/components/InputAndOutputSettings";
 import EngineSelect from "../LLMNode/SingleTab/EngineSelect";
+import reactFlowService from "@/Services/reactFlowService";
+import { useParams } from "react-router-dom";
+import { useAuth } from "@/Providers/AuthenticationProvider";
+import { toast } from "react-toastify";
 
 const MultiAgentNode = (props: NodeProps) => {
   //! State
   const shouldRemove = useGet(`${props.id}_remove` as any);
-  const { setNodes, setEdges, updateNode, updateEdge } = useReactFlow();
+  const { setNodes, setEdges, updateNode, updateEdge, getNode } =
+    useReactFlow();
   const [isAdding, setIsAdding] = React.useState(false);
   const placeholderId = useRef<string | null>(uuid());
   const save = useSave();
   const theme = useTheme();
 
-  const botData = props?.data?.botData as BotData;
+  const params = useParams();
+  const botId = params?.botId;
 
-  const handleid = useMemo(() => {
-    return {
-      source: uuid(),
-      target: uuid(),
-    };
-  }, []);
+  const { userId } = useAuth();
+
+  const botData = props?.data?.botData as BotData;
 
   const initialValue = useMemo(() => {
     const foundModel = modelOptions.find((elm) => {
@@ -120,7 +123,35 @@ const MultiAgentNode = (props: NodeProps) => {
   };
 
   const handleAddNode = () => {
-    if (!placeholderId.current) return;
+    if (!placeholderId.current || !botId || !userId) return;
+
+    const newNode = getNode(placeholderId.current);
+
+    reactFlowService.createFlow(
+      botId as string,
+      userId,
+      (id) => {
+        console.log("newNodesssss", newNode);
+        if (!newNode) return;
+        updateNode(newNode.id, {
+          id: id,
+          data: {
+            label: `Agent ${id}`,
+          },
+        });
+      },
+      () => {
+        toast.error("Failed to create agent");
+      },
+      JSON.stringify({
+        id: newNode?.id,
+        position: newNode?.position,
+        measured: newNode?.measured,
+        data: newNode?.data,
+      }),
+      props.id
+    );
+
     updateNode(placeholderId.current, {
       data: {
         isPlaceholder: false,
@@ -246,6 +277,7 @@ const MultiAgentNode = (props: NodeProps) => {
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
+              width: "100%",
             }}
           >
             <Box
@@ -283,21 +315,27 @@ const MultiAgentNode = (props: NodeProps) => {
                 alignItems: "center",
               }}
             >
-              <Tooltip title="Chat with this agent" placement="top" arrow>
-                <div>
-                  <CommonIcons.Chat />
-                </div>
-              </Tooltip>
+              {props?.data?.isCurrentNode ? (
+                <Box>Chatting</Box>
+              ) : (
+                <Tooltip title="Chat with this agent" placement="top" arrow>
+                  <div>
+                    <CommonIcons.Chat
+                      fill={theme.colors.custom.normalColorTypo as string}
+                    />
+                  </div>
+                </Tooltip>
+              )}
 
               <DeleteAgentButton id={props.id} />
             </Box>
           </Box>
         }
         sxContainer={{
-          marginTop:'0',
+          marginTop: "0",
           "& .collapse-header": {
-            marginBottom:'0'
-          }
+            marginBottom: "0",
+          },
         }}
       >
         <Formik initialValues={initialValue} onSubmit={() => {}}>
@@ -310,9 +348,8 @@ const MultiAgentNode = (props: NodeProps) => {
                       Model Configuration
                     </CommonStyles.Typography>
                   }
-                  
                 >
-                  <EngineSelect name="model"/>
+                  <EngineSelect name="model" />
                   <GenerationDiversity />
                   <Advance />
                   <InputAndOutputSettings />
@@ -376,7 +413,7 @@ const MultiAgentNode = (props: NodeProps) => {
       <Handle
         type="source"
         position={Position.Right}
-        id={handleid.source}
+        id={`${props?.id}-source`}
         isConnectable={true}
         className="handle"
         onMouseEnter={handleAddPlaceholder}
@@ -386,7 +423,7 @@ const MultiAgentNode = (props: NodeProps) => {
       <Handle
         type="target"
         position={Position.Left}
-        id={handleid.target}
+        id={`${props?.id}-target`}
         isConnectable={true}
         className="handle"
       />

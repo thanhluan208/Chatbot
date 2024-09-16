@@ -28,6 +28,7 @@ import reactFlowService from "@/Services/reactFlowService";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import CommonStyles from "@/Components/CommonStyles";
 import CommonIcons from "@/Components/CommonIcons";
+import { cloneDeep } from "lodash";
 
 const edgeTypes = {
   animatedSvg: AnimatedSVGEdge,
@@ -58,18 +59,66 @@ export default function FlowChart(props: IFlowChart) {
     edgeReconnectSuccessful.current = false;
   }, []);
 
-  const onReconnect = useCallback((oldEdge: Edge, newConnection: Connection) => {
-    edgeReconnectSuccessful.current = true;
-    setEdges((els) => reconnectEdge(oldEdge, newConnection, els));
-  }, []);
+  const onReconnect = useCallback(
+    (oldEdge: Edge, newConnection: Connection) => {
+      try {
+        edgeReconnectSuccessful.current = true;
+        setEdges((els) => {
+          const newEdges = reconnectEdge(oldEdge, newConnection, els);
 
-  const onReconnectEnd = useCallback((_: any, edge: Edge) => {
-    if (!edgeReconnectSuccessful.current) {
-      setEdges((eds) => eds.filter((e) => e.id !== edge.id));
-    }
+          if (props?.botId && userId) {
+            reactFlowService.updateEdges(
+              props.botId as string,
+              userId as string,
+              cloneDeep(newEdges).map((elm) => {
+                return {
+                  dest_node: elm.target,
+                  src_node: elm.source,
+                };
+              })
+            );
 
-    edgeReconnectSuccessful.current = true;
-  }, []);
+            return newEdges;
+          }
+
+          return els;
+        });
+      } catch (error) {
+        console.log("err", error);
+      }
+    },
+    [props?.botId, userId]
+  );
+
+  const onReconnectEnd = useCallback(
+    (_: any, edge: Edge) => {
+      if (!edgeReconnectSuccessful.current) {
+        setEdges((eds) => {
+          const newEdges = eds.filter((e) => e.id !== edge.id);
+
+          if (props?.botId && userId) {
+            reactFlowService.updateEdges(
+              props.botId as string,
+              userId as string,
+              cloneDeep(newEdges).map((elm) => {
+                return {
+                  dest_node: elm.target,
+                  src_node: elm.source,
+                };
+              })
+            );
+
+            return newEdges;
+          }
+
+          return eds;
+        });
+      }
+
+      edgeReconnectSuccessful.current = true;
+    },
+    [props?.botId, userId]
+  );
 
   const onDragStop = async (_: React.MouseEvent, node: Node) => {
     if (isMultiAgent) {
@@ -275,20 +324,21 @@ export default function FlowChart(props: IFlowChart) {
         onReconnect={onReconnect}
         onReconnectEnd={onReconnectEnd}
         onReconnectStart={onReconnectStart}
+        snapToGrid
       >
         <CommonStyles.Button
           isIcon
           sx={{
             background: theme.colors.custom.backgroundCard,
-            position:'absolute',
-            top:'10px',
-            right:'10px',
-            cursor:'pointer',
-            zIndex:1000,
-            borderRadius:"8px"
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            cursor: "pointer",
+            zIndex: 1000,
+            borderRadius: "8px",
           }}
           onClick={() => {
-            save(cachedKeys.OPEN_CHAT, true)
+            save(cachedKeys.OPEN_CHAT, true);
           }}
         >
           <CommonIcons.ChatBubble />

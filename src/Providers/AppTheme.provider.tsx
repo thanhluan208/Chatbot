@@ -240,7 +240,7 @@ const darkTheme = createTheme({
       colorStar: "#f7c52b",
 
       //* Button
-      colorActive: "#f1f2fd",
+      colorActive: "#232326",
 
       //* Tab
       backgroundTab: "#4b4a580a",

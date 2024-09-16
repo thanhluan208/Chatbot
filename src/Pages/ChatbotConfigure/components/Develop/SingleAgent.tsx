@@ -69,10 +69,13 @@ const SingleAgent = () => {
           width: "25vw",
           padding: "8px 12px",
           height: "calc(100vh - 74px - 64px)",
-          background: theme.colors.custom.backgroundSecondary,
           [theme.breakpoints.down("lg")]: {
             display: "none",
           },
+          "textarea": {
+            background: theme.colors.custom.backgroundCard,
+          },
+          borderRight: `solid 0.5px ${theme.colors.custom.borderColor}`,
         }}
       >
         <PersonaAndPrompt systemPrompt={data?.system_prompt} />
@@ -80,13 +83,13 @@ const SingleAgent = () => {
       <Box
         id="wrapper"
         sx={{
-          padding: "60px 14px 105px 14px",
+          padding: "20px 35px 105px 20px",
           height: "calc(100vh - 74px - 64px)",
           position: "relative",
-          width: "75vw",
+          width: "42vw",
           transition: "all 0.5s ease",
           [theme.breakpoints.down("lg")]: {
-            flex: 1,
+            width:'75vw'
           },
         }}
       >
@@ -122,21 +125,6 @@ const SingleAgent = () => {
               </CommonStyles.Button>
             </div>
           </Tooltip>
-          <CommonStyles.Button
-            isIcon
-            sx={{
-              background: theme.colors.custom.backgroundCard,
-              padding: "8px",
-              borderRadius: "8px",
-              boxShadow:
-                "0 2px 4px 0 rgba(0,0,0,.04),0 0 1px 0 rgba(0,0,0,.08)",
-            }}
-            onClick={() => {
-              save(cachedKeys.OPEN_CONVERSATION, true);
-            }}
-          >
-            <CommonIcons.Note />
-          </CommonStyles.Button>
         </Box>
         <Box
           id="scrollbar-chatbot"
@@ -186,9 +174,10 @@ const SingleAgent = () => {
           sx={{
             paddingBottom: "20px",
             position: "absolute",
-            width: "100%",
+            width: "80%",
             bottom: 0,
-            left: 0,
+            left: '50%',
+            transform: 'translateX(-50%)',
           }}
         >
           <Box
@@ -220,10 +209,10 @@ const SingleAgent = () => {
       </Box>
       <Box
         sx={{
-          width: "25vw",
+          width: "33vw",
           padding: "8px 10px 0 20px",
-          // borderLeft:`solid 0.5px ${theme.colors.custom.borderColor}`
-          background: theme.colors.custom.backgroundSecondary,
+          borderLeft:`solid 0.5px ${theme.colors.custom.borderColor}`,
+          background: theme.colors.custom.backgroundCard,
         }}
       >
         <Configure />

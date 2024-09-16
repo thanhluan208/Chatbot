@@ -44,9 +44,7 @@ const CollapseArea = (props: ICollapseArea) => {
             }}
           />
         </CommonStyles.Button>
-        <CommonStyles.Typography type="semiBold16">
           {label || "Inputs"}
-        </CommonStyles.Typography>
       </Box>
       <Collapse in={open}>{props.children}</Collapse>
     </Box>

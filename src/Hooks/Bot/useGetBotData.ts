@@ -4,6 +4,7 @@ import { AxiosResponse } from "axios";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { Mode } from "@/Pages/ChatbotConfigure/components/Develop";
 
 export interface BotResponse {
   status_code: number;
@@ -18,29 +19,98 @@ export interface BotData {
   system_prompt: string;
   llm: Llm;
   knowledge_storage_ids: any[];
-  mode: string;
+  mode: Mode;
   bot_name: string;
   description: string;
   user_name: string;
   permission_level: string;
   visibility: string;
+  has_multi_agent: boolean;
+  nodes?: {
+    [key: string]: NodeData;
+  };
+  flow_nodes: Flow;
+}
+
+export interface Flow {
+  nodes: string[];
+  edges: any[];
+  start_node: string;
+  current_node: string;
+  scenario: string;
+}
+
+export interface NodeData {
+  class_name: string;
+  metadata: Metadata;
+  node_id: string;
+  knowledge_storage_ids: any[];
+  bot_id: string,
+  info: string
+}
+
+export interface Metadata {
+  user_id: string;
+  tools: any[];
+  system_prompt: string;
+  llm: Llm;
+  knowledge_storage_ids: any[];
 }
 
 export interface Llm {
-  class_name:        string;
-  model:             string;
-  temperature:       number;
-  max_tokens:        number;
+  class_name: string;
+  model: string;
+  temperature: number;
+  max_tokens: number;
   additional_kwargs: AdditionalKwargs;
-  history_turn:      number;
-  top_p:             number;
+  top_p: number;
   frequency_penalty: number;
-  presence_penalty:  number;
+  presence_penalty: number;
 }
 
-export interface AdditionalKwargs {
+export interface AdditionalKwargs {}
+
+export interface The70C273785020429095A7B6C205Ad597A {
+  class_name: string;
+  metadata: Metadata;
+  node_id: string;
+  knowledge_storage_ids: any[];
 }
 
+export interface Metadata {
+  user_id: string;
+  tools: any[];
+  system_prompt: string;
+  llm: Llm;
+  knowledge_storage_ids: any[];
+}
+
+export interface Llm {
+  class_name: string;
+  model: string;
+  temperature: number;
+  max_tokens: number;
+  additional_kwargs: AdditionalKwargs;
+  top_p: number;
+  frequency_penalty: number;
+  presence_penalty: number;
+}
+
+export interface AdditionalKwargs {}
+
+export interface Llm {
+  class_name: string;
+  model: string;
+  temperature: number;
+  max_tokens: number;
+  additional_kwargs: AdditionalKwargs;
+  history_turn: number;
+  top_p: number;
+  frequency_penalty: number;
+  presence_penalty: number;
+}
+
+export interface AdditionalKwargs {}
 
 export interface AdditionalKwargs {}
 
@@ -110,7 +180,7 @@ const useGetBotData = (
           }
         } catch (error: any) {
           setError(error);
-          toast.error("Failed to retrieve bot data. Please try again later")
+          toast.error("Failed to retrieve bot data. Please try again later");
         } finally {
           setLoading(false);
         }

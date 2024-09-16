@@ -4,20 +4,23 @@ import CommonStyles from "../../../Components/CommonStyles";
 import { Box, Paper, Popover, useTheme } from "@mui/material";
 import { Mode } from "./Develop";
 import httpServices from "@/Services/httpServices";
-import { createMultiAgent } from "@/Constants/api";
+import { changeBotMode, createMultiAgent } from "@/Constants/api";
 import { useParams } from "react-router-dom";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import { toast } from "react-toastify";
+import { useGet } from "@/Stores/useStore";
 
 const AgentButton = ({
   setMode,
   mode,
+  hasMultiAgent,
 }: {
   setMode: React.Dispatch<React.SetStateAction<Mode>>;
   mode: Mode;
+  hasMultiAgent?: boolean;
 }) => {
   //! State
-  const theme: any = useTheme();
+  const theme = useTheme();
   const agentId = useId();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
@@ -25,6 +28,8 @@ const AgentButton = ({
   const { userId } = useAuth();
   const params = useParams();
   const botId = params.botId;
+
+  const refetchBotData = useGet('REFETCH_BOT_DATA')
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -39,28 +44,56 @@ const AgentButton = ({
   const isSingle = mode === Mode.Single_agent;
 
   //! Function
-  const handleSelectMultiAgent = async () => {
-    return
+  const handleChangeMode = async (mode: Mode) => {
     const toastId = toast.loading("Switching to multi-agent mode...", {
       isLoading: true,
       autoClose: false,
     });
     try {
-      const response = await httpServices.post(createMultiAgent, {
+      if (!hasMultiAgent) {
+        const response = await httpServices.post(createMultiAgent, {
+          bot_id: botId,
+          user_id: userId,
+        });
+
+
+        if (response.data.status_code !== 200) {
+          toast.update(toastId, {
+            render: "Failed to switch mode",
+            type: "error",
+            isLoading: false,
+            autoClose: 3000,
+          });
+          return;
+        }
+      }
+
+      const responseSwitchMode = await httpServices.post(changeBotMode, {
         bot_id: botId,
         user_id: userId,
+        bot_mode: mode,
       });
 
-      console.log(response);
-      toast.update(toastId, {
-        render: "Switched to multi-agent mode successfully",
-        type: "success",
-        isLoading: false,
-        autoClose: 3000,
-      });
+      if (responseSwitchMode.data.status_code === 200) {
+        toast.update(toastId, {
+          render: "Switched to multi-agent mode successfully",
+          type: "success",
+          isLoading: false,
+          autoClose: 3000,
+        });
 
-      setMode(Mode.Multi_agent);
-      handleClose();
+        setMode(Mode.Multi_agent);
+        handleClose();
+      } else {
+        toast.update(toastId, {
+          render: "Failed to switch mode",
+          type: "error",
+          isLoading: false,
+          autoClose: 3000,
+        });
+      }
+
+      refetchBotData && await refetchBotData()
     } catch (error) {
       toast.update(toastId, {
         render: "Failed to switch mode",
@@ -126,6 +159,7 @@ const AgentButton = ({
           >
             <CommonStyles.Button
               isActive={isSingle}
+              disabled={mode === Mode.Single_agent}
               sx={{
                 flexDirection: "column",
                 textAlign: "left",
@@ -135,25 +169,23 @@ const AgentButton = ({
                 width: "315px",
                 minHeight: "unset",
                 height: "fit-content",
-                border: !isSingle
-                  ? `1px solid ${theme.colors.custom.normalColorTypo}`
-                  : "unset",
+                border: `1px solid ${theme.colors.custom.borderColor}`
               }}
               onClick={() => {
-                handleClose();
-                setMode(Mode.Single_agent);
+                handleChangeMode(Mode.Single_agent);
               }}
             >
-              <CommonStyles.Typography>
+              <CommonStyles.Typography >
                 Single agent mode
               </CommonStyles.Typography>
-              <CommonStyles.Typography sx={{ fontWeight: 100 }}>
+              <CommonStyles.Typography sx={{ fontWeight: 100 }} >
                 The bot only contains a single agent. This is recommended for
                 bots with simple logic.
               </CommonStyles.Typography>
             </CommonStyles.Button>
             <CommonStyles.Button
               isActive={!isSingle}
+              disabled={mode === Mode.Multi_agent}
               sx={{
                 flexDirection: "column",
                 textAlign: "left",
@@ -163,16 +195,14 @@ const AgentButton = ({
                 width: "315px",
                 minHeight: "unset",
                 height: "fit-content",
-                border: isSingle
-                  ? `1px solid ${theme.colors.custom.normalColorTypo}`
-                  : "unset",
+                border: `1px solid ${theme.colors.custom.borderColor}`,
               }}
-              onClick={handleSelectMultiAgent}
+              onClick={() =>handleChangeMode(Mode.Multi_agent)}
             >
-              <CommonStyles.Typography>
+              <CommonStyles.Typography >
                 Multi agent mode
               </CommonStyles.Typography>
-              <CommonStyles.Typography sx={{ fontWeight: 100 }}>
+              <CommonStyles.Typography sx={{ fontWeight: 100 }} >
                 Set multiple agents collaborating in one bot to deal with
                 complex logic.
               </CommonStyles.Typography>

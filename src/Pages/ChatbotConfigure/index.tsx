@@ -156,7 +156,7 @@ function ChatbotConfigure() {
               padding: "8px",
               borderRadius: "8px",
             }}
-            onClick={() => navigate(-1)}
+            onClick={() => navigate(`/workspace/${userId}`)}
           >
             <CommonIcons.ArrowBackIosNew />
           </CommonStyles.Button>
@@ -261,7 +261,7 @@ function ChatbotConfigure() {
           </CommonStyles.Typography>
         </Box>
       </Box>
-      {tab === "develop" && <Develop />}
+      {tab === "develop" && data && <Develop data={data}/>}
 
       {tab === "analysis" && <Analysis />}
     </Box>

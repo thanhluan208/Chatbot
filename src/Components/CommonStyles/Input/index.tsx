@@ -16,7 +16,7 @@ interface IInput {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   initValue?: string | number
-  onValueChange: (value:string | number) => void
+  onValueChange?: (value:string | number) => void
 }
 
 const Input = (props: IInput & TextFieldProps) => {
@@ -25,7 +25,7 @@ const Input = (props: IInput & TextFieldProps) => {
     props;
   const [value, setValue] = useState(initValue ?? "");
 
-  const theme: any = useTheme();
+  const theme = useTheme();
   //! Function
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -82,7 +82,7 @@ const Input = (props: IInput & TextFieldProps) => {
         sx={{
           div: {
             borderRadius: "10px",
-            background: "#fff",
+            background: theme.colors.custom.backgroundSecondary,
           },
 
           fieldset: {

@@ -183,6 +183,7 @@ const LeftSide = ({ setOpenConversation }: { setOpenConversation?: any }) => {
                               maxHeight: "unset",
                               height: "fit-content",
                               alignItems: "flex-start",
+                              width:'220px'
                             }}
                             onClick={() => {
                               if (loading) return;

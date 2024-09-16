@@ -6,6 +6,7 @@ import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import ChatDrawer from "./ChatDrawer";
 import ConversationDrawer from "@/Pages/ChatBot/components/ConversationDrawer";
+import { BotData } from "@/Hooks/Bot/useGetBotData";
 
 const MultiAgent = () => {
   //! State
@@ -15,11 +16,11 @@ const MultiAgent = () => {
     {
       name: "customNode_multiAgentNode",
       label: "Multi Agent Node",
-      description: "Create an agent"
+      description: "Create an agent",
     },
   ];
 
-  const botData: any = useGet("BOT_DATA");
+  const botData: BotData = useGet("BOT_DATA");
 
   const initNodes = useMemo(() => {
     const nodes: Node[] = [
@@ -41,16 +42,18 @@ const MultiAgent = () => {
         dragging: false,
       },
     ];
-    const agents = botData?.multi_agent?.nodes;
-    console.log("agents", agents);
+
+    const agents = botData?.nodes;
     if (!agents) return nodes;
     Object.keys(agents).forEach((key) => {
-      if (agents?.[key]?.node_id === botData?.bot_id) {
-        nodes[0].id = agents?.[key]?.node_id;
+      const agent = agents?.[key];
+      if (agent.node_id === botData.flow_nodes.start_node) {
+        nodes[0].id = agent?.node_id;
         return;
       }
-      const agent = agents?.[key];
+
       const agentInfo = JSON.parse(agent?.info);
+
       const agentNode = {
         id: agent?.node_id,
         type: "customNode_multiAgentNode",
@@ -60,6 +63,7 @@ const MultiAgent = () => {
         },
         data: {
           label: `Agent ${agent?.node_id}`,
+          isCurrentNode: agent?.node_id === botData?.flow_nodes?.current_node,
           ...agent?.metadata,
         },
         selected: false,
@@ -73,7 +77,7 @@ const MultiAgent = () => {
   }, [botData]);
 
   const initEdges = useMemo(() => {
-    const botEdges = botData?.multi_agent?.edges;
+    const botEdges = botData?.flow_nodes?.edges;
 
     if (!isArray(botEdges)) return [];
 
@@ -83,6 +87,8 @@ const MultiAgent = () => {
         deleteable: true,
         source: ed?.src_node,
         target: ed?.dest_node,
+        sourceHandle: `${ed?.src_node}-source`,
+        targetHandle: `${ed?.dest_node}-target`,
         type: "animatedSvg",
         markerEnd: {
           type: "arrowclosed",
@@ -94,10 +100,10 @@ const MultiAgent = () => {
     });
   }, [botData]);
 
-
   //! Function
 
   //! Render
+
   return (
     <ReactFlowProvider>
       {initNodes && (

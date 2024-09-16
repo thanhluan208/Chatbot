@@ -48,9 +48,9 @@ class reactFlowServices {
     userId: string,
     onSuccess: (id: string) => void,
     onFailed: () => void,
-    nodeInfo?: string
+    nodeInfo?: string,
+    fromId?: string
   ) {
-    return
     if (!botId || !userId) {
       onFailed();
     }
@@ -59,9 +59,9 @@ class reactFlowServices {
         bot_id: botId,
         user_id: userId,
         info: nodeInfo,
+        from_node_id: fromId,
       })
       .then((res: AxiosResponse<any>) => {
-        console.log("res", res);
         if (res.data?.status_code === 200) {
           onSuccess(res.data.node_id);
         } else {
@@ -75,7 +75,6 @@ class reactFlowServices {
   }
 
   updateFlow(botId: string, id: string, data: string) {
-    return
     if (!botId || !id) {
       return;
     }
@@ -96,6 +95,7 @@ class reactFlowServices {
       });
   }
 
+  
   updateEdges(
     botId: string,
     userId: string,

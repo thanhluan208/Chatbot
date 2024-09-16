@@ -8,6 +8,7 @@ import { deleteBot } from "../../../../../Constants/api";
 import CommonStyles from "../../../../../Components/CommonStyles";
 import ConfirmDialog from "../../../../../Components/CommonStyles/ConfirmDialog";
 import { useTheme } from "@mui/material";
+import { useAuth } from "@/Providers/AuthenticationProvider";
 
 interface IDeleteButton {
   bot: Bot;
@@ -19,6 +20,7 @@ function DeleteBotButton(props: IDeleteButton) {
   const { open, shouldRender, toggle } = useToggleDialog();
   const theme: any = useTheme();
   const refetchBotList = useGet("REFETCH_LIST_BOT");
+  const {userId} = useAuth()
 
   //! Function
   const handleDelete = async () => {
@@ -32,6 +34,7 @@ function DeleteBotButton(props: IDeleteButton) {
     try {
       const response = await httpServices.axios.post(deleteBot, {
         bot_id: bot.bot_id,
+        user_id: userId
       });
 
       await refetchBotList();
