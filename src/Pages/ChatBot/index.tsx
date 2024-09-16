@@ -194,23 +194,22 @@ const Chatbot = () => {
             button: {
               padding: "8px 16px",
               borderRadius: "8px",
-              border: "solid 1px #e6e8ea",
               display: "flex",
               gap: "4px",
               alignItems: "center",
               width: "96px",
-              background: "#fff",
+              background: theme.colors.custom.backgroundCard,
             },
             [theme.breakpoints.down("sm")]: {
               display: "none",
             },
           }}
         >
-          <CommonStyles.Button>
+          <CommonStyles.Button variant="outlined">
             <CommonIcons.StarOutline sx={{ width: 16, height: 16 }} />
             <CommonStyles.Typography>14</CommonStyles.Typography>
           </CommonStyles.Button>
-          <CommonStyles.Button sx={{ width: "96px" }}>
+          <CommonStyles.Button sx={{ width: "96px" }} variant="outlined">
             <CommonStyles.Typography type="semiBold14">
               Share
             </CommonStyles.Typography>
@@ -226,11 +225,10 @@ const Chatbot = () => {
             button: {
               padding: "8px 16px",
               borderRadius: "8px",
-              border: "solid 1px #e6e8ea",
               display: "flex",
               gap: "4px",
               alignItems: "center",
-              background: "#fff",
+              background: theme.colors.custom.backgroundCard,
               svg: {
                 width: 16,
                 height: 16,
@@ -293,8 +291,8 @@ const Chatbot = () => {
             <Options />
             <CommonStyles.Button
               isIcon
-              sx={{
-                background: "#fff",
+              sx={{               
+                background: theme.colors.custom.backgroundCard,
                 padding: "8px",
                 borderRadius: "8px",
                 boxShadow:
@@ -319,7 +317,7 @@ const Chatbot = () => {
               <CommonStyles.Button
                 isIcon
                 sx={{
-                  background: "#fff",
+                  background: theme.colors.custom.backgroundCard,
                   padding: "8px",
                   borderRadius: "8px",
                   boxShadow:
