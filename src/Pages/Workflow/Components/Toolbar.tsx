@@ -1,5 +1,6 @@
 import { Box, useTheme } from "@mui/material";
 import AddNodes from "./AddNodes";
+import ZoomControl from "./ZoomControl";
 
 const Toolbar = ({
   listNode,
@@ -22,9 +23,13 @@ const Toolbar = ({
         padding: "10px 20px",
         boxShadow: "0 5px 10px rgba(0,0,0,0.2)",
         borderRadius: "12px",
+        display:'flex',
+        gap:'12px',
+        alignItems:'center'
       }}
     >
       <AddNodes listNode={listNode ?? []} />
+      <ZoomControl />
     </Box>
   );
 };

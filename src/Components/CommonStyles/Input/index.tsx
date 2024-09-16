@@ -6,7 +6,7 @@ import {
   useTheme,
 } from "@mui/material";
 import CommonStyles from "..";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface IInput {
   sxContainer?: {};
@@ -15,13 +15,15 @@ interface IInput {
   afterOnchange?: (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
+  initValue?: string | number
+  onValueChange: (value:string | number) => void
 }
 
 const Input = (props: IInput & TextFieldProps) => {
   //! State
-  const { sxContainer, fullWidth, maxChar, afterOnchange, ...otherProps } =
+  const { sxContainer, fullWidth, maxChar, afterOnchange,initValue, onValueChange,...otherProps } =
     props;
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(initValue ?? "");
 
   const theme: any = useTheme();
   //! Function
@@ -32,6 +34,9 @@ const Input = (props: IInput & TextFieldProps) => {
     afterOnchange && afterOnchange(event);
   };
 
+  useEffect(() => {
+    onValueChange && onValueChange(value)
+  },[value])
   //! Render
   return (
     <Box
@@ -106,7 +111,7 @@ const Input = (props: IInput & TextFieldProps) => {
               }}
             >
               <CommonStyles.Typography type="normal12">
-                {maxChar && `${value?.length || 0}/${maxChar}`}
+                {maxChar && `${value.toString()?.length || 0}/${maxChar}`}
               </CommonStyles.Typography>
             </InputAdornment>
           ) : null,
