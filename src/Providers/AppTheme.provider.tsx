@@ -6,8 +6,26 @@ import { GlobalStyles } from "@mui/material";
 
 import cachedKeys from "../Constants/cachedKeys";
 import { useSave } from "../Stores/useStore";
+import { CustomColors } from "./type";
 
-const lightTheme: any = createTheme({
+declare module '@mui/material/styles' {
+  interface Theme {
+    colors: {
+      custom: CustomColors
+    };
+  }
+  // allow configuration using `createTheme`
+  interface ThemeOptions {
+    colors?: {
+      custom?: CustomColors
+    };
+  }
+  interface BreakpointOverrides {
+    xmd: true; 
+  }
+}
+
+const lightTheme = createTheme({
   breakpoints: {
     values: {
       xs: 0,
@@ -85,7 +103,6 @@ const lightTheme: any = createTheme({
       light: "#4d53e826",
     },
   },
-  //disable es
   colors: {
     custom: {
       //* Main
@@ -112,14 +129,116 @@ const lightTheme: any = createTheme({
       //* Tab
       backgroundTab: "#4b4a580a",
     },
-  } as any,
-} as any);
+  } ,
+});
 
 const darkTheme = createTheme({
-  typography: {
-    // fontFamily: ['Epilogue,  sans-serif'].join(','),
-    fontFamily: "Plus Jakarta Sans",
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      xmd: 1100,
+      lg: 1200,
+      xl: 1536,
+    },
   },
+
+  typography: {
+    fontFamily: "SegoeUI",
+  },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: `
+      @font-face {
+        font-family: SegoeUI;
+        src:
+            local("Segoe UI Light"),
+            url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/light/latest.woff2) format("woff2"),
+            url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/light/latest.woff) format("woff"),
+            url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/light/latest.ttf) format("truetype");
+        font-weight: 100;
+    }
+    
+    @font-face {
+        font-family: SegoeUI;
+        src:
+            local("Segoe UI Semilight"),
+            url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semilight/latest.woff2) format("woff2"),
+            url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semilight/latest.woff) format("woff"),
+            url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semilight/latest.ttf) format("truetype");
+        font-weight: 200;
+    }
+    
+    @font-face {
+        font-family: SegoeUI;
+        src:
+            local("Segoe UI"),
+            url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/normal/latest.woff2) format("woff2"),
+            url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/normal/latest.woff) format("woff"),
+            url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/normal/latest.ttf) format("truetype");
+        font-weight: 400;
+    }
+    
+    @font-face {
+        font-family: SegoeUI;
+        src:
+            local("Segoe UI Bold"),
+            url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/bold/latest.woff2) format("woff2"),
+            url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/bold/latest.woff) format("woff"),
+            url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/bold/latest.ttf) format("truetype");
+        font-weight: 600;
+    }
+    
+    @font-face {
+        font-family: SegoeUI;
+        src:
+            local("Segoe UI Semibold"),
+            url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semibold/latest.woff2) format("woff2"),
+            url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semibold/latest.woff) format("woff"),
+            url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semibold/latest.ttf) format("truetype");
+        font-weight: 500;
+    }
+      `,
+    },
+  },
+  palette: {
+    mode: "light",
+    primary: {
+      main: "#4e40e5",
+      light: "#4d53e826",
+    },
+  },
+  //disable es
+  colors: {
+    custom: {
+      background: "#18181b",
+
+      //* Main
+      backgroundSecondary: "#f4f4f6",
+
+      //* Button
+      backgroundButtonHover: "#1976d214",
+
+      //* Typo
+      primaryColorTypo: "#1f1e7d",
+      colorDisabledTypo: "#06070980",
+      semiColorTypo: "#383743",
+      colorErrorTypo: "#ff1515",
+
+      //* Dialog
+      backgroundDialog: "#fff",
+
+      //* Star
+      colorStar: "#f7c52b",
+
+      //* Button
+      colorActive: "#f1f2fd",
+
+      //* Tab
+      backgroundTab: "#4b4a580a",
+    },
+  } ,
 });
 
 export enum Theme {
