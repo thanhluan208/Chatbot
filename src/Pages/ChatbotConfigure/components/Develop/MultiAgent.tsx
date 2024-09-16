@@ -4,6 +4,8 @@ import { Edge, Node, ReactFlowProvider } from "@xyflow/react";
 import { isArray } from "lodash";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
+import ChatDrawer from "./ChatDrawer";
+import ConversationDrawer from "@/Pages/ChatBot/components/ConversationDrawer";
 
 const MultiAgent = () => {
   //! State
@@ -92,7 +94,6 @@ const MultiAgent = () => {
     });
   }, [botData]);
 
-  console.log("initNodes", initEdges);
 
   //! Function
 
@@ -109,6 +110,8 @@ const MultiAgent = () => {
           initEdges={initEdges as Edge[]}
         />
       )}
+      <ConversationDrawer />
+      <ChatDrawer />
     </ReactFlowProvider>
   );
 };

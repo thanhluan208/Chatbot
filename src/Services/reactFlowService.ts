@@ -50,6 +50,7 @@ class reactFlowServices {
     onFailed: () => void,
     nodeInfo?: string
   ) {
+    return
     if (!botId || !userId) {
       onFailed();
     }
@@ -74,10 +75,10 @@ class reactFlowServices {
   }
 
   updateFlow(botId: string, id: string, data: string) {
+    return
     if (!botId || !id) {
       return;
     }
-    console.log("data", data);
     httpServices
       .post(updateBotNode, {
         bot_id: botId,

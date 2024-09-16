@@ -29,7 +29,6 @@ const HelperNode = (props: NodeProps) => {
       sx={{
         height: "10px",
         width: "10px",
-        background: "red",
       }}
     >
       <AddNodePopper
@@ -39,7 +38,6 @@ const HelperNode = (props: NodeProps) => {
         placement="right"
         sxContainer={{
           width: "300px",
-          transform: "translateX(-200px)",
         }}
         isHelperNode
         helperPosition={position}

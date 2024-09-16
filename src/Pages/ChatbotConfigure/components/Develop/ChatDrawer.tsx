@@ -1,41 +1,41 @@
-import { Fragment, useState } from "react";
-import Configure from "../Configure";
-import { Box, Tooltip, useTheme } from "@mui/material";
-import ChatField from "@/Pages/ChatBot/components/ChatField";
-import CommonStyles from "@/Components/CommonStyles";
-import { useGet, useSave } from "@/Stores/useStore";
-import cachedKeys from "@/Constants/cachedKeys";
 import CommonIcons from "@/Components/CommonIcons";
-import InputBox from "@/Pages/ChatBot/components/InputBox";
-import ConversationDrawer from "@/Pages/ChatBot/components/ConversationDrawer";
-import { AxiosResponse } from "axios";
-import { CreateNewConversation } from "@/Pages/ChatBot/components/LeftSide";
-import httpServices from "@/Services/httpServices";
+import CommonStyles from "@/Components/CommonStyles";
 import { newConversation } from "@/Constants/api";
-import { useNavigate, useParams } from "react-router-dom";
+import cachedKeys from "@/Constants/cachedKeys";
+import ChatField from "@/Pages/ChatBot/components/ChatField";
+import InputBox from "@/Pages/ChatBot/components/InputBox";
+import { CreateNewConversation } from "@/Pages/ChatBot/components/LeftSide";
 import { useAuth } from "@/Providers/AuthenticationProvider";
+import httpServices from "@/Services/httpServices";
+import { useGet, useSave } from "@/Stores/useStore";
+import { Box, Drawer, useTheme } from "@mui/material";
+import { AxiosResponse } from "axios";
+import { Fragment, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import PersonalPromptDrawer from "./PersonalPromptDrawer";
-import PersonaAndPrompt from "../PersonaAndPrompt";
 
-const SingleAgent = () => {
+export default function ChatDrawer() {
   //! State
-  const theme = useTheme();
-  const [isBrandNew, setIsBrandNew] = useState(true);
+  const openDrawer = useGet("OPEN_CHAT");
   const save = useSave();
+  const theme = useTheme();
   const navigate = useNavigate();
+  const [isBrandNew, setIsBrandNew] = useState(true);
 
   const params = useParams();
   const botId = params?.botId;
 
   const { userId } = useAuth();
 
-  const data = useGet("BOT_DATA");
-
   const query = new URLSearchParams(window.location.search);
   const conversationId = query.get("conversation");
 
+  const data = useGet("BOT_DATA");
   //! Function
+  const handleClose = () => {
+    save(cachedKeys.OPEN_CHAT);
+  };
+
   const handleNewConversation = async () => {
     if (isBrandNew) return;
     setIsBrandNew(true);
@@ -61,34 +61,18 @@ const SingleAgent = () => {
 
   //! Render
   return (
-    <Fragment>
-      <ConversationDrawer />
-      <PersonalPromptDrawer system_prompt={data?.system_prompt} />
-      <Box
-        sx={{
-          width: "25vw",
-          padding: "8px 12px",
-          height: "calc(100vh - 74px - 64px)",
-          background: theme.colors.custom.backgroundSecondary,
-          [theme.breakpoints.down("lg")]: {
-            display: "none",
-          },
-        }}
-      >
-        <PersonaAndPrompt systemPrompt={data?.system_prompt} />
-      </Box>
+    <Drawer anchor="right" open={openDrawer} onClose={handleClose}>
       <Box
         id="wrapper"
         sx={{
+          width: "50vw",
           padding: "60px 14px 105px 14px",
-          height: "calc(100vh - 74px - 64px)",
-          position: "relative",
-          width: "75vw",
+          height: "100vh",
+          background: theme.colors.custom.backgroundSecondary,
           transition: "all 0.5s ease",
-          [theme.breakpoints.down("lg")]: {
-            flex: 1,
-          },
+          position: "relative",
         }}
+        role="presentation"
       >
         <Box
           sx={{
@@ -98,39 +82,23 @@ const SingleAgent = () => {
             zIndex: 100,
             display: "flex",
             gap: "8px",
-          }}
-        >
-          <Tooltip title="Personal prompt" >
-            <div>
-              <CommonStyles.Button
-                isIcon
-                sx={{
-                  background: theme.colors.custom.backgroundCard,
-                  padding: "8px",
-                  borderRadius: "8px",
-                  boxShadow:
-                    "0 2px 4px 0 rgba(0,0,0,.04),0 0 1px 0 rgba(0,0,0,.08)",
-                  [theme.breakpoints.up("lg")]: {
-                    display: "none",
-                  },
-                }}
-                onClick={() => {
-                  save(cachedKeys.OPEN_PERSONALPROMP, true);
-                }}
-              >
-                <CommonIcons.Input />
-              </CommonStyles.Button>
-            </div>
-          </Tooltip>
-          <CommonStyles.Button
-            isIcon
-            sx={{
+            button: {
               background: theme.colors.custom.backgroundCard,
               padding: "8px",
               borderRadius: "8px",
               boxShadow:
                 "0 2px 4px 0 rgba(0,0,0,.04),0 0 1px 0 rgba(0,0,0,.08)",
-            }}
+            },
+          }}
+        >
+          <CommonStyles.Button isIcon className="iconButton" onClick={() => {
+            save(cachedKeys.OPEN_CHAT, false)
+          }}>
+            <CommonIcons.Close />
+          </CommonStyles.Button>
+          <CommonStyles.Button
+            isIcon
+            className="iconButton"
             onClick={() => {
               save(cachedKeys.OPEN_CONVERSATION, true);
             }}
@@ -196,6 +164,7 @@ const SingleAgent = () => {
               maxWidth: "640px",
               margin: "auto",
               position: "relative",
+              width: "80%",
             }}
           >
             <CommonStyles.Button
@@ -218,18 +187,6 @@ const SingleAgent = () => {
           </Box>
         </Box>
       </Box>
-      <Box
-        sx={{
-          width: "25vw",
-          padding: "8px 10px 0 20px",
-          // borderLeft:`solid 0.5px ${theme.colors.custom.borderColor}`
-          background: theme.colors.custom.backgroundSecondary,
-        }}
-      >
-        <Configure />
-      </Box>
-    </Fragment>
+    </Drawer>
   );
-};
-
-export default SingleAgent;
+}

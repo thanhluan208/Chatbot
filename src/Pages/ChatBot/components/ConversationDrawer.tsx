@@ -16,7 +16,9 @@ const ConversationDrawer = () => {
 
   //! Render
   return (
-    <Drawer anchor="left" open={openDrawer} onClose={handleClose} >
+    <Drawer anchor="left" open={openDrawer} onClose={handleClose} sx={{
+      zIndex: 999999
+    }}>
       <Box sx={{ width: 300,height:'100vh', background: theme.colors.custom.backgroundSecondary }} role="presentation">
         <LeftSide />
       </Box>

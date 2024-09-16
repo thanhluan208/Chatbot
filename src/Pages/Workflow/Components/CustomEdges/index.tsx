@@ -1,5 +1,9 @@
+import CommonIcons from "@/Components/CommonIcons";
+import CommonStyles from "@/Components/CommonStyles";
+import { useTheme } from "@mui/material";
 import {
   BaseEdge,
+  EdgeLabelRenderer,
   EdgeProps,
   getSmoothStepPath,
 } from "@xyflow/react";
@@ -13,9 +17,10 @@ const AnimatedSVGEdge = ({
   sourcePosition,
   targetPosition,
   markerEnd,
-  data
+  data,
+  animated
 }: EdgeProps) => {
-  const [edgePath] = getSmoothStepPath({
+  const [edgePath, labelX, labelY] = getSmoothStepPath({
     sourceX,
     sourceY,
     sourcePosition,
@@ -23,6 +28,7 @@ const AnimatedSVGEdge = ({
     targetY,
     targetPosition,
   });
+  const theme = useTheme()
 
   return (
     <>
@@ -40,6 +46,20 @@ const AnimatedSVGEdge = ({
       <circle r="10" fill="#4e40e5">
         <animateMotion dur="2s" repeatCount="indefinite" path={edgePath} />
       </circle>
+      {animated && <EdgeLabelRenderer>
+        <CommonStyles.Button isIcon
+          style={{
+            position: 'absolute',
+            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+            borderRadius: '8px',
+            background: theme.colors.custom.backgroundCard
+          }}
+          color="error"
+          className="nodrag nopan"
+        >
+          <CommonIcons.Delete />
+        </CommonStyles.Button>
+      </EdgeLabelRenderer>}
     </>
   );
 };

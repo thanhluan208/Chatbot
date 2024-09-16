@@ -1,5 +1,5 @@
 import CommonStyles from "@/Components/CommonStyles";
-import { Box, Fade, Popper, PopperPlacementType, SxProps } from "@mui/material";
+import { Box, Fade, Popper, PopperPlacementType, SxProps, useTheme } from "@mui/material";
 import React from "react";
 import { NodeTypes, nodeTypes } from "./AddNodes";
 import logo from "@/assets/agent.png";
@@ -32,6 +32,7 @@ const AddNodePopper = (props: IAddNodePopper) => {
     helperPosition,
   } = props;
   const { setNodes } = useReactFlow();
+  const theme = useTheme()
 
   //! Function
   const onDragStart = (
@@ -107,6 +108,7 @@ const AddNodePopper = (props: IAddNodePopper) => {
               padding: "10px 20px",
               marginBottom: "20px",
               backdropFilter: "blur(10px)",
+              background: theme.colors.custom.backgroundCard,
               ...sxContainer,
             }}
           >
@@ -127,7 +129,7 @@ const AddNodePopper = (props: IAddNodePopper) => {
                   draggable
                   sx={{
                     borderRadius: "8px",
-                    border: "1px solid #e0e0e0",
+                    border: `1px solid ${theme.palette.primary.main}`,
                     boxShadow:
                       "0 6px 8px 0 rgba(29,28,35,.06),0 0 2px 0 rgba(29,28,35,.18)",
                     padding: "8px 12px",
@@ -176,7 +178,7 @@ const AddNodePopper = (props: IAddNodePopper) => {
                     variant="outlined"
                     startIcon={<CommonIcons.Add />}
                     sx={{
-                      border: "1px solid #4e40e5",
+                      border: `1px solid ${theme.palette.primary.main}`,
                     }}
                     onClick={() => {
                       handleAddNode(node);

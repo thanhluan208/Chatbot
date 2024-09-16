@@ -113,10 +113,10 @@ const LeftSide = ({ setOpenConversation }: { setOpenConversation?: any }) => {
           <CommonStyles.Button
             isIcon
             onClick={() => {
-              setOpenConversation && setOpenConversation(false);
+              setOpenConversation ? setOpenConversation(false) : save(cachedKeys.OPEN_CONVERSATION, false);
             }}
           >
-            <CommonIcons.ViewSidebar />
+            <CommonIcons.Close />
           </CommonStyles.Button>
 
           <CommonStyles.Button

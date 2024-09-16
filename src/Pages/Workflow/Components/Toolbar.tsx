@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import AddNodes from "./AddNodes";
 
 const Toolbar = ({
@@ -7,6 +7,7 @@ const Toolbar = ({
   listNode: { name: string; label: string }[];
 }) => {
   //! State
+  const theme = useTheme()
 
   //! Function
 
@@ -17,7 +18,7 @@ const Toolbar = ({
         position: "absolute",
         bottom: "20px",
         right: "250px",
-        background: "#fff",
+        background: theme.colors.custom.backgroundCard,
         padding: "10px 20px",
         boxShadow: "0 5px 10px rgba(0,0,0,0.2)",
         borderRadius: "12px",

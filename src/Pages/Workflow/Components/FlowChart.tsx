@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import {
   ReactFlow,
   MiniMap,
@@ -13,6 +13,7 @@ import {
   MarkerType,
   Node,
   Edge,
+  reconnectEdge,
 } from "@xyflow/react";
 import { v4 as uuid } from "uuid";
 
@@ -20,11 +21,13 @@ import "@xyflow/react/dist/style.css";
 import Toolbar from "./Toolbar";
 import { NodeTypes, nodeTypes } from "./AddNodes";
 import AnimatedSVGEdge from "./CustomEdges";
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { useSave } from "../../../Stores/useStore";
 import cachedKeys from "../../../Constants/cachedKeys";
 import reactFlowService from "@/Services/reactFlowService";
 import { useAuth } from "@/Providers/AuthenticationProvider";
+import CommonStyles from "@/Components/CommonStyles";
+import CommonIcons from "@/Components/CommonIcons";
 
 const edgeTypes = {
   animatedSvg: AnimatedSVGEdge,
@@ -40,15 +43,33 @@ interface IFlowChart {
 
 export default function FlowChart(props: IFlowChart) {
   const { isMultiAgent, initEdges } = props;
+  const edgeReconnectSuccessful = useRef(true);
   const [nodes, setNodes, onNodesChange] = useNodesState(
     (props?.initNodes as Node[]) ?? []
   );
   const [edges, setEdges, onEdgesChange] = useEdgesState(initEdges ?? []);
   const { screenToFlowPosition, updateNode } = useReactFlow();
   const save = useSave();
-
+  const theme = useTheme();
 
   const { userId } = useAuth();
+
+  const onReconnectStart = useCallback(() => {
+    edgeReconnectSuccessful.current = false;
+  }, []);
+
+  const onReconnect = useCallback((oldEdge: Edge, newConnection: Connection) => {
+    edgeReconnectSuccessful.current = true;
+    setEdges((els) => reconnectEdge(oldEdge, newConnection, els));
+  }, []);
+
+  const onReconnectEnd = useCallback((_: any, edge: Edge) => {
+    if (!edgeReconnectSuccessful.current) {
+      setEdges((eds) => eds.filter((e) => e.id !== edge.id));
+    }
+
+    edgeReconnectSuccessful.current = true;
+  }, []);
 
   const onDragStop = async (_: React.MouseEvent, node: Node) => {
     if (isMultiAgent) {
@@ -70,20 +91,28 @@ export default function FlowChart(props: IFlowChart) {
       const onFailed = () => {
         setEdges((eds: any) => {
           return eds.filter((edge: Edge) => {
-            return edge.source !== connection.source || edge.target !== connection.target;
+            return (
+              edge.source !== connection.source ||
+              edge.target !== connection.target
+            );
           });
         });
-      }
+      };
 
       return setEdges((eds: any) => {
         const newEdges = [...eds, connection].map((edge) => {
           return {
             src_node: edge.source as string,
             dest_node: edge.target as string,
-          }
+          };
         });
 
-        reactFlowService.updateEdges(props.botId as string, userId as string, newEdges, onFailed);
+        reactFlowService.updateEdges(
+          props.botId as string,
+          userId as string,
+          newEdges,
+          onFailed
+        );
 
         return addEdge(
           {
@@ -100,7 +129,6 @@ export default function FlowChart(props: IFlowChart) {
           eds
         );
       });
-
     },
 
     [setEdges]
@@ -132,7 +160,11 @@ export default function FlowChart(props: IFlowChart) {
         data: { label: `${type} node` },
       };
 
-      setNodes((nds) => nds.filter(node => node.type !== NodeTypes.helperNode).concat(newNode as any));
+      setNodes((nds) =>
+        nds
+          .filter((node) => node.type !== NodeTypes.helperNode)
+          .concat(newNode as any)
+      );
 
       if (isMultiAgent) {
         const onSuccess = (id: string) => {
@@ -162,28 +194,39 @@ export default function FlowChart(props: IFlowChart) {
     [screenToFlowPosition, isMultiAgent, setNodes, updateNode, props.botId]
   );
 
-  const onDoubleClick = useCallback((event: React.MouseEvent<Element, MouseEvent>) => {
-    if(nodes.some((node) => node.type === NodeTypes.helperNode)) {
-      return;
-    }
-
-    const id = uuid()
-    const position = screenToFlowPosition({
-      x: event.clientX,
-      y: event.clientY,
-    });
-
-    const newNode = {
-      id: id,
-      type: NodeTypes.helperNode,
-      position,
-      data: {
-        listnode: props.listNode
+  const onDoubleClick = useCallback(
+    (event: React.MouseEvent<Element, MouseEvent>) => {
+      event.preventDefault();
+      if (nodes.some((node) => node.type === NodeTypes.helperNode)) {
+        return;
       }
-    }
 
-    setNodes((nds) => nds.concat(newNode as any));
-  },[props?.listNode, nodes])
+      const id = uuid();
+      const position = screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
+
+      const newNode = {
+        id: id,
+        type: NodeTypes.helperNode,
+        position,
+        data: {
+          listnode: props.listNode,
+        },
+      };
+
+      setNodes((nds) => nds.concat(newNode as any));
+    },
+    [props?.listNode, nodes]
+  );
+
+  const onPaneClick = useCallback(() => {
+    if (nodes.some((elm) => elm.type === NodeTypes.helperNode))
+      setNodes((nodes) =>
+        nodes.filter((elm) => elm.type !== NodeTypes.helperNode)
+      );
+  }, [nodes]);
 
   useEffect(() => {
     save(cachedKeys.FLOW_NODES, nodes);
@@ -225,13 +268,31 @@ export default function FlowChart(props: IFlowChart) {
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         minZoom={0.1}
-        onPaneClick={(e) => {
-          if(e.detail === 2) {
-            onDoubleClick(e)
-          }
-        }}
+        onPaneClick={onPaneClick}
         zoomOnDoubleClick={false}
+        colorMode={theme?.palette?.mode}
+        onContextMenu={onDoubleClick}
+        onReconnect={onReconnect}
+        onReconnectEnd={onReconnectEnd}
+        onReconnectStart={onReconnectStart}
       >
+        <CommonStyles.Button
+          isIcon
+          sx={{
+            background: theme.colors.custom.backgroundCard,
+            position:'absolute',
+            top:'10px',
+            right:'10px',
+            cursor:'pointer',
+            zIndex:1000,
+            borderRadius:"8px"
+          }}
+          onClick={() => {
+            save(cachedKeys.OPEN_CHAT, true)
+          }}
+        >
+          <CommonIcons.ChatBubble />
+        </CommonStyles.Button>
         <Controls />
         <MiniMap />
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />

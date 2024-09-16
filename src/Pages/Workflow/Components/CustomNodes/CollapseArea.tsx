@@ -1,4 +1,4 @@
-import { Box, Collapse } from "@mui/material";
+import { Box, Collapse, useTheme } from "@mui/material";
 import CommonStyles from "../../../../Components/CommonStyles";
 import CommonIcons from "../../../../Components/CommonIcons";
 import React from "react";
@@ -12,7 +12,7 @@ const CollapseArea = (props: ICollapseArea) => {
   //! State
   const { label } = props;
   const [open, setOpen] = React.useState(true);
-
+  const theme = useTheme()
   //! Function
 
   //! Render
@@ -21,7 +21,7 @@ const CollapseArea = (props: ICollapseArea) => {
       sx={{
         marginTop: "20px",
         padding: "8px",
-        background: "#f9f9f9",
+        background: theme.colors.custom.backgroundSecondary,
       }}
     >
       <Box

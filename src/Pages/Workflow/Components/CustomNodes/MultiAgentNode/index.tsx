@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useRef } from "react";
+import React, { Fragment, useCallback, useEffect, useMemo, useRef } from "react";
 import {
   Handle,
   MarkerType,
@@ -6,7 +6,7 @@ import {
   Position,
   useReactFlow,
 } from "@xyflow/react";
-import { Box, Tooltip } from "@mui/material";
+import { Box, Tooltip, useTheme } from "@mui/material";
 import { v4 as uuid } from "uuid";
 import CommonIcons from "@/Components/CommonIcons";
 import CommonStyles from "@/Components/CommonStyles";
@@ -24,6 +24,7 @@ const MultiAgentNode = (props: NodeProps) => {
   const [isAdding, setIsAdding] = React.useState(false);
   const placeholderId = useRef<string | null>(uuid());
   const save = useSave();
+  const theme = useTheme()
 
   const handleid = useMemo(() => {
     return {
@@ -118,6 +119,25 @@ const MultiAgentNode = (props: NodeProps) => {
     setIsAdding(false);
   };
 
+  const handleClickNode = useCallback(() => {
+    setEdges((edges) => {
+      const newEdges = edges.map((item) => {
+        if(item.source === props.id || item.target === props.id) {
+          return {
+            ...item,
+            animated: true
+          }
+        } else {
+          return {
+            ...item, 
+            animated: false
+          }
+        }
+      })
+      return newEdges
+    })
+  },[props?.id])
+
   useEffect(() => {
     const node = document.getElementById(props.id);
     if (node && shouldRemove) {
@@ -162,7 +182,7 @@ const MultiAgentNode = (props: NodeProps) => {
       sx={{
         opacity: props.data?.isPlaceholder ? 0.5 : 1,
         borderRadius: "8px",
-        background: "#fff",
+        background: theme.colors.custom.backgroundCard,
         border: props?.selected ? "solid 2px #4e40e5" : "solid 2px transparent",
         minWidth: "380px",
         boxShadow: "0 0 8px 0 rgba(29,28,35,.06),0 0 2px 0 rgba(29,28,35,.18)",
@@ -174,7 +194,7 @@ const MultiAgentNode = (props: NodeProps) => {
         "& .handle": {
           "&::before": {
             content: '"+"',
-            color: "#fff",
+            color: theme.colors.custom.backgroundCard,
             fontWeight: "bold",
             width: "100%",
             height: "100%",
@@ -196,6 +216,7 @@ const MultiAgentNode = (props: NodeProps) => {
           },
         },
       }}
+      onClick={handleClickNode}
     >
       <Box
         sx={{

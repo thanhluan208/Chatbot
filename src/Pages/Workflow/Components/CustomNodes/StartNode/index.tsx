@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Handle, Position } from "@xyflow/react";
-import { Box, Collapse } from "@mui/material";
+import { Box, Collapse, useTheme } from "@mui/material";
 import { v4 as uuid } from "uuid";
 import CommonStyles from "../../../../../Components/CommonStyles";
 import InputArea from "./InputArea";
@@ -9,6 +9,7 @@ import CommonIcons from "../../../../../Components/CommonIcons";
 const StartNode = () => {
   //! State
   const [open, setOpen] = React.useState(true);
+  const theme = useTheme()
 
   const handleid = useMemo(() => {
     return uuid();
@@ -21,7 +22,7 @@ const StartNode = () => {
     <Box
       sx={{
         borderRadius: "8px",
-        background: "#fff",
+        background: theme.colors.custom.backgroundCard,
         border: "solid 2px transparent",
         minWidth: "200px",
         boxShadow: "0 0 8px 0 rgba(29,28,35,.06),0 0 2px 0 rgba(29,28,35,.18)",
