@@ -1,4 +1,4 @@
-import { Box, InputAdornment } from "@mui/material";
+import { Box, InputAdornment, useTheme } from "@mui/material";
 import CommonStyles from "../../Components/CommonStyles";
 import HighlightCard from "./components/HightlightCard";
 import { useLayoutEffect, useState } from "react";
@@ -25,6 +25,7 @@ const BotStore = () => {
   const [filters, setFilters] = useState({
     category: "recomended",
   });
+  const theme = useTheme()
 
   const { data, isLoading } = useGetBotsStore();
 
@@ -51,6 +52,7 @@ const BotStore = () => {
   }, []);
 
   //! Render
+
   return (
     <Box
       sx={{
@@ -66,7 +68,7 @@ const BotStore = () => {
           position: "sticky",
           top: 0,
           zIndex: 500,
-          background: "#f4f4f6",
+          background: theme.colors.custom.backgroundSecondary,
         }}
       >
         <CommonStyles.Typography type="semiBold20">
@@ -104,6 +106,7 @@ const BotStore = () => {
           justifyContent: "space-between",
           alignItems: "center",
           padding: "24px",
+          background: theme.colors.custom.backgroundSecondary,
         }}
       >
         <Box
@@ -170,7 +173,7 @@ const BotStore = () => {
           position: "sticky",
           top: "80px",
           zIndex: 500,
-          background: "#f4f4f6",
+          background: theme.colors.custom.backgroundSecondary,
           transition: "box-shadow 0.3s",
         }}
       >
@@ -188,14 +191,14 @@ const BotStore = () => {
               }
               sx={{
                 padding: "4px 12px",
-                background: isActive ? "#4e40e5" : "#fff",
+                background: isActive ? "#4e40e5" : theme.colors.custom.backgroundCard,
                 fontSize: "14px",
                 fontWeight: "500",
-                color: isActive ? "#fff" : "#000",
+                color: theme.colors.custom.normalColorTypo,
                 cursor: "pointer",
                 boxShadow: "0px 2px 4px 0px #1E1E1F0A",
                 "&:hover": {
-                  background: isActive ? "#4e40e5" : "#f5f5f5",
+                  background: isActive ? "#4e40e5" : theme.colors.custom.backgroundCardHover,
                 },
               }}
             >
@@ -215,7 +218,7 @@ const BotStore = () => {
             columns={{
               sm: 1,
               md: 2,
-              lg: 3,
+              lg: 4,
             }}
             spacing={2}
           >

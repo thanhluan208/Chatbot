@@ -17,7 +17,6 @@ const SingleAgent = () => {
   const save = useSave();
 
   const data = useGet("BOT_DATA");
-  console.log('data', data)
 
   const query = new URLSearchParams(window.location.search);
   const conversationId = query.get("conversation");
@@ -29,17 +28,21 @@ const SingleAgent = () => {
     <Fragment>
       <ConversationDrawer />
 
-      <Box flex={2} paddingRight="10px">
+      <Box sx={{
+        width:'400px',
+        padding:'0 12px',
+        height: "calc(100vh - 74px - 60px)",
+        // borderRight:'1px solid #ccc'
+      }}>
         <PersonaAndPrompt systemPrompt={data?.system_prompt}/>
       </Box>
       <Box
         id="wrapper"
         sx={{
           padding: "60px 14px 105px 14px",
-          height: "calc(100vh - 74px - 64)",
+          height: "calc(100vh - 74px - 64px)",
           position: "relative",
-          width: "60vw",
-          minWidth: "500px",
+          width: 'calc(100vw - 600px)',
           transition: "all 0.5s ease",
           [theme.breakpoints.down("lg")]: {
             flex: 1,
@@ -70,7 +73,7 @@ const SingleAgent = () => {
           <CommonStyles.Button
             isIcon
             sx={{
-              background: "#fff",
+              background: theme.colors.custom.backgroundCard,
               padding: "8px",
               borderRadius: "8px",
               boxShadow:
@@ -130,7 +133,6 @@ const SingleAgent = () => {
             width: "100%",
             bottom: 0,
             left: 0,
-            background: "#fff",
           }}
         >
           <Box
@@ -158,7 +160,10 @@ const SingleAgent = () => {
           </Box>
         </Box>
       </Box>
-      <Box flex={2} padding="8px 10px 0 20px">
+      <Box  sx={{
+        width:'300px',
+        padding:"8px 10px 0 20px"
+      }}>
         <Configure />
       </Box>
     </Fragment>

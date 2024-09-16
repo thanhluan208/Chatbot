@@ -171,7 +171,7 @@ const GenerationDiversity = () => {
                 textTransform: "none",
                 color: isSelected
                   ? theme.palette.primary.main
-                  : theme.colors.custom.colorDisabledTypo,
+                  : theme.colors.custom.normalColorTypo,
               }}
             >
               <CommonStyles.Typography

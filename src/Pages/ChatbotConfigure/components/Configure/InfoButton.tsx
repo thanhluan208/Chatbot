@@ -20,7 +20,7 @@ const Params = (props: IParams) => {
         <CommonStyles.Typography
           type="normal12"
           component="span"
-          color={theme.colors.custom.colorDisabledTypo}
+          color={theme.colors.custom.normalColorTypo}
           sx={{ ml: 1 }}
         >
           {type}
@@ -38,7 +38,7 @@ const Params = (props: IParams) => {
       </CommonStyles.Typography>
       <CommonStyles.Typography
         type="normal12"
-        color={theme.colors.custom.colorDisabledTypo}
+        color={theme.colors.custom.normalColorTypo}
       >
         {description}
       </CommonStyles.Typography>
@@ -97,7 +97,7 @@ function InfoButton(props: IInfoButton) {
             </CommonStyles.Typography>
             <CommonStyles.Typography
               type="normal12"
-              color={theme.colors.custom.colorDisabledTypo}
+              color={theme.colors.custom.normalColorTypo}
             >
               answer user's question about the image
             </CommonStyles.Typography>

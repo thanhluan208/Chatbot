@@ -34,7 +34,7 @@ function InputField(props: IInputField & FieldProps & TextFieldProps) {
     maxChar,
     ...otherProps
   } = props;
-  const theme: any = useTheme();
+  const theme = useTheme();
   const { setFieldValue, errors, touched } = form;
   const { name, value, onBlur } = field;
 
@@ -80,7 +80,7 @@ function InputField(props: IInputField & FieldProps & TextFieldProps) {
         input: {
           "&:hover": {
             input: {
-              background: "#fff !important",
+              background: `${theme.colors.custom.backgroundSecondary}`,
             },
           },
         },
@@ -123,7 +123,7 @@ function InputField(props: IInputField & FieldProps & TextFieldProps) {
         sx={{
           div: {
             borderRadius: "10px",
-            background: "#fff",
+            background: theme.colors.custom.backgroundSecondary,
           },
           textarea: {
             display: !shouldMaxRow ? undefined : "-webkit-box",

@@ -11,7 +11,7 @@ const sectionList = ["Bots", ];
 function Users(props: IUsers) {
   //! State
   const {} = props;
-  const theme: any = useTheme();
+  const theme = useTheme();
   const [personalSection, setPersonalSection] = useState("Bots");
 
   //! Function
@@ -76,10 +76,8 @@ function Users(props: IUsers) {
             <CommonStyles.Button
               key={item}
               onClick={() => setPersonalSection(item)}
+              variant={isActive ? "contained" : 'outlined'}
               sx={{
-                background: isActive
-                  ? theme.colors.custom.backgroundButtonHover
-                  : "transparent",
                 "&:hover": {
                   "& p": {
                     fontWeight: "500 !important",
@@ -90,7 +88,8 @@ function Users(props: IUsers) {
               <CommonStyles.Typography
                 type={isActive ? "semiBold14" : "normal14"}
                 sx={{
-                  color: "#060709cc",
+                  color: theme.colors.custom.normalColorTypo,
+                  opacity: isActive ? 1 : 0.6
                 }}
               >
                 {item}

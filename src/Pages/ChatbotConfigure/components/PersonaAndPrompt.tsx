@@ -18,10 +18,6 @@ const PersonaAndPrompt = ({ systemPrompt }: { systemPrompt: string }) => {
   const { userId } = useAuth();
   const refetchBotData = useGet("REFETCH_BOT_DATA");
 
-  
-
-  console.log("botId", systemPrompt);
-
   const inititalValues = useMemo(() => {
     return {
       personaAndPrompt: systemPrompt ?? "",
@@ -37,13 +33,12 @@ const PersonaAndPrompt = ({ systemPrompt }: { systemPrompt: string }) => {
     });
 
     try {
-      const response = await httpServices.post(updatePrompt, {
+      await httpServices.post(updatePrompt, {
         bot_id: botId,
         user_id: userId,
         system_prompt: values.personaAndPrompt,
       });
 
-      console.log("response", response);
       refetchBotData && (await refetchBotData());
 
       toast.update(toastId, {
@@ -88,12 +83,12 @@ const PersonaAndPrompt = ({ systemPrompt }: { systemPrompt: string }) => {
             <Form>
               <Box
                 sx={{
-                  padding: "20px 16px 0 16px",
+                  padding: "20px 12px",
                   fieldset: {
                     border: "none",
                   },
                   textarea: {
-                    padding: `0 !important`,
+                    padding: `0 16px!important`,
                   },
                 }}
               >
@@ -111,6 +106,9 @@ const PersonaAndPrompt = ({ systemPrompt }: { systemPrompt: string }) => {
                   type="submit"
                   disabled={isSubmitting}
                   isLoading={isSubmitting}
+                  sx={{
+                    marginTop:'20px',
+                  }}
                 >
                   Save
                 </CommonStyles.Button>

@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import AgentButton from "./AgentButton";
 import EngineButton from "./EngineButton";
 import { useState } from "react";
@@ -13,7 +13,7 @@ export enum Mode {
 const Develop = () => {
   //! State
   const [mode, setMode] = useState(Mode.Single_agent);
-
+  const theme = useTheme()
   //! Function
 
   //! Render
@@ -41,7 +41,8 @@ const Develop = () => {
           justifyContent: "center",
           alignItems: "center",
           boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.25)",
-          background: "#f9f9f9",
+          background: theme.colors.custom.backgroundSecondary,
+          // borderBottom:"solid 1px #ccc"
         }}
       >
         <AgentButton setMode={setMode} mode={mode}/>

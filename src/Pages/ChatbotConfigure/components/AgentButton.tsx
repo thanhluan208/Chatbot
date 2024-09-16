@@ -77,7 +77,7 @@ const AgentButton = ({
         onClick={handleClick}
         sx={{
           gap: "8px",
-          color: theme.colors.custom.colorDisabledTypo,
+          color: theme.colors.custom.normalColorTypo,
         }}
       >
         <CommonIcons.LooksOne sx={{ width: 16, height: 16 }} />
@@ -136,7 +136,7 @@ const AgentButton = ({
                 minHeight: "unset",
                 height: "fit-content",
                 border: !isSingle
-                  ? `1px solid ${theme.colors.custom.colorDisabledTypo}`
+                  ? `1px solid ${theme.colors.custom.normalColorTypo}`
                   : "unset",
               }}
               onClick={() => {
@@ -164,7 +164,7 @@ const AgentButton = ({
                 minHeight: "unset",
                 height: "fit-content",
                 border: isSingle
-                  ? `1px solid ${theme.colors.custom.colorDisabledTypo}`
+                  ? `1px solid ${theme.colors.custom.normalColorTypo}`
                   : "unset",
               }}
               onClick={handleSelectMultiAgent}

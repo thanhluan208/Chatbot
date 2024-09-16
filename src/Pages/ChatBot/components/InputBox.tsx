@@ -1,6 +1,6 @@
 import CommonIcons from "@/Components/CommonIcons";
 import CommonStyles from "@/Components/CommonStyles";
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import {  useId,  useRef, useState } from "react";
 import PerfectScrollBar from "react-perfect-scrollbar";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
@@ -37,6 +37,7 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
   const { userId, userData } = useAuth();
   const save = useSave();
   const botId = params.botId;
+  const theme = useTheme()
 
   const controller = new AbortController();
 
@@ -184,7 +185,7 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
         scrollChatbot?.removeEventListener("scroll", checkScrollUp);
         // You may want to handle cleanup here
       },
-      onerror(err) {
+      onerror(err: any) {
         abortFetch(id, "There was an error from server" + JSON.stringify(err));
         interval && clearInterval(interval);
       },
@@ -203,24 +204,25 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
         onFocus={() => {
           const element = document.getElementById(id);
           if (element) {
-            element.style.border = "1px solid #060709";
+            element.style.background = `${theme.colors.custom.backgroundCard}`;
           }
         }}
         onBlur={() => {
           const element = document.getElementById(id);
           if (element) {
-            element.style.border = "1px solid #0607090a";
+            element.style.background = theme.colors.custom.backgroundCardHover;
           }
         }}
         sx={{
           padding: "8px 8px 8px 20px",
           borderRadius: "16px",
-          border: "1px solid #0607090a",
+          border: `1px solid ${theme.palette.primary.main}`,
           width: "100%",
           display: "flex",
           alignItems: "center",
           flexWrap: "wrap",
           justifyContent: "end",
+          background: theme.colors.custom.backgroundCardHover,
           textarea: {
             border: "none",
             resize: "none",

@@ -1,3 +1,4 @@
+import { useTheme } from "@mui/material";
 import TypographyMui, { TypographyProps } from "@mui/material/Typography";
 import { useMemo } from "react";
 
@@ -10,6 +11,7 @@ interface ITypography {
 const Typography = (props: ITypography & TypographyProps) => {
   //! State
   const { type = "normal14", sx,truncate, ...restProps } = props;
+  const theme = useTheme()
   const sxCustomize = useMemo(() => {
     const styles = new Map();
 
@@ -130,7 +132,7 @@ const Typography = (props: ITypography & TypographyProps) => {
       sx={{
         ...sxCustomize,
         ...sx,
-        color: props.color,
+        color: props.color ?? theme.colors.custom.normalColorTypo,
       }}
       {...restProps}
     >

@@ -13,6 +13,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import useGetListBot from "../../../../Hooks/Bot/useGetListBot";
 import { useEffect, useMemo } from "react";
 import { useAuth } from "../../../../Providers/AuthenticationProvider";
+import Mansory from "@mui/lab/Masonry";
 
 export interface IBotCard {
   bot_id: string;
@@ -42,7 +43,7 @@ const BotCard = (props: IBotCard) => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const theme: any = useTheme();
+  const theme = useTheme();
 
   const imgUrl = useMemo(() => {
     return listImg[Math.floor(Math.random() * listImg.length)];
@@ -65,11 +66,10 @@ const BotCard = (props: IBotCard) => {
       onClick={handleClick}
       sx={{
         color: "unset",
-        width: "30%",
+        width: "100%",
         padding: "16px",
-        background: "#fff",
+        background: theme.colors.custom.backgroundCard,
         borderRadius: "12px",
-        border: "solid 1px #ccc",
         transition: "all 0.3s",
         cursor: "pointer",
         [theme.breakpoints.down("lg")]: {
@@ -85,6 +85,7 @@ const BotCard = (props: IBotCard) => {
         },
         "&:hover": {
           boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+          background: theme.colors.custom.backgroundCardHover,
           ".btnGroup": {
             display: "flex",
           },
@@ -104,16 +105,17 @@ const BotCard = (props: IBotCard) => {
           <CommonStyles.Typography type="semiBold16">
             {bot_name}
           </CommonStyles.Typography>
-          <CommonStyles.Typography
-            color={theme.colors.custom.colorDisabledTypo}
-          >
+          <CommonStyles.Typography color={theme.colors.custom.normalColorTypo}>
             {description}
           </CommonStyles.Typography>
         </Box>
         <Box>
           <img
-            src={imgUrl}
-            alt={bot_name}
+            src={
+              imgUrl ??
+              "https://p16-flow-product-sign-sg.ibyteimg.com/tos-alisg-i-bfte7mpw5s-sg/9c9ef4e4c6f147339c0cae1408bb1f46~tplv-bfte7mpw5s-resize:128:128.image?rk3s=2e2596fd&x-expires=1727594320&x-signature=VTZfu6FleEdw6gvUsvvssaBeyLg%3D"
+            }
+            alt={""}
             style={{
               width: "75px",
               height: "75px",
@@ -127,7 +129,7 @@ const BotCard = (props: IBotCard) => {
           <Box mt={1} display={"flex"}>
             <CommonStyles.Typography
               type="normal12"
-              color={theme.colors.custom.colorDisabledTypo}
+              color={theme.colors.custom.normalColorTypo}
             >
               GPT-4 (8k)
             </CommonStyles.Typography>
@@ -136,12 +138,12 @@ const BotCard = (props: IBotCard) => {
                 width: "3px",
                 height: "3px",
                 margin: "auto 8px",
-                color: theme.colors.custom.colorDisabledTypo,
+                color: theme.colors.custom.normalColorTypo,
               }}
             />
             <CommonStyles.Typography
               type="normal12"
-              color={theme.colors.custom.colorDisabledTypo}
+              color={theme.colors.custom.normalColorTypo}
             >
               Edited {moment().format("HH:mm")}
             </CommonStyles.Typography>
@@ -150,15 +152,23 @@ const BotCard = (props: IBotCard) => {
             mt={1}
             sx={{ display: "flex", gap: "8px", alignItems: "center" }}
           >
-            <CommonStyles.Typography>
+            <CommonStyles.Typography
+              sx={{
+                maxWidth: "80px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                textWrap: "nowrap",
+              }}
+            >
               {userData?.user_name}
             </CommonStyles.Typography>
             <CommonStyles.Typography
-              color={theme.colors.custom.colorDisabledTypo}
+              color={theme.colors.custom.normalColorTypo}
               sx={{
-                maxWidth: "100px",
+                maxWidth: "80px",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
+                textWrap: "nowrap",
               }}
             >
               {userData?.email ? `@${userData?.email}` : "-"}
@@ -262,7 +272,7 @@ function ListBot() {
           mt={1}
           mb={3}
           sx={{
-            color: theme.colors.custom.colorDisabledTypo,
+            color: theme.colors.custom.normalColorTypo,
           }}
         >
           Build an AI Bot with the power of LLM and plugins in minutes
@@ -274,18 +284,23 @@ function ListBot() {
   }
 
   return (
-    <Box
+    <Mansory
+      columns={{
+        sm: 1,
+        md: 2,
+        xmd: 3,
+        lg: 4,
+      }}
+      spacing={2}
       sx={{
-        display: "flex",
-        gap: "16px",
-        flexWrap: "wrap",
+        maxWidth: "1600px",
       }}
     >
       {isArray(data) &&
         data.map((bot) => {
           return <BotCard key={bot.bot_id} {...bot} />;
         })}
-    </Box>
+    </Mansory>
   );
 }
 

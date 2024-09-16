@@ -8,20 +8,19 @@ import cachedKeys from "../Constants/cachedKeys";
 import { useSave } from "../Stores/useStore";
 import { CustomColors } from "./type";
 
-declare module '@mui/material/styles' {
+declare module "@mui/material/styles" {
   interface Theme {
     colors: {
-      custom: CustomColors
+      custom: CustomColors;
     };
   }
-  // allow configuration using `createTheme`
   interface ThemeOptions {
     colors?: {
-      custom?: CustomColors
+      custom?: CustomColors;
     };
   }
   interface BreakpointOverrides {
-    xmd: true; 
+    xmd: true;
   }
 }
 
@@ -105,6 +104,9 @@ const lightTheme = createTheme({
   },
   colors: {
     custom: {
+      backgroundCard: "#fff",
+      backgroundCardHover: "#f7f7f714",
+
       //* Main
       backgroundSecondary: "#f4f4f6",
 
@@ -113,12 +115,12 @@ const lightTheme = createTheme({
 
       //* Typo
       primaryColorTypo: "#1f1e7d",
-      colorDisabledTypo: "#06070980",
+      normalColorTypo: "#000",
       semiColorTypo: "#383743",
       colorErrorTypo: "#ff1515",
 
       //* Dialog
-      backgroundDialog: "#fff",
+      backgroundDialog: "#f9f9f9",
 
       //* Star
       colorStar: "#f7c52b",
@@ -129,7 +131,7 @@ const lightTheme = createTheme({
       //* Tab
       backgroundTab: "#4b4a580a",
     },
-  } ,
+  },
 });
 
 const darkTheme = createTheme({
@@ -181,7 +183,7 @@ const darkTheme = createTheme({
     }
     
     @font-face {
-        font-family: SegoeUI;
+        font-family: SegoeUI; 
         src:
             local("Segoe UI Bold"),
             url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/bold/latest.woff2) format("woff2"),
@@ -203,7 +205,7 @@ const darkTheme = createTheme({
     },
   },
   palette: {
-    mode: "light",
+    mode: "dark",
     primary: {
       main: "#4e40e5",
       light: "#4d53e826",
@@ -212,22 +214,23 @@ const darkTheme = createTheme({
   //disable es
   colors: {
     custom: {
-      background: "#18181b",
+      backgroundCard: "#202024",
+      backgroundCardHover: "#f7f7f714",
 
       //* Main
-      backgroundSecondary: "#f4f4f6",
+      backgroundSecondary: "#18181b",
 
       //* Button
       backgroundButtonHover: "#1976d214",
 
       //* Typo
       primaryColorTypo: "#1f1e7d",
-      colorDisabledTypo: "#06070980",
+      normalColorTypo: "#fff",
       semiColorTypo: "#383743",
       colorErrorTypo: "#ff1515",
 
       //* Dialog
-      backgroundDialog: "#fff",
+      backgroundDialog: "#26272b",
 
       //* Star
       colorStar: "#f7c52b",
@@ -238,7 +241,7 @@ const darkTheme = createTheme({
       //* Tab
       backgroundTab: "#4b4a580a",
     },
-  } ,
+  },
 });
 
 export enum Theme {
@@ -253,12 +256,19 @@ const switchTheme = {
   [Theme.light]: lightTheme,
 };
 
+let initTheme = (localStorage.getItem(keyTheme) as Theme) ?? Theme.light;
+if (!!window.matchMedia) {
+  if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+    initTheme = Theme.dark;
+  } else {
+    initTheme = Theme.light;
+  }
+}
+
 export default function AppThemeProvider(props: { children: React.ReactNode }) {
   const { children } = props;
   const save = useSave();
-  const [theme, setTheme] = useState<Theme>(
-    (localStorage?.getItem(keyTheme) as Theme) || Theme.light
-  );
+  const [theme, setTheme] = useState<Theme>(initTheme);
 
   const toggleTheme = useCallback(() => {
     setTheme((prevTheme) => {
@@ -271,6 +281,15 @@ export default function AppThemeProvider(props: { children: React.ReactNode }) {
   useEffect(() => {
     save(cachedKeys.toggleTheme, toggleTheme);
   }, [save, toggleTheme]);
+
+  useEffect(() => {
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (event) => {
+        const newColorScheme = event.matches ? Theme.dark : Theme.light;
+        setTheme(newColorScheme);
+      });
+  }, []);
 
   return (
     <ThemeProvider theme={switchTheme[theme]}>

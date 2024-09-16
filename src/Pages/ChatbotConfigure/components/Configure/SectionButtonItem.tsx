@@ -50,7 +50,7 @@ function SectionButtonItem(props: ISectionButtonItem) {
         </CommonStyles.Typography>
         <CommonStyles.Typography
           type="normal12"
-          color={theme.colors.custom.colorDisabledTypo}
+          color={theme.colors.custom.normalColorTypo}
         >
           {subTitle}
         </CommonStyles.Typography>

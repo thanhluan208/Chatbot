@@ -19,11 +19,11 @@ function NavItem(props: INavItem) {
   //! State
   const { icon, title, path, children, navActive, onClick, buttonSx, endNum } =
     props;
-  const theme: any = useTheme();
+  const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isActive = location.pathname === path || navActive;
+  const isActive = location.pathname === path || navActive ;
 
   //! Function
 
@@ -44,8 +44,8 @@ function NavItem(props: INavItem) {
           }}
           sx={{
             justifyContent: "flex-start",
-            color: !isActive ? theme.colors.custom.colorDisabledTypo : "#000",
-
+            color: theme.colors.custom.normalColorTypo,
+            opacity: !isActive ? 0.6 : 1,
             backgroundColor:
               isActive && !navActive
                 ? theme.colors.custom.backgroundButtonHover

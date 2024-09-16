@@ -2,7 +2,7 @@ export interface CustomColors {
   backgroundSecondary?: string;
   backgroundButtonHover?: string;
   primaryColorTypo?: string;
-  colorDisabledTypo?: string;
+  normalColorTypo?: string;
   semiColorTypo?: string;
   colorErrorTypo?: string;
   backgroundDialog?: string;
@@ -10,4 +10,6 @@ export interface CustomColors {
   colorActive?: string;
   backgroundTab?: string;
   background?: string;
+  backgroundCard?: string
+  backgroundCardHover: string
 }

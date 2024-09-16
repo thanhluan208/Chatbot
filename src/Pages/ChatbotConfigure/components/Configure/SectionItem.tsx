@@ -125,7 +125,7 @@ function SectionItem(props: ISectionItem) {
           ) : (
             <CommonStyles.Typography
               type="normal14"
-              color={theme.colors.custom.colorDisabledTypo}
+              color={theme.colors.custom.normalColorTypo}
             >
               {content}
             </CommonStyles.Typography>

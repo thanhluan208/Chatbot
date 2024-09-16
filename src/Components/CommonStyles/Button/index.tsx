@@ -17,7 +17,7 @@ interface IMuiButton {
 function MuiButton(props: IMuiButton & ButtonProps) {
   //! State
   const { children, isIcon, isLoading, isActive, ...otherProps } = props;
-  const theme: any = useTheme();
+  const theme = useTheme();
   const styleActive = useMemo(() => {
     if (isActive) {
       return {
@@ -28,8 +28,7 @@ function MuiButton(props: IMuiButton & ButtonProps) {
     if (otherProps.variant === "outlined") {
       return {
         border: `none !important`,
-        color: theme.palette.primary.main,
-        background: "#fff",
+        background: theme.colors.custom.backgroundSecondary,
       };
     }
   }, [isActive, theme, otherProps.variant]);
@@ -47,6 +46,7 @@ function MuiButton(props: IMuiButton & ButtonProps) {
           "&:focus": {
             outline: "none",
           },
+          color: theme.colors.custom.normalColorTypo,
           ...props.sx,
         }}
       >
@@ -68,6 +68,7 @@ function MuiButton(props: IMuiButton & ButtonProps) {
         "&:focus": {
           outline: "none",
         },
+        color: theme.colors.custom.normalColorTypo,
         ...styleActive,
         ...props.sx,
       }}

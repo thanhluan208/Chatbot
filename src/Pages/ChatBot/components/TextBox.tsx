@@ -1,6 +1,6 @@
 import CommonStyles from "@/Components/CommonStyles";
 import { useGet } from "@/Stores/useStore";
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, useTheme } from "@mui/material";
 import { isString } from "lodash";
 import { useEffect, useMemo } from "react";
 
@@ -35,6 +35,7 @@ const TextBox = ({
 }: TextBoxProps) => {
   //! State
   const data: Data = useGet(`chat-${id}` as any);
+  const theme = useTheme()
 
   const botType = data ? data.type : type;
 
@@ -47,7 +48,10 @@ const TextBox = ({
         };
       case TextBoxType.BOT_CHAT:
         return {
-          background: "#f1f1f1",
+          background: theme.colors.custom.backgroundCard,
+          "&:hover": {
+            background: theme.colors.custom.backgroundCardHover
+          }
         };
       case TextBoxType.USER_CHAT:
         return {

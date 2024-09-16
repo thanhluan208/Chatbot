@@ -216,7 +216,7 @@ function ChatbotConfigure() {
             isIcon
             sx={{
               borderRadius: "8px",
-              border: `1px solid ${theme.colors.custom.colorDisabledTypo}`,
+              border: `1px solid ${theme.colors.custom.normalColorTypo}`,
             }}
           >
             <CommonIcons.Restore />

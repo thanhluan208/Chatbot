@@ -5,8 +5,6 @@ import { processNavLabel } from "../../Helpers";
 import { Outlet } from "react-router-dom";
 import { capitalize } from "lodash";
 import NavItem from "./Components/NavItem";
-import AddTeam from "./Components/AddTeams";
-import ListTeam from "./Components/ListTeam";
 import UserButton from "./Components/UserButton";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import CreateBotButton from "./Components/CreateBotButton";
@@ -82,7 +80,7 @@ function DefaultLayout() {
                     <CommonStyles.Typography
                       type="normal14"
                       pl={"15px"}
-                      color={theme.colors.custom.colorDisabledTypo}
+                      color={theme.colors.custom.normalColorTypo}
                     >
                       {capitalize(keyPar)}
                     </CommonStyles.Typography>
@@ -107,12 +105,12 @@ function DefaultLayout() {
                 </Box>
               );
             })}
-            <Box mt={1} display="flex" flexDirection={"column"}>
+            {/* <Box mt={1} display="flex" flexDirection={"column"}>
               <Box display="flex" justifyContent={"space-between"}>
                 <CommonStyles.Typography
                   type="normal14"
                   pl={"15px"}
-                  color={theme.colors.custom.colorDisabledTypo}
+                  color={theme.colors.custom.normalColorTypo}
                 >
                   Teams
                 </CommonStyles.Typography>
@@ -125,7 +123,7 @@ function DefaultLayout() {
               sx={{
                 mt: "8px",
               }}
-            />
+            /> */}
           </Box>
 
           <Box

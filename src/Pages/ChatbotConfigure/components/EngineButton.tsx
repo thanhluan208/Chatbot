@@ -127,7 +127,7 @@ const EngineButton = () => {
         onClick={handleClick}
         sx={{
           gap: "8px",
-          color: theme.colors.custom.colorDisabledTypo,
+          color: theme.colors.custom.normalColorTypo,
         }}
       >
         <img

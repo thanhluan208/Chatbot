@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import CommonStyles from "../../../Components/CommonStyles";
 import { ReactNode } from "react";
 import CommonIcons from "../../../Components/CommonIcons";
@@ -59,6 +59,8 @@ const BotCard = (props: BotCardProps) => {
   const navigate = useNavigate();
 
   const isOwner = permission_level === "owner";
+
+  const theme = useTheme()
   //! Function
 
   //! Render
@@ -70,28 +72,28 @@ const BotCard = (props: BotCardProps) => {
         position: "relative",
         maxWidth: "400px",
         width: "100%",
-        "&:before": {
-          content: '""',
-          position: "absolute",
-          height: "100%",
-          width: "100%",
-          bottom: "-12px",
-          left: 0,
-          background: "rgba(0,0,0,0.03)",
-          borderRadius: "8px",
-          transition: "all 0.3s ease",
-        },
-        "&:after": {
-          content: '""',
-          position: "absolute",
-          height: "100%",
-          width: "100%",
-          bottom: "-24px",
-          left: 0,
-          background: "rgba(0,0,0,0.03)",
-          borderRadius: "8px",
-          transition: "all 0.3s ease",
-        },
+        // "&:before": {
+        //   content: '""',
+        //   position: "absolute",
+        //   height: "100%",
+        //   width: "100%",
+        //   bottom: "-12px",
+        //   left: 0,
+        //   background: "rgba(0,0,0,0.03)",
+        //   borderRadius: "8px",
+        //   transition: "all 0.3s ease",
+        // },
+        // "&:after": {
+        //   content: '""',
+        //   position: "absolute",
+        //   height: "100%",
+        //   width: "100%",
+        //   bottom: "-24px",
+        //   left: 0,
+        //   background: "rgba(0,0,0,0.03)",
+        //   borderRadius: "8px",
+        //   transition: "all 0.3s ease",
+        // },
         "&:hover": {
           boxShadow: "0 4px 12px 0px rgba(0,0,0,0.1)",
           "& .img": {
@@ -117,7 +119,7 @@ const BotCard = (props: BotCardProps) => {
     >
       <Box
         sx={{
-          background: "#fff",
+          background: theme.colors.custom.backgroundCard,
           borderRadius: "8px",
           zIndex: 100,
           position: "relative",
@@ -228,6 +230,7 @@ const BotCard = (props: BotCardProps) => {
             display: "-webkit-box",
             padding: "0 20px",
             textAlign: "justify",
+            height:'82px'
           }}
         >
           {description}

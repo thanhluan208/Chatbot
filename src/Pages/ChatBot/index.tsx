@@ -17,7 +17,7 @@ import ConversationDrawer from "./components/ConversationDrawer";
 
 const Chatbot = () => {
   //! State
-  const theme: any = useTheme();
+  const theme = useTheme();
   const navigate = useNavigate();
   const save = useSave();
   const [isBrandNew, setIsBrandNew] = useState(false);
@@ -38,7 +38,6 @@ const Chatbot = () => {
   }, [botId]);
 
   const { data, isLoading } = useGetBotData(payload);
-  console.log('isBrandNew', isBrandNew);
 
 
   //! Function
@@ -148,7 +147,7 @@ const Chatbot = () => {
                     height: "16px",
                     width: "1px",
                     margin: "0 8px",
-                    background: theme.colors.custom.colorDisabledTypo,
+                    background: theme.colors.custom.normalColorTypo,
                   }}
                 />
                 <CommonStyles.Typography type="normal12">
@@ -358,7 +357,7 @@ const Chatbot = () => {
               width: "100%",
               bottom: 0,
               left: 0,
-              background: "#fff",
+              background: theme.colors.custom.backgroundSecondary,
             }}
           >
             <Box

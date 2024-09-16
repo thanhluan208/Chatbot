@@ -89,7 +89,7 @@ const LeftSide = ({ setOpenConversation }: { setOpenConversation?: any }) => {
       <PerfectScrollbar
         className="main-scrollbar"
         style={{
-          background: "#f9f9f9",
+          background: theme.colors.custom.backgroundSecondary,
           padding: "24px 0",
           maxHeight: "calc(100vh - 74px)",
           minHeight: "calc(100vh - 74px)",
@@ -173,7 +173,7 @@ const LeftSide = ({ setOpenConversation }: { setOpenConversation?: any }) => {
                             variant="outlined"
                             disabled={loading}
                             sx={{
-                              border: "1px solid #E0E0E0",
+                              border: `1px solid ${theme.palette.primary.main}`,
                               color: "unset",
                               flexDirection: "column",
                               maxHeight: "unset",

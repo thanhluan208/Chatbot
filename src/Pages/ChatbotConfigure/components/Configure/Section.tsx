@@ -21,7 +21,7 @@ function Section(props: ISection) {
     <Box mb="16px">
       <CommonStyles.Typography
         type="bold14"
-        color={theme.colors.custom.colorDisabledTypo}
+        color={theme.colors.custom.normalColorTypo}
       >
         {title}
       </CommonStyles.Typography>

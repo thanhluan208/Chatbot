@@ -1,4 +1,4 @@
-import { Avatar, Box, Fade, Paper, Popper } from "@mui/material";
+import { Avatar, Box, Fade, Paper, Popper, useTheme } from "@mui/material";
 import NavItem from "./NavItem";
 import React, { Fragment } from "react";
 import CommonStyles from "../../CommonStyles";
@@ -11,6 +11,8 @@ function UserButton() {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
+
+  const theme = useTheme()
 
   const open = !!anchorEl;
   const { logout, userData } = useAuth();
@@ -53,7 +55,7 @@ function UserButton() {
                 flexDirection: "column",
                 gap: "8px",
                 button: {
-                  color: "#000",
+                  color: theme.colors.custom.normalColorTypo,
                   fontWeight: 500,
                 },
               }}

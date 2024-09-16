@@ -1,6 +1,5 @@
 import { Fragment } from "react/jsx-runtime";
 import CommonStyles from "../../../Components/CommonStyles";
-import { useTheme } from "@mui/material";
 import useToggleDialog from "../../../Hooks/useToggleDialog";
 import { CreateBotDialog } from "../../../Components/DefaultLayout/Components/CreateBotButton";
 
@@ -11,7 +10,6 @@ function CreateBotPersonal(props: ICreateBotPersonal) {
   const {} = props;
   const { open, shouldRender, toggle } = useToggleDialog();
 
-  const theme: any = useTheme();
   //! Function
 
   //! Render
@@ -29,11 +27,11 @@ function CreateBotPersonal(props: ICreateBotPersonal) {
       )}
       <CommonStyles.Button
         onClick={toggle}
+        variant="contained"
         sx={{
           padding: "9px 20px",
           width: "fit-content",
           height: "40px",
-          background: theme.colors.custom.backgroundButtonHover,
         }}
       >
         <CommonStyles.Typography type="semiBold16">

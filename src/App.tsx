@@ -3,21 +3,25 @@ import {
   createBrowserRouter,
   redirect,
 } from "react-router-dom";
-import Users from "./Pages/Users";
 import DefaultLayout from "./Components/DefaultLayout";
 import { ListRoutes } from "./Constants/routes";
-import ChatbotConfigure from "./Pages/ChatbotConfigure";
-import Workflow from "./Pages/Workflow";
-import KnowledgeDetail from "./Pages/KnowledgeDetail";
-import Login from "./Pages/Login";
-import SignUp from "./Pages/SignUp";
-import { useAuth } from "./Providers/AuthenticationProvider";
 import useRoutes from "./Constants/routes";
-import KnowledgeUpload from "./Pages/KnowledgeUpload";
-import BotStore from "./Pages/BotStore";
-import UserProfile from "./Pages/UserProfile";
-import KnowledgeStore from "./Pages/KnowledgeStore";
-import ChatBot from "./Pages/ChatBot";
+import { useAuth } from "./Providers/AuthenticationProvider";
+import { lazy, Suspense } from "react";
+
+const KnowledgeDetail = lazy(() => import("./Pages/KnowledgeDetail"));
+const Login = lazy(() => import("./Pages/Login"));
+const SignUp = lazy(() => import("./Pages/SignUp"));
+const KnowledgeUpload = lazy(() => import("./Pages/KnowledgeUpload"));
+const BotStore = lazy(() => import("./Pages/BotStore"));
+const UserProfile = lazy(() => import("./Pages/UserProfile"));
+const KnowledgeStore = lazy(() => import("./Pages/KnowledgeStore"));
+
+const ChatBot = lazy(() => import("./Pages/ChatBot"));
+const Users = lazy(() => import("./Pages/Users"));
+const ChatbotConfigure = lazy(() => import("./Pages/ChatbotConfigure"));
+const Workflow = lazy(() => import("./Pages/Workflow"));
+
 
 function App() {
   //! State
@@ -149,7 +153,9 @@ function App() {
 
   //! Render
   return (
-      <RouterProvider router={router} />
+      <Suspense fallback={<h1>Loading...</h1>}>
+        <RouterProvider router={router} />
+      </Suspense>
   );
 }
 

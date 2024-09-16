@@ -7,7 +7,7 @@ const useRoutes = () => {
   return {
     common: {
       HOME: {
-        path: "/bot-store",
+        path: "/",
         icon: <CommonIcons.Home />,
       },
       PERSONAL: {
