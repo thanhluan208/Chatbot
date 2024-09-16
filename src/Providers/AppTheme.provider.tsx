@@ -106,6 +106,7 @@ const lightTheme = createTheme({
     custom: {
       backgroundCard: "#fff",
       backgroundCardHover: "#f7f7f714",
+      borderColor: "#69696933",
 
       //* Main
       backgroundSecondary: "#f4f4f6",
@@ -216,6 +217,8 @@ const darkTheme = createTheme({
     custom: {
       backgroundCard: "#202024",
       backgroundCardHover: "#f7f7f714",
+      borderColor: "#69696933",
+
 
       //* Main
       backgroundSecondary: "#18181b",

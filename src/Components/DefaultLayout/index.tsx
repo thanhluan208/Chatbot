@@ -1,25 +1,31 @@
-import { Box, Divider, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import CommonStyles from "../CommonStyles";
-import CommonIcons from "../CommonIcons";
-import { processNavLabel } from "../../Helpers";
-import { Outlet } from "react-router-dom";
-import { capitalize } from "lodash";
-import NavItem from "./Components/NavItem";
-import UserButton from "./Components/UserButton";
-import PerfectScrollbar from "react-perfect-scrollbar";
-import CreateBotButton from "./Components/CreateBotButton";
-import useRoutes from "../../Constants/routes";
 
-import logo from '@/assets/logo.png'
-import PriceTableDialog from "./Components/PriceTableDialog";
+import { Outlet } from "react-router-dom";
+import Sidebar from "./Components/Sidebar";
+import { useEffect, useState } from "react";
+import CommonIcons from "../CommonIcons";
 
 export const sidebarWidth = 232;
 
 function DefaultLayout() {
   //! State
   const theme: any = useTheme();
-  const Routes = useRoutes();
+  const [open, setOpen] = useState(window.innerWidth > 900);
   //! Function
+  useEffect(() => {
+    const onResize = () => {
+      if(window.innerWidth < 900) {
+        setOpen(false)
+      } else {
+        setOpen(true)
+      }
+    }
+
+    window.addEventListener('resize', onResize)
+
+    return () => window.removeEventListener('resize', onResize)
+  },[])
 
   //! Render
   return (
@@ -30,137 +36,44 @@ function DefaultLayout() {
         display: "flex",
       }}
     >
-      <PerfectScrollbar
-        style={{
-          maxHeight: "100vh",
-        }}
-      >
-        <Box
-          sx={{
-            width: sidebarWidth,
-            height: "100%",
-            padding: "24px 16px",
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "24px",
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                gap: "8px",
-                height: "40px",
-                alignItems: "center",
-              }}
-            >
-              <img src={logo} style={{ width: "40px", height: "40px" }} />
-              <CommonStyles.Typography type="semiBold24">Alphii</CommonStyles.Typography>
-            </Box>
-            <Box sx={{ height: "40px" }}>
-              <CreateBotButton />
-            </Box>
-          </Box>
-          <Box mt={2}>
-            {Object.entries(Routes).map(([keyPar, valPar]) => {
-              return (
-                <Box
-                  key={keyPar}
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "8px",
-                  }}
-                  mt={2}
-                >
-                  {keyPar !== "common" && (
-                    <CommonStyles.Typography
-                      type="normal14"
-                      pl={"15px"}
-                      color={theme.colors.custom.normalColorTypo}
-                    >
-                      {capitalize(keyPar)}
-                    </CommonStyles.Typography>
-                  )}
-
-                  {Object.entries(valPar).map(([keyChi, valChi]) => {
-                    return (
-                      <NavItem
-                        icon={valChi.icon}
-                        title={processNavLabel(keyChi)}
-                        path={valChi.path}
-                        key={keyChi}
-                      />
-                    );
-                  })}
-
-                  <Divider
-                    sx={{
-                      mt: "8px",
-                    }}
-                  />
-                </Box>
-              );
-            })}
-            {/* <Box mt={1} display="flex" flexDirection={"column"}>
-              <Box display="flex" justifyContent={"space-between"}>
-                <CommonStyles.Typography
-                  type="normal14"
-                  pl={"15px"}
-                  color={theme.colors.custom.normalColorTypo}
-                >
-                  Teams
-                </CommonStyles.Typography>
-                <AddTeam />
-              </Box>
-
-              <ListTeam />
-            </Box>
-            <Divider
-              sx={{
-                mt: "8px",
-              }}
-            /> */}
-          </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "8px",
-              mt: "8px",
-            }}
-          >
-            <PriceTableDialog />
-            <NavItem
-              icon={<CommonIcons.Token />}
-              title="Alphii Token"
-              path="/token"
-              navActive
-              endNum={10}
-            />
-          </Box>
-
-          <Box>
-            <UserButton />
-          </Box>
-        </Box>
-      </PerfectScrollbar>
+      <Sidebar open={open} setOpen={setOpen} />
       <Box
         id="main-content"
         sx={{
-          width: `calc(100vw - ${sidebarWidth}px)`,
+          width: `calc(100vw - ${open ? sidebarWidth : 0}px)`,
           height: "100vh",
           overflowY: "auto",
           backgroundColor: theme.colors.custom.backgroundSecondary,
-          position: "relative", 
+          position: "relative",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
         }}
       >
-        <CommonStyles.LoadingOverlay isLoadingApp/>
-        <Outlet />
+        <CommonStyles.LoadingOverlay isLoadingApp />
+        <Box
+          sx={{
+            paddingLeft: !open ? "20px" : "0px",
+            position: "relative",
+          }}
+        >
+          {!open && (
+            <CommonStyles.Button
+              isIcon
+              style={{
+                borderRadius: "8px",
+                position:'absolute',
+                top:'24px',
+                zIndex:1000,
+                left:'5px'
+              }}
+              onClick={() => setOpen(true)}
+            >
+              <CommonIcons.KeyboardDoubleArrowRight />
+            </CommonStyles.Button>
+          )}
+          <Outlet />
+        </Box>
       </Box>
     </Box>
   );

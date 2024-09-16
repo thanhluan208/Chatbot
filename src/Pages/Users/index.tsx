@@ -38,6 +38,8 @@ function Users(props: IUsers) {
     <Box
       sx={{
         padding: "24px",
+        maxWidth:'100%',
+        overflow: 'hidden'
       }}
     >
       <Box
@@ -99,7 +101,7 @@ function Users(props: IUsers) {
         })}
       </Box>
 
-      <Box mt={"24px"}>{renderPersonalSection()}</Box>
+      <Box mt={"24px"} >{renderPersonalSection()}</Box>
     </Box>
   );
 }

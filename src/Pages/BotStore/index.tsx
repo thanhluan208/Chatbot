@@ -25,7 +25,7 @@ const BotStore = () => {
   const [filters, setFilters] = useState({
     category: "recomended",
   });
-  const theme = useTheme()
+  const theme = useTheme();
 
   const { data, isLoading } = useGetBotsStore();
 
@@ -62,37 +62,59 @@ const BotStore = () => {
       <CommonStyles.LoadingOverlay isLoading={isLoading} />
       <Box
         sx={{
-          display: "grid",
-          gridTemplateColumns: "1fr minmax(auto, 480px) 1fr",
+          display: "flex",
           padding: "24px",
           position: "sticky",
           top: 0,
           zIndex: 500,
           background: theme.colors.custom.backgroundSecondary,
+          justifyContent: "space-between",
         }}
       >
         <CommonStyles.Typography type="semiBold20">
           Bot store
         </CommonStyles.Typography>
-        <CommonStyles.Input
-          fullWidth
-          placeholder="Search"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start" sx={{ marginLeft: "16px" }}>
-                <CommonIcons.Search />
-              </InputAdornment>
-            ),
-          }}
+        <Box
           sx={{
-            fieldset: {
-              border: "none",
-              boxShadow:
-                "0 4px 12px 0px rgba(0,0,0,0.08), 0px 8px 24px 0px rgba(0,0,0,0.04)",
+            display: "flex",
+            justifyContent: "center",
+            [theme.breakpoints.up("sm")]: {
+              width: `50%`,
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%,-50%)",
             },
           }}
-        />
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        >
+          <CommonStyles.Input
+            fullWidth
+            placeholder="Search"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start" sx={{ marginLeft: "16px" }}>
+                  <CommonIcons.Search />
+                </InputAdornment>
+              ),
+            }}
+            sx={{
+              fieldset: {
+                border: "none",
+                boxShadow:
+                  "0 4px 12px 0px rgba(0,0,0,0.08), 0px 8px 24px 0px rgba(0,0,0,0.04)",
+              },
+            }}
+          />
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            [theme.breakpoints.down("sm")]: {
+              display: "none",
+            },
+          }}
+        >
           <CommonStyles.Button variant="contained">
             Submit bot
           </CommonStyles.Button>
@@ -191,14 +213,18 @@ const BotStore = () => {
               }
               sx={{
                 padding: "4px 12px",
-                background: isActive ? "#4e40e5" : theme.colors.custom.backgroundCard,
+                background: isActive
+                  ? "#4e40e5"
+                  : theme.colors.custom.backgroundCard,
                 fontSize: "14px",
                 fontWeight: "500",
                 color: theme.colors.custom.normalColorTypo,
                 cursor: "pointer",
                 boxShadow: "0px 2px 4px 0px #1E1E1F0A",
                 "&:hover": {
-                  background: isActive ? "#4e40e5" : theme.colors.custom.backgroundCardHover,
+                  background: isActive
+                    ? "#4e40e5"
+                    : theme.colors.custom.backgroundCardHover,
                 },
               }}
             >
@@ -216,20 +242,28 @@ const BotStore = () => {
         {isArray(data) && (
           <Mansory
             columns={{
-              sm: 1,
+              xs: 1,
               md: 2,
-              lg: 4,
+              lg: 3,
+              xl: 4,
+            }}
+            sx={{
+              maxWidth: "1600px",
+              margin: "auto",
             }}
             spacing={2}
           >
             {data.map((item: any) => {
               return (
-                <Box key={item?.bot_id} sx={{
-                  padding:'30px 0',
-                  display:'flex',
-                  justifyContent:'center',
-                  alignItems:'center'
-                }}>
+                <Box
+                  key={item?.bot_id}
+                  sx={{
+                    padding: "30px 0",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
                   <BotCard
                     id={item?.bot_id}
                     avatar="https://p16-flow-product-sign-sg.ibyteimg.com/tos-alisg-i-bfte7mpw5s-sg/9c9ef4e4c6f147339c0cae1408bb1f46~tplv-bfte7mpw5s-resize:128:128.image?rk3s=2e2596fd&x-expires=1727594320&x-signature=VTZfu6FleEdw6gvUsvvssaBeyLg%3D"
@@ -240,7 +274,6 @@ const BotStore = () => {
                         "https://sf16-passport-sg.ibytedtos.com/img/user-avatar-alisg/4d26373f2eedfe14710becde336c2450~300x300.image",
                       name: item?.user_name || "User name",
                     }}
-                    comments={Math.floor(Math.random() * 100)}
                     creator={{
                       name: `@${item?.user_name || "User name"}`,
                       avatar:
@@ -249,7 +282,6 @@ const BotStore = () => {
                           : "",
                     }}
                     description={item?.description || ""}
-                    star={Math.floor(Math.random() * 50 + 100)}
                     users={Math.floor(Math.random() * 1000 + 3000)}
                     owner_id={item?.owner_id}
                     permission_level={item?.permission_level}

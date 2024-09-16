@@ -42,13 +42,14 @@ const Develop = () => {
           alignItems: "center",
           boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.25)",
           background: theme.colors.custom.backgroundSecondary,
-          // borderBottom:"solid 1px #ccc"
+          height:'64px',
+          borderBottom:`solid 0.5px ${theme.colors.custom.borderColor}`
         }}
       >
         <AgentButton setMode={setMode} mode={mode}/>
         <EngineButton />
       </Box>
-      <Box display="flex" paddingTop="8px" height="calc(100vh - 138px)">
+      <Box display="flex" height="calc(100vh - 138px)">
         {renderContent && renderContent()}
       </Box>
     </Box>

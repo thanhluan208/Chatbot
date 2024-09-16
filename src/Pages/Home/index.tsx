@@ -29,6 +29,9 @@ function Home(props: IHome) {
           maxHeight: "calc(100vh - 130px)",
           marginBottom: "10px",
           overflowY: "auto",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
         }}
       >
         <CommonStyles.Typography type="bold56" textAlign={"center"} mt="36px">

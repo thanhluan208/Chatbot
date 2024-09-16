@@ -12,4 +12,5 @@ export interface CustomColors {
   background?: string;
   backgroundCard?: string
   backgroundCardHover: string
+  borderColor: string
 }

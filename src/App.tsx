@@ -8,6 +8,7 @@ import { ListRoutes } from "./Constants/routes";
 import useRoutes from "./Constants/routes";
 import { useAuth } from "./Providers/AuthenticationProvider";
 import { lazy, Suspense } from "react";
+import CommonStyles from "./Components/CommonStyles";
 
 const KnowledgeDetail = lazy(() => import("./Pages/KnowledgeDetail"));
 const Login = lazy(() => import("./Pages/Login"));
@@ -153,7 +154,7 @@ function App() {
 
   //! Render
   return (
-      <Suspense fallback={<h1>Loading...</h1>}>
+      <Suspense fallback={<CommonStyles.LoadingOverlay isLoading/>}>
         <RouterProvider router={router} />
       </Suspense>
   );

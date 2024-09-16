@@ -4,7 +4,7 @@ import CommonStyles from "../../../Components/CommonStyles";
 import { Box, Paper, Popover, useTheme } from "@mui/material";
 import { Mode } from "./Develop";
 import httpServices from "@/Services/httpServices";
-import { switchMultiAgent } from "@/Constants/api";
+import { createMultiAgent } from "@/Constants/api";
 import { useParams } from "react-router-dom";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import { toast } from "react-toastify";
@@ -46,7 +46,7 @@ const AgentButton = ({
       autoClose: false,
     });
     try {
-      const response = await httpServices.post(switchMultiAgent, {
+      const response = await httpServices.post(createMultiAgent, {
         bot_id: botId,
         user_id: userId,
       });

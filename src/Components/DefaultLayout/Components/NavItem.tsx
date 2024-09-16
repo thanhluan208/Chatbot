@@ -50,6 +50,9 @@ function NavItem(props: INavItem) {
               isActive && !navActive
                 ? theme.colors.custom.backgroundButtonHover
                 : "transparent",
+            "&:hover": {
+              opacity: 1,
+            },
             ...buttonSx,
           }}
           startIcon={icon}

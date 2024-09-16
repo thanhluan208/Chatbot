@@ -66,16 +66,12 @@ const BotCard = (props: IBotCard) => {
       onClick={handleClick}
       sx={{
         color: "unset",
-        width: "100%",
         padding: "16px",
+        maxWidth: "400px",
         background: theme.colors.custom.backgroundCard,
         borderRadius: "12px",
         transition: "all 0.3s",
         cursor: "pointer",
-        [theme.breakpoints.down("lg")]: {
-          width: "45%",
-        },
-
         ".btnGroup": {
           display: "none",
 
@@ -289,11 +285,12 @@ function ListBot() {
         sm: 1,
         md: 2,
         xmd: 3,
-        lg: 4,
+        xl: 4,
       }}
       spacing={2}
       sx={{
         maxWidth: "1600px",
+        margin:'auto'
       }}
     >
       {isArray(data) &&

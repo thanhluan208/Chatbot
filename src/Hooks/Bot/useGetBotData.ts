@@ -110,6 +110,7 @@ const useGetBotData = (
           }
         } catch (error: any) {
           setError(error);
+          toast.error("Failed to retrieve bot data. Please try again later")
         } finally {
           setLoading(false);
         }

@@ -29,10 +29,11 @@ const SingleAgent = () => {
       <ConversationDrawer />
 
       <Box sx={{
-        width:'400px',
-        padding:'0 12px',
-        height: "calc(100vh - 74px - 60px)",
-        // borderRight:'1px solid #ccc'
+        width:'25vw',
+        padding:'8px 12px',
+        height: "calc(100vh - 74px - 64px)",
+        // borderRight:`solid 0.5px ${theme.colors.custom.borderColor}`
+        background: theme.colors.custom.backgroundSecondary
       }}>
         <PersonaAndPrompt systemPrompt={data?.system_prompt}/>
       </Box>
@@ -42,7 +43,7 @@ const SingleAgent = () => {
           padding: "60px 14px 105px 14px",
           height: "calc(100vh - 74px - 64px)",
           position: "relative",
-          width: 'calc(100vw - 600px)',
+          width: '50vw',
           transition: "all 0.5s ease",
           [theme.breakpoints.down("lg")]: {
             flex: 1,
@@ -114,8 +115,8 @@ const SingleAgent = () => {
                 <img
                   src="https://lf16-alice-tos-sign.oceanapi-i18n.com/obj/ocean-cloud-tos-sg/FileBizType.BIZ_BOT_ICON/7342794110727701510_1724933118523505822_yxm0POQ2JJ.gif?lk3s=50ccb0c5&x-expires=1726843125&x-signature=33gB0Q3PT8%2FCKhBm3paQslW%2Fvzo%3D"
                   style={{
-                    width: 48,
-                    height: 48,
+                    width: 82,
+                    height: 82,
                     borderRadius: "8px",
                     marginBottom: "12px",
                   }}
@@ -161,8 +162,10 @@ const SingleAgent = () => {
         </Box>
       </Box>
       <Box  sx={{
-        width:'300px',
-        padding:"8px 10px 0 20px"
+        width:'25vw',
+        padding:"8px 10px 0 20px",
+        // borderLeft:`solid 0.5px ${theme.colors.custom.borderColor}`
+        background: theme.colors.custom.backgroundSecondary
       }}>
         <Configure />
       </Box>

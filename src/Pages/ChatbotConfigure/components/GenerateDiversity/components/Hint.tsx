@@ -55,6 +55,9 @@ const Hint = (props: IHint) => {
             ul: {
               paddingLeft: "17.5px",
             },
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
           }}
         >
           {content}

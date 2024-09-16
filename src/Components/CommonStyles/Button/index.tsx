@@ -69,6 +69,9 @@ function MuiButton(props: IMuiButton & ButtonProps) {
           outline: "none",
         },
         color: theme.colors.custom.normalColorTypo,
+        "&:hover": {
+          border: `1px solid ${theme.palette.primary.main}`
+        },
         ...styleActive,
         ...props.sx,
       }}

@@ -41,7 +41,6 @@ function ChatbotConfigure() {
     !!botId && !!userId
   );
 
-  console.log('data',data)
 
   const isOwner = data?.permission_level === "owner";
   const isPublished = data?.visibility === "public";

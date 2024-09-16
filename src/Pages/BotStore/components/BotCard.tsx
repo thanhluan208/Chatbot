@@ -35,8 +35,6 @@ interface BotCardProps {
   };
   description: string;
   users: number;
-  star: number;
-  comments: number;
   id: string;
   owner_id: string;
   permission_level?: string;
@@ -51,8 +49,6 @@ const BotCard = (props: BotCardProps) => {
     space,
     description,
     users,
-    star,
-    comments,
     permission_level,
     owner_id,
   } = props;
@@ -224,16 +220,16 @@ const BotCard = (props: BotCardProps) => {
         <CommonStyles.Typography
           type="normal14"
           sx={{
-            WebkitLineClamp: 4,
+            WebkitLineClamp: 3,
             WebkitBoxOrient: "vertical",
             overflow: "hidden",
             display: "-webkit-box",
             padding: "0 20px",
             textAlign: "justify",
-            height:'82px'
+            height:'60px'
           }}
         >
-          {description}
+          {description} 
         </CommonStyles.Typography>
 
         <Box
@@ -256,8 +252,6 @@ const BotCard = (props: BotCardProps) => {
             }}
           >
             <Stats icon={<CommonIcons.People />} value={users} />
-            <Stats icon={<CommonIcons.Comment />} value={comments} />
-            <Stats icon={<CommonIcons.StarOutline />} value={star} />
           </Box>
           <CommonStyles.Button>Try it now</CommonStyles.Button>
         </Box>

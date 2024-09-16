@@ -39,7 +39,7 @@ export const botChatHistory = baseAPI + "/bot/get_all_chat_history";
 export const getBotListConversation = baseAPI + "/bot/list_conversation";
 export const newConversation = baseAPI + "/bot/new_conversation";
 export const deleteConversation = baseAPI + "/bot/delete_conversation";
-export const switchMultiAgent = baseAPI + "/bot/create_multi_agent";
+export const createMultiAgent = baseAPI + "/bot/create_multi_agent";
 export const updateBotEdge = baseAPI + "/bot/update_agent_detail_data";
 export const updatePrompt = baseAPI + "/bot/update_system_prompt_to_bot";
 
