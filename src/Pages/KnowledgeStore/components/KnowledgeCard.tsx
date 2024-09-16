@@ -4,6 +4,7 @@ import { useAuth } from "@/Providers/AuthenticationProvider";
 import { Box, Tooltip } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import logo from '@/assets/logo.png'
 
 interface KnowledgeCardProps {
   avatar: string;
@@ -117,7 +118,15 @@ const Knowledgecard = (props: KnowledgeCardProps) => {
                   height: "20px",
                 }}
               >
-                <CommonIcons.Logo />
+                <img
+                  src={logo}
+                  alt="logo"
+                  style={{
+                    width: "20px",
+                    height: "20px",
+                    borderRadius: "50%",
+                  }}
+                />
               </div>
             </Tooltip>
           )}

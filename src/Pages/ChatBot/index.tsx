@@ -12,8 +12,13 @@ import CommunityDrawer from "./components/Community/CommunityDrawer";
 import { useEffect, useMemo, useState } from "react";
 import useGetBotData from "@/Hooks/Bot/useGetBotData";
 import ChatField from "./components/ChatField";
-import LeftSide from "./components/LeftSide";
+import LeftSide, { CreateNewConversation } from "./components/LeftSide";
 import ConversationDrawer from "./components/ConversationDrawer";
+import { AxiosResponse } from "axios";
+import httpServices from "@/Services/httpServices";
+import { newConversation } from "@/Constants/api";
+import { useAuth } from "@/Providers/AuthenticationProvider";
+import { toast } from "react-toastify";
 
 const Chatbot = () => {
   //! State
@@ -28,6 +33,8 @@ const Chatbot = () => {
   const params = useParams();
   const botId = params?.botId;
 
+  const { userId } = useAuth();
+
   const query = new URLSearchParams(window.location.search);
   const conversationId = query.get("conversation");
 
@@ -39,8 +46,31 @@ const Chatbot = () => {
 
   const { data, isLoading } = useGetBotData(payload);
 
-
   //! Function
+
+  const handleNewConversation = async () => {
+    if (isBrandNew) return;
+    setIsBrandNew(true);
+    try {
+      const response: AxiosResponse<CreateNewConversation> =
+        await httpServices.post(newConversation, {
+          bot_id: botId,
+          user_id: userId,
+        });
+
+      if (response.data.status_code === 200 && response.data.conversation_id) {
+        const isOwner = query.get("isOwner");
+        navigate(
+          window.location.pathname +
+            `?isOwner=${isOwner}&conversation=${response.data.conversation_id}`
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to create new conversation");
+    }
+  };
+
   useEffect(() => {
     if (data) {
       save(cachedKeys.BOT_DATA, data);
@@ -378,6 +408,8 @@ const Chatbot = () => {
                     height: 20,
                   },
                 }}
+                disabled={isBrandNew}
+                onClick={handleNewConversation}
               >
                 <CommonIcons.Message />
               </CommonStyles.Button>

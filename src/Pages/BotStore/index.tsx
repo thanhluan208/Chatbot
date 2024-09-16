@@ -165,14 +165,13 @@ const BotStore = () => {
               maxHeight: "unset",
               borderRadius: "32px",
               marginTop: "20px",
-              color: "#fff",
               background: "#000",
               "&:hover": {
                 background: "#000",
               },
             }}
           >
-            <CommonStyles.Typography type="semiBold14">
+            <CommonStyles.Typography type="semiBold14" color="#fff">
               Try it now
             </CommonStyles.Typography>
           </CommonStyles.Button>
@@ -211,6 +210,7 @@ const BotStore = () => {
               onClick={() =>
                 setFilters((prev) => ({ ...prev, category: cate }))
               }
+              variant={isActive ? "contained" : "outlined"}
               sx={{
                 padding: "4px 12px",
                 background: isActive
@@ -218,7 +218,6 @@ const BotStore = () => {
                   : theme.colors.custom.backgroundCard,
                 fontSize: "14px",
                 fontWeight: "500",
-                color: theme.colors.custom.normalColorTypo,
                 cursor: "pointer",
                 boxShadow: "0px 2px 4px 0px #1E1E1F0A",
                 "&:hover": {

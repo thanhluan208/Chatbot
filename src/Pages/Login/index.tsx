@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { FastField, Form, Formik } from "formik";
 import * as yup from "yup";
 import { useAuth } from "../../Providers/AuthenticationProvider";
@@ -20,6 +20,8 @@ const Login = () => {
     email_or_username: yup.string().required("Email or username is required"),
     password: yup.string().required("Password is required"),
   });
+
+  const theme = useTheme()
 
   //! Function
 
@@ -51,7 +53,7 @@ const Login = () => {
           return (
             <Form
               style={{
-                background: " #fff",
+                background: theme.colors.custom.backgroundCard,
                 border: "1px solid rgba(28, 31, 35, .08)",
                 borderRadius: "12px",
                 boxShadow:

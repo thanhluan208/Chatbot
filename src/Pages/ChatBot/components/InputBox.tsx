@@ -213,6 +213,9 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
             element.style.background = theme.colors.custom.backgroundCardHover;
           }
         }}
+        onClick={() => {
+          textAreaRef?.current && textAreaRef.current.focus()
+        }}
         sx={{
           padding: "8px 8px 8px 20px",
           borderRadius: "16px",

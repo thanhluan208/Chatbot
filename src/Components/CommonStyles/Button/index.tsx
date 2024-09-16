@@ -31,6 +31,11 @@ function MuiButton(props: IMuiButton & ButtonProps) {
         background: theme.colors.custom.backgroundSecondary,
       };
     }
+    if(otherProps.variant === 'contained') {
+      return {
+        color:"#ffffff !important"
+      }
+    }
   }, [isActive, theme, otherProps.variant]);
 
   //! Function

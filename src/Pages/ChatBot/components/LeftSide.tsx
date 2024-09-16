@@ -5,7 +5,7 @@ import cachedKeys from "@/Constants/cachedKeys";
 import useGetListConversation from "@/Hooks/Bot/useGetListConversation";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import httpServices from "@/Services/httpServices";
-import { useSave } from "@/Stores/useStore";
+import { useGet, useSave } from "@/Stores/useStore";
 import { Box, useTheme } from "@mui/material";
 import { isArray, isObject } from "lodash";
 import moment from "moment";
@@ -35,6 +35,8 @@ const LeftSide = ({ setOpenConversation }: { setOpenConversation?: any }) => {
 
   const query = new URLSearchParams(window.location.search);
 
+  const isBrandnewChat = useGet('IS_BRANDNEW_CHAT')
+
   //! Function
   const handleClickConversation = (conversationId: string) => {
     if (query.get("conversation") === conversationId || loading) return;
@@ -46,6 +48,7 @@ const LeftSide = ({ setOpenConversation }: { setOpenConversation?: any }) => {
   };
 
   const handleNewConversation = async () => {
+    if(isBrandnewChat) return
     setLoading(true);
     try {
       const response: AxiosResponse<CreateNewConversation> =
@@ -117,7 +120,7 @@ const LeftSide = ({ setOpenConversation }: { setOpenConversation?: any }) => {
           </CommonStyles.Button>
 
           <CommonStyles.Button
-            disabled={loading}
+            disabled={loading || isBrandnewChat}
             isIcon
             onClick={handleNewConversation}
           >
@@ -155,6 +158,7 @@ const LeftSide = ({ setOpenConversation }: { setOpenConversation?: any }) => {
                     item?.conversations.map((conv) => {
                       return (
                         <Box
+                          key={conv.id}
                           sx={{
                             display: "flex",
                             gap: "8px",

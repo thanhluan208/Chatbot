@@ -73,6 +73,14 @@ const ChatField = (props: IChatField) => {
     }
   },[])
 
+  useEffect(() => {
+    if(renderChats.length === 0) {
+      save(cachedKeys.IS_BRANDNEW_CHAT, true)
+    } else {
+      save(cachedKeys. IS_BRANDNEW_CHAT, false)
+    }
+  },[renderChats])
+
   //! Render
   if (isBrandNew) return null;
 

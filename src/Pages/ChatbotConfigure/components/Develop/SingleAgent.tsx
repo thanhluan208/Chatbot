@@ -1,7 +1,6 @@
 import { Fragment, useState } from "react";
-import PersonaAndPrompt from "../PersonaAndPrompt";
 import Configure from "../Configure";
-import { Box, useTheme } from "@mui/material";
+import { Box, Tooltip, useTheme } from "@mui/material";
 import ChatField from "@/Pages/ChatBot/components/ChatField";
 import CommonStyles from "@/Components/CommonStyles";
 import { useGet, useSave } from "@/Stores/useStore";
@@ -9,12 +8,27 @@ import cachedKeys from "@/Constants/cachedKeys";
 import CommonIcons from "@/Components/CommonIcons";
 import InputBox from "@/Pages/ChatBot/components/InputBox";
 import ConversationDrawer from "@/Pages/ChatBot/components/ConversationDrawer";
+import { AxiosResponse } from "axios";
+import { CreateNewConversation } from "@/Pages/ChatBot/components/LeftSide";
+import httpServices from "@/Services/httpServices";
+import { newConversation } from "@/Constants/api";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "@/Providers/AuthenticationProvider";
+import { toast } from "react-toastify";
+import PersonalPromptDrawer from "./PersonalPromptDrawer";
+import PersonaAndPrompt from "../PersonaAndPrompt";
 
 const SingleAgent = () => {
   //! State
   const theme = useTheme();
   const [isBrandNew, setIsBrandNew] = useState(true);
   const save = useSave();
+  const navigate = useNavigate();
+
+  const params = useParams();
+  const botId = params?.botId;
+
+  const { userId } = useAuth();
 
   const data = useGet("BOT_DATA");
 
@@ -22,20 +36,46 @@ const SingleAgent = () => {
   const conversationId = query.get("conversation");
 
   //! Function
+  const handleNewConversation = async () => {
+    if (isBrandNew) return;
+    setIsBrandNew(true);
+    try {
+      const response: AxiosResponse<CreateNewConversation> =
+        await httpServices.post(newConversation, {
+          bot_id: botId,
+          user_id: userId,
+        });
+
+      if (response.data.status_code === 200 && response.data.conversation_id) {
+        const isOwner = query.get("isOwner");
+        navigate(
+          window.location.pathname +
+            `?isOwner=${isOwner}&conversation=${response.data.conversation_id}`
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to create new conversation");
+    }
+  };
 
   //! Render
   return (
     <Fragment>
       <ConversationDrawer />
-
-      <Box sx={{
-        width:'25vw',
-        padding:'8px 12px',
-        height: "calc(100vh - 74px - 64px)",
-        // borderRight:`solid 0.5px ${theme.colors.custom.borderColor}`
-        background: theme.colors.custom.backgroundSecondary
-      }}>
-        <PersonaAndPrompt systemPrompt={data?.system_prompt}/>
+      <PersonalPromptDrawer system_prompt={data?.system_prompt} />
+      <Box
+        sx={{
+          width: "25vw",
+          padding: "8px 12px",
+          height: "calc(100vh - 74px - 64px)",
+          background: theme.colors.custom.backgroundSecondary,
+          [theme.breakpoints.down("lg")]: {
+            display: "none",
+          },
+        }}
+      >
+        <PersonaAndPrompt systemPrompt={data?.system_prompt} />
       </Box>
       <Box
         id="wrapper"
@@ -43,7 +83,7 @@ const SingleAgent = () => {
           padding: "60px 14px 105px 14px",
           height: "calc(100vh - 74px - 64px)",
           position: "relative",
-          width: '50vw',
+          width: "75vw",
           transition: "all 0.5s ease",
           [theme.breakpoints.down("lg")]: {
             flex: 1,
@@ -69,8 +109,32 @@ const SingleAgent = () => {
             top: "20px",
             left: "20px",
             zIndex: 100,
+            display: "flex",
+            gap: "8px",
           }}
         >
+          <Tooltip title="Personal prompt" >
+            <div>
+              <CommonStyles.Button
+                isIcon
+                sx={{
+                  background: theme.colors.custom.backgroundCard,
+                  padding: "8px",
+                  borderRadius: "8px",
+                  boxShadow:
+                    "0 2px 4px 0 rgba(0,0,0,.04),0 0 1px 0 rgba(0,0,0,.08)",
+                  [theme.breakpoints.up("lg")]: {
+                    display: "none",
+                  },
+                }}
+                onClick={() => {
+                  save(cachedKeys.OPEN_PERSONALPROMP, true);
+                }}
+              >
+                <CommonIcons.Input />
+              </CommonStyles.Button>
+            </div>
+          </Tooltip>
           <CommonStyles.Button
             isIcon
             sx={{
@@ -96,10 +160,10 @@ const SingleAgent = () => {
             overflowY: "auto",
             position: "relative",
             "&::-webkit-scrollbar": {
-                display: "none",
-              },
+              display: "none",
+            },
           }}
-        > 
+        >
           <Box
             sx={{
               maxWidth: "640px",
@@ -123,7 +187,11 @@ const SingleAgent = () => {
                 />
               </Fragment>
             )}
-            <ChatField setIsBrandNew={setIsBrandNew} isBrandNew={isBrandNew} key={conversationId}/>
+            <ChatField
+              setIsBrandNew={setIsBrandNew}
+              isBrandNew={isBrandNew}
+              key={conversationId}
+            />
           </Box>
         </Box>
         <Box
@@ -154,6 +222,8 @@ const SingleAgent = () => {
                   height: 20,
                 },
               }}
+              disabled={isBrandNew}
+              onClick={handleNewConversation}
             >
               <CommonIcons.Message />
             </CommonStyles.Button>
@@ -161,12 +231,14 @@ const SingleAgent = () => {
           </Box>
         </Box>
       </Box>
-      <Box  sx={{
-        width:'25vw',
-        padding:"8px 10px 0 20px",
-        // borderLeft:`solid 0.5px ${theme.colors.custom.borderColor}`
-        background: theme.colors.custom.backgroundSecondary
-      }}>
+      <Box
+        sx={{
+          width: "25vw",
+          padding: "8px 10px 0 20px",
+          // borderLeft:`solid 0.5px ${theme.colors.custom.borderColor}`
+          background: theme.colors.custom.backgroundSecondary,
+        }}
+      >
         <Configure />
       </Box>
     </Fragment>

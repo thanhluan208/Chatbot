@@ -4,7 +4,7 @@ import CommonIcons from "../../CommonIcons";
 import CommonStyles from "../../CommonStyles";
 import { useCallback, useMemo } from "react";
 import * as yup from "yup";
-import { Box, DialogActions, DialogContent, DialogTitle, useTheme } from "@mui/material";
+import { Box, DialogActions, DialogContent, DialogTitle,  } from "@mui/material";
 import { FastField, Form, Formik } from "formik";
 import CommonField from "../../CommonFields";
 import { isEmpty } from "lodash";
@@ -31,7 +31,6 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
   const params = useParams();
   const navigate = useNavigate();
   const { userId } = useAuth();
-  const theme = useTheme()
   const { id } = params;
   const refetchListBot = useGet("REFETCH_LIST_BOT");
   const initialValues = useMemo(() => {
@@ -232,9 +231,6 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
                   </CommonStyles.Button>
                   <CommonStyles.Button
                     variant="contained"
-                    sx={{
-                      color: theme.colors.custom.normalColorTypo,
-                    }}
                     type="submit"
                     isLoading={isSubmitting}
                     disabled={isSubmitting || !isEmpty(errors)}

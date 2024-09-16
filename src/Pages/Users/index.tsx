@@ -1,4 +1,4 @@
-import { Box, useTheme } from "@mui/material";
+import { Box,  } from "@mui/material";
 import CommonStyles from "../../Components/CommonStyles";
 import CreateBotPersonal from "./Components/CreateBotPersonal";
 import { useCallback, useState } from "react";
@@ -11,7 +11,6 @@ const sectionList = ["Bots", ];
 function Users(props: IUsers) {
   //! State
   const {} = props;
-  const theme = useTheme();
   const [personalSection, setPersonalSection] = useState("Bots");
 
   //! Function
@@ -80,6 +79,7 @@ function Users(props: IUsers) {
               onClick={() => setPersonalSection(item)}
               variant={isActive ? "contained" : 'outlined'}
               sx={{
+                opacity: isActive ? 1 : 0.6,
                 "&:hover": {
                   "& p": {
                     fontWeight: "500 !important",
@@ -89,10 +89,7 @@ function Users(props: IUsers) {
             >
               <CommonStyles.Typography
                 type={isActive ? "semiBold14" : "normal14"}
-                sx={{
-                  color: theme.colors.custom.normalColorTypo,
-                  opacity: isActive ? 1 : 0.6
-                }}
+                color="#fff"
               >
                 {item}
               </CommonStyles.Typography>

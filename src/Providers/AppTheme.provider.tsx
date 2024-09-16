@@ -7,6 +7,8 @@ import { GlobalStyles } from "@mui/material";
 import cachedKeys from "../Constants/cachedKeys";
 import { useSave } from "../Stores/useStore";
 import { CustomColors } from "./type";
+import CommonStyles from "@/Components/CommonStyles";
+import CommonIcons from "@/Components/CommonIcons";
 
 declare module "@mui/material/styles" {
   interface Theme {
@@ -219,7 +221,6 @@ const darkTheme = createTheme({
       backgroundCardHover: "#f7f7f714",
       borderColor: "#69696933",
 
-
       //* Main
       backgroundSecondary: "#18181b",
 
@@ -259,8 +260,8 @@ const switchTheme = {
   [Theme.light]: lightTheme,
 };
 
-let initTheme = (localStorage.getItem(keyTheme) as Theme) ?? Theme.light;
-if (!!window.matchMedia) {
+let initTheme = (localStorage.getItem(keyTheme) as Theme);
+if (!!window.matchMedia && !initTheme) {
   if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
     initTheme = Theme.dark;
   } else {
@@ -306,6 +307,19 @@ export default function AppThemeProvider(props: { children: React.ReactNode }) {
         }}
       />
       {children}
+      <CommonStyles.Button isIcon variant="outlined" sx={{
+        position:"fixed",
+        bottom:'20px',
+        right:"20px"
+      }}
+      onClick={toggleTheme}
+      >
+        {theme === Theme.light ? (
+          <CommonIcons.LightMode />
+        ) : (
+          <CommonIcons.DarkMode />
+        )}
+      </CommonStyles.Button>
     </ThemeProvider>
   );
 }

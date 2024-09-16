@@ -1,7 +1,7 @@
 import { Box,  } from "@mui/material";
 import { Fragment } from "react/jsx-runtime";
 import CommonStyles from "../../../Components/CommonStyles";
-import { FastField, Form, Formik } from "formik";
+import {  Field, Form, Formik } from "formik";
 import CommonField from "../../../Components/CommonFields";
 import { toast } from "react-toastify";
 import httpServices from "@/Services/httpServices";
@@ -92,13 +92,15 @@ const PersonaAndPrompt = ({ systemPrompt }: { systemPrompt: string }) => {
                   },
                 }}
               >
-                <FastField
+                <Field
+                  id="personaAndPrompt"
                   name="personaAndPrompt"
                   component={CommonField.InputField}
                   fullWidth
                   multiline
                   placeholder="Design the bot's persona, features and workflows using natural language."
                   rows={20}
+                  autoFocus
                 />
 
                 <CommonStyles.Button

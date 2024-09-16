@@ -69,6 +69,7 @@ const BotCard = (props: IBotCard) => {
         padding: "16px",
         maxWidth: "400px",
         background: theme.colors.custom.backgroundCard,
+        boxShadow: "0px 2px 4px 0px #1E1E1F0A",
         borderRadius: "12px",
         transition: "all 0.3s",
         cursor: "pointer",

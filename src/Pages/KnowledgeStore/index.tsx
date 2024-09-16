@@ -1,4 +1,4 @@
-import { Box, InputAdornment } from "@mui/material";
+import { Box, InputAdornment, useTheme } from "@mui/material";
 import CommonStyles from "../../Components/CommonStyles";
 import { useLayoutEffect, useState } from "react";
 import { capitalize, isArray } from "lodash";
@@ -27,6 +27,7 @@ const KnowledgeStore = () => {
   });
 
   const { data, isLoading } = useGetListFolderKnowledge();
+  const theme = useTheme()
 
   //! Function
   useLayoutEffect(() => {
@@ -68,7 +69,7 @@ const KnowledgeStore = () => {
           position: "sticky",
           top: 0,
           zIndex: 100,
-          background: "#f4f4f6",
+          background: theme.colors.custom.backgroundSecondary,
         }}
       >
         <CommonStyles.Typography type="semiBold20">
@@ -96,7 +97,11 @@ const KnowledgeStore = () => {
           <CommonStyles.Button>
             <CommonIcons.Mail />
           </CommonStyles.Button>
-          <CommonStyles.Button variant="contained">
+          <CommonStyles.Button variant="contained" sx={{
+            width:'fit-content',
+            maxWidth:'unset',
+            textWrap:"nowrap"
+          }}>
             Publish knowledge
           </CommonStyles.Button>
         </Box>
@@ -112,7 +117,7 @@ const KnowledgeStore = () => {
           position: "sticky",
           top: "80px",
           zIndex: 100,
-          background: "#f4f4f6",
+          background: theme.colors.custom.backgroundSecondary,
           transition: "box-shadow 0.3s",
         }}
       >
@@ -128,17 +133,16 @@ const KnowledgeStore = () => {
               onClick={() =>
                 setFilters((prev) => ({ ...prev, category: cate }))
               }
+              variant={isActive ? 'contained' : 'outlined'}
               sx={{
                 padding: "4px 12px",
-                background: isActive ? "#4e40e5" : "#fff",
+                // background: isActive ? "#4e40e5" : theme.colors.custom.backgroundCard,
                 fontSize: "14px",
                 fontWeight: "500",
-                color: isActive ? "#fff" : "#000",
+                opacity: isActive ? 1 : .6,
                 cursor: "pointer",
                 boxShadow: "0px 2px 4px 0px #1E1E1F0A",
-                "&:hover": {
-                  background: isActive ? "#4e40e5" : "#f5f5f5",
-                },
+                
               }}
             >
               {name}

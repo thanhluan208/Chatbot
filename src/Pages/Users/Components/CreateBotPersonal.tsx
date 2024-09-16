@@ -34,7 +34,7 @@ function CreateBotPersonal(props: ICreateBotPersonal) {
           height: "40px",
         }}
       >
-        <CommonStyles.Typography type="semiBold16">
+        <CommonStyles.Typography type="semiBold16" color="#fff">
           Create bot
         </CommonStyles.Typography>
       </CommonStyles.Button>

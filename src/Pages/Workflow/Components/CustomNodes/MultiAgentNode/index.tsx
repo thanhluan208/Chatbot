@@ -15,6 +15,7 @@ import { FastField, Formik } from "formik";
 import CommonField from "@/Components/CommonFields";
 import { useGet, useSave } from "@/Stores/useStore";
 import DeleteAgentButton from "./DeleteAgentButton";
+import logo from '@/assets/logo.png'
 
 const MultiAgentNode = (props: NodeProps) => {
   //! State
@@ -210,7 +211,11 @@ const MultiAgentNode = (props: NodeProps) => {
             gap: "12px",
           }}
         >
-          <CommonIcons.Logo />
+          <img src={logo} alt="logo" style={{
+            width:'20px',
+            height:'20px',
+            borderRadius:'50%'
+          }} />
           <CommonStyles.Typography
             type="semiBold16"
             sx={{
