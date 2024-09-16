@@ -1,4 +1,4 @@
-const baseAPI = "https://562b-2401-d800-7f80-919b-9cc0-75e0-7693-e2f8.ngrok-free.app";
+const baseAPI = "https://chatbot-api.alphiiai.com";
 
 export const getFolderKnowledge =
   baseAPI + "/knowledge/list_knowledge_storages";
@@ -48,4 +48,3 @@ export const getBotNode = baseAPI + "/node/get_node_data";
 export const deleteBotNode = baseAPI + "/node/delete_node";
 export const createNode = baseAPI + "/node/create_node";
 export const updateBotNode = baseAPI + "/node/update_info";
-// export const updateBotEdge = baseAPI + '/node/add_edge'
