@@ -1,4 +1,4 @@
-import { Box, Collapse, useTheme } from "@mui/material";
+import { Box, Collapse, SxProps, useTheme } from "@mui/material";
 import CommonStyles from "../../../../Components/CommonStyles";
 import CommonIcons from "../../../../Components/CommonIcons";
 import React from "react";
@@ -6,11 +6,12 @@ import React from "react";
 interface ICollapseArea {
   children?: React.ReactNode;
   label: string | React.ReactNode;
+  sxContainer?: SxProps
 }
 
 const CollapseArea = (props: ICollapseArea) => {
   //! State
-  const { label } = props;
+  const { label,sxContainer } = props;
   const [open, setOpen] = React.useState(true);
   const theme = useTheme()
   //! Function
@@ -19,12 +20,15 @@ const CollapseArea = (props: ICollapseArea) => {
   return (
     <Box
       sx={{
-        marginTop: "20px",
         padding: "8px",
         background: theme.colors.custom.backgroundSecondary,
+        borderRadius:'12px',
+        marginTop:'20px',
+        ...sxContainer
       }}
     >
       <Box
+        className="collapse-header"
         sx={{
           display: "flex",
           gap: "8px",

@@ -12,11 +12,12 @@ interface IMuiButton {
   isIcon?: boolean;
   isLoading?: boolean;
   isActive?: boolean;
+  isRound?:boolean
 }
 
 function MuiButton(props: IMuiButton & ButtonProps) {
   //! State
-  const { children, isIcon, isLoading, isActive, ...otherProps } = props;
+  const { children, isIcon, isLoading, isActive,isRound=true, ...otherProps } = props;
   const theme = useTheme();
   const styleActive = useMemo(() => {
     if (isActive) {
@@ -51,7 +52,7 @@ function MuiButton(props: IMuiButton & ButtonProps) {
           "&:focus": {
             outline: "none",
           },
-          color: theme.colors.custom.normalColorTypo,
+          borderRadius: isRound?'50%':'8px',
           ...props.sx,
         }}
       >

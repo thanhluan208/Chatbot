@@ -1,4 +1,10 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useRef } from "react";
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
 import {
   Handle,
   MarkerType,
@@ -15,7 +21,13 @@ import { FastField, Formik } from "formik";
 import CommonField from "@/Components/CommonFields";
 import { useGet, useSave } from "@/Stores/useStore";
 import DeleteAgentButton from "./DeleteAgentButton";
-import logo from '@/assets/logo.png'
+import logo from "@/assets/logo.png";
+import { modelOptions } from "@/Constants/options";
+import { BotData } from "@/Hooks/Bot/useGetBotData";
+import EngineSelect from "@/Pages/ChatbotConfigure/components/EngineSelect";
+import GenerationDiversity from "@/Pages/ChatbotConfigure/components/GenerationDiversity";
+import Advance from "@/Pages/ChatbotConfigure/components/GenerateDiversity/components/Advance";
+import InputAndOutputSettings from "@/Pages/ChatbotConfigure/components/InputAndOutputSettings";
 
 const MultiAgentNode = (props: NodeProps) => {
   //! State
@@ -24,7 +36,9 @@ const MultiAgentNode = (props: NodeProps) => {
   const [isAdding, setIsAdding] = React.useState(false);
   const placeholderId = useRef<string | null>(uuid());
   const save = useSave();
-  const theme = useTheme()
+  const theme = useTheme();
+
+  const botData = props?.data?.botData as BotData;
 
   const handleid = useMemo(() => {
     return {
@@ -34,13 +48,18 @@ const MultiAgentNode = (props: NodeProps) => {
   }, []);
 
   const initialValue = useMemo(() => {
+    const foundModel = modelOptions.find((elm) => {
+      return elm.value === botData?.llm?.model;
+    });
     return {
       scenario: "",
       system_prompt: "",
-      llm: {
-        model: "",
-        temperature: 0,
-      },
+      model: foundModel ?? modelOptions[5],
+      generationDiversity: "precise",
+      temperature: botData?.llm?.temperature ?? 1.21,
+      top_p: botData?.llm?.top_p ?? 0.9,
+      history_turn: botData?.llm?.history_turn ?? 3,
+      max_tokens: botData?.llm?.max_tokens ?? 2048,
     };
   }, []);
   //! Function
@@ -122,21 +141,21 @@ const MultiAgentNode = (props: NodeProps) => {
   const handleClickNode = useCallback(() => {
     setEdges((edges) => {
       const newEdges = edges.map((item) => {
-        if(item.source === props.id || item.target === props.id) {
+        if (item.source === props.id || item.target === props.id) {
           return {
             ...item,
-            animated: true
-          }
+            animated: true,
+          };
         } else {
           return {
-            ...item, 
-            animated: false
-          }
+            ...item,
+            animated: false,
+          };
         }
-      })
-      return newEdges
-    })
-  },[props?.id])
+      });
+      return newEdges;
+    });
+  }, [props?.id]);
 
   useEffect(() => {
     const node = document.getElementById(props.id);
@@ -168,10 +187,12 @@ const MultiAgentNode = (props: NodeProps) => {
         });
       });
     } else {
-      setEdges(edge => edge.map(item => ({
-        ...item,
-        animated: false
-      })))
+      setEdges((edge) =>
+        edge.map((item) => ({
+          ...item,
+          animated: false,
+        }))
+      );
     }
   }, [props?.selected, props?.id]);
 
@@ -218,111 +239,140 @@ const MultiAgentNode = (props: NodeProps) => {
       }}
       onClick={handleClickNode}
     >
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-          }}
-        >
-          <img src={logo} alt="logo" style={{
-            width:'20px',
-            height:'20px',
-            borderRadius:'50%'
-          }} />
-          <CommonStyles.Typography
-            type="semiBold16"
+      <CollapseArea
+        label={
+          <Box
             sx={{
-              maxWidth: "200px",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
             }}
           >
-            {`Agent ${props.id}`}
-          </CommonStyles.Typography>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            gap: "12px",
-            alignItems: "center",
-          }}
-        >
-          <Tooltip title="Chat with this agent" placement="top" arrow>
-            <div>
-              <CommonIcons.Chat />
-            </div>
-          </Tooltip>
-
-          <DeleteAgentButton id={props.id} />
-        </Box>
-      </Box>
-
-      <Formik initialValues={initialValue} onSubmit={() => {}}>
-        {() => {
-          return (
-            <Fragment>
-              <CollapseArea
-                label={
-                  <CommonStyles.Typography type="semiBold14">
-                    Scenario{" "}
-                    <span
-                      style={{
-                        color: "#FF0000",
-                      }}
-                    >
-                      *
-                    </span>
-                  </CommonStyles.Typography>
-                }
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+              }}
+            >
+              <img
+                src={logo}
+                alt="logo"
+                style={{
+                  width: "20px",
+                  height: "20px",
+                  borderRadius: "50%",
+                }}
+              />
+              <CommonStyles.Typography
+                type="semiBold16"
+                sx={{
+                  maxWidth: "200px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
               >
-                <FastField
-                  name="scenario"
-                  component={CommonField.InputField}
-                  multiline
-                  minRows={3}
-                  maxRows={3}
-                  fullWidth
-                  maxChar={6000}
-                />
-              </CollapseArea>
+                {`Agent ${props.id}`}
+              </CommonStyles.Typography>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                gap: "12px",
+                alignItems: "center",
+              }}
+            >
+              <Tooltip title="Chat with this agent" placement="top" arrow>
+                <div>
+                  <CommonIcons.Chat />
+                </div>
+              </Tooltip>
 
-              <CollapseArea
-                label={
-                  <CommonStyles.Typography type="semiBold14">
-                    Agent prompt
-                    <span
-                      style={{
-                        color: "#FF0000",
-                      }}
-                    >
-                      *
-                    </span>
-                  </CommonStyles.Typography>
-                }
-              >
-                <FastField
-                  name="system_prompt"
-                  component={CommonField.InputField}
-                  multiline
-                  minRows={3}
-                  maxRows={3}
-                  fullWidth
-                  maxChar={6000}
-                />
-              </CollapseArea>
-            </Fragment>
-          );
+              <DeleteAgentButton id={props.id} />
+            </Box>
+          </Box>
+        }
+        sxContainer={{
+          marginTop:'0',
+          "& .collapse-header": {
+            marginBottom:'0'
+          }
         }}
-      </Formik>
+      >
+        <Formik initialValues={initialValue} onSubmit={() => {}}>
+          {() => {
+            return (
+              <Fragment>
+                <CollapseArea
+                  label={
+                    <CommonStyles.Typography type="semiBold14">
+                      Model Configuration
+                    </CommonStyles.Typography>
+                  }
+                  
+                >
+                  <EngineSelect />
+                  <GenerationDiversity />
+                  <Advance />
+                  <InputAndOutputSettings />
+                </CollapseArea>
+
+                <CollapseArea
+                  label={
+                    <CommonStyles.Typography type="semiBold14">
+                      Scenario{" "}
+                      <span
+                        style={{
+                          color: "#FF0000",
+                        }}
+                      >
+                        *
+                      </span>
+                    </CommonStyles.Typography>
+                  }
+                >
+                  <FastField
+                    name="scenario"
+                    component={CommonField.InputField}
+                    multiline
+                    minRows={3}
+                    maxRows={3}
+                    fullWidth
+                    maxChar={6000}
+                  />
+                </CollapseArea>
+
+                <CollapseArea
+                  label={
+                    <CommonStyles.Typography type="semiBold14">
+                      Agent prompt
+                      <span
+                        style={{
+                          color: "#FF0000",
+                        }}
+                      >
+                        *
+                      </span>
+                    </CommonStyles.Typography>
+                  }
+                >
+                  <FastField
+                    name="system_prompt"
+                    component={CommonField.InputField}
+                    multiline
+                    minRows={3}
+                    maxRows={3}
+                    fullWidth
+                    maxChar={6000}
+                  />
+                </CollapseArea>
+              </Fragment>
+            );
+          }}
+        </Formik>
+      </CollapseArea>
+
       <Handle
         type="source"
         position={Position.Right}

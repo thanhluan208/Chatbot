@@ -36,7 +36,7 @@ function MuiSelectField(props: IMuiSelectField & SelectProps & FieldProps) {
     ...otherProps
   } = props;
   const id = useId();
-  const theme: any = useTheme();
+  const theme = useTheme();
   const { errors, touched, setFieldValue } = form || {};
   const { name, value, onBlur } = field || {};
 
@@ -126,7 +126,7 @@ function MuiSelectField(props: IMuiSelectField & SelectProps & FieldProps) {
 
           div: {
             borderRadius: "10px",
-            background: "#fff",
+            background: theme.colors.custom.backgroundCard,
           },
 
           fieldset: {

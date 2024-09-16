@@ -84,6 +84,8 @@ function DeleteAgentButton(props: IDeleteButton) {
           e.stopPropagation();
           toggle();
         }}
+        isRound={false}
+        color="error"
       >
         <CommonIcons.Delete />
       </CommonStyles.Button>

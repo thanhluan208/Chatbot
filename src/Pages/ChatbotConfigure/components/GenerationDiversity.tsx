@@ -84,7 +84,7 @@ const HintContent = () => {
 const GenerationDiversity = () => {
   //! State
   const { values, setValues } = useFormikContext<initialValueEngine>();
-  const theme: any = useTheme();
+  const theme = useTheme();
 
   //! Function
   const handleChange = (value: any) => {
@@ -152,7 +152,7 @@ const GenerationDiversity = () => {
             )} * (100% - 16px) / 4 + 8px)`,
             transition: "left 0.3s",
             height: "24px",
-            background: "#fff",
+            background: theme.colors.custom.backgroundCard,
             borderRadius: "8px",
           }}
         ></Box>

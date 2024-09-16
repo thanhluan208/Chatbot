@@ -67,16 +67,16 @@ const InputAndOutputSettings = () => {
         <SlideAndNumField
           title="Dialog round"
           hintContent={<HintDialogRound />}
-          min={model.history_turn.min ?? 1}
-          max={model.history_turn.max ?? 100}
+          min={model ? model.history_turn.min : 1}
+          max={model ? model.history_turn.max : 100}
           step={1}  
           name="history_turn"
         />
         <SlideAndNumField
           title="Response max length"
           hintContent={<HintReponseMaxLength />}
-          min={model.max_tokens.min ?? 1}
-          max={model.max_tokens.max ?? 8192}
+          min={model ? model.max_tokens.min : 1}
+          max={model ? model.max_tokens.max : 8192}
           name="max_tokens"
           step={1}
         />
