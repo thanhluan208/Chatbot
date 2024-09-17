@@ -1,6 +1,8 @@
 import CommonIcons from "@/Components/CommonIcons";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import reactFlowService from "@/Services/reactFlowService";
+import { useGet } from "@/Stores/useStore";
+import { useTheme } from "@mui/material";
 import {
   BaseEdge,
   EdgeLabelRenderer,
@@ -36,6 +38,8 @@ const AnimatedSVGEdge = ({
   const { setEdges } = useReactFlow();
   const botId = useParams()?.botId;
   const { userId } = useAuth();
+  const theme = useTheme();
+  const disabledCircle = useGet("DISABLE_CIRCLE");
 
   //! Function
   const handleRemoveEdge = useCallback(
@@ -85,6 +89,7 @@ const AnimatedSVGEdge = ({
               position: "absolute",
               transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
               pointerEvents: "all",
+              background: theme.colors.custom.backgroundSecondary,
             }}
             className="nodrag nopan"
             onClick={handleRemoveEdge}
@@ -93,9 +98,9 @@ const AnimatedSVGEdge = ({
           </button>
         </EdgeLabelRenderer>
       )}
-      <circle r="10" fill="#4e40e5">
+      {!disabledCircle && <circle r="10" fill="#4e40e5">
         <animateMotion dur="2s" repeatCount="indefinite" path={edgePath} />
-      </circle>
+      </circle>}
     </>
   );
 };

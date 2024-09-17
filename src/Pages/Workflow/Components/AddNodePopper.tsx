@@ -131,7 +131,7 @@ const AddNodePopper = (props: IAddNodePopper) => {
         return newNodes;
       });
     },
-    [setNodes]
+    [setNodes,handleSaveHistory]
   );
 
   useEffect(() => {

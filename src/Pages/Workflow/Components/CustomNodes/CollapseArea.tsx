@@ -22,7 +22,7 @@ const CollapseArea = (props: ICollapseArea) => {
     <Box
       sx={{
         padding: "8px",
-        background: theme.colors.custom.backgroundSecondary,
+        background: `${theme.colors.custom.backgroundDialog}e0`,
         borderRadius:'12px',
         marginTop:'20px',
         ...sxContainer

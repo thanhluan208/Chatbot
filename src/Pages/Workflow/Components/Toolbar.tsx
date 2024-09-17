@@ -11,6 +11,8 @@ import FitView from "@/Components/CommonIcons/FitView";
 import { useCallback, useEffect, useRef } from "react";
 import { cloneDeep, isEmpty } from "lodash";
 import { v4 as uuid } from "uuid";
+import Shortcuts from "./Shortcuts";
+import AnimationControl from "./AnimationControl";
 
 // const direction = "TB"
 
@@ -78,6 +80,10 @@ const Toolbar = ({
 
     setEdges([...edges]);
     setNodes([...newNodes] as Node[]);
+    fitView({
+      nodes: newNodes,
+      padding: 5,
+    });
 
     handleSaveHistory(newNodes, edges);
 
@@ -97,21 +103,22 @@ const Toolbar = ({
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.code.toLowerCase() === "space") {
+      console.log(e);
+      if (e.code.toLowerCase() === "backspace") {
         handleDeleteNode();
-      } else if (e.code.toLowerCase() === "keyz" && e.ctrlKey) {
+      } else if (e.code.toLowerCase() === "keyz" && (e.ctrlKey || e.metaKey)) {
         historyRef.current?.handleChangeHistory &&
           historyRef.current?.handleChangeHistory(1);
-      } else if (e.code.toLowerCase() === "keyy" && e.ctrlKey) {
+      } else if (e.code.toLowerCase() === "keyy" && (e.ctrlKey || e.metaKey)) {
         historyRef.current?.handleChangeHistory &&
           historyRef.current?.handleChangeHistory(-1);
-      } else if (e.code.toLowerCase() === "equal" && e.ctrlKey) {
+      } else if (e.code.toLowerCase() === "equal" && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
         zoomTo(getZoom() + 0.1);
-      } else if (e.code.toLowerCase() === "minus" && e.ctrlKey) {
+      } else if (e.code.toLowerCase() === "minus" && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
         zoomTo(getZoom() - 0.1);
-      } else if (e.code.toLowerCase() === "keyc" && e.ctrlKey) {
+      } else if (e.code.toLowerCase() === "keyc" && (e.ctrlKey || e.metaKey)) {
         setNodes((nodes) =>
           nodes.map((elm) => {
             if (elm.selected) {
@@ -127,7 +134,7 @@ const Toolbar = ({
             return elm;
           })
         );
-      } else if (e.code.toLowerCase() === "keyv" && e.ctrlKey) {
+      } else if (e.code.toLowerCase() === "keyv" && (e.ctrlKey || e.metaKey)) {
         setNodes((nodes) => {
           const pasteNodes = cloneDeep(nodes)
             .filter((elm) => elm.data?.readyToPaste)
@@ -194,23 +201,46 @@ const Toolbar = ({
         boxShadow: "0 5px 10px rgba(0,0,0,0.2)",
         borderRadius: "12px",
         alignItems: "center",
-        display:'flex'
+        display: "flex",
+        "& .iconBtn": {
+          borderRadius: "8px",
+          padding: "12px",
+          maxWidth: "unset",
+          height: "fit-content",
+          width: "fit-content",
+          background: theme.colors.custom.backgroundCard,
+          "&:hover": {
+            background: theme.colors.custom.backgroundCardHover,
+          },
+        },
       }}
     >
       <Box
         sx={{
           display: "flex",
-          gap: "12px",
+          gap: "4px",
           alignItems: "center",
         }}
       >
         <AddNodes listNode={listNode ?? []} />
         <ZoomControl />
 
+        <Box
+          sx={{
+            height: "25px",
+            width: "2px",
+            borderRadius: "10px",
+            background: theme.colors.custom.normalColorTypo,
+            margin: "0 24px",
+            opacity: 0.75,
+          }}
+        />
+
         <CommonStyles.Button
           isIcon
           onClick={() => getLayoutedElements("LR")}
           tooltip="Rearrange flow"
+          className="iconBtn"
         >
           <Layout />
         </CommonStyles.Button>
@@ -218,11 +248,12 @@ const Toolbar = ({
           isIcon
           onClick={() => fitView()}
           tooltip="Fit view"
+          className="iconBtn"
         >
           <FitView />
         </CommonStyles.Button>
-        <History innerRef={historyRef} />
       </Box>
+      <AnimationControl />
 
       <Box
         sx={{
@@ -231,11 +262,24 @@ const Toolbar = ({
           borderRadius: "10px",
           background: theme.colors.custom.normalColorTypo,
           margin: "0 24px",
-          opacity: .8
+          opacity: 0.75,
         }}
       />
 
-      
+      <History innerRef={historyRef} />
+
+      <Box
+        sx={{
+          height: "25px",
+          width: "2px",
+          borderRadius: "10px",
+          background: theme.colors.custom.normalColorTypo,
+          margin: "0 24px",
+          opacity: 0.75,
+        }}
+      />
+
+      <Shortcuts />
     </Box>
   );
 };
