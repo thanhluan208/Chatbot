@@ -7,31 +7,14 @@ import { ReactFlowProvider } from "@xyflow/react";
 
 const initNodes = [
   {
-    id: "b7e48d14-235b-4238-bdac-cd54ae7796e2",
-    type: "customNode_startNode",
-    position: {
-      x: -320,
-      y: 241,
-    },
-    data: {
-      label: "customNode_startNode node",
-    },
-    measured: {
-      width: 1002,
-      height: 275,
-    },
-    selected: false,
-    dragging: false,
-  },
-  {
     id: "c372a3b5-85fa-4b7d-a1e5-1913df8d6721",
-    type: "customNode_endNode",
+    type: "customNode_mutliAgentStartNode",
     position: {
       x: 1301,
       y: 175,
     },
     data: {
-      label: "customNode_endNode node",
+      label: "customNode_mutliAgentStartNode node",
     },
     measured: {
       width: 500,

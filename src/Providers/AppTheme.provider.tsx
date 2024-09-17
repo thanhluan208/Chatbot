@@ -109,6 +109,7 @@ const lightTheme = createTheme({
       backgroundCard: "#fff",
       backgroundCardHover: "#f7f7f714",
       borderColor: "#69696933",
+      boxShadow: "0 4px 12px 0px rgba(0,0,0,0.08), 0px 8px 24px 0px rgba(0,0,0,0.04)",
 
       //* Main
       backgroundSecondary: "#f5f5f5",
@@ -214,12 +215,12 @@ const darkTheme = createTheme({
       light: "#4d53e826",
     },
   },
-  //disable es
   colors: {
     custom: {
       backgroundCard: "#202024",
       backgroundCardHover: "#f7f7f714",
       borderColor: "#69696933",
+      boxShadow: "0 4px 12px 0px rgba(255,255,255,0.08), 0px 8px 24px 0px rgba(255,255,255,0.04)",
 
       //* Main
       backgroundSecondary: "#18181b",

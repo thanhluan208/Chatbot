@@ -99,9 +99,7 @@ const BotStore = () => {
             }}
             sx={{
               fieldset: {
-                border: "none",
-                boxShadow:
-                  "0 4px 12px 0px rgba(0,0,0,0.08), 0px 8px 24px 0px rgba(0,0,0,0.04)",
+                boxShadow: theme.colors.custom.boxShadow,
               },
             }}
           />

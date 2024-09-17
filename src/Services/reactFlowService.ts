@@ -51,6 +51,7 @@ class reactFlowServices {
     nodeInfo?: string,
     fromId?: string
   ) {
+    return
     if (!botId || !userId) {
       onFailed();
     }

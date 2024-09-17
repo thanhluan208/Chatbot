@@ -66,7 +66,8 @@ const SingleAgent = () => {
       <PersonalPromptDrawer system_prompt={data?.system_prompt} />
       <Box
         sx={{
-          width: "25vw",
+          width: "min(350px, 25vw)",
+          minWidth: "min(350px, 25vw)",
           padding: "8px 12px",
           height: "calc(100vh - 74px - 64px)",
           [theme.breakpoints.down("lg")]: {
@@ -74,6 +75,7 @@ const SingleAgent = () => {
           },
           "textarea": {
             background: theme.colors.custom.backgroundCard,
+            borderRadius:"10px"
           },
           borderRight: `solid 0.5px ${theme.colors.custom.borderColor}`,
         }}
@@ -86,7 +88,7 @@ const SingleAgent = () => {
           padding: "20px 35px 105px 20px",
           height: "calc(100vh - 74px - 64px)",
           position: "relative",
-          width: "42vw",
+          width: '100%',
           transition: "all 0.5s ease",
           [theme.breakpoints.down("lg")]: {
             width:'75vw'
@@ -209,7 +211,8 @@ const SingleAgent = () => {
       </Box>
       <Box
         sx={{
-          width: "33vw",
+          width: "min(33vw, 450px)",
+          minWidth: "min(33vw, 450px)",
           padding: "8px 10px 0 20px",
           borderLeft:`solid 0.5px ${theme.colors.custom.borderColor}`,
           background: theme.colors.custom.backgroundCard,

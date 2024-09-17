@@ -14,7 +14,7 @@ interface IMuiButton {
   isLoading?: boolean;
   isActive?: boolean;
   isRound?: boolean;
-  tooltip?: string
+  tooltip?: string;
 }
 
 function MuiButton(props: IMuiButton & ButtonProps) {
@@ -38,12 +38,15 @@ function MuiButton(props: IMuiButton & ButtonProps) {
     }
     if (otherProps.variant === "outlined") {
       return {
-        border: `none !important`,
         background: theme.colors.custom.backgroundSecondary,
+        "&:hover": {
+          border: `1px solid ${theme.palette.primary.main}`,
+        },
       };
     }
     if (otherProps.variant === "contained") {
       return {
+        border: `none !important`,
         color: "#ffffff !important",
       };
     }
@@ -91,9 +94,7 @@ function MuiButton(props: IMuiButton & ButtonProps) {
               outline: "none",
             },
             color: theme.colors.custom.normalColorTypo,
-            "&:hover": {
-              border: `1px solid ${theme.palette.primary.main}`,
-            },
+
             ...styleActive,
             ...props.sx,
           }}

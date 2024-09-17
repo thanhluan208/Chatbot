@@ -1,7 +1,7 @@
-import { Box,  } from "@mui/material";
+import { Box } from "@mui/material";
 import { Fragment } from "react/jsx-runtime";
 import CommonStyles from "../../../Components/CommonStyles";
-import {  Field, Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 import CommonField from "../../../Components/CommonFields";
 import { toast } from "react-toastify";
 import httpServices from "@/Services/httpServices";
@@ -77,8 +77,12 @@ const PersonaAndPrompt = ({ systemPrompt }: { systemPrompt: string }) => {
         </CommonStyles.Button> */}
       </Box>
 
-      <Formik enableReinitialize initialValues={inititalValues} onSubmit={handleSubmit}>
-        {({ isSubmitting }) => {
+      <Formik
+        enableReinitialize
+        initialValues={inititalValues}
+        onSubmit={handleSubmit}
+      >
+        {({ isSubmitting, dirty }) => {
           return (
             <Form>
               <Box
@@ -101,15 +105,20 @@ const PersonaAndPrompt = ({ systemPrompt }: { systemPrompt: string }) => {
                   placeholder="Design the bot's persona, features and workflows using natural language."
                   rows={20}
                   autoFocus
+                  sx={{
+                    div: {
+                      background: "transparent",
+                    },
+                  }}
                 />
 
                 <CommonStyles.Button
                   variant="contained"
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !dirty}
                   isLoading={isSubmitting}
                   sx={{
-                    marginTop:'20px',
+                    marginTop: "20px",
                   }}
                 >
                   Save

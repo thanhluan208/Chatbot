@@ -324,7 +324,10 @@ export default function FlowChart(props: IFlowChart) {
         onReconnect={onReconnect}
         onReconnectEnd={onReconnectEnd}
         onReconnectStart={onReconnectStart}
-        snapToGrid
+        onViewportChange={(viewport) => {
+          const zoom = viewport.zoom
+          save(cachedKeys.VIEWPORT, zoom)
+        }}        
       >
         <CommonStyles.Button
           isIcon
