@@ -4,6 +4,9 @@ import CreateWorkFlowButton from "./Components/CreateWorkFlowButton";
 import CommonIcons from "../../Components/CommonIcons";
 import FlowChart from "./Components/FlowChart";
 import { ReactFlowProvider } from "@xyflow/react";
+import { useEffect } from "react";
+import { useSave } from "@/Stores/useStore";
+import cachedKeys from "@/Constants/cachedKeys";
 
 const initNodes = [
   {
@@ -20,8 +23,8 @@ const initNodes = [
       width: 500,
       height: 367,
     },
-    selected: true,
     dragging: false,
+    selectable: false
   },
 ];
 
@@ -35,17 +38,29 @@ const listNode = [
 
 const Workflow = () => {
   //! State
+  const save = useSave();
 
   //! Function
 
+  useEffect(() => {
+    save(cachedKeys.HISTORY, [
+      {
+        nodes: initNodes,
+        edges: [],
+      },
+    ]);
+  }, [initNodes]);
+
   //! Render
   return (
-    <Box sx={{
-      width:'100vw',
-      height:"100vh"
-    }}>
+    <Box
+      sx={{
+        width: "100vw",
+        height: "100vh",
+      }}
+    >
       <ReactFlowProvider>
-        <FlowChart initNodes={initNodes} listNode={listNode} />
+        <FlowChart initNodes={initNodes} listNode={listNode} botId="123"/>
       </ReactFlowProvider>
     </Box>
   );

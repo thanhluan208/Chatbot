@@ -29,6 +29,7 @@ import { useAuth } from "@/Providers/AuthenticationProvider";
 import CommonStyles from "@/Components/CommonStyles";
 import CommonIcons from "@/Components/CommonIcons";
 import { cloneDeep } from "lodash";
+import { detectDiff } from "@/Helpers";
 
 const edgeTypes = {
   animatedSvg: AnimatedSVGEdge,
@@ -42,14 +43,20 @@ interface IFlowChart {
   initEdges?: Edge[];
 }
 
+export type HistoryFlow = {
+  nodes: Node[];
+  edges: Edge[];
+}[];
+
 export default function FlowChart(props: IFlowChart) {
-  const { isMultiAgent, initEdges } = props;
+  const { isMultiAgent, initEdges = [], initNodes } = props;
   const edgeReconnectSuccessful = useRef(true);
   const [nodes, setNodes, onNodesChange] = useNodesState(
-    (props?.initNodes as Node[]) ?? []
+    (initNodes as Node[]) ?? []
   );
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initEdges ?? []);
-  const { screenToFlowPosition, updateNode } = useReactFlow();
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initEdges);
+  const { screenToFlowPosition, updateNode, getNodes, getEdges } =
+    useReactFlow();
   const save = useSave();
   const theme = useTheme();
 
@@ -77,6 +84,8 @@ export default function FlowChart(props: IFlowChart) {
                 };
               })
             );
+
+            handleSaveHistory(getNodes(), newEdges);
 
             return newEdges;
           }
@@ -111,6 +120,8 @@ export default function FlowChart(props: IFlowChart) {
             return newEdges;
           }
 
+          handleSaveHistory(getNodes(), newEdges);
+
           return eds;
         });
       }
@@ -121,6 +132,15 @@ export default function FlowChart(props: IFlowChart) {
   );
 
   const onDragStop = async (_: React.MouseEvent, node: Node) => {
+    const newNodes = cloneDeep(nodes).map((item) => {
+      if (item.id === node.id) {
+        return node;
+      } else {
+        return item;
+      }
+    });
+
+    handleSaveHistory(newNodes, getEdges());
     if (isMultiAgent) {
       const info = {
         position: node.position,
@@ -155,6 +175,21 @@ export default function FlowChart(props: IFlowChart) {
             dest_node: edge.target as string,
           };
         });
+
+        handleSaveHistory(getNodes(), [
+          ...eds,
+          {
+            ...connection,
+            type: "animatedSvg",
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+              width: 20,
+              height: 20,
+              color: "#4e40e5",
+            },
+            deletable: true,
+          },
+        ]);
 
         reactFlowService.updateEdges(
           props.botId as string,
@@ -209,11 +244,15 @@ export default function FlowChart(props: IFlowChart) {
         data: { label: `${type} node` },
       };
 
-      setNodes((nds) =>
-        nds
+      setNodes((nds) => {
+        const newNodes = nds
           .filter((node) => node.type !== NodeTypes.helperNode)
-          .concat(newNode as any)
-      );
+          .concat(newNode as any);
+
+        handleSaveHistory(newNodes, getEdges());
+
+        return newNodes;
+      });
 
       if (isMultiAgent) {
         const onSuccess = (id: string) => {
@@ -277,6 +316,53 @@ export default function FlowChart(props: IFlowChart) {
       );
   }, [nodes]);
 
+  const handleSaveHistory = useCallback(
+    (nodes: Node[], edges: Edge[]) => {
+      save(
+        cachedKeys.HISTORY,
+        (state: any) => {
+          const validNodes = cloneDeep(nodes).filter(
+            (node) => !node?.data?.isPlaceholder ?? []
+          );
+          const validEdges = cloneDeep(edges).filter(
+            (edge) => !edge?.data?.isPlaceholder ?? []
+          );
+
+          const history: HistoryFlow = [...(state[cachedKeys.HISTORY] ?? [])];
+
+          if (history.length === 0) {
+            return [
+              {
+                nodes: validNodes,
+                edges: validEdges,
+              },
+            ];
+          } else {
+            const { nodes: prevNodes, edges: prevEdges } =
+              history[history.length - 1];
+
+            const diffNode = detectDiff(prevNodes, validNodes);
+            const diffEdge = detectDiff(prevEdges, validEdges);
+            if (!diffNode && !diffEdge) {
+              return state[cachedKeys.HISTORY];
+            }
+
+            history.push({
+              nodes: validNodes,
+              edges: validEdges,
+            });
+          }
+
+          return history;
+        },
+        true
+      );
+    },
+    [getNodes, getEdges]
+  );
+
+  
+
   useEffect(() => {
     save(cachedKeys.FLOW_NODES, nodes);
   }, [save, nodes]);
@@ -284,6 +370,21 @@ export default function FlowChart(props: IFlowChart) {
   useEffect(() => {
     save(cachedKeys.FLOW_EDGES, edges);
   }, [edges, save]);
+
+  useEffect(() => {
+    save(cachedKeys.SAVE_HISTORY, handleSaveHistory);
+  }, [handleSaveHistory, save]);
+
+  useEffect(() => {
+    
+
+    return () => {
+      save(cachedKeys.FLOW_EDGES, undefined);
+      save(cachedKeys.FLOW_NODES, undefined);
+      save(cachedKeys.HISTORY, []);
+
+    };
+  }, []);
 
   return (
     <Box
@@ -325,9 +426,10 @@ export default function FlowChart(props: IFlowChart) {
         onReconnectEnd={onReconnectEnd}
         onReconnectStart={onReconnectStart}
         onViewportChange={(viewport) => {
-          const zoom = viewport.zoom
-          save(cachedKeys.VIEWPORT, zoom)
-        }}        
+          const zoom = viewport.zoom;
+          save(cachedKeys.VIEWPORT, zoom);
+        }}
+        selectionKeyCode={"shift"}
       >
         <CommonStyles.Button
           isIcon

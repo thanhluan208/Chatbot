@@ -7,16 +7,17 @@ import {
   SxProps,
   useTheme,
 } from "@mui/material";
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import { NodeTypes, nodeTypes } from "./AddNodes";
 import logo from "@/assets/agent.png";
 import CommonIcons from "@/Components/CommonIcons";
 import { Node, useReactFlow } from "@xyflow/react";
 import { v4 as uuid } from "uuid";
-import { useSave } from "@/Stores/useStore";
+import { useGet, useSave } from "@/Stores/useStore";
 import reactFlowService from "@/Services/reactFlowService";
 import { useParams } from "react-router-dom";
 import { useAuth } from "@/Providers/AuthenticationProvider";
+import cachedKeys from "@/Constants/cachedKeys";
 
 interface IAddNodePopper {
   open?: boolean;
@@ -43,13 +44,15 @@ const AddNodePopper = (props: IAddNodePopper) => {
     isHelperNode,
     helperPosition,
   } = props;
-  const { setNodes, updateNode } = useReactFlow();
+  const { setNodes, updateNode, getEdges } = useReactFlow();
   const theme = useTheme();
   const save = useSave();
 
   const params = useParams();
   const botId = params?.botId;
   const { userId } = useAuth();
+
+  const handleSaveHistory = useGet("SAVE_HISTORY");
 
   //! Function
   const onDragStart = (
@@ -60,76 +63,80 @@ const AddNodePopper = (props: IAddNodePopper) => {
     event.dataTransfer.effectAllowed = "move";
   };
 
-  const handleAddNode = (node: {
-    name: string;
-    label: string;
-    description?: string;
-  }) => {
-    if (!setNodes) return;
-    const nodeId = uuid();
+  const handleAddNode = useCallback(
+    (node: { name: string; label: string; description?: string }) => {
+      if (!setNodes) return;
+      const nodeId = uuid();
 
-    const onSuccess = (id: string) => {
-      console.log(nodeId)
-      updateNode(nodeId, {
-        id: id,
-        data: {
-          label: `Agent ${id}`,
-        },
-      });
-    };
-
-    const onFailed = () => {
-      save(`${nodeId}_remove`, true);
-    };
-
-    setNodes((nodes) => {
-      const newNodes = nodes.filter(
-        (node) => node.type !== NodeTypes.helperNode
-      );
-      const lastnode: Node = newNodes[newNodes.length - 1];
-      if (lastnode) {
-        const position = helperPosition ?? {
-          x: lastnode.position.x + (lastnode.measured?.width ?? 200) + 100,
-          y: lastnode.position.y,
-        };
-        const newNode = {
-          id: nodeId,
-          type: node.name,
-          position,
-          data: { label: `${node.label} node` },
-        };
-        newNodes.push(newNode);
-
-        reactFlowService.createFlow(
-          botId as string,
-          userId as string,
-          onSuccess,
-          onFailed,
-          JSON.stringify(newNode)
-        );
-      } else {
-        const newNode = {
-          id: nodeId,
-          type: node.name,
-          position: helperPosition ?? {
-            x: 0,
-            y: 0,
+      const onSuccess = (id: string) => {
+        console.log(nodeId);
+        updateNode(nodeId, {
+          id: id,
+          data: {
+            label: `Agent ${id}`,
           },
-          data: { label: `${node.label} node` },
-        };
-        newNodes.push(newNode);
-        reactFlowService.createFlow(
-          botId as string,
-          userId as string,
-          onSuccess,
-          onFailed,
-          JSON.stringify(newNode)
+        });
+      };
+
+      const onFailed = () => {
+        save(`${nodeId}_remove`, true);
+      };
+
+      setNodes((nodes) => {
+        const newNodes = nodes.filter(
+          (node) => node.type !== NodeTypes.helperNode
         );
-      }
-      console.log("newNodes", newNodes);
-      return newNodes;
-    });
-  };
+        const lastnode: Node = newNodes[newNodes.length - 1];
+        if (lastnode) {
+          const position = helperPosition ?? {
+            x: lastnode.position.x + (lastnode.measured?.width ?? 200) + 100,
+            y: lastnode.position.y,
+          };
+          const newNode = {
+            id: nodeId,
+            type: node.name,
+            position,
+            data: { label: `${node.label} node` },
+          };
+          newNodes.push(newNode);
+
+          reactFlowService.createFlow(
+            botId as string,
+            userId as string,
+            onSuccess,
+            onFailed,
+            JSON.stringify(newNode)
+          );
+        } else {
+          const newNode = {
+            id: nodeId,
+            type: node.name,
+            position: helperPosition ?? {
+              x: 0,
+              y: 0,
+            },
+            data: { label: `${node.label} node` },
+          };
+          newNodes.push(newNode);
+          reactFlowService.createFlow(
+            botId as string,
+            userId as string,
+            onSuccess,
+            onFailed,
+            JSON.stringify(newNode)
+          );
+        }
+
+        handleSaveHistory(newNodes, getEdges());
+        return newNodes;
+      });
+    },
+    [setNodes]
+  );
+
+  useEffect(() => {
+    save(cachedKeys.ADD_NODE, handleAddNode)
+  },[handleAddNode])
 
   //! Render
   return (

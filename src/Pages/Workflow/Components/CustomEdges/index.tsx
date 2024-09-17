@@ -40,7 +40,6 @@ const AnimatedSVGEdge = ({
   //! Function
   const handleRemoveEdge = useCallback(
     (e: any) => {
-      console.log("remove");
       e.stopPropagation();
       setEdges((edges) => {
         const newEdges = edges.filter((edge) => edge.id !== id);

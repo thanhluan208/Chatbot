@@ -111,3 +111,27 @@ export const boolean = (value: string) => {
   if (value === "true") return true;
   else return false;
 };
+
+
+
+export function detectDiff<T >(before: T[], after: T[]): T[] | boolean {
+  const diff: T[] = [];
+  
+  if(!isArray(after) || !isArray(before)) return false
+
+  if (after.length > before.length) {
+    after.forEach((elm) => {
+      if (before.some((item) => JSON.stringify(item) === JSON.stringify(elm))) return;
+      diff.push(elm);
+    });
+  } else {
+    before.forEach((elm) => {
+      if (after.some((item) => JSON.stringify(item) === JSON.stringify(elm))) return;
+      diff.push(elm);
+    });
+  }
+
+  if(diff.length === 0) return false
+
+  return diff;
+}

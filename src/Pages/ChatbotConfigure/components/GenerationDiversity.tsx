@@ -164,6 +164,7 @@ const GenerationDiversity = () => {
               onClick={() => {
                 handleChange(option.value);
               }}
+              fullWidth
               sx={{
                 borderRadius: "8px",
                 padding: "4px 8px",
@@ -172,6 +173,11 @@ const GenerationDiversity = () => {
                 color: isSelected
                   ? theme.palette.primary.main
                   : theme.colors.custom.normalColorTypo,
+                border: isSelected ? `1px solid ${theme.palette.primary.main}` : "0",
+                "&:hover": {
+                  border: `1px solid ${theme.palette.primary.main}`,
+                  background: theme.colors.custom.backgroundCard,
+                }
               }}
             >
               <CommonStyles.Typography

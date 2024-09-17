@@ -31,7 +31,7 @@ export default function ZoomControl() {
         },
       }}
     >
-      <CommonStyles.Button isIcon className="iconBtn" onClick={() => handleChange(zoom * 100 + 10)} >
+      <CommonStyles.Button isIcon className="iconBtn" onClick={() => handleChange(zoom * 100 + 10)} tooltip="Zoom in">
         <CommonIcons.Add />
       </CommonStyles.Button>
       <CommonStyles.Input
@@ -56,7 +56,7 @@ export default function ZoomControl() {
         }}
         onValueChange={handleChange}
       />
-      <CommonStyles.Button isIcon className="iconBtn" onClick={() => handleChange(zoom * 100 - 10)}>
+      <CommonStyles.Button isIcon className="iconBtn" onClick={() => handleChange(zoom * 100 - 10)} tooltip="Zoom out">
         <CommonIcons.Remove />
       </CommonStyles.Button>
     </Box>

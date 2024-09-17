@@ -1,15 +1,25 @@
-import { Box, Tooltip, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import AddNodes from "./AddNodes";
 import ZoomControl from "./ZoomControl";
 import dagre from "dagre";
 import { Node, useReactFlow } from "@xyflow/react";
 import CommonStyles from "@/Components/CommonStyles";
 import Layout from "@/Components/CommonIcons/Layout";
+import History from "./History";
+import { useGet } from "@/Stores/useStore";
+import FitView from "@/Components/CommonIcons/FitView";
+import { useCallback, useEffect, useRef } from "react";
+import { cloneDeep, isEmpty } from "lodash";
+import { v4 as uuid } from "uuid";
 
 // const direction = "TB"
 
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
+
+export type HistoryRef = {
+  handleChangeHistory: (value: number) => void;
+};
 
 const Toolbar = ({
   listNode,
@@ -18,7 +28,16 @@ const Toolbar = ({
 }) => {
   //! State
   const theme = useTheme();
-  const { getNodes, getEdges, setEdges, setNodes } = useReactFlow();
+  const { getNodes, getEdges, setEdges, setNodes, fitView, getZoom, zoomTo } =
+    useReactFlow();
+  const handleSaveHistory = useGet("SAVE_HISTORY");
+  const handleAddNode = useGet("ADD_NODE");
+  const mousePos = useRef<{
+    clientX: number;
+    clientY: number;
+  } | null>(null);
+
+  const historyRef = useRef<HistoryRef | null>(null);
 
   //! Function
   const getLayoutedElements = (direction?: string) => {
@@ -26,8 +45,6 @@ const Toolbar = ({
     const edges = getEdges();
     const isHorizontal = direction === "LR";
     dagreGraph.setGraph({ rankdir: direction });
-
-    console.log("nodes", nodes)
 
     nodes.forEach((node) => {
       dagreGraph.setNode(node.id, {
@@ -62,8 +79,108 @@ const Toolbar = ({
     setEdges([...edges]);
     setNodes([...newNodes] as Node[]);
 
+    handleSaveHistory(newNodes, edges);
+
     return { nodes: newNodes, edges };
   };
+
+  const handleDeleteNode = useCallback(() => {
+    const nodes = getNodes();
+    if (nodes.every((item) => !item.selected)) return;
+    setNodes((nodes) => {
+      const newNodes = nodes.filter((elm) => !elm.selected);
+      handleSaveHistory(newNodes, getEdges());
+
+      return newNodes;
+    });
+  }, [handleSaveHistory, getEdges, getNodes]);
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.code.toLowerCase() === "space") {
+        handleDeleteNode();
+      } else if (e.code.toLowerCase() === "keyz" && e.ctrlKey) {
+        historyRef.current?.handleChangeHistory &&
+          historyRef.current?.handleChangeHistory(1);
+      } else if (e.code.toLowerCase() === "keyy" && e.ctrlKey) {
+        historyRef.current?.handleChangeHistory &&
+          historyRef.current?.handleChangeHistory(-1);
+      } else if (e.code.toLowerCase() === "equal" && e.ctrlKey) {
+        e.preventDefault();
+        zoomTo(getZoom() + 0.1);
+      } else if (e.code.toLowerCase() === "minus" && e.ctrlKey) {
+        e.preventDefault();
+        zoomTo(getZoom() - 0.1);
+      } else if (e.code.toLowerCase() === "keyc" && e.ctrlKey) {
+        setNodes((nodes) =>
+          nodes.map((elm) => {
+            if (elm.selected) {
+              return {
+                ...elm,
+                data: {
+                  ...elm.data,
+                  readyToPaste: true,
+                },
+              };
+            }
+
+            return elm;
+          })
+        );
+      } else if (e.code.toLowerCase() === "keyv" && e.ctrlKey) {
+        setNodes((nodes) => {
+          const pasteNodes = cloneDeep(nodes)
+            .filter((elm) => elm.data?.readyToPaste)
+            .map((elm) => {
+              const newId = uuid();
+              return {
+                ...elm,
+                id: newId,
+                position: {
+                  x: elm.position.x + 200,
+                  y: elm.position.y - 200,
+                },
+                data: {
+                  ...elm.data,
+                  label: `Agent ${newId}`,
+                },
+              };
+            });
+
+          if (isEmpty(pasteNodes)) return nodes;
+
+          return nodes.concat(pasteNodes).map((node) => {
+            return {
+              ...node,
+              selected: false,
+              data: {
+                ...node.data,
+                readyToPaste: false,
+              },
+            };
+          });
+        });
+      }
+    },
+    [handleDeleteNode, handleAddNode]
+  );
+
+  const handleTrackMouse = useCallback((e: MouseEvent) => {
+    mousePos.current = {
+      clientX: e.clientX,
+      clientY: e.clientY,
+    };
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("mousemove", handleTrackMouse);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("mousemove", handleTrackMouse);
+    };
+  }, [handleKeyDown]);
 
   //! Render
   return (
@@ -76,20 +193,49 @@ const Toolbar = ({
         padding: "10px 20px",
         boxShadow: "0 5px 10px rgba(0,0,0,0.2)",
         borderRadius: "12px",
-        display: "flex",
-        gap: "12px",
         alignItems: "center",
+        display:'flex'
       }}
     >
-      <AddNodes listNode={listNode ?? []} />
-      <ZoomControl />
-      <Tooltip title="Rearrange flow">
-        <div>
-          <CommonStyles.Button isIcon onClick={() => getLayoutedElements("LR")}>
-            <Layout />
-          </CommonStyles.Button>
-        </div>
-      </Tooltip>
+      <Box
+        sx={{
+          display: "flex",
+          gap: "12px",
+          alignItems: "center",
+        }}
+      >
+        <AddNodes listNode={listNode ?? []} />
+        <ZoomControl />
+
+        <CommonStyles.Button
+          isIcon
+          onClick={() => getLayoutedElements("LR")}
+          tooltip="Rearrange flow"
+        >
+          <Layout />
+        </CommonStyles.Button>
+        <CommonStyles.Button
+          isIcon
+          onClick={() => fitView()}
+          tooltip="Fit view"
+        >
+          <FitView />
+        </CommonStyles.Button>
+        <History innerRef={historyRef} />
+      </Box>
+
+      <Box
+        sx={{
+          height: "25px",
+          width: "2px",
+          borderRadius: "10px",
+          background: theme.colors.custom.normalColorTypo,
+          margin: "0 24px",
+          opacity: .8
+        }}
+      />
+
+      
     </Box>
   );
 };

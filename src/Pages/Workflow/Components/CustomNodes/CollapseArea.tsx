@@ -6,13 +6,14 @@ import React from "react";
 interface ICollapseArea {
   children?: React.ReactNode;
   label: string | React.ReactNode;
-  sxContainer?: SxProps
+  sxContainer?: SxProps,
+  initOpen?:boolean
 }
 
 const CollapseArea = (props: ICollapseArea) => {
   //! State
-  const { label,sxContainer } = props;
-  const [open, setOpen] = React.useState(true);
+  const { label,sxContainer,initOpen = true} = props;
+  const [open, setOpen] = React.useState(initOpen);
   const theme = useTheme()
   //! Function
 

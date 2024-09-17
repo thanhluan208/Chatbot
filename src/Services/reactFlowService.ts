@@ -76,6 +76,7 @@ class reactFlowServices {
   }
 
   updateFlow(botId: string, id: string, data: string) {
+    return
     if (!botId || !id) {
       return;
     }
@@ -106,6 +107,7 @@ class reactFlowServices {
     }[],
     onFailed?: () => void
   ) {
+    return
     try {
       httpServices
         .post(updateBotEdge, {
@@ -121,7 +123,7 @@ class reactFlowServices {
         });
     } catch (error) {
       console.log("error", error);
-      onFailed && onFailed();
+      onFailed && onFailed?.();
     }
   }
 }

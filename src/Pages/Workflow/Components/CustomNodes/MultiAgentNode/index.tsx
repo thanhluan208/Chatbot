@@ -123,15 +123,13 @@ const MultiAgentNode = (props: NodeProps) => {
   };
 
   const handleAddNode = () => {
-    if (!placeholderId.current || !botId || !userId) return;
-
+    if (!placeholderId.current || !userId) return;
     const newNode = getNode(placeholderId.current);
 
     reactFlowService.createFlow(
       botId as string,
       userId,
       (id) => {
-        console.log("newNodesssss", newNode);
         if (!newNode) return;
         updateNode(newNode.id, {
           id: id,
@@ -170,22 +168,9 @@ const MultiAgentNode = (props: NodeProps) => {
   };
 
   const handleClickNode = useCallback(() => {
-    setEdges((edges) => {
-      const newEdges = edges.map((item) => {
-        if (item.source === props.id || item.target === props.id) {
-          return {
-            ...item,
-            animated: true,
-          };
-        } else {
-          return {
-            ...item,
-            animated: false,
-          };
-        }
-      });
-      return newEdges;
-    });
+    updateNode(props?.id, {
+      selected: true
+    })
   }, [props?.id]);
 
   useEffect(() => {
@@ -217,6 +202,13 @@ const MultiAgentNode = (props: NodeProps) => {
           };
         });
       });
+
+      updateNode(props?.id, {
+        data: {
+          ...props.data,
+          readyToPaste: true
+        }
+      })
     } else {
       setEdges((edge) =>
         edge.map((item) => ({
@@ -224,6 +216,13 @@ const MultiAgentNode = (props: NodeProps) => {
           animated: false,
         }))
       );
+
+      updateNode(props?.id, {
+        data: {
+          ...props.data,
+          readyToPaste: false
+        }
+      })
     }
   }, [props?.selected, props?.id]);
 
@@ -343,6 +342,7 @@ const MultiAgentNode = (props: NodeProps) => {
             return (
               <Fragment>
                 <CollapseArea
+                  initOpen={false}
                   label={
                     <CommonStyles.Typography type="semiBold14">
                       Model Configuration
