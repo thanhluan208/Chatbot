@@ -8,7 +8,8 @@ import { changeBotMode, createMultiAgent } from "@/Constants/api";
 import { useParams } from "react-router-dom";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import { toast } from "react-toastify";
-import { useGet } from "@/Stores/useStore";
+import { useGet, useSave } from "@/Stores/useStore";
+import cachedKeys from "@/Constants/cachedKeys";
 
 const AgentButton = ({
   setMode,
@@ -22,6 +23,7 @@ const AgentButton = ({
   //! State
   const theme = useTheme();
   const agentId = useId();
+  const save = useSave();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
@@ -29,7 +31,7 @@ const AgentButton = ({
   const params = useParams();
   const botId = params.botId;
 
-  const refetchBotData = useGet('REFETCH_BOT_DATA')
+  const refetchBotData = useGet("REFETCH_BOT_DATA");
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -49,13 +51,13 @@ const AgentButton = ({
       isLoading: true,
       autoClose: false,
     });
+    save(cachedKeys.LOADING_APP, true);
     try {
       if (!hasMultiAgent) {
         const response = await httpServices.post(createMultiAgent, {
           bot_id: botId,
           user_id: userId,
         });
-
 
         if (response.data.status_code !== 200) {
           toast.update(toastId, {
@@ -93,7 +95,8 @@ const AgentButton = ({
         });
       }
 
-      refetchBotData && await refetchBotData()
+      refetchBotData && (await refetchBotData());
+      save(cachedKeys.LOADING_APP, false);
     } catch (error) {
       toast.update(toastId, {
         render: "Failed to switch mode",
@@ -101,6 +104,7 @@ const AgentButton = ({
         isLoading: false,
         autoClose: 3000,
       });
+      save(cachedKeys.LOADING_APP, false);
     }
   };
   //! Render
@@ -169,16 +173,16 @@ const AgentButton = ({
                 width: "315px",
                 minHeight: "unset",
                 height: "fit-content",
-                border: `1px solid ${theme.colors.custom.borderColor}`
+                border: `1px solid ${theme.colors.custom.borderColor}`,
               }}
               onClick={() => {
                 handleChangeMode(Mode.Single_agent);
               }}
             >
-              <CommonStyles.Typography >
+              <CommonStyles.Typography>
                 Single agent mode
               </CommonStyles.Typography>
-              <CommonStyles.Typography sx={{ fontWeight: 100 }} >
+              <CommonStyles.Typography sx={{ fontWeight: 100 }}>
                 The bot only contains a single agent. This is recommended for
                 bots with simple logic.
               </CommonStyles.Typography>
@@ -197,12 +201,12 @@ const AgentButton = ({
                 height: "fit-content",
                 border: `1px solid ${theme.colors.custom.borderColor}`,
               }}
-              onClick={() =>handleChangeMode(Mode.Multi_agent)}
+              onClick={() => handleChangeMode(Mode.Multi_agent)}
             >
-              <CommonStyles.Typography >
+              <CommonStyles.Typography>
                 Multi agent mode
               </CommonStyles.Typography>
-              <CommonStyles.Typography sx={{ fontWeight: 100 }} >
+              <CommonStyles.Typography sx={{ fontWeight: 100 }}>
                 Set multiple agents collaborating in one bot to deal with
                 complex logic.
               </CommonStyles.Typography>

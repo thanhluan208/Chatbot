@@ -1,13 +1,13 @@
 import React from "react";
 import { Box, ClickAwayListener } from "@mui/material";
-import CommonStyles from "../../../Components/CommonStyles";
-import StartNode from "./CustomNodes/StartNode";
-import LLMNode from "./CustomNodes/LLMNode";
-import EndNode from "./CustomNodes/EndNode";
-import MultiAgentStartNode from "./CustomNodes/MultiAgentStartNode";
-import MultiAgentNode from "./CustomNodes/MultiAgentNode";
+import CommonStyles from "../../../../Components/CommonStyles";
+import StartNode from "../CustomNodes/StartNode";
+import LLMNode from "../CustomNodes/LLMNode";
+import EndNode from "../CustomNodes/EndNode";
+import MultiAgentStartNode from "../CustomNodes/MultiAgentStartNode";
+import MultiAgentNode from "../CustomNodes/MultiAgentNode";
 import AddNodePopper from "./AddNodePopper";
-import HelperNode from "./CustomNodes/HelperNode";
+import HelperNode from "../CustomNodes/HelperNode";
 
 export enum NodeTypes {
   startNode = "customNode_startNode",

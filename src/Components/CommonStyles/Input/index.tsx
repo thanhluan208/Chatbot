@@ -6,7 +6,9 @@ import {
   useTheme,
 } from "@mui/material";
 import CommonStyles from "..";
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
+import { useSave } from "@/Stores/useStore";
+import cachedKeys from "@/Constants/cachedKeys";
 
 interface IInput {
   sxContainer?: {};
@@ -15,28 +17,39 @@ interface IInput {
   afterOnchange?: (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
-  initValue?: string | number
-  onValueChange?: (value:string | number) => void
+  initValue?: string | number;
+  onValueChange?: (value: string | number) => void;
 }
 
-const Input = (props: IInput & TextFieldProps) => {
+const Input = forwardRef((props: IInput & TextFieldProps, ref: React.ForwardedRef<unknown>) => {
   //! State
-  const { sxContainer, fullWidth, maxChar, afterOnchange,initValue, onValueChange,...otherProps } =
-    props;
+  const {
+    sxContainer,
+    fullWidth,
+    maxChar,
+    afterOnchange,
+    initValue,
+    onValueChange,
+    ...otherProps
+  } = props;
   const [value, setValue] = useState(initValue ?? "");
+  const save = useSave();
 
   const theme = useTheme();
   //! Function
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
+    event.preventDefault();
+    event.stopPropagation();
     setValue(event.target.value);
     afterOnchange && afterOnchange(event);
   };
 
   useEffect(() => {
-    onValueChange && onValueChange(value)
-  },[value])
+    onValueChange && onValueChange(value);
+  }, [value]);
+  
   //! Render
   return (
     <Box
@@ -79,6 +92,12 @@ const Input = (props: IInput & TextFieldProps) => {
         value={value}
         label=""
         onChange={handleChange}
+        onFocus={() => {
+          save(cachedKeys.IS_EDITING, true);
+        }}
+        onBlur={() => {
+          save(cachedKeys.IS_EDITING, false);
+        }}
         sx={{
           div: {
             borderRadius: "10px",
@@ -97,6 +116,7 @@ const Input = (props: IInput & TextFieldProps) => {
               : "8px 16px",
           },
         }}
+        inputRef={ref}
         InputProps={{
           endAdornment: otherProps.InputProps?.endAdornment ? (
             otherProps.InputProps?.endAdornment
@@ -120,6 +140,6 @@ const Input = (props: IInput & TextFieldProps) => {
       />
     </Box>
   );
-};
+});
 
 export default Input;

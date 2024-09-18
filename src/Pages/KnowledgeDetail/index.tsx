@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import CommonStyles from "../../Components/CommonStyles";
 import useGetListKnowledgeFiles from "../../Hooks/Knowledges/useGetListKnowledgeFiles";
 import { useNavigate, useParams } from "react-router-dom";
@@ -7,24 +7,26 @@ import { useSave } from "../../Stores/useStore";
 import cachedKeys from "../../Constants/cachedKeys";
 import CommonIcons from "../../Components/CommonIcons";
 import AddContentButton from "./components/AddContentButton";
-import PerfectScrollBar from "react-perfect-scrollbar";
 import { useAuth } from "../../Providers/AuthenticationProvider";
 import { isEmpty } from "lodash";
 import SegmentList from "./components/SegmentList";
 import EditKnowledge from "./components/EditKnowledge";
 import PublicButton from "./components/PublicButton";
 import { boolean } from "@/Helpers";
+import httpServices from "@/Services/httpServices";
+import { updateKnowledgeToBot } from "@/Constants/api";
+import { toast } from "react-toastify";
 
 const KnowledgeDetail = () => {
   //! State
   const params = useParams();
+  const theme = useTheme();
   const save = useSave();
   const navigate = useNavigate();
-  const { knowledgeId } = params || {};
+  const { knowledgeId, botId } = params || {};
   const queryParams = new URLSearchParams(location.search);
 
   const isOwner = boolean(queryParams.get("isOwner") as string);
-
 
   const { userId } = useAuth();
 
@@ -54,14 +56,39 @@ const KnowledgeDetail = () => {
   }, [data]);
 
   //! Function
-  // const handleChangeSearch = (
-  //   e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  // ) => {
-  //   if (debounceRef.current) clearTimeout(debounceRef.current);
-  //   debounceRef.current = setTimeout(() => {
-  //     setFilter((prev) => ({ ...prev, search: e.target.value }));
-  //   }, 300);
-  // };
+  const handleAddKnowledgeToBot = async (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.stopPropagation();
+    if (!botId || !knowledgeId || !userId) return;
+
+    const toastId = toast.loading("Adding knowledge to bot...", {
+      isLoading: true,
+      autoClose: false,
+    });
+
+    try {
+      await httpServices.axios.post(updateKnowledgeToBot, {
+        user_id: userId,
+        bot_id: botId,
+        knowledge_storage_ids: [knowledgeId],
+      });
+
+      toast.update(toastId, {
+        render: "Added knowledge to bot successfully!",
+        type: "success",
+        isLoading: false,
+        autoClose: 2000,
+      });
+    } catch (error) {
+      toast.update(toastId, {
+        render: "Failed to add knowledge to bot!",
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+      });
+    }
+  };
 
   //! Effect
   useEffect(() => {
@@ -75,7 +102,7 @@ const KnowledgeDetail = () => {
         position: "relative",
         width: "100vw",
         height: "100vh",
-        background: "#f7f7fa",
+        background: theme.colors.custom.background,
       }}
     >
       <CommonStyles.LoadingOverlay isLoading={isLoading} />
@@ -140,7 +167,7 @@ const KnowledgeDetail = () => {
                 <Fragment>
                   <PublicButton />
                   <AddContentButton />
-                  <CommonStyles.Button variant="contained">
+                  <CommonStyles.Button variant="contained" onClick={handleAddKnowledgeToBot}>
                     Add to bot
                   </CommonStyles.Button>
                 </Fragment>
@@ -148,18 +175,22 @@ const KnowledgeDetail = () => {
             </Box>
           </Box>
         </Box>
-        <PerfectScrollBar
-          style={{
+        <Box
+          sx={{
             padding: "0 24px",
             margin: "24px 0",
 
-            maxHeight: "calc(100vh - 92.5px - 24px * 2",
-            height: "calc(100vh - 92.5px - 24px * 2",
+            maxHeight: "calc(100vh - 92.5px - 24px * 2)",
+            height: "calc(100vh - 92.5px - 24px * 2)",
+            overflowY: "auto",
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
           }}
         >
           <Box
             sx={{
-              background: "#fff",
+              background: theme.colors.custom.backgroundCard,
               height: "100%",
               width: "100%",
               borderRadius: "8px",
@@ -194,7 +225,7 @@ const KnowledgeDetail = () => {
               <SegmentList data={data} />
             )}
           </Box>
-        </PerfectScrollBar>
+        </Box>
       </Box>
     </Box>
   );

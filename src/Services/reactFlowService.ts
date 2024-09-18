@@ -5,7 +5,6 @@ import { createNode, updateBotEdge, updateBotNode } from "@/Constants/api";
 import { AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 
-
 class reactFlowServices {
   flows: {
     [key: string]: {
@@ -43,7 +42,7 @@ class reactFlowServices {
     }
   }
 
-  createFlow(
+  async createFlow(
     botId: string,
     userId: string,
     onSuccess: (id: string) => void,
@@ -51,11 +50,11 @@ class reactFlowServices {
     nodeInfo?: string,
     fromId?: string
   ) {
-    return
     if (!botId || !userId) {
+      console.log("botId or userId is missing");
       onFailed();
     }
-    httpServices
+    return httpServices
       .post(createNode, {
         bot_id: botId,
         user_id: userId,
@@ -66,6 +65,7 @@ class reactFlowServices {
         if (res.data?.status_code === 200) {
           onSuccess(res.data.node_id);
         } else {
+          console.log("Failed to create node", res.data);
           onFailed();
         }
       })
@@ -75,12 +75,11 @@ class reactFlowServices {
       });
   }
 
-  updateFlow(botId: string, id: string, data: string) {
-    return
+  async updateFlow(botId: string, id: string, data: string) {
     if (!botId || !id) {
       return;
     }
-    httpServices
+    return httpServices
       .post(updateBotNode, {
         bot_id: botId,
         node_id: id,
@@ -97,7 +96,6 @@ class reactFlowServices {
       });
   }
 
-  
   updateEdges(
     botId: string,
     userId: string,
@@ -107,7 +105,6 @@ class reactFlowServices {
     }[],
     onFailed?: () => void
   ) {
-    return
     try {
       httpServices
         .post(updateBotEdge, {

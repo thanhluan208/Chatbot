@@ -4,7 +4,7 @@ import CommonIcons from "../../CommonIcons";
 import CommonStyles from "../../CommonStyles";
 import { useCallback, useMemo } from "react";
 import * as yup from "yup";
-import { Box, DialogActions, DialogContent, DialogTitle,  } from "@mui/material";
+import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { FastField, Form, Formik } from "formik";
 import CommonField from "../../CommonFields";
 import { isEmpty } from "lodash";
@@ -23,6 +23,7 @@ interface ICreateBotDialog {
 interface InitValues {
   name: string;
   description: string;
+  avatar_file_input?: File[];
 }
 
 export const CreateBotDialog = (props: ICreateBotDialog) => {
@@ -37,6 +38,7 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
     return {
       name: "",
       description: "",
+      avatar_file_input: undefined,
     };
   }, []);
 
@@ -50,17 +52,26 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
 
   const handleSubmit = useCallback(
     async (values: InitValues) => {
+      if (!userId) return;
       const toastId = toast.info("Creating bot...", {
         isLoading: true,
         autoClose: false,
       });
 
       try {
-        const response = await httpServices.axios.post(createBot, {
-          user_id: userId,
-          bot_name: values.name,
-          bot_description: values.description,
-        });
+        const formData = new FormData();
+
+        formData.append("user_id", userId);
+        formData.append("bot_name", values.name);
+        if (values.description) {
+          formData.append("bot_description", values.description);
+        }
+
+        if (values.avatar_file_input) {
+          formData.append("avatar_file_input", values.avatar_file_input[0]);
+        }
+
+        const response = await httpServices.axios.post(createBot, formData);
         refetchListBot && (await refetchListBot());
         if (response.data.status_code === 200) {
           toast.update(toastId, {
@@ -76,7 +87,7 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
           throw new Error(response.data.message);
         }
 
-        toggle()
+        toggle();
       } catch (error: any) {
         console.log("Create bot error: ", error);
         toast.update(toastId, {
@@ -100,7 +111,7 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
       validateOnBlur
       validateOnMount
     >
-      {({ isSubmitting, errors }) => {
+      {({ isSubmitting, errors, values, setFieldValue }) => {
         return (
           <Form
             style={{
@@ -149,64 +160,15 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
                   maxChar={2000}
                 />
 
-                {/* <Box>
-                  <CommonStyles.Typography type="bold14" my={1}>
-                    Profile picture
-                    <span
-                      style={{
-                        color: theme.colors.custom.colorErrorTypo,
-                        marginLeft: "4px",
-                      }}
-                    >
-                      *
-                    </span>
-                  </CommonStyles.Typography>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      gap: "8px",
-                    }}
-                  >
-                    <Field
-                      name="avatar"
-                      component={CommonField.ButtonUploadField}
-                    />
-                    <Box
-                      sx={{
-                        width: "100%",
-                        borderRadius: "12px",
-                        background: "#f0f0f5",
-                        height: "100px",
-                        display: "flex",
-                        alignItems: "center",
-                        padding: "10px 20px",
-                      }}
-                    >
-                      <CommonStyles.Button
-                        disabled={isDisabledAiGenerate}
-                        sx={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          flexDirection: "column",
-                          height: "80px",
-                          width: "80px",
-                          border: "solid 1px #ccc",
-                          background: "#fff",
-                          svg: {
-                            width: "18px",
-                            height: "18px",
-                          },
-                        }}
-                      >
-                        <CommonIcons.AiIcon />
-                        <CommonStyles.Typography type="normal12">
-                          Generate
-                        </CommonStyles.Typography>
-                      </CommonStyles.Button>
-                    </Box>
-                  </Box>
-                </Box> */}
+                <CommonStyles.UploadFile
+                  label="Upload Image"
+                  files={values.avatar_file_input}
+                  dropzoneProps={{
+                    onDrop: (acceptedFiles) => {
+                      setFieldValue("avatar_file_input", acceptedFiles);
+                    },
+                  }}
+                />
               </DialogContent>
 
               <DialogActions>

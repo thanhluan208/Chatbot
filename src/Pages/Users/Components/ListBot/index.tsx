@@ -10,17 +10,10 @@ import moment from "moment";
 import MoreOption from "./components/MoreOption";
 import cachedKeys from "../../../../Constants/cachedKeys";
 import { useLocation, useNavigate } from "react-router-dom";
-import useGetListBot from "../../../../Hooks/Bot/useGetListBot";
-import { useEffect, useMemo } from "react";
+import useGetListBot, { Bot } from "../../../../Hooks/Bot/useGetListBot";
+import { useEffect,  } from "react";
 import { useAuth } from "../../../../Providers/AuthenticationProvider";
 import Mansory from "@mui/lab/Masonry";
-
-export interface IBotCard {
-  bot_id: string;
-  bot_name: string;
-  description: string;
-  isFavourite?: boolean;
-}
 
 export interface Workspace {
   label: string;
@@ -28,36 +21,22 @@ export interface Workspace {
   value: string;
 }
 
-const listImg = [
-  "https://i.imgur.com/SYxkcfJ.jpeg",
-  "https://i.imgur.com/VUWXbmo.png",
-  "https://i.imgur.com/UpI9KQ1.jpeg",
-  "https://i.imgur.com/8SIRLa1.jpeg",
-];
 
-const BotCard = (props: IBotCard) => {
+const BotCard = (props: Bot) => {
   //! State
   const { userData } = useAuth();
-  const { bot_id, bot_name, description, isFavourite } = props;
+  const { bot_id, bot_name, description, avatar_url } = props;
   const openDialog = useGet("OPEN_DIALOG");
 
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
 
-  const imgUrl = useMemo(() => {
-    return listImg[Math.floor(Math.random() * listImg.length)];
-  }, []);
-
   //! Function
   const handleClick = (e: any) => {
     if (openDialog) return;
     e.stopPropagation();
     navigate(location.pathname + "/bot/" + bot_id + "?isOwner=true");
-  };
-
-  const handleFav = (e: any) => {
-    e.stopPropagation();
   };
 
   //! Render
@@ -109,7 +88,7 @@ const BotCard = (props: IBotCard) => {
         <Box>
           <img
             src={
-              imgUrl ??
+              avatar_url ??
               "https://p16-flow-product-sign-sg.ibyteimg.com/tos-alisg-i-bfte7mpw5s-sg/9c9ef4e4c6f147339c0cae1408bb1f46~tplv-bfte7mpw5s-resize:128:128.image?rk3s=2e2596fd&x-expires=1727594320&x-signature=VTZfu6FleEdw6gvUsvvssaBeyLg%3D"
             }
             alt={""}
@@ -117,6 +96,7 @@ const BotCard = (props: IBotCard) => {
               width: "75px",
               height: "75px",
               borderRadius: "8px",
+              objectFit: "cover",
             }}
           />
         </Box>
@@ -181,7 +161,7 @@ const BotCard = (props: IBotCard) => {
             justifyContent: "flex-end",
           }}
         >
-          <CommonStyles.Button
+          {/* <CommonStyles.Button
             isIcon
             className={isFavourite ? "" : "btnGroup"}
             onClick={handleFav}
@@ -195,14 +175,8 @@ const BotCard = (props: IBotCard) => {
             ) : (
               <CommonIcons.StarOutline />
             )}
-          </CommonStyles.Button>
-          <MoreOption
-            bot={{
-              bot_id,
-              bot_name,
-              description,
-            }}
-          />
+          </CommonStyles.Button> */}
+          <MoreOption bot={{ ...props }} />
         </Box>
       </Box>
     </Box>
@@ -291,7 +265,7 @@ function ListBot() {
       spacing={2}
       sx={{
         maxWidth: "1600px",
-        margin:'auto'
+        margin: "auto",
       }}
     >
       {isArray(data) &&

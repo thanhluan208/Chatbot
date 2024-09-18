@@ -6,7 +6,6 @@ import {
   Paper,
   Popper,
   SelectChangeEvent,
-  useTheme,
 } from "@mui/material";
 import React, { Fragment, memo, useId } from "react";
 import { FastField, useFormikContext } from "formik";
@@ -41,7 +40,9 @@ const EngineOption = ({
   return (
     <Fragment>
       {option?.group && !isValue && (
-        <ListSubheader>{option.group}</ListSubheader>
+        <ListSubheader sx={{
+          background:"transparent !important",
+        }}>{option.group}</ListSubheader>
       )}
       <MenuItem
         value={JSON.stringify(option)}
@@ -152,7 +153,6 @@ const EngineSelect = ({name}: {name?:string}) => {
   //! State
   const { setFieldValue } = useFormikContext();
   const [open, setOpen] = React.useState(true);
-  const theme  = useTheme()
 
   //! Function
   const renderOption = (option: ModelOption) => {
@@ -178,7 +178,6 @@ const EngineSelect = ({name}: {name?:string}) => {
         },
         marginTop: "20px",
         padding: "8px",
-        background: theme.colors.custom.backgroundSecondary,
       }}
     >
       <Box

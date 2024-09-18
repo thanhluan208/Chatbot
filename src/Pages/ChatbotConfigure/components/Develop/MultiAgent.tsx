@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import ChatDrawer from "./ChatDrawer";
 import ConversationDrawer from "@/Pages/ChatBot/components/ConversationDrawer";
 import { BotData } from "@/Hooks/Bot/useGetBotData";
+import { NodeTypes } from "@/Pages/Workflow/Components/Toolbar/AddNodes";
 
 const MultiAgent = () => {
   //! State
@@ -23,34 +24,12 @@ const MultiAgent = () => {
   const botData: BotData = useGet("BOT_DATA");
 
   const initNodes = useMemo(() => {
-    const nodes: Node[] = [
-      {
-        id: "c372a3b5-85fa-4b7d-a1e5-1913df8d6721",
-        type: "customNode_mutliAgentStartNode",
-        position: {
-          x: 1301,
-          y: 175,
-        },
-        data: {
-          label: "customNode_mutliAgentStartNode node",
-        },
-        measured: {
-          width: 500,
-          height: 367,
-        },
-        selected: true,
-        dragging: false,
-      },
-    ];
+    const nodes: Node[] = [];
 
     const agents = botData?.nodes;
     if (!agents) return nodes;
     Object.keys(agents).forEach((key) => {
       const agent = agents?.[key];
-      if (agent.node_id === botData.flow_nodes.start_node) {
-        nodes[0].id = agent?.node_id;
-        return;
-      }
 
       const agentInfo = JSON.parse(agent?.info);
 
@@ -58,17 +37,23 @@ const MultiAgent = () => {
         id: agent?.node_id,
         type: "customNode_multiAgentNode",
         position: {
-          x: agentInfo?.position?.x,
-          y: agentInfo?.position?.y,
+          x: agentInfo?.position?.x ?? 8,
+          y: agentInfo?.position?.y ?? 8,
         },
         data: {
           label: `Agent ${agent?.node_id}`,
           isCurrentNode: agent?.node_id === botData?.flow_nodes?.current_node,
           ...agent?.metadata,
         },
+        selectable: true,
         selected: false,
         dragging: false,
       };
+
+      if (agent.node_id === botData.flow_nodes.start_node) {
+        agentNode.type = NodeTypes.multiAgentStartNode;
+        agentNode.selectable = false;
+      }
 
       nodes.push(agentNode);
     });

@@ -1,6 +1,6 @@
 import React, { useMemo, useRef } from "react";
 import { Box } from "@mui/material";
-import AddNodePopper from "../../AddNodePopper";
+import AddNodePopper from "../../Toolbar/AddNodePopper";
 import { NodeProps } from "@xyflow/react";
 
 const HelperNode = (props: NodeProps) => {

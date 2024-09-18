@@ -1,7 +1,7 @@
 import { Fragment } from "react/jsx-runtime";
-import CommonStyles from "../../../Components/CommonStyles";
 import { Box, useTheme } from "@mui/material";
-import useToggleDialog from "../../../Hooks/useToggleDialog";
+import CommonStyles from "@/Components/CommonStyles";
+import useToggleDialog from "@/Hooks/useToggleDialog";
 
 interface ICreateWorkFlowButton {}
 

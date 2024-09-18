@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { Fragment, memo, useState } from "react";
 import { DropzoneOptions, useDropzone } from "react-dropzone";
 import CommonIcons from "../../CommonIcons";
@@ -15,7 +15,7 @@ interface IFilesUpload {
 const FilesUpload = (props: IFilesUpload) => {
   //! State
   const { label, dropzoneProps, files } = props;
-
+  const theme = useTheme()
   const { onDrop, onDragEnter, onDragLeave, ...otherDropzoneProps } =
     dropzoneProps || {};
   const [isDragOver, setIsDragOver] = useState(false);
@@ -55,10 +55,10 @@ const FilesUpload = (props: IFilesUpload) => {
           alignItems: "center",
           justifyContent: "center",
           mt: "20px",
-          border: `1px dashed ${isDragOver ? "#4e40e5" : "#ccc"}`,
+          border: `1px dashed ${isDragOver ? "#4e40e5" : theme.colors.custom.borderColor}`,
           borderRadius: "8px",
           padding: !isEmpty(files) ? "8px" : "20px",
-          backgroundColor: isDragOver ? "#4e40e50f" : "#fff",
+          backgroundColor: isDragOver ? "#4e40e50f" : theme.colors.custom.backgroundCard,
           transition: "all 0.3s",
           svg: {
             width: "150px",

@@ -3,10 +3,17 @@ import { useAuth } from "../../Providers/AuthenticationProvider";
 import botService from "../../Services/bot.service";
 
 export interface Bot {
-  bot_id: string;
-  bot_name: string;
-  description: string;
+  bot_id:           string;
+  bot_name:         string;
+  description:      string;
+  owner_id:         string;
+  created_at:       Date;
+  user_name:        string;
+  permission_level: string;
+  visibility:       string;
+  avatar_url:       string;
 }
+
 
 const useGetListBot = (isTrigger = true) => {
   const [data, setData] = useState<Bot[]>([]);

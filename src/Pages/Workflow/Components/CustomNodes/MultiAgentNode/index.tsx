@@ -23,7 +23,6 @@ import { useGet, useSave } from "@/Stores/useStore";
 import DeleteAgentButton from "./DeleteAgentButton";
 import logo from "@/assets/logo.png";
 import { modelOptions } from "@/Constants/options";
-import { BotData } from "@/Hooks/Bot/useGetBotData";
 import GenerationDiversity from "@/Pages/ChatbotConfigure/components/GenerationDiversity";
 import Advance from "@/Pages/ChatbotConfigure/components/GenerateDiversity/components/Advance";
 import InputAndOutputSettings from "@/Pages/ChatbotConfigure/components/InputAndOutputSettings";
@@ -35,11 +34,14 @@ import { toast } from "react-toastify";
 
 const MultiAgentNode = (props: NodeProps) => {
   //! State
+  const { data } = props;
   const shouldRemove = useGet(`${props.id}_remove` as any);
   const { setNodes, setEdges, updateNode, updateEdge, getNode } =
     useReactFlow();
   const [isAdding, setIsAdding] = React.useState(false);
+  const [isRenaming, setIsRenaming] = React.useState(false);
   const placeholderId = useRef<string | null>(uuid());
+  const nameRef = useRef<HTMLInputElement | null>(null);
   const save = useSave();
   const theme = useTheme();
 
@@ -48,23 +50,27 @@ const MultiAgentNode = (props: NodeProps) => {
 
   const { userId } = useAuth();
 
-  const botData = props?.data?.botData as BotData;
-
   const initialValue = useMemo(() => {
+    const botData: any = {
+      llm: data.llm,
+      scenario: data.scenario,
+      system_prompt: data.system_prompt,
+    };
+
     const foundModel = modelOptions.find((elm) => {
       return elm.value === botData?.llm?.model;
     });
     return {
-      scenario: "",
-      system_prompt: "",
-      model: foundModel ?? modelOptions[5],
+      scenario: botData?.scenario ?? "",
+      system_prompt: botData?.system_prompt ?? "",
+      model: foundModel ?? modelOptions[0],
       generationDiversity: "precise",
       temperature: botData?.llm?.temperature ?? 1.21,
       top_p: botData?.llm?.top_p ?? 0.9,
       history_turn: botData?.llm?.history_turn ?? 3,
       max_tokens: botData?.llm?.max_tokens ?? 2048,
     };
-  }, []);
+  }, [data]);
   //! Function
   const handleAddPlaceholder = () => {
     if (isAdding) return;
@@ -126,21 +132,37 @@ const MultiAgentNode = (props: NodeProps) => {
     if (!placeholderId.current || !userId) return;
     const newNode = getNode(placeholderId.current);
 
+    if (!newNode) return;
+
+    const onSuccess = (id: string) => {
+      updateNode(newNode.id, {
+        id: id,
+        data: {
+          label: `Agent ${id}`,
+        },
+      });
+      updateEdge(`${props.id}-${newNode.id}`, {
+        data: {
+          isPlaceholder: false,
+        },
+        target: id,
+        animated: false,
+      });
+    };
+
+    const onFailed = () => {
+      save(`${newNode.id}_remove`, false);
+      setEdges((edges) =>
+        edges.filter((edge) => edge.id !== `${props.id}-${newNode.id}`)
+      );
+      toast.error("Failed to create agent");
+    };
+
     reactFlowService.createFlow(
       botId as string,
       userId,
-      (id) => {
-        if (!newNode) return;
-        updateNode(newNode.id, {
-          id: id,
-          data: {
-            label: `Agent ${id}`,
-          },
-        });
-      },
-      () => {
-        toast.error("Failed to create agent");
-      },
+      onSuccess,
+      onFailed,
       JSON.stringify({
         id: newNode?.id,
         position: newNode?.position,
@@ -150,27 +172,14 @@ const MultiAgentNode = (props: NodeProps) => {
       props.id
     );
 
-    updateNode(placeholderId.current, {
-      data: {
-        isPlaceholder: false,
-      },
-    });
-
-    updateEdge(`${props.id}-${placeholderId.current}`, {
-      data: {
-        isPlaceholder: false,
-      },
-      animated: false,
-    });
-
     placeholderId.current = null;
     setIsAdding(false);
   };
 
   const handleClickNode = useCallback(() => {
     updateNode(props?.id, {
-      selected: true
-    })
+      selected: true,
+    });
   }, [props?.id]);
 
   useEffect(() => {
@@ -206,9 +215,9 @@ const MultiAgentNode = (props: NodeProps) => {
       updateNode(props?.id, {
         data: {
           ...props.data,
-          readyToPaste: true
-        }
-      })
+          readyToPaste: true,
+        },
+      });
     } else {
       setEdges((edge) =>
         edge.map((item) => ({
@@ -220,11 +229,20 @@ const MultiAgentNode = (props: NodeProps) => {
       updateNode(props?.id, {
         data: {
           ...props.data,
-          readyToPaste: false
-        }
-      })
+          readyToPaste: false,
+        },
+      });
     }
   }, [props?.selected, props?.id]);
+
+  const handleRename = useCallback(() => {
+    updateNode(props?.id, {
+      data: {
+        label: nameRef?.current?.value,
+      },
+    });
+    setIsRenaming(false);
+  }, [updateNode, props?.id]);
 
   //! Render
   return (
@@ -295,17 +313,94 @@ const MultiAgentNode = (props: NodeProps) => {
                   borderRadius: "50%",
                 }}
               />
-              <CommonStyles.Typography
-                type="semiBold16"
+              <Box
                 sx={{
-                  maxWidth: "200px",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
+                  display: "flex",
+                  gap: "4px",
+                  alignItems: "center",
                 }}
               >
-                {`Agent ${props.id}`}
-              </CommonStyles.Typography>
+                {isRenaming ? (
+                  <CommonStyles.Input
+                    ref={nameRef}
+                    initValue={props?.data?.label as string}
+                    key={props?.data?.label as string}
+                    sxContainer={{
+                      "& .MuiInputBase-root": {
+                        height: "23.56px",
+                      },
+                    }}
+                  />
+                ) : (
+                  <CommonStyles.Typography
+                    type="semiBold16"
+                    sx={{
+                      maxWidth: "200px",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {(props?.data?.label as string) ?? `Agent ${props.id}`}
+                  </CommonStyles.Typography>
+                )}
+                {isRenaming ? (
+                  <Box
+                    sx={{
+                      display: "flex",
+                    }}
+                  >
+                    <CommonStyles.Button
+                      isIcon
+                      tooltip="Cancel"
+                      isRound={false}
+                      sx={{
+                        svg: {
+                          width: "16px",
+                          height: "16px",
+                        },
+                      }}
+                      onClick={() => setIsRenaming(false)}
+                    >
+                      <CommonIcons.Close />
+                    </CommonStyles.Button>
+                    <CommonStyles.Button
+                      isIcon
+                      tooltip="Cancel"
+                      isRound={false}
+                      sx={{
+                        svg: {
+                          width: "16px",
+                          height: "16px",
+                        },
+                      }}
+                      onClick={handleRename}
+                    >
+                      <CommonIcons.Save />
+                    </CommonStyles.Button>
+                  </Box>
+                ) : (
+                  <CommonStyles.Button
+                    isIcon
+                    tooltip="Rename"
+                    isRound={false}
+                    sx={{
+                      svg: {
+                        width: "16px",
+                        height: "16px",
+                      },
+                    }}
+                    onClick={() => {
+                      setIsRenaming(true);
+                      setTimeout(() => {
+                        nameRef.current?.focus();
+                      }, 1);
+                    }}
+                  >
+                    <CommonIcons.Edit />
+                  </CommonStyles.Button>
+                )}
+              </Box>
             </Box>
             <Box
               sx={{

@@ -13,7 +13,7 @@ const AnimationControl = () => {
     <CommonStyles.Button
       isIcon
       sx={{
-        background: disabledCircle
+        background: !disabledCircle
           ? theme.colors.custom.backgroundCardHover
           : theme.colors.custom.backgroundCard,
         borderRadius: "8px",

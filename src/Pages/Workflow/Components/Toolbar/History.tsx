@@ -4,9 +4,9 @@ import { useGet } from "@/Stores/useStore";
 import { Box } from "@mui/material";
 import { useReactFlow } from "@xyflow/react";
 import { memo, useEffect, useState } from "react";
-import { HistoryFlow } from "./FlowChart";
 import { isEmpty } from "lodash";
-import { HistoryRef } from "./Toolbar";
+import { HistoryFlow } from "../FlowChart";
+import { HistoryRef } from "../Toolbar";
 
 const History = ({
   innerRef,

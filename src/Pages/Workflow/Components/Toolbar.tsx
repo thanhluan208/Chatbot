@@ -1,23 +1,24 @@
 import { Box, useTheme } from "@mui/material";
-import AddNodes from "./AddNodes";
-import ZoomControl from "./ZoomControl";
-import dagre from "dagre";
-import { Node, useReactFlow } from "@xyflow/react";
+import AddNodes from "./Toolbar/AddNodes";
+import ZoomControl from "./Toolbar/ZoomControl";
+import {  useReactFlow } from "@xyflow/react";
 import CommonStyles from "@/Components/CommonStyles";
-import Layout from "@/Components/CommonIcons/Layout";
-import History from "./History";
 import { useGet } from "@/Stores/useStore";
 import FitView from "@/Components/CommonIcons/FitView";
 import { useCallback, useEffect, useRef } from "react";
 import { cloneDeep, isEmpty } from "lodash";
 import { v4 as uuid } from "uuid";
-import Shortcuts from "./Shortcuts";
-import AnimationControl from "./AnimationControl";
+import Shortcuts from "./Toolbar/Shortcuts";
+import AnimationControl from "./Toolbar/AnimationControl";
+import httpServices from "@/Services/httpServices";
+import { deleteBotNode } from "@/Constants/api";
+import { useParams } from "react-router-dom";
+import History from "./Toolbar/History";
+import ReArrangeFlow from "./Toolbar/ReArrangeFlow";
 
 // const direction = "TB"
 
-const dagreGraph = new dagre.graphlib.Graph();
-dagreGraph.setDefaultEdgeLabel(() => ({}));
+
 
 export type HistoryRef = {
   handleChangeHistory: (value: number) => void;
@@ -30,10 +31,11 @@ const Toolbar = ({
 }) => {
   //! State
   const theme = useTheme();
-  const { getNodes, getEdges, setEdges, setNodes, fitView, getZoom, zoomTo } =
+  const { getNodes, getEdges,  setNodes, fitView, getZoom, zoomTo } =
     useReactFlow();
   const handleSaveHistory = useGet("SAVE_HISTORY");
   const handleAddNode = useGet("ADD_NODE");
+  const isEditing = useGet("IS_EDITING");
   const mousePos = useRef<{
     clientX: number;
     clientY: number;
@@ -41,71 +43,52 @@ const Toolbar = ({
 
   const historyRef = useRef<HistoryRef | null>(null);
 
+  const params = useParams();
+  const botId = params["botId"];
+
   //! Function
-  const getLayoutedElements = (direction?: string) => {
+  
+
+  const handleDeleteNode = useCallback(async () => {
     const nodes = getNodes();
-    const edges = getEdges();
-    const isHorizontal = direction === "LR";
-    dagreGraph.setGraph({ rankdir: direction });
-
-    nodes.forEach((node) => {
-      dagreGraph.setNode(node.id, {
-        width: node.measured?.width,
-        height: node.measured?.height,
-      });
-    });
-
-    edges.forEach((edge) => {
-      dagreGraph.setEdge(edge.source, edge.target);
-    });
-
-    dagre.layout(dagreGraph);
-
-    const newNodes = nodes.map((node) => {
-      const nodeWithPosition = dagreGraph.node(node.id);
-      const newNode = {
-        ...node,
-        targetPosition: isHorizontal ? "left" : "top",
-        sourcePosition: isHorizontal ? "right" : "bottom",
-        // We are shifting the dagre node position (anchor=center center) to the top left
-        // so it matches the React Flow node anchor point (top left).
-        position: {
-          x: nodeWithPosition.x - 200,
-          y: nodeWithPosition.y - 400,
-        },
-      };
-
-      return newNode;
-    });
-
-    setEdges([...edges]);
-    setNodes([...newNodes] as Node[]);
-    fitView({
-      nodes: newNodes,
-      padding: 5,
-    });
-
-    handleSaveHistory(newNodes, edges);
-
-    return { nodes: newNodes, edges };
-  };
-
-  const handleDeleteNode = useCallback(() => {
-    const nodes = getNodes();
+    console.log("nodes", nodes);
     if (nodes.every((item) => !item.selected)) return;
-    setNodes((nodes) => {
-      const newNodes = nodes.filter((elm) => !elm.selected);
-      handleSaveHistory(newNodes, getEdges());
 
-      return newNodes;
-    });
-  }, [handleSaveHistory, getEdges, getNodes]);
+    try {
+      const deleteNode = cloneDeep(nodes).filter((elm) => elm.selected);
+
+      const promise: Promise<any>[] = [];
+
+      deleteNode.forEach((elm) => {
+        promise.push(
+          httpServices.axios.post(deleteBotNode, {
+            bot_id: botId,
+            node_id: elm.id,
+          })
+        );
+      });
+
+      const response = await Promise.all(promise);
+      console.log("response", response);
+
+      // setNodes((nodes) => {
+      //   const newNodes = nodes.filter((elm) => !elm.selected);
+      //   handleSaveHistory(newNodes, getEdges());
+
+      //   return newNodes;
+      // });
+    } catch (error) {
+      console.log("error", error);
+    }
+  }, [handleSaveHistory, getEdges, getNodes, botId]);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
+      if (isEditing) return;
       console.log(e);
+
       if (e.code.toLowerCase() === "backspace") {
-        handleDeleteNode();
+        // handleDeleteNode();
       } else if (e.code.toLowerCase() === "keyz" && (e.ctrlKey || e.metaKey)) {
         historyRef.current?.handleChangeHistory &&
           historyRef.current?.handleChangeHistory(1);
@@ -169,7 +152,7 @@ const Toolbar = ({
         });
       }
     },
-    [handleDeleteNode, handleAddNode]
+    [handleDeleteNode, handleAddNode, isEditing]
   );
 
   const handleTrackMouse = useCallback((e: MouseEvent) => {
@@ -236,14 +219,8 @@ const Toolbar = ({
           }}
         />
 
-        <CommonStyles.Button
-          isIcon
-          onClick={() => getLayoutedElements("LR")}
-          tooltip="Rearrange flow"
-          className="iconBtn"
-        >
-          <Layout />
-        </CommonStyles.Button>
+        <ReArrangeFlow />
+        
         <CommonStyles.Button
           isIcon
           onClick={() => fitView()}

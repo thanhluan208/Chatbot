@@ -8,6 +8,7 @@ import CommonSelect from "./Select";
 import TextArea from "./TextArea";
 import Typography from "./Typography";
 import UploadFile from "./UploadFile";
+import VirtualizeList from "./VirtualizeList";
 
 const CommonStyles = {
   Button: MuiButton,
@@ -19,7 +20,8 @@ const CommonStyles = {
   LoadingOverlay,
   ConfirmDialog,
   UploadFile,
-  TextArea
+  TextArea,
+  VirtualizeList
 };
 
 export default CommonStyles;

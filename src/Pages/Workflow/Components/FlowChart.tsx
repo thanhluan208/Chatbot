@@ -19,7 +19,7 @@ import { v4 as uuid } from "uuid";
 
 import "@xyflow/react/dist/style.css";
 import Toolbar from "./Toolbar";
-import { NodeTypes, nodeTypes } from "./AddNodes";
+import { NodeTypes, nodeTypes } from "./Toolbar/AddNodes";
 import AnimatedSVGEdge from "./CustomEdges";
 import { Box, useTheme } from "@mui/material";
 import { useSave } from "../../../Stores/useStore";
@@ -30,6 +30,9 @@ import CommonStyles from "@/Components/CommonStyles";
 import CommonIcons from "@/Components/CommonIcons";
 import { cloneDeep } from "lodash";
 import { detectDiff } from "@/Helpers";
+import httpServices from "@/Services/httpServices";
+import {  deleteBotNode } from "@/Constants/api";
+import { toast } from "react-toastify";
 
 const edgeTypes = {
   animatedSvg: AnimatedSVGEdge,
@@ -59,6 +62,8 @@ export default function FlowChart(props: IFlowChart) {
     useReactFlow();
   const save = useSave();
   const theme = useTheme();
+
+  console.log("nodes", nodes);
 
   const { userId } = useAuth();
 
@@ -361,7 +366,46 @@ export default function FlowChart(props: IFlowChart) {
     [getNodes, getEdges]
   );
 
-  
+
+  const handleDeleteNode = useCallback(
+    async (nodes: Node[]) => {
+      const promise: Promise<any>[] = [];
+
+      const deleteEdges = cloneDeep(edges).filter((edge) => {
+        return (
+          nodes.some((node) => node.id === edge.source) ||
+          nodes.some((node) => node.id === edge.target)
+        );
+      });
+
+      nodes.forEach((node) => {
+        promise.push(
+          httpServices.post(deleteBotNode, {
+            bot_id: props.botId,
+            node_id: node.id,
+            user_id: userId,
+          })
+        );
+      });
+
+      const response = await Promise.allSettled(promise);
+
+      const failedNodes: Node[] = [];
+
+      response.forEach((res, index) => {
+        if (res.status === "rejected") {
+          toast.error(`Failed to delete ${nodes[index].data?.label}`);
+          failedNodes.push(nodes[index]);
+        }
+      });
+
+      if (failedNodes.length > 0) {
+        setNodes((nodes) => nodes.concat(failedNodes));
+        setEdges((edges) => edges.concat(deleteEdges));
+      }
+    },
+    [props?.botId, edges, userId]
+  );
 
   useEffect(() => {
     save(cachedKeys.FLOW_NODES, nodes);
@@ -376,13 +420,10 @@ export default function FlowChart(props: IFlowChart) {
   }, [handleSaveHistory, save]);
 
   useEffect(() => {
-    
-
     return () => {
       save(cachedKeys.FLOW_EDGES, undefined);
       save(cachedKeys.FLOW_NODES, undefined);
       save(cachedKeys.HISTORY, []);
-
     };
   }, []);
 
@@ -430,6 +471,8 @@ export default function FlowChart(props: IFlowChart) {
           save(cachedKeys.VIEWPORT, zoom);
         }}
         selectionKeyCode={"shift"}
+        panOnScroll={true}
+        onNodesDelete={handleDeleteNode}
       >
         <CommonStyles.Button
           isIcon

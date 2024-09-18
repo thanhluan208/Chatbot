@@ -10,16 +10,26 @@ import { Box, useTheme } from "@mui/material";
 import { v4 as uuid } from "uuid";
 import CommonStyles from "@/Components/CommonStyles";
 import { useSave } from "@/Stores/useStore";
-import { NodeTypes } from "../../AddNodes";
+import { NodeTypes } from "../../Toolbar/AddNodes";
+import reactFlowService from "@/Services/reactFlowService";
+import { useParams } from "react-router-dom";
+import { useAuth } from "@/Providers/AuthenticationProvider";
+import { toast } from "react-toastify";
 
 const MultiAgentStartNode = (props: NodeProps) => {
   //! State
   const theme = useTheme();
-  
+
   const [isAdding, setIsAdding] = React.useState(false);
   const placeholderId = React.useRef<string | null>(null);
-  const { setNodes, setEdges, updateNode, updateEdge } = useReactFlow();
+  const { setNodes, setEdges, updateNode, updateEdge, getNode } =
+    useReactFlow();
   const save = useSave();
+
+  const params = useParams();
+  const botId = params["botId"];
+
+  const { userId } = useAuth();
 
   //! Function
   const handleAddPlaceholder = () => {
@@ -42,30 +52,33 @@ const MultiAgentStartNode = (props: NodeProps) => {
       },
     };
 
-    setNodes((nodes) => nodes.concat(newNode));
+    setNodes((nodes) => nodes.concat([newNode]));
     setEdges((edges) =>
-      edges.concat({
-        id: `${props.id}-${newId}`,
-        source: props.id,
-        target: newId,
-        animated: true,
-        type: "animatedSvg",
-        markerEnd: {
-          type: MarkerType.ArrowClosed,
-          width: 20,
-          height: 20,
-          color: "#4e40e5",
+      edges.concat([
+        {
+          id: `${props.id}-${newId}`,
+          source: props.id,
+          target: newId,
+          animated: true,
+          type: "animatedSvg",
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+            width: 20,
+            height: 20,
+            color: "#4e40e5",
+          },
+          data: {
+            isPlaceholder: true,
+          },
+          deletable: true,
         },
-        data: {
-          isPlaceholder: true,
-        },
-        deletable: true,
-      })
+      ])
     );
   };
 
   const handleRemovePlaceholder = () => {
-    if (!placeholderId.current) return;
+    if (!placeholderId.current || !isAdding) return;
+    console.log("remove placeholder");
     save(`${placeholderId.current}_remove`, true);
     setIsAdding(false);
     setEdges((edges) => {
@@ -78,22 +91,56 @@ const MultiAgentStartNode = (props: NodeProps) => {
   };
 
   const handleAddNode = () => {
-    if (!placeholderId.current) return;
-    updateNode(placeholderId.current, {
-      data: {
-        isPlaceholder: false,
-      },
-    });
+    if (!placeholderId.current || !botId || !userId) return;
+    setIsAdding(false);
 
-    updateEdge(`${props.id}-${placeholderId.current}`, {
-      data: {
-        isPlaceholder: false,
-      },
-      animated: false,
-    });
+    const newNode = getNode(placeholderId.current);
+
+    if (!newNode) {
+      return;
+    }
+
+    const onSuccess = (id: string) => {
+      updateNode(newNode.id, {
+        id: id,
+        data: {
+          label: `Agent ${id}`,
+        },
+      });
+      updateEdge(`${props.id}-${newNode.id}`, {
+        data: {
+          isPlaceholder: false,
+        },
+        target: id,
+        animated: false,
+      });
+    };
+
+    const onFailed = () => {
+      save(`${newNode.id}_remove`, false);
+      setEdges((edges) =>
+        edges.filter(
+          (edge) => edge.id !== `${props.id}-${newNode.id}`
+        )
+      );
+      toast.error("Failed to create agent");
+    }
+
+    reactFlowService.createFlow(
+      botId,
+      userId,
+      onSuccess,
+      onFailed,
+      JSON.stringify({
+        id: newNode?.id,
+        position: newNode?.position,
+        measured: newNode?.measured,
+        data: newNode?.data,
+      }),
+      props.id
+    );
 
     placeholderId.current = null;
-    setIsAdding(false);
   };
 
   //! Render

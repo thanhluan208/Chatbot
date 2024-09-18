@@ -106,34 +106,63 @@ const lightTheme = createTheme({
   },
   colors: {
     custom: {
-      backgroundCard: "#fff",
-      backgroundCardHover: "#f7f7f714",
-      borderColor: "#69696933",
-      boxShadow: "0 4px 12px 0px rgba(0,0,0,0.08), 0px 8px 24px 0px rgba(0,0,0,0.04)",
+      // backgroundCard: "#fff",
+      // backgroundCardHover: "#f7f7f714",
+      // borderColor: "#69696933",
+      // boxShadow: "0 4px 12px 0px rgba(0,0,0,0.08), 0px 8px 24px 0px rgba(0,0,0,0.04)",
+
+      // //* Main
+      // backgroundSecondary: "#f5f5f5",
+
+      // //* Button
+      // backgroundButtonHover: "#1976d214",
+
+      // //* Typo
+      // primaryColorTypo: "#1f1e7d",
+      // normalColorTypo: "#000",
+      // semiColorTypo: "#383743",
+      // colorErrorTypo: "#ff1515",
+
+      // //* Dialog
+      // backgroundDialog: "#f9f9f9",
+
+      // //* Star
+      // colorStar: "#f7c52b",
+
+      // //* Button
+      // colorActive: "#f1f2fd",
+
+      // //* Tab
+      // backgroundTab: "#4b4a580a",
+
+      backgroundCard: "#f9f9f9", // Light gray for card background
+      backgroundCardHover: "#e0e0e0", // Slightly darker for hover effect
+      borderColor: "#cccccc", // Light gray for borders
+      boxShadow: "0 4px 12px 0px rgba(0,0,0,0.08), 0px 8px 24px 0px rgba(0,0,0,0.04)", // Darker shadow for contrast
 
       //* Main
-      backgroundSecondary: "#f5f5f5",
+      backgroundSecondary: "#f0f0f0", // Light gray for secondary background
 
       //* Button
-      backgroundButtonHover: "#1976d214",
+      backgroundButtonHover: "#e3f2fd", // Light blue with transparency for button hover
 
       //* Typo
-      primaryColorTypo: "#1f1e7d",
-      normalColorTypo: "#000",
-      semiColorTypo: "#383743",
-      colorErrorTypo: "#ff1515",
+      primaryColorTypo: "#000", // Dark color for primary text
+      normalColorTypo: "#333", // Dark gray for normal text
+      semiColorTypo: "#555", // Slightly lighter gray for secondary text
+      colorErrorTypo: "#d32f2f", // Dark red for errors
 
       //* Dialog
-      backgroundDialog: "#f9f9f9",
+      backgroundDialog: "#ffffff", // White for dialog background
 
       //* Star
-      colorStar: "#f7c52b",
+      colorStar: "#ffca28", // Gold for stars
 
       //* Button
-      colorActive: "#f1f2fd",
+      colorActive: "#f5f5f5", // Light gray for active button background
 
       //* Tab
-      backgroundTab: "#4b4a580a",
+      backgroundTab: "#f3f3f3", // Very light gray for tabs
     },
   },
 });

@@ -128,7 +128,7 @@ const UploadLocalDialog = (props: IUploadLocalDialog) => {
                   maxChar={2000}
                 />
                 <CommonStyles.UploadFile
-                  label="Upload contract"
+                  label="Upload document"
                   files={values.file_input}
                   dropzoneProps={{
                     onDrop: (acceptedFiles) => {

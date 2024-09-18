@@ -1,9 +1,19 @@
-import { Box, ClickAwayListener, Fade, Popper } from "@mui/material";
-import {  TestPDF } from "../../../Hooks/Knowledges/useGetListFolderKnowledge";
-import { useState } from "react";
+import {
+  Box,
+  ClickAwayListener,
+  Fade,
+  Popper,
+  useTheme,
+} from "@mui/material";
+import { TestPDF } from "../../../Hooks/Knowledges/useGetListFolderKnowledge";
+import { useMemo, useState } from "react";
 import CommonStyles from "../../../Components/CommonStyles";
 import CommonIcons from "../../../Components/CommonIcons";
 import DeleteFileButton from "./DeleteFileButton";
+import { useParams } from "react-router-dom";
+import useGetListSegment, {
+} from "@/Hooks/Knowledges/useGetListSegments";
+import { isEmpty } from "lodash";
 
 interface ISegmentList {
   data: TestPDF[] | [];
@@ -18,14 +28,37 @@ const SegmentList = (props: ISegmentList) => {
   const currentFile = Object.values(data).find((item) => {
     return item.name === currentSegment;
   });
+
+  const theme = useTheme();
+  const params = useParams();
+  const knowledgeId = params["knowledgeId"];
+
+  const payload = useMemo(() => {
+    if (currentFile?.name && knowledgeId) {
+      return {
+        knowledge_storage_id: knowledgeId,
+        file_name: currentFile.name,
+      };
+    }
+  }, [knowledgeId, currentFile?.name]);
+
+  const { data: segment, isLoading } = useGetListSegment(payload, !!payload);
+
+
   //! Function
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
   //! Render
+ 
+
   return (
-    <Box>
+    <Box
+      sx={{
+        height: "calc(100% - 56px)",
+      }}
+    >
       <ClickAwayListener onClickAway={() => setAnchorEl(null)}>
         <Box
           sx={{
@@ -34,6 +67,7 @@ const SegmentList = (props: ISegmentList) => {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
+            height: "56px",
           }}
         >
           <CommonStyles.Button
@@ -67,7 +101,7 @@ const SegmentList = (props: ISegmentList) => {
                     padding: "8px",
                     display: "flex",
                     flexDirection: "column",
-                    background: "#fff",
+                    background: theme.colors.custom.backgroundSecondary,
                   }}
                 >
                   <CommonStyles.Button
@@ -90,7 +124,7 @@ const SegmentList = (props: ISegmentList) => {
                         }}
                       />
                     )}
-                    <CommonStyles.Typography type="normal12" color="#000">
+                    <CommonStyles.Typography type="normal12">
                       All
                     </CommonStyles.Typography>
                   </CommonStyles.Button>
@@ -117,7 +151,7 @@ const SegmentList = (props: ISegmentList) => {
                             }}
                           />
                         )}
-                        <CommonStyles.Typography type="normal12" color="#000">
+                        <CommonStyles.Typography type="normal12">
                           {item.name}
                         </CommonStyles.Typography>
                       </CommonStyles.Button>
@@ -132,11 +166,24 @@ const SegmentList = (props: ISegmentList) => {
       </ClickAwayListener>
       <Box
         sx={{
-          borderTop: "1px solid #E0E0E0",
-          widht: "100%",
+          borderTop: `1px solid ${theme.colors.custom.borderColor}`,
+          width: "100%",
           height: "100%",
+          padding: "20px 40px",
+          "& .List": {
+            "&:-webkit-scrollbar": {
+              display: "none",
+            },
+          },
         }}
-      ></Box>
+      >
+        <CommonStyles.LoadingOverlay isLoading={isLoading} />
+        {!isEmpty(segment) && (
+          <CommonStyles.VirtualizeList items={segment} size={114}>
+            <div></div>
+          </CommonStyles.VirtualizeList>
+        )}
+      </Box>
     </Box>
   );
 };

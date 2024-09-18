@@ -1,4 +1,4 @@
-import { getFolderKnowledge, getListKnowledgeFile } from "../Constants/api";
+import { getFolderKnowledge, getListKnowledgeFile, getSegments } from "../Constants/api";
 import httpServices from "./httpServices";
 
 interface GetListFilter {
@@ -12,12 +12,21 @@ export interface PayloadKnowledgeDetail {
   knowledge_storage_id: string;
 }
 
+export interface PayloadSegment {
+  user_id: string;
+  knowledge_storage_id: string;
+  file_name: string;
+}
+
 class KnowledgeServices {
   getListFolder(filters: GetListFilter) {
     return httpServices.post(getFolderKnowledge,filters);
   }
   getListFiles(payload: PayloadKnowledgeDetail) {
     return httpServices.post(getListKnowledgeFile, payload);
+  }
+  getListSegments(payload: PayloadSegment) {
+    return httpServices.post(getSegments, payload);
   }
 }
 

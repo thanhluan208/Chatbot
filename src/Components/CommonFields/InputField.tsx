@@ -8,6 +8,8 @@ import {
 import { FieldProps, getIn } from "formik";
 import { useCallback, useState } from "react";
 import CommonStyles from "../CommonStyles";
+import { useSave } from "@/Stores/useStore";
+import cachedKeys from "@/Constants/cachedKeys";
 
 interface IInputField {
   onChangeCustomize: (
@@ -35,6 +37,7 @@ function InputField(props: IInputField & FieldProps & TextFieldProps) {
     ...otherProps
   } = props;
   const theme = useTheme();
+  const save = useSave()
   const { setFieldValue, errors, touched } = form;
   const { name, value, onBlur } = field;
 
@@ -108,9 +111,11 @@ function InputField(props: IInputField & FieldProps & TextFieldProps) {
         onBlur={(e) => {
           onBlur(e);
           setShouldMaxRow(true);
+          save(cachedKeys.IS_EDITING, false);
         }}
         onFocus={() => {
           setShouldMaxRow(false);
+          save(cachedKeys.IS_EDITING, true);
         }}
         {...otherProps}
         maxRows={
