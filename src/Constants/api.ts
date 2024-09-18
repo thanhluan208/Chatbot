@@ -50,3 +50,5 @@ export const getBotNode = baseAPI + "/node/get_node_data";
 export const deleteBotNode = baseAPI + "/node/delete_node";
 export const createNode = baseAPI + "/node/create_node";
 export const updateBotNode = baseAPI + "/node/update_info";
+export const updateMetadata = baseAPI + "/node/update_node_metadata"
+export const updateSystemPrompt = baseAPI + "/node/update_system_prompt_to_node";

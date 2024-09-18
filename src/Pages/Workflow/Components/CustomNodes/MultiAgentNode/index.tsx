@@ -1,10 +1,4 @@
-import React, {
-  Fragment,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   Handle,
   MarkerType,
@@ -17,7 +11,7 @@ import { v4 as uuid } from "uuid";
 import CommonIcons from "@/Components/CommonIcons";
 import CommonStyles from "@/Components/CommonStyles";
 import CollapseArea from "../CollapseArea";
-import { FastField, Formik } from "formik";
+import { FastField, Form, Formik } from "formik";
 import CommonField from "@/Components/CommonFields";
 import { useGet, useSave } from "@/Stores/useStore";
 import DeleteAgentButton from "./DeleteAgentButton";
@@ -31,6 +25,8 @@ import reactFlowService from "@/Services/reactFlowService";
 import { useParams } from "react-router-dom";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import { toast } from "react-toastify";
+import httpServices from "@/Services/httpServices";
+import { updateMetadata, updateSystemPrompt } from "@/Constants/api";
 
 const MultiAgentNode = (props: NodeProps) => {
   //! State
@@ -40,8 +36,11 @@ const MultiAgentNode = (props: NodeProps) => {
     useReactFlow();
   const [isAdding, setIsAdding] = React.useState(false);
   const [isRenaming, setIsRenaming] = React.useState(false);
+
   const placeholderId = useRef<string | null>(uuid());
   const nameRef = useRef<HTMLInputElement | null>(null);
+  const timeoutRef = useRef<any>(null);
+
   const save = useSave();
   const theme = useTheme();
 
@@ -182,6 +181,103 @@ const MultiAgentNode = (props: NodeProps) => {
     });
   }, [props?.id]);
 
+  const afterOnChangePrompt = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      timeoutRef.current = setTimeout(() => {
+        httpServices
+          .post(updateSystemPrompt, {
+            bot_id: botId,
+            node_id: props.id,
+            system_prompt: event.target.value,
+          })
+          .catch((err) => {
+            console.log("err", err);
+            toast.error("Failed to update system prompt");
+          });
+      }, 500);
+    },
+    [botId, props.id]
+  );
+
+  const handleRename = useCallback(() => {
+    if (!botId) return;
+    const info = {
+      position: {
+        x: props.positionAbsoluteX,
+        y: props.positionAbsoluteY,
+      },
+      data: {
+        ...props.data,
+        label: nameRef?.current?.value,
+      },
+    };
+
+    reactFlowService
+      .updateFlow(botId, props.id, JSON.stringify(info))
+      .catch((err) => {
+        console.log("err", err);
+      });
+
+    updateNode(props?.id, {
+      data: {
+        label: nameRef?.current?.value,
+      },
+    });
+    setIsRenaming(false);
+  }, [updateNode, props?.id]);
+
+  const handleSubmit = useCallback(async (values: any) => {
+    const toastId = toast.loading(`Saving agent ${props.id}...`, {
+      isLoading: true,
+      autoClose: false,
+    });
+
+    try {
+      const response = await httpServices.post(updateMetadata, {
+        bot_id: botId,
+        node_id: props.id,
+        data: {
+          llm: {
+            model: values.model.value,
+            temperature: values.temperature ?? 1.21,
+            top_p: values.top_p ?? 0.9,
+            history_turn: values.history_turn ?? 3,
+            max_tokens: values.max_tokens ?? 2048,
+          },
+          scenario: values.scenario ?? "",
+          system_prompt: values.system_prompt ?? "",
+        },
+        info: JSON.stringify({
+          id: props?.id,
+          position: {
+            x: props.positionAbsoluteX,
+            y: props.positionAbsoluteY,
+          },
+          data: props?.data,
+        }),
+      });
+      console.log("response", response);
+
+      toast.update(toastId, {
+        isLoading: false,
+        render: "Agent saved successfully!",
+        type: toast.TYPE.SUCCESS,
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.log("error", error);
+      toast.update(toastId, {
+        isLoading: false,
+        render: "Failed to save agent!",
+        type: toast.TYPE.ERROR,
+        autoClose: 2000,
+      });
+    }
+  }, []);
+
   useEffect(() => {
     const node = document.getElementById(props.id);
     if (node && shouldRemove) {
@@ -234,15 +330,6 @@ const MultiAgentNode = (props: NodeProps) => {
       });
     }
   }, [props?.selected, props?.id]);
-
-  const handleRename = useCallback(() => {
-    updateNode(props?.id, {
-      data: {
-        label: nameRef?.current?.value,
-      },
-    });
-    setIsRenaming(false);
-  }, [updateNode, props?.id]);
 
   //! Render
   return (
@@ -432,10 +519,10 @@ const MultiAgentNode = (props: NodeProps) => {
           },
         }}
       >
-        <Formik initialValues={initialValue} onSubmit={() => {}}>
-          {() => {
+        <Formik initialValues={initialValue} onSubmit={handleSubmit}>
+          {({ isSubmitting }) => {
             return (
-              <Fragment>
+              <Form>
                 <CollapseArea
                   initOpen={false}
                   label={
@@ -497,9 +584,27 @@ const MultiAgentNode = (props: NodeProps) => {
                     maxRows={3}
                     fullWidth
                     maxChar={6000}
+                    afterOnChange={afterOnChangePrompt}
                   />
                 </CollapseArea>
-              </Fragment>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    marginTop: "20px",
+                  }}
+                >
+                  <CommonStyles.Button
+                    variant="contained"
+                    type="submit"
+                    startIcon={<CommonIcons.Save />}
+                    disabled={isSubmitting}
+                  >
+                    Save
+                  </CommonStyles.Button>
+                </Box>
+              </Form>
             );
           }}
         </Formik>
