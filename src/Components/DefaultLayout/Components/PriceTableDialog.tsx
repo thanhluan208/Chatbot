@@ -3,7 +3,7 @@ import useToggleDialog from "@/Hooks/useToggleDialog";
 import { Fragment } from "react";
 import NavItem from "./NavItem";
 import CommonIcons from "@/Components/CommonIcons";
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 
 interface EachPlanProps {
   name: string;
@@ -20,13 +20,15 @@ interface EachPlanProps {
 
 const EachPlan = (props: EachPlanProps) => {
   const { model, isCurrentPlan, shouldHighlight } = props;
+  const theme = useTheme()
+
   return (
     <Box
       className="each-plan"
       sx={{
         borderRadius: "16px",
         border: "1px solid #06070920",
-        background: "#fff",
+        background: theme.colors.custom.backgroundCard,
         overflow: "hidden",
         maxHeight: "600px",
         overflowY: "auto",
@@ -54,7 +56,7 @@ const EachPlan = (props: EachPlanProps) => {
       <Box
         className="each-plan-header"
         sx={{
-          background: "#fff",
+          background: theme.colors.custom.backgroundCard,
           position: "sticky",
           top: 0,
           zIndex: 100,
@@ -231,7 +233,7 @@ const plans = [
 const PriceTableDialog = () => {
   //! State
   const { open, shouldRender, toggle } = useToggleDialog();
-
+  const theme = useTheme()
   //! Function
 
   //! Render
@@ -249,7 +251,7 @@ const PriceTableDialog = () => {
               width: "100vw",
               maxWidth: "100%",
               padding: "24px 16px",
-              background: "#f9f9f9",
+              background: theme.colors.custom.backgroundDialog,
             }}
           >
             <Box

@@ -1,11 +1,12 @@
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 
 const TextArea = () => {
+  const theme= useTheme()
   return (
     <Box
       sx={{
         borderRadius: "8px",
-        background: "#fff",
+        background: theme.colors.custom.backgroundCard,
       }}
     >
       <textarea

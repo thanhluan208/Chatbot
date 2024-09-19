@@ -65,7 +65,7 @@ const Input = forwardRef((props: IInput & TextFieldProps, ref: React.ForwardedRe
         input: {
           "&:hover": {
             input: {
-              background: "#fff !important",
+              background: theme.colors.custom.backgroundSecondary,
             },
           },
         },

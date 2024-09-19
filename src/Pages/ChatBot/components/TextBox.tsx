@@ -61,7 +61,7 @@ const TextBox = ({
       case TextBoxType.BOT_HINT_CHAT:
         return {
           border: "1px solid #0607090a",
-          background: "#fff",
+          background: theme.colors.custom.backgroundSecondary,
           "&:hover": {
             background: "#0607091a",
           },

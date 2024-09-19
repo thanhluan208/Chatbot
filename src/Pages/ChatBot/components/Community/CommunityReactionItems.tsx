@@ -1,6 +1,6 @@
 import CommonStyles from "@/Components/CommonStyles";
 import { useGet, useSave } from "@/Stores/useStore";
-import { Box, Fade, Popper } from "@mui/material";
+import { Box, Fade, Popper, useTheme } from "@mui/material";
 import { cloneDeep, isArray } from "lodash";
 import { useState } from "react";
 
@@ -18,6 +18,7 @@ const MoreReactions = ({
   //! State
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
+  const theme = useTheme()
 
   //! Function
 
@@ -38,7 +39,7 @@ const MoreReactions = ({
                 padding: "8px 12px",
                 borderRadius: "8px",
                 boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-                background: "#fff",
+                background: theme.colors.custom.backgroundDialog,
                 marginTop: "12px ",
               }}
             >
@@ -52,11 +53,14 @@ const MoreReactions = ({
                       minWidth: "fit-content",
                       minHeight: "fit-content",
                       borderRadius: "8px",
-                      background: "#f0f0f0",
+                      background: theme.colors.custom.backgroundCard,
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
                       gap: "8px",
+                      "&:hover": {
+                        background: theme.colors.custom.backgroundCardHover
+                      }
                     }}
                   >
                     {reaction}
@@ -99,6 +103,7 @@ const CommunityReactionItems = (props: ICommunityReactionItems) => {
   const { handleClick, reactionProps, max } = props;
   const reactions = reactionProps ?? useGet("COMMUNITY_REACTION");
   const save = useSave();
+  const theme = useTheme()
 
   //! Function
   const onClick = (reaction: string) => {
@@ -144,7 +149,7 @@ const CommunityReactionItems = (props: ICommunityReactionItems) => {
               minWidth: "fit-content",
               minHeight: "fit-content",
               borderRadius: "8px",
-              background: "#f0f0f0",
+              background: theme.colors.custom.backgroundCard,
               display: "flex",
               justifyContent: "center",
               alignItems: "center",

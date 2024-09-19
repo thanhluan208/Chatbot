@@ -1,6 +1,6 @@
 import CommonIcons from "@/Components/CommonIcons";
 import CommonStyles from "@/Components/CommonStyles";
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 interface CommunityItemProps {
@@ -20,7 +20,7 @@ const CommunityItem = ({
 }: CommunityItemProps) => {
   //! State
   const navigate = useNavigate();
-
+  const theme = useTheme()
   //! Function
 
   //! Render
@@ -32,9 +32,9 @@ const CommunityItem = ({
       sx={{
         padding: "8px 10px 8px 12px",
         borderRadius: "8px",
-        background: "#fff",
+        background: theme.colors.custom.backgroundCard,
         "&:hover": {
-          background: "#f8f8f8",
+          background: theme.colors.custom.backgroundCardHover,
           boxShadow: "0px 4px 8px rgba(6, 7, 9, 0.04)",
         },
       }}

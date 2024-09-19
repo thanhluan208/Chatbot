@@ -2,7 +2,7 @@ import CommonIcons from "@/Components/CommonIcons";
 import CommonStyles from "@/Components/CommonStyles";
 import cachedKeys from "@/Constants/cachedKeys";
 import { useGet, useSave } from "@/Stores/useStore";
-import { Box, Fade, Popper } from "@mui/material";
+import { Box, Fade, Popper, useTheme } from "@mui/material";
 import React from "react";
 
 const listReactions = ["👍", "👎", "😂", "🤯", "🙏"];
@@ -22,6 +22,7 @@ const CommunityReaction = (props: ICommunityReaction) => {
   const reactions = reactionProps ?? useGet(cachedKeys.COMMUNITY_REACTION);
 
   const save = useSave();
+  const theme = useTheme()
 
   //! Function
   const onClick = (reaction: string) => {
@@ -59,7 +60,7 @@ const CommunityReaction = (props: ICommunityReaction) => {
                 padding: "8px 12px",
                 borderRadius: "8px",
                 boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-                background: "#fff",
+                background: theme.colors.custom.backgroundDialog,
                 marginBottom: "12px ",
               }}
             >

@@ -28,7 +28,7 @@ const CommonSelect = (props: ISelect & SelectProps) => {
     ...otherProps
   } = props;
 
-  const theme: any = useTheme();
+  const theme = useTheme();
 
   //! Function
 
@@ -74,7 +74,7 @@ const CommonSelect = (props: ISelect & SelectProps) => {
 
           div: {
             borderRadius: "10px",
-            background: "#fff",
+            background: theme.colors.custom.backgroundCard,
           },
 
           fieldset: {
