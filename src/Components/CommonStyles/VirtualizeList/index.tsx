@@ -8,7 +8,7 @@ import {
 } from "react-virtualized";
 import CommonStyles from "..";
 
-const DynamicHeightList = ({ items }: any) => {
+const DynamicHeightList = ({ items, onClick }: any) => {
   const theme = useTheme();
   const cache = React.useRef(
     new CellMeasurerCache({
@@ -34,6 +34,10 @@ const DynamicHeightList = ({ items }: any) => {
               ...style,
               padding: "25px 20px",
               boxSizing: "border-box",
+              cursor: onClick ? "pointer" : "default",
+            }}
+            onClick={() => {
+              onClick(item);
             }}
           >
             {/* Render your item here */}

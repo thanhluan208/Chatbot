@@ -105,14 +105,6 @@ function MoreOption(props: IMoreOption) {
                 },
               }}
             >
-              <CommonStyles.Button>
-                <CommonStyles.Typography
-                  type="semiBold14"
-                  color={theme.colors.custom.semiColorTypo}
-                >
-                  Statistic
-                </CommonStyles.Typography>
-              </CommonStyles.Button>
               <CommonStyles.Button onClick={handleDuplicate}>
                 <CommonStyles.Typography
                   type="semiBold14"

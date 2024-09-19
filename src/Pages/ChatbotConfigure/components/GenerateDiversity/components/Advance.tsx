@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Box, Collapse } from "@mui/material";
 import CommonIcons from "../../../../../Components/CommonIcons";
 import SlideAndNumField from "./SlideAndNumField";
+import { useFormikContext } from "formik";
+import { initialValueEngine } from "../../EngineButton";
 
 const TemperatureHint = () => {
   return (
@@ -58,6 +60,9 @@ const TopPHInt = () => {
 const Advance = () => {
   //! State
   const [open, setOpen] = useState(true);
+  const { values } = useFormikContext<initialValueEngine>();
+
+  const { model } = values || {};
 
   //! Function
 
@@ -92,17 +97,34 @@ const Advance = () => {
           hintContent={<TemperatureHint />}
           name="temperature"
           title="Temperature"
-          min={0}
-          max={2}
+          min={model ? model.temperature.min : 0}
+          max={model ? model.temperature.max : 2}
         />
 
         <SlideAndNumField
           hintContent={<TopPHInt />}
           name="top_p"
           title="Top P"
-          min={0}
-          max={1}
+          min={model.top_p?.min ? model.top_p?.min : 0}
+          max={model.top_p?.max ? model.top_p?.max : 1}
         />
+
+        {model.value.includes("gpt") && (
+          <Fragment>
+            <SlideAndNumField
+              name="frequency_penalty"
+              title="Frequency penalty"
+              min={model.frequency_penalty?.min ? model.frequency_penalty?.min : 0}
+              max={model.frequency_penalty?.min ? model.frequency_penalty?.min : 2}
+            />
+             <SlideAndNumField
+              name="presence_penalty"
+              title="Presence penalty"
+              min={model.presence_penalty?.min ? model.presence_penalty?.min : 0}
+              max={model.presence_penalty?.min ? model.presence_penalty?.min : 2}
+            />
+          </Fragment>
+        )}
       </Collapse>
     </Fragment>
   );

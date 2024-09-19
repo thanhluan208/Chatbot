@@ -5,6 +5,7 @@ import MUIDialog from "./Dialog";
 import Input from "./Input";
 import LoadingOverlay from "./LoadingOverlay";
 import CommonSelect from "./Select";
+import Table from "./Table";
 import TextArea from "./TextArea";
 import Typography from "./Typography";
 import UploadFile from "./UploadFile";
@@ -21,7 +22,8 @@ const CommonStyles = {
   ConfirmDialog,
   UploadFile,
   TextArea,
-  VirtualizeList
+  VirtualizeList,
+  Table
 };
 
 export default CommonStyles;

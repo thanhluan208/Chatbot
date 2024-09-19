@@ -16,6 +16,7 @@ import { boolean } from "@/Helpers";
 import httpServices from "@/Services/httpServices";
 import { updateKnowledgeToBot } from "@/Constants/api";
 import { toast } from "react-toastify";
+import SegmentDetail from "./components/SegmentDetail";
 
 const KnowledgeDetail = () => {
   //! State
@@ -105,6 +106,7 @@ const KnowledgeDetail = () => {
         background: theme.colors.custom.background,
       }}
     >
+      <SegmentDetail />
       <CommonStyles.LoadingOverlay isLoading={isLoading} />
       <Box>
         <Box
@@ -167,9 +169,14 @@ const KnowledgeDetail = () => {
                 <Fragment>
                   <PublicButton />
                   <AddContentButton />
-                  <CommonStyles.Button variant="contained" onClick={handleAddKnowledgeToBot}>
-                    Add to bot
-                  </CommonStyles.Button>
+                  {botId && (
+                    <CommonStyles.Button
+                      variant="contained"
+                      onClick={handleAddKnowledgeToBot}
+                    >
+                      Add to bot
+                    </CommonStyles.Button>
+                  )}
                 </Fragment>
               )}
             </Box>

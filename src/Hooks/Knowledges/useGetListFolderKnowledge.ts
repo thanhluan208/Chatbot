@@ -77,6 +77,7 @@ const useGetListFolderKnowledge = (filters?: Filters, isTrigger = true) => {
             sharingWithBots: item.sharing_with_bots,
             userName: item.user_name,
             owner_id: item.owner_id,
+            permission_level: item.permission_level,
           };
         });
 

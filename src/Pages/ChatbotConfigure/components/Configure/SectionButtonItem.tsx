@@ -1,10 +1,10 @@
-import { Box, Tooltip, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import CommonStyles from "../../../../Components/CommonStyles";
 import { memo, useState } from "react";
 import CommonIcons from "../../../../Components/CommonIcons";
-import InfoButton from "./InfoButton";
 import DeleteKnowledge from "./Knowledge/DeleteKnowledge";
 import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 interface ISectionButtonItem {
   title: string;
@@ -26,7 +26,12 @@ function SectionButtonItem(props: ISectionButtonItem) {
   //! Render
   const renderDeleteButton = (toggle: () => void) => {
     return (
-      <CommonStyles.Button isIcon onClick={toggle} tooltip="Delete">
+      <CommonStyles.Button
+        isIcon
+        onClick={toggle}
+        tooltip="Delete"
+        isRound={false}
+      >
         <CommonIcons.DeleteOutlined />
       </CommonStyles.Button>
     );
@@ -34,6 +39,19 @@ function SectionButtonItem(props: ISectionButtonItem) {
 
   const handleNavigate = () => {
     navigate(`${pathname}/knowledge/${id}?isOwner=${isOwner}`);
+  };
+
+  const handleCopy = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    try {
+      e.stopPropagation();
+      e.preventDefault();
+      navigator.clipboard.writeText(title);
+      setShowAction(false);
+
+      toast.success("Copied to clipboard");
+    } catch (error) {
+      toast.error("Failed to copy to clipboard");
+    }
   };
 
   return (
@@ -103,21 +121,14 @@ function SectionButtonItem(props: ISectionButtonItem) {
           backdropFilter: "blur(400px)",
         }}
       >
-        <InfoButton id="1" />
-        <CommonStyles.Button isIcon>
-          <Tooltip title="Copy">
-            <CommonIcons.ContentCopyOutlined />
-          </Tooltip>
-        </CommonStyles.Button>
-        <CommonStyles.Button isIcon>
-          <Tooltip title="Card data binding">
-            <CommonIcons.AddCardOutlined />
-          </Tooltip>
-        </CommonStyles.Button>
-        <CommonStyles.Button isIcon>
-          <Tooltip title="Edit parameters">
-            <CommonIcons.SettingsOutlined />
-          </Tooltip>
+        {/* <InfoButton id="1" /> */}
+        <CommonStyles.Button
+          isIcon
+          tooltip="Copy"
+          isRound={false}
+          onClick={handleCopy}
+        >
+          <CommonIcons.ContentCopyOutlined />
         </CommonStyles.Button>
         <DeleteKnowledge
           data={{

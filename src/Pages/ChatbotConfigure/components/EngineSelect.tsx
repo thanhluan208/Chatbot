@@ -69,6 +69,8 @@ const EngineOption = ({
             top_p: option.top_p?.default ?? 0.9,
             temperature: option.temperature?.default ?? 1.21,
             history_turn: option.history_turn?.default ?? 3,
+            frequency_penalty: option.frequency_penalty?.default ?? 0,
+            presence_penalty: option.presence_penalty?.default ?? 0,
           });
         }}
       >

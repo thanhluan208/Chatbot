@@ -7,7 +7,7 @@ import CustomAdornment from "./CustomAdornment";
 import { memo, useMemo } from "react";
 
 interface ISlideAndNumField {
-  hintContent: React.ReactNode;
+  hintContent?: React.ReactNode;
   title: string;
   min: number;
   max: number;
@@ -53,7 +53,7 @@ const SlideAndNumField = (props: ISlideAndNumField) => {
         <CommonStyles.Typography type="normal12">
           {title}
         </CommonStyles.Typography>
-        <Hint content={hintContent} />
+        {hintContent && <Hint content={hintContent} />}
       </Box>
       <Box
         display="flex"

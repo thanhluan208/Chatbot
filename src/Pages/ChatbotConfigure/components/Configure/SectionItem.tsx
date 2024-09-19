@@ -105,7 +105,7 @@ function SectionItem(props: ISectionItem) {
             list.map((item) => {
               return (
                 <SectionButtonItem
-                  title={item?.knowledge_storage_id}
+                  title={item?.knowledge_storage_name}
                   permission_level={item?.permission_level}
                   id={item?.knowledge_storage_id}
                   key={item?.knowledge_storage_id}

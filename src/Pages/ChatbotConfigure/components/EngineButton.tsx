@@ -24,6 +24,8 @@ export interface initialValueEngine {
   history_turn: number;
   max_tokens: number;
   outputFormat: string;
+  frequency_penalty: number;
+  presence_penalty: number;
 }
 
 const EngineButton = () => {
@@ -49,6 +51,8 @@ const EngineButton = () => {
       top_p: botData?.llm?.top_p ?? 0.9,
       history_turn: botData?.llm?.history_turn ?? 3,
       max_tokens: botData?.llm?.max_tokens ?? 2048,
+      frequency_penalty: botData?.llm?.frequency_penalty ?? 0,
+      presence_penalty: botData?.llm?.presence_penalty ?? 0,
       outputFormat: "text",
     };
   }, [botData]);
@@ -73,20 +77,30 @@ const EngineButton = () => {
     });
 
     try {
-
-      const responseParams = await httpServices.post(updateBotParams, {
+      const payload: any = {
         user_id: userId,
         bot_id: params.botId,
-        llm_name:values.model.value,
+        llm_name: values.model.value,
         model_params: {
-          temperature: values?.temperature ?? values?.model?.temperature.default,
+          temperature:
+            values?.temperature ?? values?.model?.temperature.default,
           top_p: values?.top_p ?? values.model.top_p?.default ?? 1,
-          history_turn: values?.history_turn ?? values.model.history_turn.default,
+          history_turn:
+            values?.history_turn ?? values.model.history_turn.default,
           max_tokens: values?.max_tokens ?? values.model.max_tokens.default,
         },
-      });
+      };
 
-      console.log("responseParams", responseParams);
+      if (payload.llm_name.includes("gpt")) {
+        payload.model_params = {
+          ...payload.model_params,
+          frequency_penalty: values?.frequency_penalty ?? 0,
+          presence_penalty: values?.presence_penalty ?? 0,
+        };
+      }
+
+      await httpServices.post(updateBotParams, payload);
+
 
       refetchBotData && (await refetchBotData());
 

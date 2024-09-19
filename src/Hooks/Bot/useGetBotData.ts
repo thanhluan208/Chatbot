@@ -34,9 +34,10 @@ export interface BotData {
 
 export interface KnowledgeStorage {
   knowledge_storage_id: string;
-  permission_level:     string;
+  knowledge_storage_name: string;
+  description: string;
+  permission_level: string;
 }
-
 
 export interface Flow {
   nodes: string[];
@@ -51,8 +52,8 @@ export interface NodeData {
   metadata: Metadata;
   node_id: string;
   knowledge_storage_ids: any[];
-  bot_id: string,
-  info: string
+  bot_id: string;
+  info: string;
 }
 
 export interface Metadata {

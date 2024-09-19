@@ -23,6 +23,7 @@ export interface IKnowledgeFolder {
   sharingWithBots?: string[];
   userName?: string;
   owner_id?: string;
+  permission_level?: string;
 }
 
 const KnowledgeFolder = (props: IKnowledgeFolder) => {
@@ -36,6 +37,7 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
     id,
     sharingWithBots,
     owner_id,
+    permission_level
   } = props;
   const navigate = useNavigate();
   const theme = useTheme()
@@ -45,12 +47,12 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
   const userId = params.id;
 
   const isOwner = useMemo(() => {
-    if (userId === owner_id) {
+    if (userId === owner_id || permission_level?.toLowerCase() === "owner") {
       return true;
     }
 
     return false;
-  }, [userId, owner_id]);
+  }, [userId, owner_id,permission_level]);
 
   const isSharing = useMemo(() => {
     if (botId && sharingWithBots?.includes(botId)) {

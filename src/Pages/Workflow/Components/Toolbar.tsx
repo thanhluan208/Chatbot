@@ -48,11 +48,12 @@ const Toolbar = ({
       console.log(e);
 
       if (e.code.toLowerCase() === "keyz" && (e.ctrlKey || e.metaKey)) {
-        historyRef.current?.handleChangeHistory &&
-          historyRef.current?.handleChangeHistory(1);
+        // historyRef.current?.handleChangeHistory &&
+        //   historyRef.current?.handleChangeHistory(1);
       } else if (e.code.toLowerCase() === "keyy" && (e.ctrlKey || e.metaKey)) {
-        historyRef.current?.handleChangeHistory &&
-          historyRef.current?.handleChangeHistory(-1);
+        e.preventDefault()
+        // historyRef.current?.handleChangeHistory &&
+        //   historyRef.current?.handleChangeHistory(-1);
       } else if (e.code.toLowerCase() === "equal" && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
         zoomTo(getZoom() + 0.1);

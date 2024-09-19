@@ -3,7 +3,7 @@ import { KnowledgeFilter } from "@/Pages/ChatbotConfigure/components/Configure/K
 import { IKnowledgeFolder } from "@/Pages/ChatbotConfigure/components/Configure/Knowledge/KnowledgeFolder";
 import KnowledgeFolder from "@/Pages/ChatbotConfigure/components/Configure/Knowledge/KnowledgeFolder";
 import { Fragment } from "react/jsx-runtime";
-import { Box, Divider, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { isEmpty } from "lodash";
 import Empty from "../ListBot/components/Empty";
 import EmptyCard from "../ListBot/components/EmptyCard";
@@ -91,7 +91,7 @@ const ListKnowledge = () => {
         margin: "auto",
       }}
     >
-      {data?.map((item: IKnowledgeFolder, index: number) => {
+      {data?.map((item: IKnowledgeFolder) => {
         return (
           <Fragment key={item.id}>
             <KnowledgeFolder
@@ -103,8 +103,8 @@ const ListKnowledge = () => {
               createdAt={item.createdAt}
               sharingWithBots={item.sharingWithBots}
               owner_id={item.owner_id}
+              permission_level={item.permission_level}
             />
-            {index < data.length - 1 && <Divider />}
           </Fragment>
         );
       })}
