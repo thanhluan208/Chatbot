@@ -91,6 +91,10 @@ const MultiAgentStartNode = (props: NodeProps) => {
   };
 
   const handleAddNode = () => {
+    console.log({
+      placeholderId: placeholderId.current,
+      botId,userId,
+    })
     if (!placeholderId.current || !botId || !userId) return;
     setIsAdding(false);
 
