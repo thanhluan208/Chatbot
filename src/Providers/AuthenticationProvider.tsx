@@ -97,14 +97,15 @@ const AuthenticationProvider = ({
     try {
       const response = await httpServices.axios.post(signUpApi, payload);
       if (response.data.status_code === 200) {
-        setUserId(response.data.user_id);
+        const {id} = response.data?.user_data
+        setUserId(id);
         toast.update(toastId, {
           render: "Sign up successfully",
           type: "success",
           autoClose: 2000,
           isLoading: false,
         });
-        localStorage.setItem("userId", response.data.user_id);
+        localStorage.setItem("userId", id);
       } else {
         throw new Error(response.data.message);
       }
@@ -153,6 +154,8 @@ const AuthenticationProvider = ({
   const logout = () => {
     setUserId(null);
     localStorage.removeItem("userId");
+    localStorage.removeItem("userData")
+    location.reload()
   };
 
   useEffect(() => {

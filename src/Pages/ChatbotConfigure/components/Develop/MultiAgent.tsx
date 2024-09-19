@@ -42,18 +42,17 @@ const MultiAgent = () => {
         },
         data: {
           label: agentInfo?.label ?? `Agent ${agent?.node_id}`,
-          isCurrentNode: agent?.node_id === botData?.flow_nodes?.current_node,
+          currentNode: agent.node_id === botData.flow_nodes.current_node && agent.node_id !== botData.flow_nodes.start_node,
           ...agent?.metadata,
         },
-        selectable: true,
+        selectable: agent.node_id !== botData.flow_nodes.start_node,
         selected: false,
         dragging: false,
       };
 
       if (agent.node_id === botData.flow_nodes.start_node) {
         agentNode.type = NodeTypes.multiAgentStartNode;
-        agentNode.selectable = false;
-      }
+      } 
 
       nodes.push(agentNode);
     });

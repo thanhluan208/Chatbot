@@ -6,7 +6,7 @@ import {
   Position,
   useReactFlow,
 } from "@xyflow/react";
-import { Box, Tooltip, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { v4 as uuid } from "uuid";
 import CommonIcons from "@/Components/CommonIcons";
 import CommonStyles from "@/Components/CommonStyles";
@@ -26,7 +26,11 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import { toast } from "react-toastify";
 import httpServices from "@/Services/httpServices";
-import { updateMetadata, updateSystemPrompt } from "@/Constants/api";
+import {
+  updateMetadata,
+  updateScenario,
+  updateSystemPrompt,
+} from "@/Constants/api";
 
 const MultiAgentNode = (props: NodeProps) => {
   //! State
@@ -202,6 +206,27 @@ const MultiAgentNode = (props: NodeProps) => {
     [botId, props.id]
   );
 
+  const afterOnChangeScenario = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      timeoutRef.current = setTimeout(() => {
+        httpServices
+          .post(updateScenario, {
+            bot_id: botId,
+            node_id: props.id,
+            scenario: event.target.value,
+          })
+          .catch((err) => {
+            console.log("err", err);
+            toast.error("Failed to update system prompt");
+          });
+      }, 500);
+    },
+    [botId, props.id]
+  );
+
   const handleRename = useCallback(() => {
     if (!botId) return;
     const info = {
@@ -339,7 +364,11 @@ const MultiAgentNode = (props: NodeProps) => {
         opacity: props.data?.isPlaceholder ? 0.5 : 1,
         borderRadius: "8px",
         background: theme.colors.custom.backgroundCard,
-        border: props?.selected ? "solid 2px #4e40e5" : "solid 2px transparent",
+        border: data?.currentNode
+          ? `solid 2px ${theme.palette.success.main}`
+          : props?.selected
+          ? "solid 2px #4e40e5"
+          : "solid 2px transparent",
         minWidth: "380px",
         boxShadow: "0 0 8px 0 rgba(29,28,35,.06),0 0 2px 0 rgba(29,28,35,.18)",
         "&:hover": {
@@ -347,6 +376,7 @@ const MultiAgentNode = (props: NodeProps) => {
         },
         padding: "12px",
         transition: "all 0.5s ease",
+        position: "relative",
         "& .handle": {
           "&::before": {
             content: '"+"',
@@ -374,6 +404,23 @@ const MultiAgentNode = (props: NodeProps) => {
       }}
       onClick={handleClickNode}
     >
+      {!!data?.currentNode && (
+        <Box
+          sx={{
+            background: `${theme.palette.success.main}`,
+            position:'absolute',
+            top:'-50px',
+            left:'50%',
+            transform:'translateX(-50%)',
+            padding:'4px 12px',
+            borderRadius:'12px'
+          }}
+        >
+          <CommonStyles.Typography type="semiBold16" color="#fff">
+            Chatting with this agent...
+          </CommonStyles.Typography>
+        </Box>
+      )}
       <CollapseArea
         label={
           <Box
@@ -496,17 +543,17 @@ const MultiAgentNode = (props: NodeProps) => {
                 alignItems: "center",
               }}
             >
-              {props?.data?.isCurrentNode ? (
-                <Box>Chatting</Box>
-              ) : (
-                <Tooltip title="Chat with this agent" placement="top" arrow>
-                  <div>
-                    <CommonIcons.Chat
-                      fill={theme.colors.custom.normalColorTypo as string}
-                    />
-                  </div>
-                </Tooltip>
-              )}
+              <CommonStyles.Button
+                isIcon
+                tooltip={
+                  data?.currentNode ? "Chatting..." : "Chat with this bot"
+                }
+                disabled={!!data?.currentNode}
+              >
+                <CommonIcons.Chat
+                  fill={theme.colors.custom.normalColorTypo as string}
+                />
+              </CommonStyles.Button>
 
               <DeleteAgentButton id={props.id} />
             </Box>
@@ -559,6 +606,7 @@ const MultiAgentNode = (props: NodeProps) => {
                     maxRows={3}
                     fullWidth
                     maxChar={6000}
+                    afterOnChange={afterOnChangeScenario}
                   />
                 </CollapseArea>
 

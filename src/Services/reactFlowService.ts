@@ -1,45 +1,35 @@
-import { ReactFlowInstance } from "@xyflow/react";
-import { FormikProps } from "formik";
 import httpServices from "./httpServices";
-import { createNode, updateBotEdge, updateBotNode } from "@/Constants/api";
+import {
+  createNode,
+  removeEdge,
+  updateBotEdge,
+  updateBotNode,
+} from "@/Constants/api";
+import { Edge, Node } from "@xyflow/react";
 import { AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 
 class reactFlowServices {
-  flows: {
-    [key: string]: {
-      form?: { [key: string]: FormikProps<any> };
-      ref?: ReactFlowInstance | null;
-    };
-  } = {};
+  setEdges: React.Dispatch<React.SetStateAction<Edge[]>> | null = null;
+  getEdges: () => Edge[] | [] = () => [];
+  setNodes: React.Dispatch<React.SetStateAction<Node[]>> | null = null;
+  getNodes: () => Node[] | [] = () => [];
 
-  subscribeForm(id: string, value: any, flowsId: keyof typeof this.flows) {
-    this.flows[flowsId] = {
-      ...this.flows[flowsId],
-      form: {
-        ...this.flows[flowsId]?.form,
-        [id]: value,
-      },
-    };
+  subcribeFlow(
+    setEdges: React.Dispatch<React.SetStateAction<Edge[]>>,
+    setNodes: React.Dispatch<React.SetStateAction<Node[]>>,
+    getEdges: () => Edge[],
+    getNodes: () => Node[]
+  ) {
+    this.setEdges = setEdges;
+    this.setNodes = setNodes;
+    this.getEdges = getEdges;
+    this.getNodes = getNodes;
   }
 
-  subscribeRef(value: ReactFlowInstance, flowsId: keyof typeof this.flows) {
-    this.flows[flowsId] = {
-      ...this.flows[flowsId],
-      ref: value,
-    };
-  }
-
-  unsubscribeForm(id: string, flowsId: keyof typeof this.flows) {
-    if (this?.flows?.[flowsId]?.form?.[id]) {
-      delete this?.flows?.[flowsId]?.form?.[id];
-    }
-  }
-
-  unsubscribeRef(flowsId: keyof typeof this.flows) {
-    if (this?.flows?.[flowsId]?.ref) {
-      delete this?.flows?.[flowsId]?.ref;
-    }
+  unsubcribeFlow() {
+    this.setEdges = null;
+    this.setNodes = null;
   }
 
   async createFlow(
@@ -96,30 +86,53 @@ class reactFlowServices {
       });
   }
 
-  updateEdges(
+  updateEdge(
+    isAdd: boolean,
     botId: string,
-    userId: string,
-    edges: {
-      src_node: string;
-      dest_node: string;
-    }[],
+    src_node_id: string,
+    dest_node_id: string,
     onFailed?: () => void
   ) {
+    let handleFail = () => {
+      this.setEdges &&
+        this.setEdges((edges) =>
+          edges.filter(
+            (elm) => elm.target !== dest_node_id && elm.source !== src_node_id
+          )
+        );
+    };
+
+    if (!isAdd) {
+      handleFail = () => {
+        this.setEdges &&
+          this.setEdges((edges) =>
+            edges.concat([
+              {
+                source: src_node_id,
+                target: dest_node_id,
+                id: `${src_node_id}_${dest_node_id}`,
+              },
+            ])
+          );
+      };
+    }
+
     try {
       httpServices
-        .post(updateBotEdge, {
+        .post(isAdd ? updateBotEdge : removeEdge, {
           bot_id: botId,
-          user_id: userId,
-          bot_mode: "multi_agent",
-          data: { edges },
+          src_node_id,
+          dest_node_id,
         })
         .then((res: AxiosResponse<any>) => {
           if (res.data?.status_code !== 200) {
+            handleFail();
             onFailed && onFailed();
           }
         });
     } catch (error) {
       console.log("error", error);
+      handleFail();
       onFailed && onFailed?.();
     }
   }

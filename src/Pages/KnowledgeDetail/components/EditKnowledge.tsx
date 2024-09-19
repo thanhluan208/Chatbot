@@ -4,7 +4,7 @@ import CommonStyles from "../../../Components/CommonStyles";
 import CommonIcons from "../../../Components/CommonIcons";
 import { memo } from "react";
 import { FieldArray, Form, Formik } from "formik";
-import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Box, DialogActions, DialogContent, DialogTitle, useTheme } from "@mui/material";
 import { isArray, isEmpty } from "lodash";
 import { v4 as uuid } from "uuid";
 import UserPermission, { PermissionOption } from "./UserPermission";
@@ -22,6 +22,7 @@ interface User {
 
 const UpdatePriviledgeDialog = memo(({ toggle }: { toggle: () => void }) => {
   //! State
+  const theme = useTheme()
   const params = useParams();
   const userId = params?.id;
   const knowledgeId = params?.knowledgeId;
@@ -179,25 +180,22 @@ const UpdatePriviledgeDialog = memo(({ toggle }: { toggle: () => void }) => {
                 }}
               >
                 <CommonStyles.Button
-                  variant="contained"
-                  sx={{
-                    background: "#fff",
-                    color: "#000",
-                    "&:hover": {
-                      background: "#fff",
-                    },
-                  }}
-                  onClick={toggle}
-                  disabled={isSubmitting}
-                  type="button"
-                >
-                  Cancel
-                </CommonStyles.Button>
+                    variant="contained"
+                    sx={{
+                      background: theme.colors.custom.backgroundCard,
+                      "&:hover": {
+                        background: theme.colors.custom.backgroundCardHover,
+                      },
+                      color:'unset'
+                    }}
+                    onClick={toggle}
+                    disabled={isSubmitting}
+                    type="button"
+                  >
+                    <CommonStyles.Typography>Cancel</CommonStyles.Typography>
+                  </CommonStyles.Button>
                 <CommonStyles.Button
                   variant="contained"
-                  sx={{
-                    color: "#fff",
-                  }}
                   type="submit"
                   isLoading={isSubmitting}
                   disabled={isSubmitting || !isEmpty(errors) || !dirty}

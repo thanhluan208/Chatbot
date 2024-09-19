@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { commonBotCard } from "../../../../../Interfaces/common";
 import CommonStyles from "../../../../../Components/CommonStyles";
 import { useState } from "react";
@@ -41,7 +41,8 @@ const WorkCard = (props: WorkCard) => {
     collect,
   } = props;
   const [isReadMore, setIsReadMore] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const theme = useTheme();
   //! Function
 
   //! Render
@@ -49,15 +50,16 @@ const WorkCard = (props: WorkCard) => {
     <Box
       sx={{
         padding: "16px",
-        background: "#fff",
+        background: theme.colors.custom.backgroundCard,
         borderRadius: "12px",
         cursor: "pointer",
         transition: "all 0.3s",
         "&:hover": {
           boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-        }
+          background: theme.colors.custom.backgroundCardHover,
+        },
       }}
-      onClick={() => navigate('/bot-store/123123')}
+      onClick={() => navigate("/bot-store/123123")}
     >
       <Box
         sx={{
@@ -100,7 +102,9 @@ const WorkCard = (props: WorkCard) => {
         </Box>
         <p>
           <CommonStyles.Typography type="normal12">
-            {description.length <= 270 || isReadMore ? description : description.substring(0, 270) + "..."}
+            {description.length <= 270 || isReadMore
+              ? description
+              : description.substring(0, 270) + "..."}
           </CommonStyles.Typography>
           {description.length > 270 && (
             <CommonStyles.Typography
@@ -123,7 +127,14 @@ const WorkCard = (props: WorkCard) => {
         <Stats value="Users" label={users.toString()} />
         <Stats value="Collect" label={collect.toString()} />
       </Box>
-      <Box sx={{ marginTop: "12px", display: "flex", gap: "4px", flexWrap: 'wrap'}}>
+      <Box
+        sx={{
+          marginTop: "12px",
+          display: "flex",
+          gap: "4px",
+          flexWrap: "wrap",
+        }}
+      >
         {(category ?? []).map((cate) => {
           return <CommonStyles.Chip label={cate} />;
         })}

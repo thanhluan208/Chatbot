@@ -1,10 +1,10 @@
 import CommonIcons from "@/Components/CommonIcons";
 import CommonStyles from "@/Components/CommonStyles/index";
 import { useAuth } from "@/Providers/AuthenticationProvider";
-import { Box, Tooltip } from "@mui/material";
+import { Box, Tooltip, useTheme } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from '@/assets/logo.png'
+import logo from "@/assets/logo.png";
 
 interface KnowledgeCardProps {
   avatar: string;
@@ -41,9 +41,9 @@ const Knowledgecard = (props: KnowledgeCardProps) => {
   } = props;
   const [isReadMore, setIsReadMore] = useState(false);
   const { userId } = useAuth();
+  const theme = useTheme();
   const navigate = useNavigate();
   //! Function
-  console.log("asdasd", props);
   const handleNavigate = () => {
     navigate(`/knowledge-store/${id}?isOwner=${owner_id === userId}`);
   };
@@ -54,7 +54,7 @@ const Knowledgecard = (props: KnowledgeCardProps) => {
       onClick={handleNavigate}
       sx={{
         padding: "16px",
-        background: "#FFFFFF",
+        background: theme.colors.custom.backgroundCard,
         border: "solid 1px #0607091a",
         borderRadius: "8px",
         cursor: "pointer",
@@ -63,6 +63,7 @@ const Knowledgecard = (props: KnowledgeCardProps) => {
           "& .favorite": {
             opacity: 1,
           },
+          background: theme.colors.custom.backgroundCardHover,
         },
         position: "relative",
       }}

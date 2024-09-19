@@ -10,9 +10,6 @@ import { cloneDeep, isEmpty } from "lodash";
 import { v4 as uuid } from "uuid";
 import Shortcuts from "./Toolbar/Shortcuts";
 import AnimationControl from "./Toolbar/AnimationControl";
-import httpServices from "@/Services/httpServices";
-import { deleteBotNode } from "@/Constants/api";
-import { useParams } from "react-router-dom";
 import History from "./Toolbar/History";
 import ReArrangeFlow from "./Toolbar/ReArrangeFlow";
 
@@ -31,9 +28,8 @@ const Toolbar = ({
 }) => {
   //! State
   const theme = useTheme();
-  const { getNodes, getEdges,  setNodes, fitView, getZoom, zoomTo } =
+  const {   setNodes, fitView, getZoom, zoomTo } =
     useReactFlow();
-  const handleSaveHistory = useGet("SAVE_HISTORY");
   const handleAddNode = useGet("ADD_NODE");
   const isEditing = useGet("IS_EDITING");
   const mousePos = useRef<{
@@ -43,53 +39,15 @@ const Toolbar = ({
 
   const historyRef = useRef<HistoryRef | null>(null);
 
-  const params = useParams();
-  const botId = params["botId"];
 
   //! Function
-  
-
-  const handleDeleteNode = useCallback(async () => {
-    const nodes = getNodes();
-    console.log("nodes", nodes);
-    if (nodes.every((item) => !item.selected)) return;
-
-    try {
-      const deleteNode = cloneDeep(nodes).filter((elm) => elm.selected);
-
-      const promise: Promise<any>[] = [];
-
-      deleteNode.forEach((elm) => {
-        promise.push(
-          httpServices.axios.post(deleteBotNode, {
-            bot_id: botId,
-            node_id: elm.id,
-          })
-        );
-      });
-
-      const response = await Promise.all(promise);
-      console.log("response", response);
-
-      // setNodes((nodes) => {
-      //   const newNodes = nodes.filter((elm) => !elm.selected);
-      //   handleSaveHistory(newNodes, getEdges());
-
-      //   return newNodes;
-      // });
-    } catch (error) {
-      console.log("error", error);
-    }
-  }, [handleSaveHistory, getEdges, getNodes, botId]);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (isEditing) return;
       console.log(e);
 
-      if (e.code.toLowerCase() === "backspace") {
-        // handleDeleteNode();
-      } else if (e.code.toLowerCase() === "keyz" && (e.ctrlKey || e.metaKey)) {
+      if (e.code.toLowerCase() === "keyz" && (e.ctrlKey || e.metaKey)) {
         historyRef.current?.handleChangeHistory &&
           historyRef.current?.handleChangeHistory(1);
       } else if (e.code.toLowerCase() === "keyy" && (e.ctrlKey || e.metaKey)) {
@@ -152,7 +110,7 @@ const Toolbar = ({
         });
       }
     },
-    [handleDeleteNode, handleAddNode, isEditing]
+    [ handleAddNode, isEditing]
   );
 
   const handleTrackMouse = useCallback((e: MouseEvent) => {

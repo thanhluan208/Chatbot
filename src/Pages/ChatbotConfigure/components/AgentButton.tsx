@@ -53,7 +53,7 @@ const AgentButton = ({
     });
     save(cachedKeys.LOADING_APP, true);
     try {
-      if (!hasMultiAgent) {
+      if (!hasMultiAgent && mode === Mode.Multi_agent) {
         const response = await httpServices.post(createMultiAgent, {
           bot_id: botId,
           user_id: userId,

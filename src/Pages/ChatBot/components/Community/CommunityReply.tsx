@@ -1,7 +1,7 @@
 import CommonStyles from "@/Components/CommonStyles";
 import cachedKeys from "@/Constants/cachedKeys";
 import { useSave } from "@/Stores/useStore";
-import { Box, ClickAwayListener, Fade, Popper } from "@mui/material";
+import { Box, ClickAwayListener, Fade, Popper, useTheme } from "@mui/material";
 import React, { useId, useRef } from "react";
 import PerfectScrollBar from "react-perfect-scrollbar";
 import { v4 as uuidv4 } from "uuid";
@@ -20,6 +20,7 @@ export const DiscardReply = ({
     null
   );
   const open = Boolean(anchorEl);
+  const theme = useTheme()
 
   //! Function
 
@@ -44,7 +45,7 @@ export const DiscardReply = ({
                   padding: "8px 12px",
                   borderRadius: "8px",
                   boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-                  background: "#fff",
+                  background: theme.colors.custom.backgroundDialog,
                   marginTop: "12px ",
                   maxWidth: "300px",
                 }}

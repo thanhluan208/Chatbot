@@ -12,7 +12,7 @@ import { BotData } from "@/Hooks/Bot/useGetBotData";
 import CommonIcons from "@/Components/CommonIcons";
 import { toast } from "react-toastify";
 import httpServices from "@/Services/httpServices";
-import { updateBotModel, updateBotParams } from "@/Constants/api";
+import { updateBotParams } from "@/Constants/api";
 import { useParams } from "react-router-dom";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 
@@ -73,17 +73,11 @@ const EngineButton = () => {
     });
 
     try {
-      const responseModel = await httpServices.post(updateBotModel, {
-        bot_id: params.botId,
-        user_id: userId,
-        llm_name: values.model.value,
-      });
-
-      console.log("responseModel", responseModel);
 
       const responseParams = await httpServices.post(updateBotParams, {
         user_id: userId,
         bot_id: params.botId,
+        llm_name:values.model.value,
         model_params: {
           temperature: values?.temperature ?? values?.model?.temperature.default,
           top_p: values?.top_p ?? values.model.top_p?.default ?? 1,

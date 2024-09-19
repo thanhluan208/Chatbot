@@ -44,7 +44,7 @@ const AddNodePopper = (props: IAddNodePopper) => {
     isHelperNode,
     helperPosition,
   } = props;
-  const { setNodes, updateNode, getEdges } = useReactFlow();
+  const { setNodes, updateNode,  } = useReactFlow();
   const theme = useTheme();
   const save = useSave();
 
@@ -126,17 +126,17 @@ const AddNodePopper = (props: IAddNodePopper) => {
             JSON.stringify(newNode)
           );
         }
-
-        handleSaveHistory(newNodes, getEdges());
+        //TODO: HISTORY FEATURE
+        // handleSaveHistory(newNodes, getEdges());
         return newNodes;
       });
     },
-    [setNodes,handleSaveHistory]
+    [setNodes, handleSaveHistory]
   );
 
   useEffect(() => {
-    save(cachedKeys.ADD_NODE, handleAddNode)
-  },[handleAddNode])
+    save(cachedKeys.ADD_NODE, handleAddNode);
+  }, [handleAddNode]);
 
   //! Render
   return (

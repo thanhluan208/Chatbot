@@ -74,41 +74,49 @@ const ShortcutItem = memo(
   }
 );
 
+let modifierKeyPrefix = "Ctrl"; // control key
+if (
+  navigator.platform.indexOf("Mac") === 0 ||
+  navigator.platform === "iPhone"
+) {
+  modifierKeyPrefix = "⌘"; // command key
+}
+
 const shortcutData = [
   {
     icon: <Copy />,
     title: "Copy",
-    keys: ["⌘ / ⇧", "C"],
+    keys: [`${modifierKeyPrefix}`, "C"],
   },
   {
     icon: <Paste />,
     title: "Paste",
-    keys: ["⌘ / ⇧", "V"],
+    keys: [`${modifierKeyPrefix}`, "V"],
   },
   {
     icon: <ZoomIn />,
     title: "Zoom In",
-    keys: ["⌘ / ⇧", "+"],
+    keys: [`${modifierKeyPrefix}`, "+"],
   },
   {
     icon: <ZoomOut />,
     title: "Zoom Out",
-    keys: ["⌘ / ⇧", "-"],
+    keys: [`${modifierKeyPrefix}`, "-"],
   },
   {
     icon: <Undo />,
     title: "Undo",
-    keys: ["⌘ / ⇧", "Z"],
+    keys: [`${modifierKeyPrefix}`, "Z"],
   },
   {
     icon: <Redo />,
     title: "Redo",
-    keys: ["⌘ / ⇧", "Y"],
+    keys: [`${modifierKeyPrefix}`, "Y"],
   },
   {
     icon: <MousePointer />,
     title: "Multi-select",
-    keys: ["⌘ / ⇧", "Click"],
+    keys: [`${modifierKeyPrefix}`, "Click"],
   },
   {
     icon: <DeleteTrash />,

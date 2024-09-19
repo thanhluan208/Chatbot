@@ -3,7 +3,13 @@ import { Fragment } from "react/jsx-runtime";
 import { useCallback, useMemo } from "react";
 import * as yup from "yup";
 import { FastField, Form, Formik } from "formik";
-import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+  Box,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  useTheme,
+} from "@mui/material";
 
 import { isEmpty } from "lodash";
 import { toast } from "react-toastify";
@@ -18,7 +24,7 @@ import { useAuth } from "../../../../../Providers/AuthenticationProvider";
 
 interface IKnowledgeActionDialog {
   toggle: () => void;
-  data?: InitValues
+  data?: InitValues;
 }
 
 export enum KnowledgeTypes {
@@ -37,18 +43,19 @@ export const KnowledgeActionDialog = (props: IKnowledgeActionDialog) => {
   //! State
   const { toggle, data } = props;
   const { userId } = useAuth();
+  const theme = useTheme();
 
   const refetchListFolder = useGet("REFETCH_FOLDER_KNOWLEDGE");
   const isEdit = useMemo(() => {
-    return !!data
-  },[])
+    return !!data;
+  }, []);
 
   const initialValues = useMemo(() => {
     return {
       type: KnowledgeTypes.Document,
       name: "",
       description: "",
-      ...data
+      ...data,
     };
   }, []);
 
@@ -177,23 +184,20 @@ export const KnowledgeActionDialog = (props: IKnowledgeActionDialog) => {
                   <CommonStyles.Button
                     variant="contained"
                     sx={{
-                      background: "#fff",
-                      color: "#000",
+                      background: theme.colors.custom.backgroundCard,
                       "&:hover": {
-                        background: "#fff",
+                        background: theme.colors.custom.backgroundCardHover,
                       },
+                      color:'unset'
                     }}
                     onClick={toggle}
                     disabled={isSubmitting}
                     type="button"
                   >
-                    Cancel
+                    <CommonStyles.Typography>Cancel</CommonStyles.Typography>
                   </CommonStyles.Button>
                   <CommonStyles.Button
                     variant="contained"
-                    sx={{
-                      color: "#fff",
-                    }}
                     type="submit"
                     isLoading={isSubmitting}
                     disabled={isSubmitting || !isEmpty(errors) || !dirty}

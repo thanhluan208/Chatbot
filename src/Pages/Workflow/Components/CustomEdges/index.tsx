@@ -10,7 +10,6 @@ import {
   getSmoothStepPath,
   useReactFlow,
 } from "@xyflow/react";
-import { cloneDeep } from "lodash";
 import { useCallback } from "react";
 import { useParams } from "react-router-dom";
 
@@ -25,6 +24,8 @@ const AnimatedSVGEdge = ({
   markerEnd,
   data,
   animated,
+  source,
+  target,
 }: EdgeProps) => {
   //! State
   const [edgePath, labelX, labelY] = getSmoothStepPath({
@@ -49,16 +50,7 @@ const AnimatedSVGEdge = ({
         const newEdges = edges.filter((edge) => edge.id !== id);
 
         if (botId && userId) {
-          reactFlowService.updateEdges(
-            botId,
-            userId,
-            cloneDeep(newEdges).map((elm) => {
-              return {
-                dest_node: elm.target,
-                src_node: elm.source,
-              };
-            })
-          );
+          reactFlowService.updateEdge(false, botId, source, target);
 
           return newEdges;
         }
@@ -66,7 +58,7 @@ const AnimatedSVGEdge = ({
         return edges;
       });
     },
-    [botId, userId, setEdges, id]
+    [botId, userId, setEdges, id, source, target]
   );
 
   //! Render
@@ -98,9 +90,11 @@ const AnimatedSVGEdge = ({
           </button>
         </EdgeLabelRenderer>
       )}
-      {!disabledCircle && <circle r="10" fill="#4e40e5">
-        <animateMotion dur="2s" repeatCount="indefinite" path={edgePath} />
-      </circle>}
+      {!disabledCircle && (
+        <circle r="10" fill="#4e40e5">
+          <animateMotion dur="2s" repeatCount="indefinite" path={edgePath} />
+        </circle>
+      )}
     </>
   );
 };

@@ -28,10 +28,10 @@ import reactFlowService from "@/Services/reactFlowService";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import CommonStyles from "@/Components/CommonStyles";
 import CommonIcons from "@/Components/CommonIcons";
-import { cloneDeep } from "lodash";
+import { cloneDeep,  } from "lodash";
 import { detectDiff } from "@/Helpers";
 import httpServices from "@/Services/httpServices";
-import {  deleteBotNode } from "@/Constants/api";
+import { deleteBotNode } from "@/Constants/api";
 import { toast } from "react-toastify";
 
 const edgeTypes = {
@@ -63,8 +63,6 @@ export default function FlowChart(props: IFlowChart) {
   const save = useSave();
   const theme = useTheme();
 
-  console.log("nodes", nodes);
-
   const { userId } = useAuth();
 
   const onReconnectStart = useCallback(() => {
@@ -73,24 +71,23 @@ export default function FlowChart(props: IFlowChart) {
 
   const onReconnect = useCallback(
     (oldEdge: Edge, newConnection: Connection) => {
+      if(newConnection.source === newConnection.target) return
+
       try {
         edgeReconnectSuccessful.current = true;
         setEdges((els) => {
           const newEdges = reconnectEdge(oldEdge, newConnection, els);
 
           if (props?.botId && userId) {
-            reactFlowService.updateEdges(
+            reactFlowService.updateEdge(
+              true,
               props.botId as string,
-              userId as string,
-              cloneDeep(newEdges).map((elm) => {
-                return {
-                  dest_node: elm.target,
-                  src_node: elm.source,
-                };
-              })
+              newConnection.source,
+              newConnection.target
             );
 
-            handleSaveHistory(getNodes(), newEdges);
+            //TODO: HISTORY FEATURE
+            // handleSaveHistory(getNodes(), newEdges);
 
             return newEdges;
           }
@@ -111,21 +108,17 @@ export default function FlowChart(props: IFlowChart) {
           const newEdges = eds.filter((e) => e.id !== edge.id);
 
           if (props?.botId && userId) {
-            reactFlowService.updateEdges(
+            reactFlowService.updateEdge(
+              false,
               props.botId as string,
-              userId as string,
-              cloneDeep(newEdges).map((elm) => {
-                return {
-                  dest_node: elm.target,
-                  src_node: elm.source,
-                };
-              })
+              edge.source,
+              edge.target
             );
-
             return newEdges;
           }
 
-          handleSaveHistory(getNodes(), newEdges);
+          //TODO: HISTORY FEATURE
+          // handleSaveHistory(getNodes(), newEdges);
 
           return eds;
         });
@@ -137,15 +130,16 @@ export default function FlowChart(props: IFlowChart) {
   );
 
   const onDragStop = async (_: React.MouseEvent, node: Node) => {
-    const newNodes = cloneDeep(nodes).map((item) => {
-      if (item.id === node.id) {
-        return node;
-      } else {
-        return item;
-      }
-    });
+    // const newNodes = cloneDeep(nodes).map((item) => {
+    //   if (item.id === node.id) {
+    //     return node;
+    //   } else {
+    //     return item;
+    //   }
+    // });
 
-    handleSaveHistory(newNodes, getEdges());
+    //TODO: HISTORY FEATURE
+    // handleSaveHistory(newNodes, getEdges());
     if (isMultiAgent) {
       const info = {
         position: node.position,
@@ -162,45 +156,32 @@ export default function FlowChart(props: IFlowChart) {
 
   const onConnect = useCallback(
     (connection: Connection) => {
-      const onFailed = () => {
-        setEdges((eds: any) => {
-          return eds.filter((edge: Edge) => {
-            return (
-              edge.source !== connection.source ||
-              edge.target !== connection.target
-            );
-          });
-        });
-      };
+      if(connection.source === connection.target) {
+        return
+      }
 
       return setEdges((eds: any) => {
-        const newEdges = [...eds, connection].map((edge) => {
-          return {
-            src_node: edge.source as string,
-            dest_node: edge.target as string,
-          };
-        });
+        //TODO: HISTORY FEATURE
+        // handleSaveHistory(getNodes(), [
+        //   ...eds,
+        //   {
+        //     ...connection,
+        //     type: "animatedSvg",
+        //     markerEnd: {
+        //       type: MarkerType.ArrowClosed,
+        //       width: 20,
+        //       height: 20,
+        //       color: "#4e40e5",
+        //     },
+        //     deletable: true,
+        //   },
+        // ]);
 
-        handleSaveHistory(getNodes(), [
-          ...eds,
-          {
-            ...connection,
-            type: "animatedSvg",
-            markerEnd: {
-              type: MarkerType.ArrowClosed,
-              width: 20,
-              height: 20,
-              color: "#4e40e5",
-            },
-            deletable: true,
-          },
-        ]);
-
-        reactFlowService.updateEdges(
+        reactFlowService.updateEdge(
+          true,
           props.botId as string,
-          userId as string,
-          newEdges,
-          onFailed
+          connection.source,
+          connection.target
         );
 
         return addEdge(
@@ -254,7 +235,8 @@ export default function FlowChart(props: IFlowChart) {
           .filter((node) => node.type !== NodeTypes.helperNode)
           .concat(newNode as any);
 
-        handleSaveHistory(newNodes, getEdges());
+        //TODO: HISTORY FEATURE
+        // handleSaveHistory(newNodes, getEdges());
 
         return newNodes;
       });
@@ -366,7 +348,6 @@ export default function FlowChart(props: IFlowChart) {
     [getNodes, getEdges]
   );
 
-
   const handleDeleteNode = useCallback(
     async (nodes: Node[]) => {
       const promise: Promise<any>[] = [];
@@ -427,6 +408,10 @@ export default function FlowChart(props: IFlowChart) {
     };
   }, []);
 
+  useEffect(() => {
+    reactFlowService.subcribeFlow(setEdges, setNodes, getEdges, getNodes)
+  },[setEdges, setNodes, getEdges, getNodes])
+
   return (
     <Box
       sx={{
@@ -434,14 +419,14 @@ export default function FlowChart(props: IFlowChart) {
         height: "100%",
         position: "relative",
         "& .handle": {
-          height: "10px",
-          width: "10px",
+          height: "15px",
+          width: "15px",
           borderRadius: "50%",
           background: "#4e40e5",
           transition: "all 0.3s ease",
           "&:hover": {
-            height: "20px",
-            width: "20px",
+            height: "30px",
+            width: "30px",
           },
         },
       }}

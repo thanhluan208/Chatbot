@@ -5,10 +5,10 @@ import { Field, Form, Formik } from "formik";
 import CommonField from "../../../Components/CommonFields";
 import { toast } from "react-toastify";
 import httpServices from "@/Services/httpServices";
-import { updatePrompt } from "@/Constants/api";
+import { updatePrompt,  } from "@/Constants/api";
 import { useParams } from "react-router-dom";
 import { useAuth } from "@/Providers/AuthenticationProvider";
-import { useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { useGet } from "@/Stores/useStore";
 
 const PersonaAndPrompt = ({ systemPrompt }: { systemPrompt: string }) => {
@@ -17,6 +17,7 @@ const PersonaAndPrompt = ({ systemPrompt }: { systemPrompt: string }) => {
   const botId = params?.botId;
   const { userId } = useAuth();
   const refetchBotData = useGet("REFETCH_BOT_DATA");
+  const timeoutRef = useRef<any>(null)
 
   const inititalValues = useMemo(() => {
     return {
@@ -58,6 +59,27 @@ const PersonaAndPrompt = ({ systemPrompt }: { systemPrompt: string }) => {
     }
   };
 
+  const afterOnChangePrompt = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      timeoutRef.current = setTimeout(() => {
+        httpServices
+          .post(updatePrompt, {
+            bot_id: botId,
+            user_id: userId,
+            system_prompt: event.target.value,
+          })
+          .catch((err) => {
+            console.log("err", err);
+            toast.error("Failed to update system prompt");
+          });
+      }, 500);
+    },
+    [botId, userId]
+  );
+
   //! Render
   return (
     <Fragment>
@@ -82,7 +104,7 @@ const PersonaAndPrompt = ({ systemPrompt }: { systemPrompt: string }) => {
         initialValues={inititalValues}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting, dirty }) => {
+        {() => {
           return (
             <Form>
               <Box
@@ -92,7 +114,7 @@ const PersonaAndPrompt = ({ systemPrompt }: { systemPrompt: string }) => {
                     border: "none",
                   },
                   textarea: {
-                    padding: `0 16px!important`,
+                    padding: `12 16px!important`,
                   },
                 }}
               >
@@ -110,19 +132,9 @@ const PersonaAndPrompt = ({ systemPrompt }: { systemPrompt: string }) => {
                       background: "transparent",
                     },
                   }}
+                  afterOnChange={afterOnChangePrompt}
                 />
 
-                <CommonStyles.Button
-                  variant="contained"
-                  type="submit"
-                  disabled={isSubmitting || !dirty}
-                  isLoading={isSubmitting}
-                  sx={{
-                    marginTop: "20px",
-                  }}
-                >
-                  Save
-                </CommonStyles.Button>
               </Box>
             </Form>
           );

@@ -261,7 +261,7 @@ function ChatbotConfigure() {
           </CommonStyles.Typography>
         </Box>
       </Box>
-      {tab === "develop" && data && <Develop data={data}/>}
+      {tab === "develop" && data && <Develop data={data} key={data?.mode}/>}
 
       {tab === "analysis" && <Analysis />}
     </Box>

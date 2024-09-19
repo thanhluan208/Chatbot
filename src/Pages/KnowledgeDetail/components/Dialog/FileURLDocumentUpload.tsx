@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { FastField, Form, Formik } from "formik";
-import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Box, DialogActions, DialogContent, DialogTitle, useTheme } from "@mui/material";
 import CommonStyles from "../../../../Components/CommonStyles";
 import CommonIcons from "../../../../Components/CommonIcons";
 import CommonField from "../../../../Components/CommonFields";
@@ -25,6 +25,7 @@ interface UploadValue {
 const FileURLDocumentDialog = (props: IFileURLDocumentDialog) => {
   //! State
   const { toggle } = props;
+  const theme = useTheme()
   const params = useParams();
   const userId = params.id;
   const knowledgeId = params.knowledgeId;
@@ -159,26 +160,21 @@ const FileURLDocumentDialog = (props: IFileURLDocumentDialog) => {
                   <CommonStyles.Button
                     variant="contained"
                     sx={{
-                      background: "#fff",
-                      color: "#000",
+                      background: theme.colors.custom.backgroundCard,
                       "&:hover": {
-                        background: "#fff",
+                        background: theme.colors.custom.backgroundCardHover,
                       },
+                      color:'unset'
                     }}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        toggle();
-                    }}
+                    onClick={toggle}
                     disabled={isSubmitting}
                     type="button"
                   >
-                    Cancel
+                    <CommonStyles.Typography>Cancel</CommonStyles.Typography>
                   </CommonStyles.Button>
                   <CommonStyles.Button
                     variant="contained"
-                    sx={{
-                      color: "#fff",
-                    }}
+                   
                     type="submit"
                     isLoading={isSubmitting}
                     disabled={isSubmitting || !isEmpty(errors)}

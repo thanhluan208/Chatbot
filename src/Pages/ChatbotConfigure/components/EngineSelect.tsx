@@ -31,7 +31,9 @@ const EngineOption = ({
   return (
     <Fragment>
       {option?.group && !isValue && (
-        <ListSubheader>{option.group}</ListSubheader>
+        <ListSubheader sx={{
+          background:'transparent'
+        }}>{option.group}</ListSubheader>
       )}
       <MenuItem
         value={JSON.stringify(option)}
