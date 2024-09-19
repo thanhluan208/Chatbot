@@ -11,11 +11,12 @@ import { useParams } from "react-router-dom";
 
 interface IDeleteKnowledge {
   data: IKnowledgeFolder;
+  deleteButton?: (toggle: () => void) => JSX.Element;
 }
 
 function DeleteKnowledge(props: IDeleteKnowledge) {
   //! State
-  const { data } = props;
+  const { data, deleteButton } = props;
   const { open, shouldRender, toggle } = useToggleDialog();
   const params = useParams();
   const refetchListFolderKnowledge = useGet("REFETCH_FOLDER_KNOWLEDGE");
@@ -23,17 +24,16 @@ function DeleteKnowledge(props: IDeleteKnowledge) {
 
   //! Function
   const handleDelete = async () => {
-    console.log('data', data, userId)
-    if (!data.title || !data.id || !userId) return;
+    if (!data?.title || !data?.id || !userId) return;
 
-    const toastId = toast.loading(`Deleting ${data.title}...`, {
+    const toastId = toast.loading(`Deleting ${data?.title}...`, {
       isLoading: true,
       autoClose: false,
     });
 
     const payload = {
       user_id: userId,
-      knowledge_storage_id: data.id,
+      knowledge_storage_id: data?.id,
     };
 
     try {
@@ -57,7 +57,7 @@ function DeleteKnowledge(props: IDeleteKnowledge) {
         autoClose: 2000,
       });
 
-      console.log('Delete failed', error);
+      console.log("Delete failed", error);
     }
     toggle();
   };
@@ -72,29 +72,33 @@ function DeleteKnowledge(props: IDeleteKnowledge) {
           maxWidth="sm"
           fullWidth
           onClick={(e) => {
-            e.stopPropagation()
+            e.stopPropagation();
           }}
         >
           <ConfirmDialog
             handleConfirm={handleDelete}
-            content={`Confirm delete ${data.title}`}
+            content={`Confirm delete ${data?.title || "this knowledge"}?`}
             toggle={toggle}
           />
         </CommonStyles.Dialog>
       )}
-      <CommonStyles.Button
-        color="error"
-        onClick={(e) => {
-          e.stopPropagation();
-          toggle();
-        }}
-        variant="outlined"
-        sx={{
-          color: "#ff1515",
-        }}
-      >
-        Delete
-      </CommonStyles.Button>
+      {deleteButton ? (
+        deleteButton(toggle)
+      ) : (
+        <CommonStyles.Button
+          color="error"
+          onClick={(e) => {
+            e.stopPropagation();
+            toggle();
+          }}
+          variant="outlined"
+          sx={{
+            color: "#ff1515",
+          }}
+        >
+          Delete
+        </CommonStyles.Button>
+      )}
     </Fragment>
   );
 }

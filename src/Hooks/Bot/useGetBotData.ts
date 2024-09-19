@@ -18,7 +18,7 @@ export interface BotData {
   tools: any[];
   system_prompt: string;
   llm: Llm;
-  knowledge_storage_ids: any[];
+  knowledge_storage_ids: KnowledgeStorage[];
   mode: Mode;
   bot_name: string;
   description: string;
@@ -31,6 +31,12 @@ export interface BotData {
   };
   flow_nodes: Flow;
 }
+
+export interface KnowledgeStorage {
+  knowledge_storage_id: string;
+  permission_level:     string;
+}
+
 
 export interface Flow {
   nodes: string[];

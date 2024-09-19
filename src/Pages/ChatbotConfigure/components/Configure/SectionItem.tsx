@@ -3,34 +3,31 @@ import CommonStyles from "../../../../Components/CommonStyles";
 import CommonIcons from "../../../../Components/CommonIcons";
 import { useCallback, useState } from "react";
 import { Box, Collapse, useTheme } from "@mui/material";
-import { AllQueryKeys, useGet } from "../../../../Stores/useStore";
-import { useParams } from "react-router-dom";
 import SectionButtonItem from "./SectionButtonItem";
 import { isArray, isEmpty } from "lodash";
 import useToggleDialog from "../../../../Hooks/useToggleDialog";
 import KnowledgeListDialog from "./Knowledge/KnowledgeListDialog";
+import { KnowledgeStorage } from "@/Hooks/Bot/useGetBotData";
 
 interface ISectionItem {
   content: string;
   title: string;
   isAutoAwesome?: boolean;
   sectionTitle: string;
+  list: KnowledgeStorage[]
 }
 
 function SectionItem(props: ISectionItem) {
   //! State
-  const { content, title, isAutoAwesome, sectionTitle } = props;
+  const { content, title, isAutoAwesome, sectionTitle, list } = props;
   const [open, setOpen] = useState(false);
   const theme: any = useTheme();
-  const params = useParams();
-  const { botId } = params as { botId: string };
 
-  const list = useGet(`${botId}/hihi` as AllQueryKeys);
   const { open: openDialog, shouldRender, toggle } = useToggleDialog();
 
   //! Function
   const renderDialog = useCallback(() => {
-    if (sectionTitle.toLowerCase() === "knowledge") {
+    if (true) {
       return (
         <CommonStyles.Dialog
           open={openDialog}
@@ -108,11 +105,10 @@ function SectionItem(props: ISectionItem) {
             list.map((item) => {
               return (
                 <SectionButtonItem
-                  avatar={item?.avatar}
-                  title={item?.title}
-                  subTitle={item?.subTitle}
-                  id={item?.id}
-                  key={item?.id}
+                  title={item?.knowledge_storage_id}
+                  permission_level={item?.permission_level}
+                  id={item?.knowledge_storage_id}
+                  key={item?.knowledge_storage_id}
                 />
                 // <SectionButtonItem
                 //   avatar="https://lf16-alice-tos-sign.oceanapi-i18n.com/obj/ocean-cloud-tos-sg/plugin_icon/7304214883296691202_1709124525992516552_523YvDutnS.png?lk3s=cd508e2b&x-expires=1717920653&x-signature=myQw4ZrWUb5h12BW%2FhsxEgDsQe0%3D"

@@ -7,7 +7,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSave } from "../../Stores/useStore";
 import { useEffect, useMemo, useState } from "react";
 import Develop from "./components/Develop";
-import Analysis from "./components/Analysis";
 import useGetBotData from "../../Hooks/Bot/useGetBotData";
 import cachedKeys from "../../Constants/cachedKeys";
 import { toast } from "react-toastify";
@@ -249,7 +248,7 @@ function ChatbotConfigure() {
           >
             Develop
           </CommonStyles.Typography>
-          <CommonStyles.Typography
+          {/* <CommonStyles.Typography
             type={tab !== "develop" ? "bold18" : "semiBold18"}
             color={tab !== "develop" ? theme.palette.primary.main : ""}
             sx={{
@@ -258,12 +257,12 @@ function ChatbotConfigure() {
             onClick={() => setTab("analysis")}
           >
             Analysis
-          </CommonStyles.Typography>
+          </CommonStyles.Typography> */}
         </Box>
       </Box>
       {tab === "develop" && data && <Develop data={data} key={data?.mode}/>}
 
-      {tab === "analysis" && <Analysis />}
+      {/* {tab === "analysis" && <Analysis />} */}
     </Box>
   );
 }

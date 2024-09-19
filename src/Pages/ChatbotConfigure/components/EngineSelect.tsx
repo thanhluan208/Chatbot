@@ -1,4 +1,11 @@
-import { Box, ListSubheader, MenuItem, Paper, Popper,  } from "@mui/material";
+import {
+  Box,
+  ListSubheader,
+  MenuItem,
+  Paper,
+  Popper,
+  useTheme,
+} from "@mui/material";
 import React, { Fragment, useId } from "react";
 import CommonStyles from "../../../Components/CommonStyles";
 import { ModelOption, modelOptions } from "../../../Constants/options";
@@ -15,6 +22,7 @@ const EngineOption = ({
   isValue?: boolean;
 }) => {
   //! State
+  const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
@@ -31,9 +39,13 @@ const EngineOption = ({
   return (
     <Fragment>
       {option?.group && !isValue && (
-        <ListSubheader sx={{
-          background:'transparent'
-        }}>{option.group}</ListSubheader>
+        <ListSubheader
+          sx={{
+            background: "transparent",
+          }}
+        >
+          {option.group}
+        </ListSubheader>
       )}
       <MenuItem
         value={JSON.stringify(option)}
@@ -42,6 +54,12 @@ const EngineOption = ({
           display: "flex",
           justifyContent: "space-between",
           padding: isValue ? "0 12px 0 16px" : "12px 16px",
+          transition: "background 0.3s",
+          "&:hover": {
+            background: isSelected
+              ? "transparent"
+              : theme.colors.custom.backgroundSecondary,
+          },
         }}
         onClick={() => {
           setValues({
@@ -62,7 +80,14 @@ const EngineOption = ({
           }}
         >
           {!isValue && (
-            <Box sx={{ width: 16, height: 16, marginRight: "8px", display:'flex' }}>
+            <Box
+              sx={{
+                width: 16,
+                height: 16,
+                marginRight: "8px",
+                display: "flex",
+              }}
+            >
               {isSelected && (
                 <CommonIcons.CheckOutlined sx={{ width: 16, height: 16 }} />
               )}

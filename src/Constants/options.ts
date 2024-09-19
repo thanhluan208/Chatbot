@@ -76,25 +76,25 @@ export const outputFormatOptions = [
 ];
 
 export const configures = [
-  {
-    title: "Skills",
-    items: [
-      {
-        title: "Plugins",
-        content:
-          "Plugins allow the bot to call external APIs that enable it to search for information, browse web pages, generate images, and more, expanding the bot's capabilities and applications.",
-      },
-      {
-        title: "Workflows",
-        content:
-          "Workflow supports the combination of plugins, LLMs, code blocks, and other features through a visual interface, enabling the orchestration of complex and stable business processes, such as travel planning and report analysis.",
-      },
-      {
-        title: "Triggers",
-        content: "Allow users to create scheduled triggers during chatting",
-      },
-    ],
-  },
+  // {
+  //   title: "Skills",
+  //   items: [
+  //     {
+  //       title: "Plugins",
+  //       content:
+  //         "Plugins allow the bot to call external APIs that enable it to search for information, browse web pages, generate images, and more, expanding the bot's capabilities and applications.",
+  //     },
+  //     {
+  //       title: "Workflows",
+  //       content:
+  //         "Workflow supports the combination of plugins, LLMs, code blocks, and other features through a visual interface, enabling the orchestration of complex and stable business processes, such as travel planning and report analysis.",
+  //     },
+  //     {
+  //       title: "Triggers",
+  //       content: "Allow users to create scheduled triggers during chatting",
+  //     },
+  //   ],
+  // },
   {
     title: "Knowledge",
     items: [
@@ -103,61 +103,61 @@ export const configures = [
         content:
           "After uploading documents, URLs, and third-party data sources into a text knowledge base, Bot can source the content in the text knowledge to answer user questions.",
       },
-      {
-        title: "Table",
-        content:
-          "Table supports matching appropriate rows according to a certain column of the table. It also supports querying and calculating the database based on natural language.",
-      },
-      {
-        title: "Images",
-        content:
-          "After uploading the image, you can choose to automatically or manually add the semantic description. Then, the bot can match the most appropriate image based on its description.",
-      },
+      // {
+      //   title: "Table",
+      //   content:
+      //     "Table supports matching appropriate rows according to a certain column of the table. It also supports querying and calculating the database based on natural language.",
+      // },
+      // {
+      //   title: "Images",
+      //   content:
+      //     "After uploading the image, you can choose to automatically or manually add the semantic description. Then, the bot can match the most appropriate image based on its description.",
+      // },
     ],
   },
-  {
-    title: "Memory",
-    items: [
-      {
-        title: "Variable",
-        content:
-          "After setting the memory, the bot will recall those memories during chats, which enables the bot to provide personalized responses.",
-      },
-      {
-        title: "Database",
-        content:
-          "Organize your data in a tabular structure to implement features such as bookmarks and book management.",
-      },
-      {
-        title: "Long-term Memory",
-        content:
-          "Summarize chat conversations and utilize them for enhanced user message responses.",
-      },
-      {
-        title: "Filebox",
-        content:
-          "Filebox has been disabled. If you want to enable automatic saving files, please turn the Filebox on",
-      },
-    ],
-  },
-  {
-    title: "Dialog",
-    items: [
-      {
-        title: "Opening Dialog",
-        content: "",
-      },
-      {
-        title: "Auto suggestion",
-        content: "",
-      },
-      {
-        title: "Shortcut",
-        content:
-          "Shortcut are buttons fixed to the bot's input above. Once added, users can quickly execute queries by clicking them.",
-      },
-    ],
-  },
+  // {
+  //   title: "Memory",
+  //   items: [
+  //     {
+  //       title: "Variable",
+  //       content:
+  //         "After setting the memory, the bot will recall those memories during chats, which enables the bot to provide personalized responses.",
+  //     },
+  //     {
+  //       title: "Database",
+  //       content:
+  //         "Organize your data in a tabular structure to implement features such as bookmarks and book management.",
+  //     },
+  //     {
+  //       title: "Long-term Memory",
+  //       content:
+  //         "Summarize chat conversations and utilize them for enhanced user message responses.",
+  //     },
+  //     {
+  //       title: "Filebox",
+  //       content:
+  //         "Filebox has been disabled. If you want to enable automatic saving files, please turn the Filebox on",
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: "Dialog",
+  //   items: [
+  //     {
+  //       title: "Opening Dialog",
+  //       content: "",
+  //     },
+  //     {
+  //       title: "Auto suggestion",
+  //       content: "",
+  //     },
+  //     {
+  //       title: "Shortcut",
+  //       content:
+  //         "Shortcut are buttons fixed to the bot's input above. Once added, users can quickly execute queries by clicking them.",
+  //     },
+  //   ],
+  // },
 ];
 
 export const chartData = {

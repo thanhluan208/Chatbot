@@ -12,8 +12,8 @@ const DynamicHeightList = ({ items }: any) => {
   const theme = useTheme();
   const cache = React.useRef(
     new CellMeasurerCache({
-      fixedWidth: true, 
-      defaultHeight: 50, 
+      fixedWidth: true,
+      defaultHeight: 50,
     })
   );
 
@@ -32,27 +32,37 @@ const DynamicHeightList = ({ items }: any) => {
           <Box
             sx={{
               ...style,
-              padding: "10px 20px",
+              padding: "25px 20px",
               boxSizing: "border-box",
-              background: theme.colors.custom.backgroundCard,
-              borderRadius: "12px",
-              border: `1px solid transparent`,
-              transition: "all 0.3s ease",
-              "&:hover": {
-                background: theme.colors.custom.backgroundCardHover,
-                border: `1px solid ${theme.palette.primary.main}`,
-              },
             }}
           >
             {/* Render your item here */}
 
-            <CommonStyles.Typography
+            <Box
               sx={{
-                whiteSpace: "pre-line",
+                padding: "24px",
+                background: theme.colors.custom.backgroundCard,
+                borderRadius: "12px",
+                border: `1px solid ${theme.palette.primary.main}`,
+                transition: "all 0.3s ease",
+                boxShadow: theme.colors.custom.boxShadow,
+                "&:hover": {
+                  background: theme.colors.custom.backgroundCardHover,
+                },
               }}
             >
-              {item.text}
-            </CommonStyles.Typography>
+              <CommonStyles.Typography
+                sx={{
+                  whiteSpace: "pre-line",
+                  WebkitLineClamp: 4,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                  display: "-webkit-box",
+                }}
+              >
+                {item.text}
+              </CommonStyles.Typography>
+            </Box>
           </Box>
         )}
       </CellMeasurer>

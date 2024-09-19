@@ -1,17 +1,18 @@
-import { Box,  } from "@mui/material";
+import { Box, useTheme,  } from "@mui/material";
 import CommonStyles from "../../Components/CommonStyles";
 import CreateBotPersonal from "./Components/CreateBotPersonal";
 import { useCallback, useState } from "react";
 import ListBot from "./Components/ListBot";
+import CreateKnowledgeButton from "./Components/CreateKnowledgeButton";
+import ListKnowledge from "./Components/ListKnowledge";
 
-interface IUsers {}
 
-const sectionList = ["Bots", ];
+const sectionList = ["Bots","Knowledge" ];
 
-function Users(props: IUsers) {
+function Users() {
   //! State
-  const {} = props;
   const [personalSection, setPersonalSection] = useState("Bots");
+  const theme = useTheme()
 
   //! Function
 
@@ -24,13 +25,24 @@ function Users(props: IUsers) {
       case "Workflows":
         return <div>Workflows</div>;
       case "Knowledge":
-        return <div>Knowledge</div>;
+        return <ListKnowledge />;
       case "Cards":
         return <div>Cards</div>;
       default:
         return <div>Bots</div>;
     }
   }, [personalSection]);
+
+  const renderCreateButton = useCallback(() => {
+    switch (personalSection) {
+      case "Bots":
+        return <CreateBotPersonal />;
+      case "Knowledge": 
+        return <CreateKnowledgeButton />
+      default:
+        return null
+    }
+  },[personalSection])
 
   //! Render
   return (
@@ -61,7 +73,7 @@ function Users(props: IUsers) {
             Personal
           </CommonStyles.Typography>
         </Box>
-        <CreateBotPersonal />
+        {renderCreateButton()}
       </Box>
 
       <Box
@@ -79,7 +91,6 @@ function Users(props: IUsers) {
               onClick={() => setPersonalSection(item)}
               variant={isActive ? "contained" : 'outlined'}
               sx={{
-                opacity: isActive ? 1 : 0.6,
                 "&:hover": {
                   "& p": {
                     fontWeight: "500 !important",
@@ -88,8 +99,8 @@ function Users(props: IUsers) {
               }}
             >
               <CommonStyles.Typography
-                type={isActive ? "semiBold14" : "normal14"}
-                color="#fff"
+                type={"semiBold14"}
+                color={isActive ? "#fff" : theme.colors.custom.normalColorTypo}
               >
                 {item}
               </CommonStyles.Typography>

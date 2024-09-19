@@ -3,26 +3,43 @@ import CommonStyles from "../../../../Components/CommonStyles";
 import { memo, useState } from "react";
 import CommonIcons from "../../../../Components/CommonIcons";
 import InfoButton from "./InfoButton";
+import DeleteKnowledge from "./Knowledge/DeleteKnowledge";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface ISectionButtonItem {
-  avatar: string;
   title: string;
-  subTitle: string;
+  permission_level: string;
   id: string;
 }
 
 function SectionButtonItem(props: ISectionButtonItem) {
   //! State
-  const { avatar, subTitle, title } = props;
-  const theme: any = useTheme();
+  const { permission_level, title, id } = props;
+  const theme = useTheme();
+  const navigate = useNavigate();
+  const pathname = useLocation().pathname;
 
+  const isOwner = permission_level.toLowerCase() === "owner";
   const [showAction, setShowAction] = useState(false);
   //! Function
 
   //! Render
+  const renderDeleteButton = (toggle: () => void) => {
+    return (
+      <CommonStyles.Button isIcon onClick={toggle} tooltip="Delete">
+        <CommonIcons.DeleteOutlined />
+      </CommonStyles.Button>
+    );
+  };
+
+  const handleNavigate = () => {
+    navigate(`${pathname}/knowledge/${id}?isOwner=${isOwner}`);
+  };
+
   return (
     <CommonStyles.Button
       fullWidth
+      onClick={handleNavigate}
       onMouseEnter={() => setShowAction(true)}
       onMouseLeave={() => setShowAction(false)}
       sx={{
@@ -35,6 +52,11 @@ function SectionButtonItem(props: ISectionButtonItem) {
         textAlign: "left",
         position: "relative",
         overflow: "hidden",
+        background: theme.colors.custom.backgroundSecondary,
+        border: "solid 1px transparent",
+        "&:hover": {
+          border: `solid 1px ${theme.palette.primary.main}`,
+        },
         "& p": {
           maxWidth: "calc(100vw/7*2 - 86px)",
           textWrap: "nowrap",
@@ -43,7 +65,9 @@ function SectionButtonItem(props: ISectionButtonItem) {
         },
       }}
     >
-      <img src={avatar} height={36} width={36} />
+      <Box>
+        <CommonIcons.Topic color="primary" sx={{ width: 36, height: 36 }} />
+      </Box>
       <Box>
         <CommonStyles.Typography type="semiBold14">
           {title}
@@ -52,7 +76,7 @@ function SectionButtonItem(props: ISectionButtonItem) {
           type="normal12"
           color={theme.colors.custom.normalColorTypo}
         >
-          {subTitle}
+          {permission_level}
         </CommonStyles.Typography>
       </Box>
       <Box
@@ -95,11 +119,15 @@ function SectionButtonItem(props: ISectionButtonItem) {
             <CommonIcons.SettingsOutlined />
           </Tooltip>
         </CommonStyles.Button>
-        <CommonStyles.Button isIcon>
-          <Tooltip title="Delete">
-            <CommonIcons.DeleteOutlined />
-          </Tooltip>
-        </CommonStyles.Button>
+        <DeleteKnowledge
+          data={{
+            id: props.id,
+            size: "0 Byte",
+            quantity: "0",
+            createdAt: "2021-10-10T00:00:00.000Z",
+          }}
+          deleteButton={renderDeleteButton}
+        />
       </Box>
     </CommonStyles.Button>
   );

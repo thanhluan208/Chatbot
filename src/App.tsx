@@ -98,6 +98,15 @@ function App() {
       },
     },
     {
+      path: ListRoutes.knowledgeDetailFromPersonal,
+      element: <KnowledgeDetail />,
+      loader: () => {
+        if (!userId) return redirect("/login");
+
+        return null;
+      },
+    },
+    {
       path: ListRoutes.knowledgeDetailFromStore,
       element: <KnowledgeDetail />,
       loader: () => {

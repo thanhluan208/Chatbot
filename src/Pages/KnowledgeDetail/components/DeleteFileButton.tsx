@@ -87,7 +87,9 @@ function DeleteFileButton(props: IDeleteFileButton) {
           toggle();
         }}
       >
-        <CommonIcons.Delete />
+        <CommonIcons.Delete sx={{
+          fill: "red",
+        }}/>
       </CommonStyles.Button>
     </Fragment>
   );

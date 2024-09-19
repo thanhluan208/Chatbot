@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import CommonIcons from "../../../../../Components/CommonIcons";
 import CommonStyles from "../../../../../Components/CommonStyles";
 import moment from "moment";
@@ -38,6 +38,7 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
     owner_id,
   } = props;
   const navigate = useNavigate();
+  const theme = useTheme()
   const pathname = useLocation().pathname;
   const params = useParams();
   const botId = params.botId;
@@ -143,6 +144,7 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
           navigate(`${pathname}/knowledge/${id}?isOwner=${isOwner}`);
         }
       }}
+      className="knowledge-folder"
       sx={{
         display: "flex",
         justifyContent: "space-between",
@@ -150,9 +152,12 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
         padding: "16px",
         borderRadius: "8px",
         cursor: "pointer",
-        "&:hover": {
-          background: "#2e2f380d",
-        },
+        background: theme.colors.custom.backgroundCard,
+          border: '1px solid transparent',
+          "&:hover": {
+            border: `1px solid ${theme.palette.primary.main}`,
+          }
+        
       }}
     >
       <Box
@@ -187,14 +192,16 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
           gap: "8px",
         }}
       >
-        <CommonStyles.Button
-          variant="outlined"
-          onClick={
-            isSharing ? handleRemoveKnowledgeFromBot : handleAddKnowledgeToBot
-          }
-        >
-          {isSharing ? "Remove" : "Add"}
-        </CommonStyles.Button>
+        {botId && (
+          <CommonStyles.Button
+            variant="outlined"
+            onClick={
+              isSharing ? handleRemoveKnowledgeFromBot : handleAddKnowledgeToBot
+            }
+          >
+            {isSharing ? "Remove" : "Add"}
+          </CommonStyles.Button>
+        )}
         <DeleteKnowledge data={props} />
       </Box>
     </Box>

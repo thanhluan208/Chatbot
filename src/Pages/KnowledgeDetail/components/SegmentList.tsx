@@ -179,9 +179,7 @@ const SegmentList = (props: ISegmentList) => {
       >
         <CommonStyles.LoadingOverlay isLoading={isLoading} />
         {!isEmpty(segment) && (
-          <CommonStyles.VirtualizeList items={segment} size={114}>
-            <div></div>
-          </CommonStyles.VirtualizeList>
+          <CommonStyles.VirtualizeList items={segment} />
         )}
       </Box>
     </Box>

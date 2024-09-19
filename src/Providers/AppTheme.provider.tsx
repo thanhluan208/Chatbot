@@ -249,7 +249,7 @@ const darkTheme = createTheme({
       backgroundCard: "#202024",
       backgroundCardHover: "#f7f7f714",
       borderColor: "#69696933",
-      boxShadow: "0 4px 12px 0px rgba(255,255,255,0.08), 0px 8px 24px 0px rgba(255,255,255,0.04)",
+      boxShadow: "0 4px 8px 0px rgba(255,255,255,0.08), 0px 8px 16px 0px rgba(255,255,255,0.04)",
 
       //* Main
       backgroundSecondary: "#18181b",

@@ -40,7 +40,7 @@ function MuiButton(props: IMuiButton & ButtonProps) {
       return {
         background: theme.colors.custom.backgroundSecondary,
         "&:hover": {
-          border: `1px solid ${theme.palette.primary.main}`,
+          border: otherProps.color !== 'error' ? `1px solid ${theme.palette.primary.main}` : '1px solid #f44336',
         },
       };
     }

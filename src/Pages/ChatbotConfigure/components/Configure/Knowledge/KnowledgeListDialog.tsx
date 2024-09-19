@@ -3,12 +3,11 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  InputAdornment,
   useTheme,
 } from "@mui/material";
 import CommonStyles from "../../../../../Components/CommonStyles";
 import CommonIcons from "../../../../../Components/CommonIcons";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import useGetListFolderKnowledge from "../../../../../Hooks/Knowledges/useGetListFolderKnowledge";
 import cachedKeys from "../../../../../Constants/cachedKeys";
 import { useSave } from "../../../../../Stores/useStore";
@@ -31,11 +30,10 @@ export const KnowledgeSortBy = {
   editAt: "Edit Time",
 };
 
-
 const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
   //! State
   const { toggle } = props;
-  const theme: any = useTheme();
+  const theme = useTheme();
   const save = useSave();
   const [filters, setFilter] = useState({
     visual_option: KnowledgeFilter.All,
@@ -44,19 +42,19 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
 
   const { data, isLoading, refetch } = useGetListFolderKnowledge(filters);
 
-  const debounceRef = useRef<any>(null);
+  // const debounceRef = useRef<any>(null);
 
   //! Function
 
-  const handleChangeSearch = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      setFilter((prev) => ({ ...prev, search_input: e.target.value }));
-      clearTimeout(debounceRef.current);
-    }, 300);
-  };
+  // const handleChangeSearch = (
+  //   e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  // ) => {
+  //   if (debounceRef.current) clearTimeout(debounceRef.current);
+  //   debounceRef.current = setTimeout(() => {
+  //     setFilter((prev) => ({ ...prev, search_input: e.target.value }));
+  //     clearTimeout(debounceRef.current);
+  //   }, 300);
+  // };
 
   //! Effect
   useEffect(() => {
@@ -113,7 +111,7 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
                     color={
                       filters.visual_option === value
                         ? theme.palette.primary.main
-                        : "#1d1c2399"
+                        : theme.colors.custom.normalColorTypo
                     }
                   >
                     {key}
@@ -132,9 +130,7 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
               },
             }}
           >
-            
-
-            <CommonStyles.Input
+            {/* <CommonStyles.Input
               afterOnchange={handleChangeSearch}
               value={filters.search_input}
               InputProps={{
@@ -144,7 +140,7 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
                   </InputAdornment>
                 ),
               }}
-            />
+            /> */}
             <CreateKnowledgeButton />
           </Box>
         </Box>
