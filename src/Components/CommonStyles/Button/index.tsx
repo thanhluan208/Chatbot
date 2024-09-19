@@ -57,7 +57,7 @@ function MuiButton(props: IMuiButton & ButtonProps) {
   //! Render
   if (isIcon) {
     return (
-      <Tooltip title={tooltip}>
+      <Tooltip title={tooltip} placement="top-end">
         <div>
           <IconButton
             {...otherProps}
@@ -79,7 +79,7 @@ function MuiButton(props: IMuiButton & ButtonProps) {
   }
 
   return (
-    <Tooltip title={tooltip}>
+    <Tooltip title={tooltip} placement="top-end">
       <div>
         <Button
           {...otherProps}
