@@ -1,8 +1,8 @@
 .chatting-start:before {
   content: "";
   position: absolute;
-  padding-bottom: calc(100% * 1.41421356237);
-  width: calc(100% * 1.41421356237);
+  padding-bottom: 2000px;
+  width: 2000px;
   background: conic-gradient(
     from -160deg at 50% 50%,
     #66bb6a 0deg,
@@ -31,8 +31,8 @@
 .start-node:before {
   content: "";
   position: absolute;
-  padding-bottom: calc(100% * 1.41421356237);
-  width: calc(100% * 1.41421356237);
+  padding-bottom: 2000px;
+  width: 2000px;
   background: conic-gradient(
     from -160deg at 50% 50%,
     #ce93d8 0deg,
@@ -61,8 +61,9 @@
 .chatting:before {
   content: "";
   position: absolute;
-  padding-bottom: calc(100% * 1.41421356237);
-  width: calc(100% * 1.41421356237);
+  padding-bottom: 2000px;
+  width: 2000px;
+  height: 100%;
   background: conic-gradient(
     from -160deg at 50% 50%,
     #66bb6a 0deg,
@@ -91,8 +92,8 @@
 .agent-node:before {
   content: "";
   position: absolute;
-  padding-bottom: calc(100% * 1.41421356237);
-  width: calc(100% * 1.41421356237);
+  padding-bottom: 2000px;
+  width: 2000px;
   background: transparent;
   left: 50%;
   top: 50%;
@@ -106,6 +107,37 @@
     from -160deg at 50% 50%,
     #4e40e5 0deg,
     #ff6b6b 90deg,
+    rgba(42, 138, 246, 0) 360deg
+  );
+  animation: spinner 4s linear infinite;
+  transform: translate(-50%, -50%) rotate(0deg);
+  z-index: -1;
+}
+
+
+.agent-chatting:before {
+  content: "";
+  position: absolute;
+  padding-bottom: 2000px;
+  width: 2000px;
+  background: conic-gradient(
+    from -160deg at 50% 50%,
+    #4e40e5 0deg,
+    #66bb6a 90deg,
+    #4e40e5 360deg
+  );
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 100%;
+}
+
+.selected .agent-chatting:before {
+  content: "";
+  background: conic-gradient(
+    from -160deg at 50% 50%,
+    #4e40e5 0deg,
+    #66bb6a 90deg,
     rgba(42, 138, 246, 0) 360deg
   );
   animation: spinner 4s linear infinite;

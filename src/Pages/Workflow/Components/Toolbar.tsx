@@ -1,21 +1,21 @@
 import { Box, useTheme } from "@mui/material";
 import AddNodes from "./Toolbar/AddNodes";
 import ZoomControl from "./Toolbar/ZoomControl";
-import {  useReactFlow } from "@xyflow/react";
+import { useReactFlow } from "@xyflow/react";
 import CommonStyles from "@/Components/CommonStyles";
-import { useGet } from "@/Stores/useStore";
+import { useGet, useSave } from "@/Stores/useStore";
 import FitView from "@/Components/CommonIcons/FitView";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { cloneDeep, isEmpty } from "lodash";
 import { v4 as uuid } from "uuid";
 import Shortcuts from "./Toolbar/Shortcuts";
 import AnimationControl from "./Toolbar/AnimationControl";
 import History from "./Toolbar/History";
 import ReArrangeFlow from "./Toolbar/ReArrangeFlow";
+import cachedKeys from "@/Constants/cachedKeys";
+import CommonIcons from "@/Components/CommonIcons";
 
 // const direction = "TB"
-
-
 
 export type HistoryRef = {
   handleChangeHistory: (value: number) => void;
@@ -28,8 +28,16 @@ const Toolbar = ({
 }) => {
   //! State
   const theme = useTheme();
-  const {   setNodes, fitView, getZoom, zoomTo } =
-    useReactFlow();
+  const save = useSave();
+  const {
+    setNodes,
+    fitView,
+    getZoom,
+    zoomTo,
+    setCenter,
+    getNodes,
+    updateNode,
+  } = useReactFlow();
   const handleAddNode = useGet("ADD_NODE");
   const isEditing = useGet("IS_EDITING");
   const mousePos = useRef<{
@@ -37,8 +45,13 @@ const Toolbar = ({
     clientY: number;
   } | null>(null);
 
+  const [open, setOpen] = useState(true);
   const historyRef = useRef<HistoryRef | null>(null);
 
+  const COLLAPSE_TOOLBAR = useGet("COLLAPSE_TOOLBAR") || !open;
+  const collapse = COLLAPSE_TOOLBAR || !open;
+
+  console.log("COLLAPSE_TOOLBAR", COLLAPSE_TOOLBAR);
 
   //! Function
 
@@ -51,7 +64,7 @@ const Toolbar = ({
         // historyRef.current?.handleChangeHistory &&
         //   historyRef.current?.handleChangeHistory(1);
       } else if (e.code.toLowerCase() === "keyy" && (e.ctrlKey || e.metaKey)) {
-        e.preventDefault()
+        e.preventDefault();
         // historyRef.current?.handleChangeHistory &&
         //   historyRef.current?.handleChangeHistory(-1);
       } else if (e.code.toLowerCase() === "equal" && (e.ctrlKey || e.metaKey)) {
@@ -111,7 +124,7 @@ const Toolbar = ({
         });
       }
     },
-    [ handleAddNode, isEditing]
+    [handleAddNode, isEditing]
   );
 
   const handleTrackMouse = useCallback((e: MouseEvent) => {
@@ -138,12 +151,16 @@ const Toolbar = ({
         position: "absolute",
         bottom: "20px",
         right: "250px",
+        width: !collapse ? "851px" : "52px",
+        transition: "all 0.5s ease",
+        overflow: "hidden",
         background: theme.colors.custom.backgroundCard,
-        padding: "10px 20px",
+        padding: !collapse ? "10px 20px" : "10px 20px 10px 0",
         boxShadow: "0 5px 10px rgba(0,0,0,0.2)",
         borderRadius: "12px",
         alignItems: "center",
         display: "flex",
+        justifyContent: "end",
         "& .iconBtn": {
           borderRadius: "8px",
           padding: "12px",
@@ -179,7 +196,7 @@ const Toolbar = ({
         />
 
         <ReArrangeFlow />
-        
+
         <CommonStyles.Button
           isIcon
           onClick={() => fitView()}
@@ -204,6 +221,35 @@ const Toolbar = ({
 
       <History innerRef={historyRef} />
 
+      <CommonStyles.Button
+        isIcon
+        sx={{
+          background: theme.colors.custom.backgroundCard,
+          margin: "0 8px",
+        }}
+        isRound={false}
+        onClick={() => {
+          const currentNode = getNodes().find((elm) => elm.data.currentNode);
+          if (currentNode) {
+            save(cachedKeys.OPEN_CHAT, true);
+            setOpen(false)
+            setCenter(
+              currentNode.position.x + 1100,
+              currentNode.position.y + 550,
+              {
+                zoom: 0.57,
+              }
+            );
+            updateNode(currentNode.id, {
+              selected: true,
+            });
+          }
+        }}
+        tooltip="Open chat"
+      >
+        <CommonIcons.ChatBubble />
+      </CommonStyles.Button>
+
       <Box
         sx={{
           height: "25px",
@@ -216,6 +262,30 @@ const Toolbar = ({
       />
 
       <Shortcuts />
+
+      <CommonStyles.Button
+        isIcon
+        isRound={false}
+        onClick={() =>
+          setOpen((_) => {
+            if (collapse) {
+              save(cachedKeys.COLLAPSE_TOOLBAR, false);
+              return true;
+            } else {
+              save(cachedKeys.COLLAPSE_TOOLBAR, true);
+              return false;
+            }
+          })
+        }
+        sx={{
+          transform: !collapse
+            ? "translateX(0) rotate(180deg)"
+            : "translateX(10px) rotate(0deg)",
+          transition: "all 0.3s",
+        }}
+      >
+        <CommonIcons.KeyboardDoubleArrowLeft />
+      </CommonStyles.Button>
     </Box>
   );
 };

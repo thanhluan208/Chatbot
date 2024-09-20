@@ -27,19 +27,28 @@ import { useAuth } from "@/Providers/AuthenticationProvider";
 import { toast } from "react-toastify";
 import httpServices from "@/Services/httpServices";
 import {
-  updateMetadata,
+  updateNodeLLM,
   updateScenario,
   updateSystemPrompt,
 } from "@/Constants/api";
 
 import "./index.css";
+import cachedKeys from "@/Constants/cachedKeys";
 
 const MultiAgentNode = (props: NodeProps) => {
   //! State
   const { data } = props;
   const shouldRemove = useGet(`${props.id}_remove` as any);
-  const { setNodes, setEdges, updateNode, updateEdge, getNode } =
-    useReactFlow();
+  console.log("data", data);
+  const {
+    setNodes,
+    setEdges,
+    updateNode,
+    updateEdge,
+    getNodes,
+    getNode,
+    setCenter,
+  } = useReactFlow();
   const [isAdding, setIsAdding] = React.useState(false);
   const [isRenaming, setIsRenaming] = React.useState(false);
 
@@ -74,15 +83,17 @@ const MultiAgentNode = (props: NodeProps) => {
       top_p: botData?.llm?.top_p ?? 0.9,
       history_turn: botData?.llm?.history_turn ?? 3,
       max_tokens: botData?.llm?.max_tokens ?? 2048,
+      frequency_penalty: botData?.llm?.frequency_penalty ?? 0,
+      presence_penalty: botData?.llm?.presence_penalty ?? 0,
     };
   }, [data]);
 
   const classname = useMemo(() => {
-    if(data?.currentNode && data?.startNode) return "chatting-start"
-    else if(data?.currentNode) return "chatting"
-    else if(data?.startNode) return "start-node"
-    else return "agent-node"
-  },[data?.currentNode, data?.startNode])
+    if (data?.currentNode && data?.startNode) return "chatting-start";
+    else if (data?.currentNode && !data?.startNode) return "agent-chatting";
+    else if (data?.startNode) return "start-node";
+    else return "agent-node";
+  }, [data?.currentNode, data?.startNode]);
 
   //! Function
   const handleAddPlaceholder = () => {
@@ -189,12 +200,6 @@ const MultiAgentNode = (props: NodeProps) => {
     setIsAdding(false);
   };
 
-  const handleClickNode = useCallback(() => {
-    updateNode(props?.id, {
-      selected: true,
-    });
-  }, [props?.id]);
-
   const afterOnChangePrompt = useCallback(
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       if (timeoutRef.current) {
@@ -258,11 +263,12 @@ const MultiAgentNode = (props: NodeProps) => {
 
     updateNode(props?.id, {
       data: {
+        ...props.data,
         label: nameRef?.current?.value,
       },
     });
     setIsRenaming(false);
-  }, [updateNode, props?.id]);
+  }, [updateNode, props?.id, props?.data]);
 
   const handleSubmit = useCallback(async (values: any) => {
     const toastId = toast.loading(`Saving agent ${props.id}...`, {
@@ -271,37 +277,36 @@ const MultiAgentNode = (props: NodeProps) => {
     });
 
     try {
-      const response = await httpServices.post(updateMetadata, {
+      const response = await httpServices.post(updateNodeLLM, {
         bot_id: botId,
         node_id: props.id,
-        data: {
-          llm: {
-            model: values.model.value,
-            temperature: values.temperature ?? 1.21,
-            top_p: values.top_p ?? 0.9,
-            history_turn: values.history_turn ?? 3,
-            max_tokens: values.max_tokens ?? 2048,
-          },
-          scenario: values.scenario ?? "",
-          system_prompt: values.system_prompt ?? "",
+        llm_name: values.model.value,
+        model_params: {
+          temperature: values.temperature ?? 1.21,
+          top_p: values.top_p ?? 0.9,
+          history_turn: values.history_turn ?? 3,
+          max_tokens: values.max_tokens ?? 2048,
+          frequency_penalty: values.frequency_penalty ?? 0,
+          presence_penalty: values.presence_penalty ?? 0,
         },
-        info: JSON.stringify({
-          id: props?.id,
-          position: {
-            x: props.positionAbsoluteX,
-            y: props.positionAbsoluteY,
-          },
-          data: props?.data,
-        }),
       });
       console.log("response", response);
 
-      toast.update(toastId, {
-        isLoading: false,
-        render: "Agent saved successfully!",
-        type: toast.TYPE.SUCCESS,
-        autoClose: 2000,
-      });
+      if (response?.data?.status_code === 200) {
+        toast.update(toastId, {
+          isLoading: false,
+          render: "Agent saved successfully!",
+          type: toast.TYPE.SUCCESS,
+          autoClose: 2000,
+        });
+      } else {
+        toast.update(toastId, {
+          isLoading: false,
+          render: "Failed to save agent!",
+          type: toast.TYPE.ERROR,
+          autoClose: 2000,
+        });
+      }
     } catch (error) {
       console.log("error", error);
       toast.update(toastId, {
@@ -312,6 +317,31 @@ const MultiAgentNode = (props: NodeProps) => {
       });
     }
   }, []);
+
+  const handleChatWithBot = useCallback(() => {
+    save(cachedKeys.OPEN_CHAT, true);
+    save(cachedKeys.COLLAPSE_TOOLBAR, true);
+    setCenter(props.positionAbsoluteX + 1100, props.positionAbsoluteY + 550, {
+      zoom: 0.55,
+      duration: 1
+    });
+    const currentNode = getNodes().find((node) => node.data?.currentNode);
+    if (currentNode) {
+      updateNode(currentNode.id, {
+        data: {
+          ...currentNode.data,
+          currentNode: false,
+        },
+      });
+    }
+
+    updateNode(props?.id, {
+      data: {
+        ...props.data,
+        currentNode: true,
+      },
+    });
+  }, [setNodes, props?.id, updateNode, props?.data]);
 
   useEffect(() => {
     const node = document.getElementById(props.id);
@@ -342,13 +372,6 @@ const MultiAgentNode = (props: NodeProps) => {
           };
         });
       });
-
-      updateNode(props?.id, {
-        data: {
-          ...props.data,
-          readyToPaste: true,
-        },
-      });
     } else {
       setEdges((edge) =>
         edge.map((item) => ({
@@ -356,13 +379,6 @@ const MultiAgentNode = (props: NodeProps) => {
           animated: false,
         }))
       );
-
-      updateNode(props?.id, {
-        data: {
-          ...props.data,
-          readyToPaste: false,
-        },
-      });
     }
   }, [props?.selected, props?.id]);
 
@@ -374,8 +390,6 @@ const MultiAgentNode = (props: NodeProps) => {
         opacity: props.data?.isPlaceholder ? 0.5 : 1,
         display: "flex",
         borderRadius: "8px",
-        minWidth: "380px",
-
         padding: "2px",
         transition: "all 0.5s ease",
         position: "relative",
@@ -404,7 +418,6 @@ const MultiAgentNode = (props: NodeProps) => {
           },
         },
       }}
-      onClick={handleClickNode}
     >
       {(!!data?.currentNode || !!data?.startNode) && (
         <Box
@@ -451,6 +464,8 @@ const MultiAgentNode = (props: NodeProps) => {
           borderRadius: "8px",
           position: "relative",
           padding: "2px",
+          minWidth: props?.data?.currentNode && props?.selected ? "800px" : "500px",
+          transition: "all 0.5s ease",
           overflow: "hidden",
           display: "flex",
           boxShadow:
@@ -460,6 +475,16 @@ const MultiAgentNode = (props: NodeProps) => {
           },
         }}
         className={classname}
+        onClick={() => {
+          const updates: any = {
+            selected: true,
+            readyToPaste: true,
+          };
+          updateNode(props?.id, {
+            ...props.data,
+            ...updates,
+          });
+        }}
       >
         <Box
           sx={{
@@ -472,7 +497,8 @@ const MultiAgentNode = (props: NodeProps) => {
           }}
         >
           <CollapseArea
-            initOpen={false}
+            initOpen={!!props?.data?.currentNode}
+            key={props?.data?.currentNode as any}
             label={
               <Box
                 sx={{
@@ -545,7 +571,10 @@ const MultiAgentNode = (props: NodeProps) => {
                               height: "16px",
                             },
                           }}
-                          onClick={() => setIsRenaming(false)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setIsRenaming(false);
+                          }}
                         >
                           <CommonIcons.Close />
                         </CommonStyles.Button>
@@ -559,7 +588,10 @@ const MultiAgentNode = (props: NodeProps) => {
                               height: "16px",
                             },
                           }}
-                          onClick={handleRename}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRename();
+                          }}
                         >
                           <CommonIcons.Save />
                         </CommonStyles.Button>
@@ -575,7 +607,8 @@ const MultiAgentNode = (props: NodeProps) => {
                             height: "16px",
                           },
                         }}
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setIsRenaming(true);
                           setTimeout(() => {
                             nameRef.current?.focus();
@@ -599,7 +632,7 @@ const MultiAgentNode = (props: NodeProps) => {
                     tooltip={
                       data?.currentNode ? "Chatting..." : "Chat with this bot"
                     }
-                    disabled={!!data?.currentNode}
+                    onClick={handleChatWithBot}
                   >
                     <CommonIcons.Chat
                       fill={theme.colors.custom.normalColorTypo as string}
@@ -622,7 +655,8 @@ const MultiAgentNode = (props: NodeProps) => {
                 return (
                   <Form>
                     <CollapseArea
-                      initOpen={false}
+                      initOpen={!!props?.data?.currentNode}
+                      key={props?.data?.currentNode as any}
                       label={
                         <CommonStyles.Typography type="semiBold14">
                           Model Configuration
@@ -633,9 +667,27 @@ const MultiAgentNode = (props: NodeProps) => {
                       <GenerationDiversity />
                       <Advance />
                       <InputAndOutputSettings />
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "flex-end",
+                          marginTop: "20px",
+                        }}
+                      >
+                        <CommonStyles.Button
+                          variant="contained"
+                          type="submit"
+                          startIcon={<CommonIcons.Save />}
+                          disabled={isSubmitting}
+                        >
+                          Save
+                        </CommonStyles.Button>
+                      </Box>
                     </CollapseArea>
 
                     <CollapseArea
+                      initOpen={!!props?.data?.currentNode}
+                      key={props?.data?.currentNode as any}
                       label={
                         <CommonStyles.Typography type="semiBold14">
                           Scenario{" "}
@@ -662,6 +714,8 @@ const MultiAgentNode = (props: NodeProps) => {
                     </CollapseArea>
 
                     <CollapseArea
+                      initOpen={!!props?.data?.currentNode}
+                      key={props?.data?.currentNode as any}
                       label={
                         <CommonStyles.Typography type="semiBold14">
                           Agent prompt
@@ -686,23 +740,6 @@ const MultiAgentNode = (props: NodeProps) => {
                         afterOnChange={afterOnChangePrompt}
                       />
                     </CollapseArea>
-
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        marginTop: "20px",
-                      }}
-                    >
-                      <CommonStyles.Button
-                        variant="contained"
-                        type="submit"
-                        startIcon={<CommonIcons.Save />}
-                        disabled={isSubmitting}
-                      >
-                        Save
-                      </CommonStyles.Button>
-                    </Box>
                   </Form>
                 );
               }}

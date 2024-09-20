@@ -39,7 +39,7 @@ const MultiAgent = () => {
           y: agentInfo?.position?.y ?? 8,
         },
         data: {
-          label: agentInfo?.label ?? `Agent ${agent?.node_id}`,
+          label: agentInfo?.data?.label ?? `Agent ${agent?.node_id}`,
           startNode: agent.node_id === botData.flow_nodes.start_node,
           currentNode: agent.node_id === botData.flow_nodes.current_node,
           ...agent?.metadata,

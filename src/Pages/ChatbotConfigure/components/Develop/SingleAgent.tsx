@@ -170,7 +170,7 @@ const SingleAgent = () => {
           width: "33vw",
           padding: "8px 10px 0 20px",
           borderLeft: `solid 0.5px ${theme.colors.custom.borderColor}`,
-          background: theme.colors.custom.backgroundCard,
+          background: theme.colors.custom.backgroundSecondary,
         }}
       >
         <Configure system_prompt={data?.system_prompt} />

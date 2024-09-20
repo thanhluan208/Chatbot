@@ -57,7 +57,7 @@ const InputAndOutputSettings = () => {
   //! Render
   return (
     <Box>
-      <CommonStyles.Typography type="semiBold16" mt={"16px"} mb="-18px">
+      <CommonStyles.Typography type="semiBold16" mt={"16px"} >
         Input and output settings
       </CommonStyles.Typography>
 

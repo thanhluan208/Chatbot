@@ -48,9 +48,14 @@ const SlideAndNumField = (props: ISlideAndNumField) => {
 
   //! Render
   return (
-    <Box display="flex" justifyContent={"space-between"} mt="18px">
+    <Box sx={{
+      display:"grid",
+      gridTemplateColumns:'2fr 3fr',
+      marginTop:'18px',
+      gap:'16px'
+    }}>
       <Box display="flex" alignItems={"center"}>
-        <CommonStyles.Typography type="normal12">
+        <CommonStyles.Typography type="normal16">
           {title}
         </CommonStyles.Typography>
         {hintContent && <Hint content={hintContent} />}
@@ -76,8 +81,9 @@ const SlideAndNumField = (props: ISlideAndNumField) => {
           marks={marks}
           min={min}
           max={max}
+          fullWidth
           sxContainer={{
-            width: "126px",
+            width: "50%",
             "& .MuiSlider-root": {
               margin: 0,
               top: "50%",
@@ -91,7 +97,7 @@ const SlideAndNumField = (props: ISlideAndNumField) => {
           name={name}
           component={CommonField.InputField}
           type="number"
-          sxContainer={{ width: "160px" }}
+          sxContainer={{ width: "50%" }}
           InputProps={{
             endAdornment: (
               <CustomAdornment name={name} min={min} max={max} step={step} />

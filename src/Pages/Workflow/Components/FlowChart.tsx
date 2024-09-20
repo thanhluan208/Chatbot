@@ -26,8 +26,6 @@ import { useSave } from "../../../Stores/useStore";
 import cachedKeys from "../../../Constants/cachedKeys";
 import reactFlowService from "@/Services/reactFlowService";
 import { useAuth } from "@/Providers/AuthenticationProvider";
-import CommonStyles from "@/Components/CommonStyles";
-import CommonIcons from "@/Components/CommonIcons";
 import { cloneDeep } from "lodash";
 import { detectDiff } from "@/Helpers";
 import httpServices from "@/Services/httpServices";
@@ -57,6 +55,7 @@ export default function FlowChart(props: IFlowChart) {
   const [nodes, setNodes, onNodesChange] = useNodesState(
     (initNodes as Node[]) ?? []
   );
+  console.log("nodes", nodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(initEdges);
   const { screenToFlowPosition, updateNode, getNodes, getEdges } =
     useReactFlow();
@@ -471,23 +470,7 @@ export default function FlowChart(props: IFlowChart) {
         panOnScroll={true}
         onNodesDelete={handleDeleteNode}
       >
-        <CommonStyles.Button
-          isIcon
-          sx={{
-            background: theme.colors.custom.backgroundCard,
-            position: "absolute",
-            top: "10px",
-            right: "10px",
-            cursor: "pointer",
-            zIndex: 1000,
-            borderRadius: "8px",
-          }}
-          onClick={() => {
-            save(cachedKeys.OPEN_CHAT, true);
-          }}
-        >
-          <CommonIcons.ChatBubble />
-        </CommonStyles.Button>
+        
         <Controls />
         <MiniMap nodeColor={nodeColor} />
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />

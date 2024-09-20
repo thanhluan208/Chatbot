@@ -57,7 +57,10 @@ const AddNodes = ({ listNode = [] }: IAddNodes) => {
     <ClickAwayListener onClickAway={() => setAnchorEl(null)}>
       <Box>
         <AddNodePopper listNode={listNode} anchorEl={anchorEl} open={open}/>
-        <CommonStyles.Button onClick={handleClick} variant="contained">
+        <CommonStyles.Button onClick={handleClick} variant="contained" sx={{
+          textWrap:'nowrap',
+          overflow: 'hidden',
+        }}>
           Add node
         </CommonStyles.Button>
       </Box>

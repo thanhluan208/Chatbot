@@ -32,8 +32,9 @@ export default function ChatDrawer() {
 
   const data = useGet("BOT_DATA");
   //! Function
-  const handleClose = () => {
-    save(cachedKeys.OPEN_CHAT);
+  const handleClose = (_: {}, reason: "backdropClick" | "escapeKeyDown") => {
+    if(reason === 'backdropClick') return
+    save(cachedKeys.OPEN_CHAT, false);
   };
 
   const handleNewConversation = async () => {
@@ -61,7 +62,7 @@ export default function ChatDrawer() {
 
   //! Render
   return (
-    <Drawer anchor="right" open={openDrawer} onClose={handleClose}>
+    <Drawer variant="persistent" anchor="right" open={openDrawer} onClose={handleClose} hideBackdrop>
       <Box
         id="wrapper"
         sx={{
@@ -96,7 +97,7 @@ export default function ChatDrawer() {
           }}>
             <CommonIcons.Close />
           </CommonStyles.Button>
-          <CommonStyles.Button
+          {/* <CommonStyles.Button
             isIcon
             className="iconButton"
             onClick={() => {
@@ -104,7 +105,7 @@ export default function ChatDrawer() {
             }}
           >
             <CommonIcons.Note />
-          </CommonStyles.Button>
+          </CommonStyles.Button> */}
         </Box>
         <Box
           id="scrollbar-chatbot"

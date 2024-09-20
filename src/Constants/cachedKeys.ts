@@ -34,6 +34,7 @@ export default {
   //! React flow
   FLOW_NODES: "FLOW_NODES",
   FLOW_EDGES: "FLOW_EDGES",
+  COLLAPSE_TOOLBAR: "COLLAPSE_TOOLBAR",
 
   //! Community
   OPEN_DRAWER: "OPEN_DRAWER",

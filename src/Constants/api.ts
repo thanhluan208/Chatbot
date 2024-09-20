@@ -54,3 +54,4 @@ export const updateSystemPrompt = baseAPI + "/node/update_system_prompt_to_node"
 export const updateBotEdge = baseAPI + "/node/add_edge";
 export const removeEdge = baseAPI + 'node/remove_edge'
 export const updateScenario = baseAPI + "node/update_scenario_to_node"
+export const updateNodeLLM = baseAPI + '/node/update_model_params_for_node'

@@ -6,8 +6,8 @@ import { deleteBotNode } from "../../../../../Constants/api";
 import CommonStyles from "../../../../../Components/CommonStyles";
 import ConfirmDialog from "../../../../../Components/CommonStyles/ConfirmDialog";
 import CommonIcons from "@/Components/CommonIcons";
-import { useReactFlow } from "@xyflow/react";
 import { useParams } from "react-router-dom";
+import { useSave } from "@/Stores/useStore";
 
 interface IDeleteButton {
   id: string;
@@ -17,7 +17,7 @@ function DeleteAgentButton(props: IDeleteButton) {
   //! State
   const { id } = props;
   const { open, shouldRender, toggle } = useToggleDialog();
-  const { setNodes } = useReactFlow();
+  const save = useSave()
   const params = useParams();
   const botId = params.botId;
 
@@ -44,7 +44,7 @@ function DeleteAgentButton(props: IDeleteButton) {
           isLoading: false,
         });
 
-        setNodes((prevNodes) => prevNodes.filter((node) => node.id !== id));
+        save(`${id}_remove`, true)
       } else {
         throw new Error(response.data.message);
       }

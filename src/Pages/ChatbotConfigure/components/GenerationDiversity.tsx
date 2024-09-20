@@ -125,7 +125,7 @@ const GenerationDiversity = () => {
   //! Render
   return (
     <Box mt={"16px"}>
-      <Box sx={{ display: "flex", gap: "8px", alignItems: "center" }}>
+      <Box sx={{ display: "flex", gap: "8px", alignItems: "center",marginBottom:"12px" }}>
         <CommonStyles.Typography type="semiBold16">
           Generation Diversity
         </CommonStyles.Typography>
@@ -181,7 +181,7 @@ const GenerationDiversity = () => {
               }}
             >
               <CommonStyles.Typography
-                type={isSelected ? "semiBold12" : "normal12"}
+                type={isSelected ? "semiBold14" : "normal14"}
               >
                 {option.label}
               </CommonStyles.Typography>
