@@ -106,42 +106,14 @@ const lightTheme = createTheme({
   },
   colors: {
     custom: {
-      // backgroundCard: "#fff",
-      // backgroundCardHover: "#f7f7f714",
-      // borderColor: "#69696933",
-      // boxShadow: "0 4px 12px 0px rgba(0,0,0,0.08), 0px 8px 24px 0px rgba(0,0,0,0.04)",
 
-      // //* Main
-      // backgroundSecondary: "#f5f5f5",
-
-      // //* Button
-      // backgroundButtonHover: "#1976d214",
-
-      // //* Typo
-      // primaryColorTypo: "#1f1e7d",
-      // normalColorTypo: "#000",
-      // semiColorTypo: "#383743",
-      // colorErrorTypo: "#ff1515",
-
-      // //* Dialog
-      // backgroundDialog: "#f9f9f9",
-
-      // //* Star
-      // colorStar: "#f7c52b",
-
-      // //* Button
-      // colorActive: "#f1f2fd",
-
-      // //* Tab
-      // backgroundTab: "#4b4a580a",
-
-      backgroundCard: "#f9f9f9", // Light gray for card background
+      backgroundCard: "#ffffff ", // Light gray for card background
       backgroundCardHover: "#e0e0e0", // Slightly darker for hover effect
       borderColor: "#cccccc", // Light gray for borders
       boxShadow: "0 4px 12px 0px rgba(0,0,0,0.08), 0px 8px 24px 0px rgba(0,0,0,0.04)", // Darker shadow for contrast
 
       //* Main
-      backgroundSecondary: "#f0f0f0", // Light gray for secondary background
+      backgroundSecondary: "#f3f3f3", // Light gray for secondary background
 
       //* Button
       backgroundButtonHover: "#e3f2fd", // Light blue with transparency for button hover
@@ -246,13 +218,13 @@ const darkTheme = createTheme({
   },
   colors: {
     custom: {
-      backgroundCard: "#202024",
-      backgroundCardHover: "#f7f7f714",
+      backgroundCard: "#1d1d29",
+      backgroundCardHover: "#1d1d2914",
       borderColor: "#69696933",
       boxShadow: "0 4px 8px 0px rgba(255,255,255,0.08), 0px 8px 16px 0px rgba(255,255,255,0.04)",
 
       //* Main
-      backgroundSecondary: "#18181b",
+      backgroundSecondary: "#11121e",
 
       //* Button
       backgroundButtonHover: "#1976d214",

@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { Fragment, memo } from "react";
 import CommonIcons from "../../../../../../Components/CommonIcons";
 import CommonStyles from "../../../../../../Components/CommonStyles";
-import CollapseArea from "../../CollapseArea";
+import CollapseArea from "../../../../../../Components/CommonStyles/CollapseArea";
 import { FastField, FieldArray, useFormikContext } from "formik";
 import CommonField from "../../../../../../Components/CommonFields";
 import { v4 as uuid } from "uuid";

@@ -1,5 +1,6 @@
 import MuiButton from "./Button";
 import MuiChip from "./Chip";
+import CollapseArea from "./CollapseArea";
 import ConfirmDialog from "./ConfirmDialog";
 import MUIDialog from "./Dialog";
 import Input from "./Input";
@@ -23,7 +24,8 @@ const CommonStyles = {
   UploadFile,
   TextArea,
   VirtualizeList,
-  Table
+  Table,
+  CollapseArea
 };
 
 export default CommonStyles;

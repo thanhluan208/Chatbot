@@ -1,5 +1,5 @@
 import { FastField, FieldArray, useFormikContext } from "formik";
-import CollapseArea from "../../CollapseArea";
+import CollapseArea from "../../../../../../Components/CommonStyles/CollapseArea";
 import { Fragment } from "react/jsx-runtime";
 import { Box } from "@mui/material";
 import CommonStyles from "../../../../../../Components/CommonStyles";

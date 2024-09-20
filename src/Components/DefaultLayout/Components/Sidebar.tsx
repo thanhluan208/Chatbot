@@ -42,7 +42,8 @@ export default function Sidebar({
           overflow: "hidden",
           p: {
             textWrap:'nowrap'
-          }
+          },
+          background: theme.colors.custom.backgroundCard
         }}
       >
         <Box

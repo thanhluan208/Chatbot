@@ -10,7 +10,7 @@ import { Box, useTheme } from "@mui/material";
 import { v4 as uuid } from "uuid";
 import CommonIcons from "@/Components/CommonIcons";
 import CommonStyles from "@/Components/CommonStyles";
-import CollapseArea from "../CollapseArea";
+import CollapseArea from "../../../../../Components/CommonStyles/CollapseArea";
 import { FastField, Form, Formik } from "formik";
 import CommonField from "@/Components/CommonFields";
 import { useGet, useSave } from "@/Stores/useStore";
@@ -31,6 +31,8 @@ import {
   updateScenario,
   updateSystemPrompt,
 } from "@/Constants/api";
+
+import "./index.css";
 
 const MultiAgentNode = (props: NodeProps) => {
   //! State
@@ -74,6 +76,14 @@ const MultiAgentNode = (props: NodeProps) => {
       max_tokens: botData?.llm?.max_tokens ?? 2048,
     };
   }, [data]);
+
+  const classname = useMemo(() => {
+    if(data?.currentNode && data?.startNode) return "chatting-start"
+    else if(data?.currentNode) return "chatting"
+    else if(data?.startNode) return "start-node"
+    else return "agent-node"
+  },[data?.currentNode, data?.startNode])
+
   //! Function
   const handleAddPlaceholder = () => {
     if (isAdding) return;
@@ -362,19 +372,11 @@ const MultiAgentNode = (props: NodeProps) => {
       id={props.id}
       sx={{
         opacity: props.data?.isPlaceholder ? 0.5 : 1,
+        display: "flex",
         borderRadius: "8px",
-        background: theme.colors.custom.backgroundCard,
-        border: data?.currentNode
-          ? `solid 2px ${theme.palette.success.main}`
-          : props?.selected
-          ? "solid 2px #4e40e5"
-          : "solid 2px transparent",
         minWidth: "380px",
-        boxShadow: "0 0 8px 0 rgba(29,28,35,.06),0 0 2px 0 rgba(29,28,35,.18)",
-        "&:hover": {
-          boxShadow: "0 0 1px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.1)",
-        },
-        padding: "12px",
+
+        padding: "2px",
         transition: "all 0.5s ease",
         position: "relative",
         "& .handle": {
@@ -404,260 +406,310 @@ const MultiAgentNode = (props: NodeProps) => {
       }}
       onClick={handleClickNode}
     >
-      {!!data?.currentNode && (
+      {(!!data?.currentNode || !!data?.startNode) && (
         <Box
           sx={{
-            background: `${theme.palette.success.main}`,
-            position:'absolute',
-            top:'-50px',
-            left:'50%',
-            transform:'translateX(-50%)',
-            padding:'4px 12px',
-            borderRadius:'12px'
+            position: "absolute",
+            top: "-50px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
           }}
         >
-          <CommonStyles.Typography type="semiBold16" color="#fff">
-            Chatting with this agent...
-          </CommonStyles.Typography>
-        </Box>
-      )}
-      <CollapseArea
-        label={
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              width: "100%",
-            }}
-          >
+          {!!data?.currentNode && (
             <Box
               sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: "12px",
+                background: `${theme.palette.success.main}`,
+                borderRadius: "12px",
+                padding: "4px 12px",
               }}
             >
-              <img
-                src={logo}
-                alt="logo"
-                style={{
-                  width: "20px",
-                  height: "20px",
-                  borderRadius: "50%",
-                }}
-              />
+              <CommonStyles.Typography type="semiBold16" color="#fff">
+                Chatting...
+              </CommonStyles.Typography>
+            </Box>
+          )}
+          {!!data?.startNode && (
+            <Box
+              sx={{
+                background: `${theme.palette.secondary.main}`,
+                borderRadius: "12px",
+                padding: "4px 12px",
+              }}
+            >
+              <CommonStyles.Typography type="semiBold16" color="#fff">
+                Start node
+              </CommonStyles.Typography>
+            </Box>
+          )}
+        </Box>
+      )}
+      <Box
+        sx={{
+          borderRadius: "8px",
+          position: "relative",
+          padding: "2px",
+          overflow: "hidden",
+          display: "flex",
+          boxShadow:
+            "0 0 8px 0 rgba(29,28,35,.06),0 0 2px 0 rgba(29,28,35,.18)",
+          "&:hover": {
+            boxShadow: "0 0 1px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.1)",
+          },
+        }}
+        className={classname}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: 1,
+            position: "relative",
+            background: theme.colors.custom.backgroundCard,
+            borderRadius: "8px",
+          }}
+        >
+          <CollapseArea
+            initOpen={false}
+            label={
               <Box
                 sx={{
                   display: "flex",
-                  gap: "4px",
                   alignItems: "center",
+                  justifyContent: "space-between",
+                  width: "100%",
                 }}
               >
-                {isRenaming ? (
-                  <CommonStyles.Input
-                    ref={nameRef}
-                    initValue={props?.data?.label as string}
-                    key={props?.data?.label as string}
-                    sxContainer={{
-                      "& .MuiInputBase-root": {
-                        height: "23.56px",
-                      },
-                    }}
-                  />
-                ) : (
-                  <CommonStyles.Typography
-                    type="semiBold16"
-                    sx={{
-                      maxWidth: "200px",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {(props?.data?.label as string) ?? `Agent ${props.id}`}
-                  </CommonStyles.Typography>
-                )}
-                {isRenaming ? (
-                  <Box
-                    sx={{
-                      display: "flex",
-                    }}
-                  >
-                    <CommonStyles.Button
-                      isIcon
-                      tooltip="Cancel"
-                      isRound={false}
-                      sx={{
-                        svg: {
-                          width: "16px",
-                          height: "16px",
-                        },
-                      }}
-                      onClick={() => setIsRenaming(false)}
-                    >
-                      <CommonIcons.Close />
-                    </CommonStyles.Button>
-                    <CommonStyles.Button
-                      isIcon
-                      tooltip="Cancel"
-                      isRound={false}
-                      sx={{
-                        svg: {
-                          width: "16px",
-                          height: "16px",
-                        },
-                      }}
-                      onClick={handleRename}
-                    >
-                      <CommonIcons.Save />
-                    </CommonStyles.Button>
-                  </Box>
-                ) : (
-                  <CommonStyles.Button
-                    isIcon
-                    tooltip="Rename"
-                    isRound={false}
-                    sx={{
-                      svg: {
-                        width: "16px",
-                        height: "16px",
-                      },
-                    }}
-                    onClick={() => {
-                      setIsRenaming(true);
-                      setTimeout(() => {
-                        nameRef.current?.focus();
-                      }, 1);
-                    }}
-                  >
-                    <CommonIcons.Edit />
-                  </CommonStyles.Button>
-                )}
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                gap: "12px",
-                alignItems: "center",
-              }}
-            >
-              <CommonStyles.Button
-                isIcon
-                tooltip={
-                  data?.currentNode ? "Chatting..." : "Chat with this bot"
-                }
-                disabled={!!data?.currentNode}
-              >
-                <CommonIcons.Chat
-                  fill={theme.colors.custom.normalColorTypo as string}
-                />
-              </CommonStyles.Button>
-
-              <DeleteAgentButton id={props.id} />
-            </Box>
-          </Box>
-        }
-        sxContainer={{
-          marginTop: "0",
-          "& .collapse-header": {
-            marginBottom: "0",
-          },
-        }}
-      >
-        <Formik initialValues={initialValue} onSubmit={handleSubmit}>
-          {({ isSubmitting }) => {
-            return (
-              <Form>
-                <CollapseArea
-                  initOpen={false}
-                  label={
-                    <CommonStyles.Typography type="semiBold14">
-                      Model Configuration
-                    </CommonStyles.Typography>
-                  }
-                >
-                  <EngineSelect name="model" />
-                  <GenerationDiversity />
-                  <Advance />
-                  <InputAndOutputSettings />
-                </CollapseArea>
-
-                <CollapseArea
-                  label={
-                    <CommonStyles.Typography type="semiBold14">
-                      Scenario{" "}
-                      <span
-                        style={{
-                          color: "#FF0000",
-                        }}
-                      >
-                        *
-                      </span>
-                    </CommonStyles.Typography>
-                  }
-                >
-                  <FastField
-                    name="scenario"
-                    component={CommonField.InputField}
-                    multiline
-                    minRows={3}
-                    maxRows={3}
-                    fullWidth
-                    maxChar={6000}
-                    afterOnChange={afterOnChangeScenario}
-                  />
-                </CollapseArea>
-
-                <CollapseArea
-                  label={
-                    <CommonStyles.Typography type="semiBold14">
-                      Agent prompt
-                      <span
-                        style={{
-                          color: "#FF0000",
-                        }}
-                      >
-                        *
-                      </span>
-                    </CommonStyles.Typography>
-                  }
-                >
-                  <FastField
-                    name="system_prompt"
-                    component={CommonField.InputField}
-                    multiline
-                    minRows={3}
-                    maxRows={3}
-                    fullWidth
-                    maxChar={6000}
-                    afterOnChange={afterOnChangePrompt}
-                  />
-                </CollapseArea>
-
                 <Box
                   sx={{
                     display: "flex",
-                    justifyContent: "flex-end",
-                    marginTop: "20px",
+                    alignItems: "center",
+                    gap: "12px",
+                  }}
+                >
+                  <img
+                    src={logo}
+                    alt="logo"
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      borderRadius: "50%",
+                    }}
+                  />
+                  <Box
+                    sx={{
+                      display: "flex",
+                      gap: "4px",
+                      alignItems: "center",
+                    }}
+                  >
+                    {isRenaming ? (
+                      <CommonStyles.Input
+                        ref={nameRef}
+                        initValue={props?.data?.label as string}
+                        key={props?.data?.label as string}
+                        sxContainer={{
+                          "& .MuiInputBase-root": {
+                            height: "23.56px",
+                          },
+                        }}
+                      />
+                    ) : (
+                      <CommonStyles.Typography
+                        type="semiBold16"
+                        sx={{
+                          maxWidth: "200px",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {(props?.data?.label as string) ?? `Agent ${props.id}`}
+                      </CommonStyles.Typography>
+                    )}
+                    {isRenaming ? (
+                      <Box
+                        sx={{
+                          display: "flex",
+                        }}
+                      >
+                        <CommonStyles.Button
+                          isIcon
+                          tooltip="Cancel"
+                          isRound={false}
+                          sx={{
+                            svg: {
+                              width: "16px",
+                              height: "16px",
+                            },
+                          }}
+                          onClick={() => setIsRenaming(false)}
+                        >
+                          <CommonIcons.Close />
+                        </CommonStyles.Button>
+                        <CommonStyles.Button
+                          isIcon
+                          tooltip="Cancel"
+                          isRound={false}
+                          sx={{
+                            svg: {
+                              width: "16px",
+                              height: "16px",
+                            },
+                          }}
+                          onClick={handleRename}
+                        >
+                          <CommonIcons.Save />
+                        </CommonStyles.Button>
+                      </Box>
+                    ) : (
+                      <CommonStyles.Button
+                        isIcon
+                        tooltip="Rename"
+                        isRound={false}
+                        sx={{
+                          svg: {
+                            width: "16px",
+                            height: "16px",
+                          },
+                        }}
+                        onClick={() => {
+                          setIsRenaming(true);
+                          setTimeout(() => {
+                            nameRef.current?.focus();
+                          }, 1);
+                        }}
+                      >
+                        <CommonIcons.Edit />
+                      </CommonStyles.Button>
+                    )}
+                  </Box>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: "12px",
+                    alignItems: "center",
                   }}
                 >
                   <CommonStyles.Button
-                    variant="contained"
-                    type="submit"
-                    startIcon={<CommonIcons.Save />}
-                    disabled={isSubmitting}
+                    isIcon
+                    tooltip={
+                      data?.currentNode ? "Chatting..." : "Chat with this bot"
+                    }
+                    disabled={!!data?.currentNode}
                   >
-                    Save
+                    <CommonIcons.Chat
+                      fill={theme.colors.custom.normalColorTypo as string}
+                    />
                   </CommonStyles.Button>
-                </Box>
-              </Form>
-            );
-          }}
-        </Formik>
-      </CollapseArea>
 
+                  <DeleteAgentButton id={props.id} />
+                </Box>
+              </Box>
+            }
+            sxContainer={{
+              marginTop: "0",
+              "& .collapse-header": {
+                marginBottom: "0",
+              },
+            }}
+          >
+            <Formik initialValues={initialValue} onSubmit={handleSubmit}>
+              {({ isSubmitting }) => {
+                return (
+                  <Form>
+                    <CollapseArea
+                      initOpen={false}
+                      label={
+                        <CommonStyles.Typography type="semiBold14">
+                          Model Configuration
+                        </CommonStyles.Typography>
+                      }
+                    >
+                      <EngineSelect name="model" />
+                      <GenerationDiversity />
+                      <Advance />
+                      <InputAndOutputSettings />
+                    </CollapseArea>
+
+                    <CollapseArea
+                      label={
+                        <CommonStyles.Typography type="semiBold14">
+                          Scenario{" "}
+                          <span
+                            style={{
+                              color: "#FF0000",
+                            }}
+                          >
+                            *
+                          </span>
+                        </CommonStyles.Typography>
+                      }
+                    >
+                      <FastField
+                        name="scenario"
+                        component={CommonField.InputField}
+                        multiline
+                        minRows={3}
+                        maxRows={3}
+                        fullWidth
+                        maxChar={6000}
+                        afterOnChange={afterOnChangeScenario}
+                      />
+                    </CollapseArea>
+
+                    <CollapseArea
+                      label={
+                        <CommonStyles.Typography type="semiBold14">
+                          Agent prompt
+                          <span
+                            style={{
+                              color: "#FF0000",
+                            }}
+                          >
+                            *
+                          </span>
+                        </CommonStyles.Typography>
+                      }
+                    >
+                      <FastField
+                        name="system_prompt"
+                        component={CommonField.InputField}
+                        multiline
+                        minRows={3}
+                        maxRows={3}
+                        fullWidth
+                        maxChar={6000}
+                        afterOnChange={afterOnChangePrompt}
+                      />
+                    </CollapseArea>
+
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        marginTop: "20px",
+                      }}
+                    >
+                      <CommonStyles.Button
+                        variant="contained"
+                        type="submit"
+                        startIcon={<CommonIcons.Save />}
+                        disabled={isSubmitting}
+                      >
+                        Save
+                      </CommonStyles.Button>
+                    </Box>
+                  </Form>
+                );
+              }}
+            </Formik>
+          </CollapseArea>
+        </Box>
+      </Box>
       <Handle
         type="source"
         position={Position.Right}
@@ -667,14 +719,19 @@ const MultiAgentNode = (props: NodeProps) => {
         onMouseEnter={handleAddPlaceholder}
         onMouseLeave={handleRemovePlaceholder}
         onClick={handleAddNode}
+        style={{
+          right: "3px",
+        }}
       />
-      <Handle
-        type="target"
-        position={Position.Left}
-        id={`${props?.id}-target`}
-        isConnectable={true}
-        className="handle"
-      />
+      {!data?.startNode && (
+        <Handle
+          type="target"
+          position={Position.Left}
+          id={`${props?.id}-target`}
+          isConnectable={true}
+          className="handle"
+        />
+      )}
     </Box>
   );
 };

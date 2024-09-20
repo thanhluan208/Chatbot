@@ -3,7 +3,7 @@ import EngineSelect from "./SingleTab/EngineSelect";
 import { FastField, Formik } from "formik";
 import Inputs from "./SingleTab/Inputs";
 import { v4 as uuid } from "uuid";
-import CollapseArea from "../CollapseArea";
+import CollapseArea from "../../../../../Components/CommonStyles/CollapseArea";
 import CommonField from "../../../../../Components/CommonFields";
 import Outputs from "./SingleTab/Outputs";
 

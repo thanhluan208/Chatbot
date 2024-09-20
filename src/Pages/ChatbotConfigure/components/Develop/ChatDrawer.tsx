@@ -165,12 +165,13 @@ export default function ChatDrawer() {
               margin: "auto",
               position: "relative",
               width: "80%",
+              display: "flex",
+              alignItems: "end",
             }}
           >
             <CommonStyles.Button
               isIcon
               sx={{
-                position: "absolute",
                 bottom: "10px",
                 left: "-40px",
                 svg: {
@@ -179,6 +180,8 @@ export default function ChatDrawer() {
                 },
               }}
               disabled={isBrandNew}
+              isRound={false}
+              tooltip="New conversation"
               onClick={handleNewConversation}
             >
               <CommonIcons.Message />

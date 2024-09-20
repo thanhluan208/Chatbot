@@ -58,7 +58,7 @@ function MuiButton(props: IMuiButton & ButtonProps) {
   if (isIcon) {
     return (
       <Tooltip title={tooltip} placement="top-end">
-        <div>
+        <div style={{width:'fit-content'}}>
           <IconButton
             {...otherProps}
             sx={{

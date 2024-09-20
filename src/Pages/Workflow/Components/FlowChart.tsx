@@ -28,7 +28,7 @@ import reactFlowService from "@/Services/reactFlowService";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import CommonStyles from "@/Components/CommonStyles";
 import CommonIcons from "@/Components/CommonIcons";
-import { cloneDeep,  } from "lodash";
+import { cloneDeep } from "lodash";
 import { detectDiff } from "@/Helpers";
 import httpServices from "@/Services/httpServices";
 import { deleteBotNode } from "@/Constants/api";
@@ -71,7 +71,7 @@ export default function FlowChart(props: IFlowChart) {
 
   const onReconnect = useCallback(
     (oldEdge: Edge, newConnection: Connection) => {
-      if(newConnection.source === newConnection.target) return
+      if (newConnection.source === newConnection.target) return;
 
       try {
         edgeReconnectSuccessful.current = true;
@@ -156,8 +156,8 @@ export default function FlowChart(props: IFlowChart) {
 
   const onConnect = useCallback(
     (connection: Connection) => {
-      if(connection.source === connection.target) {
-        return
+      if (connection.source === connection.target) {
+        return;
       }
 
       return setEdges((eds: any) => {
@@ -388,6 +388,18 @@ export default function FlowChart(props: IFlowChart) {
     [props?.botId, edges, userId]
   );
 
+  const nodeColor = (node: Node) => {
+    if (node.selected) {
+      return "#4e40e5";
+    } else if(node.data?.startNode) {
+      return theme.palette.secondary.main;
+    } else if(node.data?.currentNode) {
+      return theme.palette.success.main;
+    }
+
+    return ""
+  };
+
   useEffect(() => {
     save(cachedKeys.FLOW_NODES, nodes);
   }, [save, nodes]);
@@ -409,8 +421,8 @@ export default function FlowChart(props: IFlowChart) {
   }, []);
 
   useEffect(() => {
-    reactFlowService.subcribeFlow(setEdges, setNodes, getEdges, getNodes)
-  },[setEdges, setNodes, getEdges, getNodes])
+    reactFlowService.subcribeFlow(setEdges, setNodes, getEdges, getNodes);
+  }, [setEdges, setNodes, getEdges, getNodes]);
 
   return (
     <Box
@@ -477,7 +489,7 @@ export default function FlowChart(props: IFlowChart) {
           <CommonIcons.ChatBubble />
         </CommonStyles.Button>
         <Controls />
-        <MiniMap />
+        <MiniMap nodeColor={nodeColor} />
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
       </ReactFlow>
       <Toolbar listNode={props.listNode} />

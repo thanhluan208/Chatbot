@@ -210,7 +210,7 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
         onBlur={() => {
           const element = document.getElementById(id);
           if (element) {
-            element.style.background = theme.colors.custom.backgroundCardHover;
+            element.style.background = theme.colors.custom.backgroundSecondary;
           }
         }}
         onClick={() => {
@@ -225,17 +225,18 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
           alignItems: "center",
           flexWrap: "wrap",
           justifyContent: "end",
-          background: theme.colors.custom.backgroundCardHover,
+          background: theme.colors.custom.backgroundCard,
+          boxShadow:theme.colors.custom.boxShadow,
           textarea: {
             border: "none",
             resize: "none",
             outline: "none",
             background: "transparent",
-            fontFamily: "inherit",
             fontSize: "14px",
             height: text ? "auto" : "24px",
             overflow: "hidden",
             width: "100%",
+            fontFamily: "SegoeUI",
           },
         }}
       >

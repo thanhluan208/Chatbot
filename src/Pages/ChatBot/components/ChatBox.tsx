@@ -32,7 +32,7 @@ const ChatBox = ({
     if (name === Role.User)
       return "https://www.w3schools.com/w3images/avatar2.png";
     return (
-      modelOptions.find((elm) => elm.value === botData?.llm.model)?.img ||
+      modelOptions.find((elm) => elm.value === botData?.llm?.model)?.img ||
       "https://www.w3schools.com/w3images/avatar2.png"
     );
   }, [botData, isByRole, name]);

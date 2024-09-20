@@ -3,7 +3,7 @@ import { FastField, FieldArray, Formik } from "formik";
 import { Fragment, memo, useMemo } from "react";
 import CommonStyles from "../../../../../Components/CommonStyles";
 import CommonField from "../../../../../Components/CommonFields";
-import CollapseArea from "../CollapseArea";
+import CollapseArea from "../../../../../Components/CommonStyles/CollapseArea";
 import { isArray } from "lodash";
 import { v4 as uuid } from "uuid";
 import { VariableTypeOptions } from "../LLMNode/SingleTab/Inputs";

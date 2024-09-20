@@ -1,6 +1,6 @@
 import { Box, Collapse, SxProps,  } from "@mui/material";
-import CommonStyles from "../../../../Components/CommonStyles";
-import CommonIcons from "../../../../Components/CommonIcons";
+import CommonStyles from ".";
+import CommonIcons from "../CommonIcons";
 import React from "react";
 
 interface ICollapseArea {
@@ -35,7 +35,7 @@ const CollapseArea = (props: ICollapseArea) => {
           alignItems: "center",
         }}
       >
-        <CommonStyles.Button isIcon onClick={() => setOpen((prev) => !prev)}>
+        <CommonStyles.Button isIcon onClick={() => setOpen((prev) => !prev)} isRound={false}>
           <CommonIcons.ExpandMore
             sx={{
               transform: !open ? "rotate(180deg)" : "rotate(0deg)",

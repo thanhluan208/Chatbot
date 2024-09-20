@@ -1,10 +1,9 @@
 import { Fragment, useState } from "react";
 import Configure from "../Configure";
-import { Box, Tooltip, useTheme } from "@mui/material";
+import { Box,  useTheme } from "@mui/material";
 import ChatField from "@/Pages/ChatBot/components/ChatField";
 import CommonStyles from "@/Components/CommonStyles";
 import { useGet, useSave } from "@/Stores/useStore";
-import cachedKeys from "@/Constants/cachedKeys";
 import CommonIcons from "@/Components/CommonIcons";
 import InputBox from "@/Pages/ChatBot/components/InputBox";
 import ConversationDrawer from "@/Pages/ChatBot/components/ConversationDrawer";
@@ -15,22 +14,22 @@ import { newConversation } from "@/Constants/api";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import { toast } from "react-toastify";
-import PersonalPromptDrawer from "./PersonalPromptDrawer";
-import PersonaAndPrompt from "../PersonaAndPrompt";
+import { BotData } from "@/Hooks/Bot/useGetBotData";
+import cachedKeys from "@/Constants/cachedKeys";
 
 const SingleAgent = () => {
   //! State
   const theme = useTheme();
   const [isBrandNew, setIsBrandNew] = useState(true);
-  const save = useSave();
   const navigate = useNavigate();
 
+  const save = useSave();
   const params = useParams();
   const botId = params?.botId;
 
   const { userId } = useAuth();
 
-  const data = useGet("BOT_DATA");
+  const data: BotData = useGet("BOT_DATA");
 
   const query = new URLSearchParams(window.location.search);
   const conversationId = query.get("conversation");
@@ -63,71 +62,26 @@ const SingleAgent = () => {
   return (
     <Fragment>
       <ConversationDrawer />
-      <PersonalPromptDrawer system_prompt={data?.system_prompt} />
-      <Box
-        sx={{
-          width: "min(350px, 25vw)",
-          minWidth: "min(350px, 25vw)",
-          padding: "8px 12px",
-          height: "calc(100vh - 74px - 64px)",
-          [theme.breakpoints.down("lg")]: {
-            display: "none",
-          },
-          "textarea": {
-            background: theme.colors.custom.backgroundCard,
-            borderRadius:"10px"
-          },
-          borderRight: `solid 0.5px ${theme.colors.custom.borderColor}`,
-        }}
-      >
-        <PersonaAndPrompt systemPrompt={data?.system_prompt} />
-      </Box>
       <Box
         id="wrapper"
         sx={{
           padding: "20px 35px 105px 20px",
           height: "calc(100vh - 74px - 64px)",
           position: "relative",
-          width: '100%',
+          width: "67vw",
           transition: "all 0.5s ease",
-          [theme.breakpoints.down("lg")]: {
-            width:'75vw'
-          },
         }}
       >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "20px",
-            left: "20px",
-            zIndex: 100,
-            display: "flex",
-            gap: "8px",
+        <CommonStyles.Button
+          isIcon
+          tooltip="Open Conversation"
+          isRound={false}
+          onClick={() => {
+            save(cachedKeys.OPEN_CONVERSATION, true);
           }}
         >
-          <Tooltip title="Personal prompt" >
-            <div>
-              <CommonStyles.Button
-                isIcon
-                sx={{
-                  background: theme.colors.custom.backgroundCard,
-                  padding: "8px",
-                  borderRadius: "8px",
-                  boxShadow:
-                    "0 2px 4px 0 rgba(0,0,0,.04),0 0 1px 0 rgba(0,0,0,.08)",
-                  [theme.breakpoints.up("lg")]: {
-                    display: "none",
-                  },
-                }}
-                onClick={() => {
-                  save(cachedKeys.OPEN_PERSONALPROMP, true);
-                }}
-              >
-                <CommonIcons.Input />
-              </CommonStyles.Button>
-            </div>
-          </Tooltip>
-        </Box>
+          <CommonIcons.Note />
+        </CommonStyles.Button>
         <Box
           id="scrollbar-chatbot"
           sx={{
@@ -178,8 +132,8 @@ const SingleAgent = () => {
             position: "absolute",
             width: "80%",
             bottom: 0,
-            left: '50%',
-            transform: 'translateX(-50%)',
+            left: "50%",
+            transform: "translateX(-50%)",
           }}
         >
           <Box
@@ -187,14 +141,16 @@ const SingleAgent = () => {
               maxWidth: "640px",
               margin: "auto",
               position: "relative",
+              display:'flex',
+              alignItems:'end',
             }}
           >
             <CommonStyles.Button
               isIcon
+              tooltip="New Conversation"
+              isRound={false}
               sx={{
-                position: "absolute",
-                bottom: "10px",
-                left: "-40px",
+                left: "-20px",
                 svg: {
                   width: 20,
                   height: 20,
@@ -211,14 +167,13 @@ const SingleAgent = () => {
       </Box>
       <Box
         sx={{
-          width: "min(33vw, 450px)",
-          minWidth: "min(33vw, 450px)",
+          width: "33vw",
           padding: "8px 10px 0 20px",
-          borderLeft:`solid 0.5px ${theme.colors.custom.borderColor}`,
+          borderLeft: `solid 0.5px ${theme.colors.custom.borderColor}`,
           background: theme.colors.custom.backgroundCard,
         }}
       >
-        <Configure />
+        <Configure system_prompt={data?.system_prompt} />
       </Box>
     </Fragment>
   );

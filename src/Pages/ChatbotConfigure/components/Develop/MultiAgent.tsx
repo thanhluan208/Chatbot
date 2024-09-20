@@ -5,9 +5,7 @@ import { isArray } from "lodash";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import ChatDrawer from "./ChatDrawer";
-import ConversationDrawer from "@/Pages/ChatBot/components/ConversationDrawer";
 import { BotData } from "@/Hooks/Bot/useGetBotData";
-import { NodeTypes } from "@/Pages/Workflow/Components/Toolbar/AddNodes";
 
 const MultiAgent = () => {
   //! State
@@ -42,7 +40,8 @@ const MultiAgent = () => {
         },
         data: {
           label: agentInfo?.label ?? `Agent ${agent?.node_id}`,
-          currentNode: agent.node_id === botData.flow_nodes.current_node && agent.node_id !== botData.flow_nodes.start_node,
+          startNode: agent.node_id === botData.flow_nodes.start_node,
+          currentNode: agent.node_id === botData.flow_nodes.current_node,
           ...agent?.metadata,
         },
         selectable: agent.node_id !== botData.flow_nodes.start_node,
@@ -50,9 +49,6 @@ const MultiAgent = () => {
         dragging: false,
       };
 
-      if (agent.node_id === botData.flow_nodes.start_node) {
-        agentNode.type = NodeTypes.multiAgentStartNode;
-      } 
 
       nodes.push(agentNode);
     });
@@ -100,7 +96,6 @@ const MultiAgent = () => {
           initEdges={initEdges as Edge[]}
         />
       )}
-      <ConversationDrawer />
       <ChatDrawer />
     </ReactFlowProvider>
   );
