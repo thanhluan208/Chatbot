@@ -1,4 +1,4 @@
-import { getFolderKnowledge, getListKnowledgeFile, getSegments } from "../Constants/api";
+import { getFileRaw, getFolderKnowledge, getListKnowledgeFile, getSegments } from "../Constants/api";
 import httpServices from "./httpServices";
 
 interface GetListFilter {
@@ -27,6 +27,9 @@ class KnowledgeServices {
   }
   getListSegments(payload: PayloadSegment) {
     return httpServices.post(getSegments, payload);
+  }
+  getRawFile(payload: PayloadKnowledgeDetail) {
+    return httpServices.post(getFileRaw, payload);
   }
 }
 

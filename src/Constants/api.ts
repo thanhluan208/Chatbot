@@ -1,5 +1,5 @@
-// const baseAPI = "https://7e1f-58-186-129-43.ngrok-free.app";
-const baseAPI = "https://chatbot-api.alphiiai.com"
+// const baseAPI = "https://edc2-2001-ee0-442d-8ef0-e918-80c6-aba5-ff1c.ngrok-free.app";
+const baseAPI = "https://chatbot-api.alphiiai.com";
 export const getFolderKnowledge =
   baseAPI + "/knowledge/list_knowledge_storages";
 export const getListKnowledgeFile = baseAPI + "/knowledge/list_files";
@@ -19,12 +19,14 @@ export const updateKnowledgePermission =
 export const publishKnowledge = baseAPI + "/knowledge/update_on_store";
 export const deleteFromStore = baseAPI + "/knowledge/delete_from_store";
 export const getSegments = baseAPI + "/knowledge/get_file_segments";
+export const getFileRaw = baseAPI + "/knowledge/get_file_url";
 
 export const signInApi = baseAPI + "/user/validate_user";
 export const signUpApi = baseAPI + "/user/create_user";
 export const changePasswordApi = baseAPI + "/user/change_password_user";
 export const getUserData = baseAPI + "/user/show_user_data";
 export const searchUser = baseAPI + "/user/search_user";
+export const updateUser = baseAPI + "/user/update_user";
 
 export const getListBot = baseAPI + "/bot/show_all_bots_for_user";
 export const createBot = baseAPI + "/bot/create_bot";
@@ -49,9 +51,10 @@ export const getBotNode = baseAPI + "/node/get_node_data";
 export const deleteBotNode = baseAPI + "/node/delete_node";
 export const createNode = baseAPI + "/node/create_node";
 export const updateBotNode = baseAPI + "/node/update_info";
-export const updateMetadata = baseAPI + "/node/update_node_metadata"
-export const updateSystemPrompt = baseAPI + "/node/update_system_prompt_to_node";
+export const updateMetadata = baseAPI + "/node/update_node_metadata";
+export const updateSystemPrompt =
+  baseAPI + "/node/update_system_prompt_to_node";
 export const updateBotEdge = baseAPI + "/node/add_edge";
-export const removeEdge = baseAPI + 'node/remove_edge'
-export const updateScenario = baseAPI + "node/update_scenario_to_node"
-export const updateNodeLLM = baseAPI + '/node/update_model_params_for_node'
+export const removeEdge = baseAPI + "node/remove_edge";
+export const updateScenario = baseAPI + "node/update_scenario_to_node";
+export const updateNodeLLM = baseAPI + "/node/update_model_params_for_node";

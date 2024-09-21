@@ -1,5 +1,4 @@
 import { Box, useTheme } from "@mui/material";
-import CommonIcons from "../../../../../Components/CommonIcons";
 import CommonStyles from "../../../../../Components/CommonStyles";
 import moment from "moment";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -12,6 +11,7 @@ import {
   updateKnowledgeToBot,
 } from "../../../../../Constants/api";
 import { useMemo } from "react";
+import { useAuth } from "@/Providers/AuthenticationProvider";
 
 export interface IKnowledgeFolder {
   id?: string;
@@ -24,6 +24,7 @@ export interface IKnowledgeFolder {
   userName?: string;
   owner_id?: string;
   permission_level?: string;
+  avatar: string;
 }
 
 const KnowledgeFolder = (props: IKnowledgeFolder) => {
@@ -37,22 +38,23 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
     id,
     sharingWithBots,
     owner_id,
-    permission_level
+    permission_level,
+    avatar,
   } = props;
   const navigate = useNavigate();
-  const theme = useTheme()
+  const theme = useTheme();
   const pathname = useLocation().pathname;
   const params = useParams();
   const botId = params.botId;
-  const userId = params.id;
+  const { userId } = useAuth();
 
   const isOwner = useMemo(() => {
-    if (userId === owner_id || permission_level?.toLowerCase() === "owner") {
+    if (userId === owner_id) {
       return true;
     }
 
     return false;
-  }, [userId, owner_id,permission_level]);
+  }, [userId, owner_id, permission_level]);
 
   const isSharing = useMemo(() => {
     if (botId && sharingWithBots?.includes(botId)) {
@@ -155,11 +157,10 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
         borderRadius: "8px",
         cursor: "pointer",
         background: theme.colors.custom.backgroundCard,
-          border: '1px solid transparent',
-          "&:hover": {
-            border: `1px solid ${theme.palette.primary.main}`,
-          }
-        
+        border: "1px solid transparent",
+        "&:hover": {
+          border: `1px solid ${theme.palette.primary.main}`,
+        },
       }}
     >
       <Box
@@ -169,9 +170,11 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
           alignItems: "center",
         }}
       >
-        <Box>
-          <CommonIcons.Topic color="primary" sx={{ width: 36, height: 36 }} />
-        </Box>
+        <img
+          src={avatar}
+          alt="avatar"
+          style={{ width: "36px", height: "36px", borderRadius: "8px" }}
+        />
         <Box sx={{ display: "flex", flexDirection: "column", gap: "4px" }}>
           <CommonStyles.Typography type="bold14">
             {title || "Anonymous folder"}
@@ -204,7 +207,7 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
             {isSharing ? "Remove" : "Add"}
           </CommonStyles.Button>
         )}
-        <DeleteKnowledge data={props} />
+        {isOwner && <DeleteKnowledge data={props} />}
       </Box>
     </Box>
   );

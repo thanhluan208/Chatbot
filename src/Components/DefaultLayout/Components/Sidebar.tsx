@@ -41,9 +41,9 @@ export default function Sidebar({
           transition: "all .3s ease",
           overflow: "hidden",
           p: {
-            textWrap:'nowrap'
+            textWrap: "nowrap",
           },
-          background: theme.colors.custom.backgroundCard
+          background: theme.colors.custom.backgroundCard,
         }}
       >
         <Box
@@ -153,7 +153,9 @@ export default function Sidebar({
           sx={{
             position: "absolute",
             bottom: 0,
-            paddingBottom: "24px",
+            width: "100%",
+            left: 0,
+            padding: "0 16px 24px 16px",
           }}
         >
           <Box

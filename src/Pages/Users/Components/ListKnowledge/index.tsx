@@ -104,6 +104,7 @@ const ListKnowledge = () => {
               sharingWithBots={item.sharingWithBots}
               owner_id={item.owner_id}
               permission_level={item.permission_level}
+              avatar={item.avatar}
             />
           </Fragment>
         );

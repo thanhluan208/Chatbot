@@ -169,7 +169,7 @@ const KnowledgeStore = () => {
                     avatar: "https://i.pravatar.cc/300",
                     email: "@luandang123",
                   }}
-                  avatar="https://p19-flow-product-sign-sg.ibyteimg.com/tos-alisg-i-bfte7mpw5s-sg/ee3cb1c8af2d4f478c54fab5d1f0282c~tplv-bfte7mpw5s-resize:128:128.image?rk3s=2e2596fd&x-expires=1727614368&x-signature=7F9a7ywdqP%2FddcqJwNtnmQOM4XM%3D"
+                  avatar={item.avatar}
                   // botUsed={formatNumber(
                   //   Math.floor(Math.random() * 345678 + 800000)
                   // )}

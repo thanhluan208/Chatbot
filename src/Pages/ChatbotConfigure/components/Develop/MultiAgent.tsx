@@ -42,6 +42,7 @@ const MultiAgent = () => {
           label: agentInfo?.data?.label ?? `Agent ${agent?.node_id}`,
           startNode: agent.node_id === botData.flow_nodes.start_node,
           currentNode: agent.node_id === botData.flow_nodes.current_node,
+          ...agentInfo?.data,
           ...agent?.metadata,
         },
         selectable: agent.node_id !== botData.flow_nodes.start_node,

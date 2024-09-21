@@ -6,11 +6,7 @@ import {
   Tooltip,
   useTheme,
 } from "@mui/material";
-import { TestPDF } from "../../../Hooks/Knowledges/useGetListFolderKnowledge";
 import { useMemo, useState } from "react";
-import CommonStyles from "../../../Components/CommonStyles";
-import CommonIcons from "../../../Components/CommonIcons";
-import DeleteFileButton from "./DeleteFileButton";
 import { useParams } from "react-router-dom";
 import useGetListSegment from "@/Hooks/Knowledges/useGetListSegments";
 import { isEmpty } from "lodash";
@@ -18,6 +14,11 @@ import { Column } from "@/Components/CommonStyles/Table";
 import { convertSize } from "@/Helpers";
 import { useSave } from "@/Stores/useStore";
 import cachedKeys from "@/Constants/cachedKeys";
+import Eye from "@/Components/CommonIcons/Eye";
+import { TestPDF } from "@/Hooks/Knowledges/useGetListFolderKnowledge";
+import CommonStyles from "@/Components/CommonStyles";
+import DeleteFileButton from "../DeleteFileButton";
+import CommonIcons from "@/Components/CommonIcons";
 
 interface ISegmentList {
   data: TestPDF[] | [];
@@ -33,7 +34,7 @@ const SegmentList = (props: ISegmentList) => {
     return item.name === currentSegment;
   });
 
-  const save = useSave()
+  const save = useSave();
   const theme = useTheme();
   const params = useParams();
   const knowledgeId = params["knowledgeId"];
@@ -120,8 +121,21 @@ const SegmentList = (props: ISegmentList) => {
             sx={{
               display: "flex",
               alignItems: "center",
+              gap: "12px",
+              justifyContent: "center",
             }}
           >
+            <CommonStyles.Button
+              isIcon
+              isRound={false}
+              tooltip="View raw file"
+              onClick={(e) => {
+                e.stopPropagation();
+                save(cachedKeys.SEGMENT_RAW, row);
+              }}
+            >
+              <Eye />
+            </CommonStyles.Button>
             <DeleteFileButton file={row} />
           </Box>
         );
@@ -131,7 +145,7 @@ const SegmentList = (props: ISegmentList) => {
 
   //! Function
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(prev => (prev ? null : event.currentTarget));
+    setAnchorEl((prev) => (prev ? null : event.currentTarget));
   };
 
   const handleClickRow = (row: TestPDF) => {
@@ -139,8 +153,8 @@ const SegmentList = (props: ISegmentList) => {
   };
 
   const handleClickSegment = (item: TestPDF) => {
-    save(cachedKeys.SEGMENT_DETAIL, item)
-  }
+    save(cachedKeys.SEGMENT_DETAIL, item);
+  };
 
   //! Render
 
@@ -271,7 +285,10 @@ const SegmentList = (props: ISegmentList) => {
       >
         <CommonStyles.LoadingOverlay isLoading={isLoading} />
         {!isEmpty(segment) && currentSegment !== "All" && (
-          <CommonStyles.VirtualizeList items={segment} onClick={handleClickSegment}/>
+          <CommonStyles.VirtualizeList
+            items={segment}
+            onClick={handleClickSegment}
+          />
         )}
 
         {currentSegment === "All" && !isEmpty(data) && (

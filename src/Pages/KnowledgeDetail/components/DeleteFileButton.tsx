@@ -18,11 +18,10 @@ function DeleteFileButton(props: IDeleteFileButton) {
   //! State
   const { file } = props;
   const { open, shouldRender, toggle } = useToggleDialog();
-  const params = useParams()
+  const params = useParams();
   const userId = params.id;
-  const knowledgeFolderId = params.knowledgeId
-  const refetchListFiles = useGet('REFETCH_KNOWLEDGE_FILES')
-  
+  const knowledgeFolderId = params.knowledgeId;
+  const refetchListFiles = useGet("REFETCH_KNOWLEDGE_FILES");
 
   //! Function
   const handleDelete = async () => {
@@ -38,9 +37,9 @@ function DeleteFileButton(props: IDeleteFileButton) {
         user_id: userId,
         knowledge_storage_id: knowledgeFolderId,
         file_name_input: file.name,
-      })
+      });
 
-      refetchListFiles && await refetchListFiles()
+      refetchListFiles && (await refetchListFiles());
 
       toast.update(toastId, {
         isLoading: false,
@@ -49,7 +48,7 @@ function DeleteFileButton(props: IDeleteFileButton) {
         autoClose: 2000,
       });
 
-      toggle()
+      toggle();
     } catch (error: any) {
       toast.update(toastId, {
         isLoading: false,
@@ -58,7 +57,7 @@ function DeleteFileButton(props: IDeleteFileButton) {
         autoClose: 2000,
       });
 
-      console.log('Delete failed', error);
+      console.log("Delete failed", error);
     }
     toggle();
   };
@@ -81,15 +80,19 @@ function DeleteFileButton(props: IDeleteFileButton) {
         </CommonStyles.Dialog>
       )}
       <CommonStyles.Button
+        isIcon
+        isRound={false}
         color="error"
         onClick={(e) => {
           e.stopPropagation();
           toggle();
         }}
       >
-        <CommonIcons.Delete sx={{
-          fill: "red",
-        }}/>
+        <CommonIcons.Delete
+          sx={{
+            fill: "red",
+          }}
+        />
       </CommonStyles.Button>
     </Fragment>
   );

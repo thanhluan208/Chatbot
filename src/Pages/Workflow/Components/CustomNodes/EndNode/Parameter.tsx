@@ -66,7 +66,7 @@ const Parameters = () => {
               />
             </Box>
 
-            <CollapseArea label="Output variables">
+            <CollapseArea  label="Output variables">
               <FieldArray
                 name="outputs"
                 render={({ push, remove }) => {

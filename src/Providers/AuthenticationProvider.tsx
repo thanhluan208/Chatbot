@@ -58,6 +58,9 @@ const AuthenticationProvider = ({
 
   const userData = localStorage.getItem("userData");
   const { data, refetch } = useGetUserData(userId, !!userId && !userData);
+  if(data) {
+    localStorage.setItem("userData", JSON.stringify(data));
+  }
 
   const signIn = async (payload: SignInPayload) => {
     const toastId = toast.loading("Logging in...", {
@@ -67,7 +70,6 @@ const AuthenticationProvider = ({
     try {
       const response = await httpServices.axios.post(signInApi, payload);
       if (response.data.status_code === 200) {
-        console.log();
         setUserId(response.data.user_data.id);
         toast.update(toastId, {
           render: "Login successfully",
@@ -95,7 +97,16 @@ const AuthenticationProvider = ({
       autoClose: false,
     });
     try {
-      const response = await httpServices.axios.post(signUpApi, payload);
+      const formData = new FormData();
+      formData.append("user_name", payload.user_name);
+      formData.append("password", payload.password);
+      payload.email && formData.append("email", payload.email || "");
+      payload.address && formData.append("address", payload.address || "");
+      payload.phone_num  && formData.append("phone_num", payload.phone_num || "");
+      formData.append("credit", "0.0");
+      formData.append("tier", "0");
+
+      const response = await httpServices.axios.post(signUpApi, formData);
       if (response.data.status_code === 200) {
         setUserId(response.data?.user_id);
         toast.update(toastId, {

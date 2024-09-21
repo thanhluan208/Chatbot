@@ -10,7 +10,7 @@ import { deleteKnowledge } from "../../../../../Constants/api";
 import { useParams } from "react-router-dom";
 
 interface IDeleteKnowledge {
-  data: IKnowledgeFolder;
+  data: Omit<IKnowledgeFolder, "avatar">;
   deleteButton?: (toggle: () => void) => JSX.Element;
 }
 

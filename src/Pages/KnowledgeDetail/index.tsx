@@ -9,14 +9,15 @@ import CommonIcons from "../../Components/CommonIcons";
 import AddContentButton from "./components/AddContentButton";
 import { useAuth } from "../../Providers/AuthenticationProvider";
 import { isEmpty } from "lodash";
-import SegmentList from "./components/SegmentList";
 import EditKnowledge from "./components/EditKnowledge";
 import PublicButton from "./components/PublicButton";
 import { boolean } from "@/Helpers";
 import httpServices from "@/Services/httpServices";
 import { updateKnowledgeToBot } from "@/Constants/api";
 import { toast } from "react-toastify";
-import SegmentDetail from "./components/SegmentDetail";
+import SegmentDetail from "./components/Segment/SegmentDetail";
+import SegmentList from "./components/Segment/SegmentList";
+import SegmentRawFile from "./components/Segment/SegmentRawFile";
 
 const KnowledgeDetail = () => {
   //! State
@@ -107,6 +108,7 @@ const KnowledgeDetail = () => {
       }}
     >
       <SegmentDetail />
+      <SegmentRawFile />
       <CommonStyles.LoadingOverlay isLoading={isLoading} />
       <Box>
         <Box

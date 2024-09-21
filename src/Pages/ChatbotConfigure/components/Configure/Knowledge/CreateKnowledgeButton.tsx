@@ -37,6 +37,7 @@ interface InitValues {
   type: KnowledgeTypes;
   name: string;
   description: string;
+  avatar_file_input?: File[];
 }
 
 export const KnowledgeActionDialog = (props: IKnowledgeActionDialog) => {
@@ -55,6 +56,7 @@ export const KnowledgeActionDialog = (props: IKnowledgeActionDialog) => {
       type: KnowledgeTypes.Document,
       name: "",
       description: "",
+      avatar_file_input: undefined,
       ...data,
     };
   }, []);
@@ -68,17 +70,24 @@ export const KnowledgeActionDialog = (props: IKnowledgeActionDialog) => {
   //! Function
 
   const handleSubmit = useCallback(async (values: InitValues) => {
+    if (!userId) return;
     const toastId = toast.loading("Creating knowledge...", {
       isLoading: true,
       autoClose: false,
     });
 
     try {
-      const response = await httpServices.axios.post(createFolderKnowledge, {
-        user_id: userId,
-        knowledge_storage_name_input: values.name,
-        knowledge_storage_description_input: values.description,
-      });
+      const formData = new FormData();
+      formData.append("user_id", userId);
+      formData.append("knowledge_storage_name", values.name);
+      if (values.description) {
+        formData.append("knowledge_storage_description", values.description);
+      }
+
+      const response = await httpServices.axios.post(
+        createFolderKnowledge,
+        formData
+      );
 
       await refetchListFolder();
 
@@ -121,7 +130,7 @@ export const KnowledgeActionDialog = (props: IKnowledgeActionDialog) => {
       validateOnBlur
       validateOnMount
     >
-      {({ isSubmitting, errors, dirty }) => {
+      {({ isSubmitting, errors, dirty, values, setFieldValue }) => {
         return (
           <Form
             style={{
@@ -167,6 +176,40 @@ export const KnowledgeActionDialog = (props: IKnowledgeActionDialog) => {
                   minRows={6}
                   maxChar={2000}
                 />
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: "16px",
+                    marginTop: "16px",
+                  }}
+                >
+                  {values.avatar_file_input?.[0] && (
+                    <img
+                      src={URL.createObjectURL(values.avatar_file_input[0])}
+                      alt="avatar"
+                      style={{
+                        width: "100px",
+                        height: "100px",
+                        objectFit: "cover",
+                        borderRadius: "8px",
+                      }}
+                    />
+                  )}
+                  <CommonStyles.UploadFile
+                    label="Upload Image"
+                    files={values.avatar_file_input}
+                    dropzoneProps={{
+                      onDrop: (acceptedFiles) => {
+                        setFieldValue("avatar_file_input", acceptedFiles);
+                      },
+                    }}
+                    handleDeleteFile={() => {
+                      setFieldValue("avatar_file_input", undefined);
+                    }}
+                  />
+                </Box>
               </DialogContent>
 
               <DialogActions>
@@ -188,7 +231,7 @@ export const KnowledgeActionDialog = (props: IKnowledgeActionDialog) => {
                       "&:hover": {
                         background: theme.colors.custom.backgroundCardHover,
                       },
-                      color:'unset'
+                      color: "unset",
                     }}
                     onClick={toggle}
                     disabled={isSubmitting}

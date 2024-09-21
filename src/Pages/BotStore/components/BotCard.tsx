@@ -165,10 +165,15 @@ const BotCard = (props: BotCardProps) => {
             width: "100%",
             justifyContent: "center",
             marginBottom: "20px",
+            transition: "all 0.3s",
+            opacity: 0.5,
+            "&:hover": {
+              opacity: 1,
+            }
           }}
           onClick={(e) => {
             e.stopPropagation();
-            navigate("/user/" + owner_id);
+            navigate("/user/" + owner_id + "?tab=Work");
           }}
         >
           {space.avatar && (
@@ -226,10 +231,9 @@ const BotCard = (props: BotCardProps) => {
             display: "-webkit-box",
             padding: "0 20px",
             textAlign: "justify",
-            height:'60px'
           }}
         >
-          {description} 
+          {description || "..."} 
         </CommonStyles.Typography>
 
         <Box

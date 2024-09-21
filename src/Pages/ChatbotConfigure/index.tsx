@@ -155,7 +155,7 @@ function ChatbotConfigure() {
               padding: "8px",
               borderRadius: "8px",
             }}
-            onClick={() => navigate(`/workspace/${userId}`)}
+            onClick={() => navigate(-1)}
           >
             <CommonIcons.ArrowBackIosNew />
           </CommonStyles.Button>

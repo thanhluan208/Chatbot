@@ -290,7 +290,6 @@ const MultiAgentNode = (props: NodeProps) => {
           presence_penalty: values.presence_penalty ?? 0,
         },
       });
-      console.log("response", response);
 
       if (response?.data?.status_code === 200) {
         toast.update(toastId, {
@@ -323,7 +322,7 @@ const MultiAgentNode = (props: NodeProps) => {
     save(cachedKeys.COLLAPSE_TOOLBAR, true);
     setCenter(props.positionAbsoluteX + 1100, props.positionAbsoluteY + 550, {
       zoom: 0.55,
-      duration: 1
+      duration: 1,
     });
     const currentNode = getNodes().find((node) => node.data?.currentNode);
     if (currentNode) {
@@ -464,7 +463,8 @@ const MultiAgentNode = (props: NodeProps) => {
           borderRadius: "8px",
           position: "relative",
           padding: "2px",
-          minWidth: props?.data?.currentNode && props?.selected ? "800px" : "500px",
+          minWidth:
+            props?.data?.currentNode && props?.selected ? "800px" : "500px",
           transition: "all 0.5s ease",
           overflow: "hidden",
           display: "flex",
@@ -497,6 +497,8 @@ const MultiAgentNode = (props: NodeProps) => {
           }}
         >
           <CollapseArea
+            nodeId={props.id}
+            dataKey="wrapperNode"
             initOpen={!!props?.data?.currentNode}
             key={props?.data?.currentNode as any}
             label={
@@ -655,8 +657,10 @@ const MultiAgentNode = (props: NodeProps) => {
                 return (
                   <Form>
                     <CollapseArea
+                      nodeId={props.id}
+                      dataKey="modelConfiguration"
                       initOpen={!!props?.data?.currentNode}
-                      key={props?.data?.currentNode as any}
+                      key={props?.data?.currentNode + props.id + "modelConfiguration"}
                       label={
                         <CommonStyles.Typography type="semiBold14">
                           Model Configuration
@@ -686,8 +690,10 @@ const MultiAgentNode = (props: NodeProps) => {
                     </CollapseArea>
 
                     <CollapseArea
+                      nodeId={props.id}
+                      dataKey="scenario"
                       initOpen={!!props?.data?.currentNode}
-                      key={props?.data?.currentNode as any}
+                      key={props?.data?.currentNode + props.id + "scenario"}
                       label={
                         <CommonStyles.Typography type="semiBold14">
                           Scenario{" "}
@@ -714,8 +720,12 @@ const MultiAgentNode = (props: NodeProps) => {
                     </CollapseArea>
 
                     <CollapseArea
-                      initOpen={!!props?.data?.currentNode}
-                      key={props?.data?.currentNode as any}
+                      nodeId={props.id}
+                      dataKey="agentPrompt"
+                      initOpen={
+                        !!props?.data?.currentNode || !!props?.data?.agentPrompt
+                      }
+                      key={props?.data?.currentNode + props.id + "agentPrompt"}
                       label={
                         <CommonStyles.Typography type="semiBold14">
                           Agent prompt

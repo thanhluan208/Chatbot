@@ -1,44 +1,37 @@
 import { useCallback, useEffect, useState } from "react";
-import { useAuth } from "../../Providers/AuthenticationProvider";
-import botService from "../../Services/bot.service";
+import knowledgeService, {
+  PayloadKnowledgeDetail,
+} from "../../Services/knowledge.service";
+import { AxiosResponse } from "axios";
 
-export interface Bot {
-  bot_id: string;
-  bot_name: string;
-  description: string;
-  owner_id: string;
-  created_at: Date;
-  user_name: string;
-  permission_level: string;
-  visibility: string;
-  avatar_url: string;
+export interface KnowledgeFileRaw {
+  status_code: number;
+  message: string;
+  file_url: string;
 }
 
-interface Filters {
-  search_filter?: string;
-  visual_option?: string;
-}
-
-const useGetListBot = (filters?: Filters, isTrigger = true) => {
-  const [data, setData] = useState<Bot[]>([]);
+const useGetRawKnowledge = (
+  payload?: PayloadKnowledgeDetail,
+  isTrigger = true
+) => {
+  const [data, setData] = useState<string>("");
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState();
-  const { userId } = useAuth();
+
 
   const callApi = useCallback(() => {
-    if (!userId) return;
-    return botService.getBotStore({
-      user_id: userId,
-      visual_option: "shared",
-      ...filters,
-    });
-  }, [userId, filters]);
+    if (!payload) return;
+    return knowledgeService.getRawFile(payload);
+  }, [payload]);
 
-  const transformResponse = useCallback((response: any) => {
-    if (response) {
-      setData(response.data.list_bots);
-    }
-  }, []);
+  const transformResponse = useCallback(
+    (response?: AxiosResponse<KnowledgeFileRaw>) => {
+      if (response && response?.data?.status_code === 200) {
+        setData(response.data.file_url);
+      }
+    },
+    []
+  );
 
   const refetch = useCallback(async () => {
     try {
@@ -82,4 +75,4 @@ const useGetListBot = (filters?: Filters, isTrigger = true) => {
   };
 };
 
-export default useGetListBot;
+export default useGetRawKnowledge;

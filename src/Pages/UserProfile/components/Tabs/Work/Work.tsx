@@ -1,16 +1,20 @@
 import { Box, useTheme } from "@mui/material";
-import { Fragment } from "react/jsx-runtime";
 import CommonStyles from "../../../../../Components/CommonStyles";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { UserProfileTab } from "../../..";
-import WorkCard from "./WorkCard";
-import { mockDescription } from "../../../../../Helpers";
 import Masonry from "@mui/lab/Masonry";
+import useGetListBot from "@/Hooks/Bot/useGetListBot";
+import { useCallback, useEffect, useMemo } from "react";
+import { isEmpty } from "lodash";
+import { BotCard } from "@/Pages/Users/Components/ListBot";
+import useGetListFolderKnowledge from "@/Hooks/Knowledges/useGetListFolderKnowledge";
+import KnowledgeFolder from "@/Pages/ChatbotConfigure/components/Configure/Knowledge/KnowledgeFolder";
+import { useSave } from "@/Stores/useStore";
+import cachedKeys from "@/Constants/cachedKeys";
 
 enum WorkTab {
   Bots = "Bots",
-  Plugins = "Plugins",
-  Workflows = "Workflows",
+  Knowledges = "Knowledges",
 }
 
 const Work = () => {
@@ -18,16 +22,68 @@ const Work = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const theme = useTheme();
+  const save = useSave();
+  const { userId } = useParams();
   const queryParams = new URLSearchParams(location.search);
 
   const subTabQuery = queryParams.get("subTab");
   const tabQuery = queryParams.get("tab");
 
+  const knowledgeFilters = useMemo(() => {
+    return {
+      user_id: userId,
+      visual_option: "shared",
+    };
+  }, [userId]);
+
+  const {
+    data: listBots,
+    isLoading: isLoadingBots,
+    refetch,
+  } = useGetListBot(
+    knowledgeFilters,
+    subTabQuery === WorkTab.Bots || !subTabQuery
+  );
+  const { data: listKnowledges, isLoading: isLoadingKnowledges } =
+    useGetListFolderKnowledge(
+      knowledgeFilters,
+      subTabQuery === WorkTab.Knowledges
+    );
+
   //! Function
+  const renderWorkTab = useCallback(() => {
+    switch (subTabQuery) {
+      case WorkTab.Bots:
+        return (
+          !isEmpty(listBots) &&
+          listBots?.map((bot) => {
+            return <BotCard key={bot.bot_id} {...bot} />;
+          })
+        );
+      case WorkTab.Knowledges:
+        return (
+          !isEmpty(listKnowledges) &&
+          listKnowledges.map((item) => {
+            return <KnowledgeFolder key={item.id} {...item} />;
+          })
+        );
+      default:
+        return (
+          !isEmpty(listBots) &&
+          listBots?.map((bot) => {
+            return <BotCard key={bot.bot_id} {...bot} />;
+          })
+        );
+    }
+  }, [tabQuery, subTabQuery, listBots, listKnowledges]);
+
+  useEffect(() => {
+    save(cachedKeys.REFETCH_LIST_BOT, refetch);
+  }, [refetch, save]);
 
   //! Render
   return (
-    <Fragment>
+    <Box>
       <Box sx={{ display: "flex", gap: "8px" }}>
         {Object.values(WorkTab).map((workTab) => {
           const isActive =
@@ -57,48 +113,44 @@ const Work = () => {
           marginTop: "20px",
           overflow: "hidden",
           [theme.breakpoints.down("md")]: {
-            padding:'0 25px'
+            padding: "0 25px",
           },
 
           "& .MuiMasonry-root": {
-            margin:0
-          }
+            margin: 0,
+          },
         }}
       >
+        <CommonStyles.LoadingOverlay
+          isLoading={isLoadingBots || isLoadingKnowledges}
+        />
         <Masonry
           columns={{
             xs: 1,
-            md: 2,
-            lg: 3,
+            lg: 2,
           }}
           spacing={2}
+          sx={{
+            [theme.breakpoints.between("md",'lg')]: {
+              "& .botCard": {
+                position: "relative",
+                left: "50%",
+                transform: "translateX(-50%)",
+              },
+            },
+            "& .botCard": {
+              border: "1px solid transparent",
+              "&:hover": {
+                border: `1px solid ${theme.palette.primary.main}`,
+                boxShadow: theme.colors.custom.boxShadow
+              },
+            },
+          }}
         >
-          {Array.from({ length: 30 }).map((_, index) => {
-            return (
-              <WorkCard
-                key={index}
-                avatar="https://p19-flow-product-sign-sg.ibyteimg.com/tos-alisg-i-bfte7mpw5s-sg/0afef35ae2244193bdf62a52a86a8b6b~tplv-bfte7mpw5s-resize:128:128.image?rk3s=2e2596fd&x-expires=1727956105&x-signature=Jz6Ikq6ZINtDl6qb1Jtsp6kxY3U%3D"
-                collect={Math.floor(Math.random() * 20)}
-                creator={{
-                  name: "@luandang123",
-                }}
-                description={mockDescription()}
-                name="Bot Name"
-                space={{
-                  name: "Space Name",
-                  avatar:
-                    "https://sf16-passport-sg.ibytedtos.com/img/user-avatar-alisg/4d26373f2eedfe14710becde336c2450~300x300.image",
-                }}
-                users={Math.floor(Math.random() * 100)}
-                category={Array.from({
-                  length: Math.floor(Math.random() * 5),
-                }).map((_, index) => "Category " + (index + 1))}
-              />
-            );
-          })}
+          {renderWorkTab()}
         </Masonry>
       </Box>
-    </Fragment>
+    </Box>
   );
 };
 

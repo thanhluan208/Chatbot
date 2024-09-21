@@ -9,9 +9,9 @@ import CommonIcons from "../../../../Components/CommonIcons";
 import moment from "moment";
 import MoreOption from "./components/MoreOption";
 import cachedKeys from "../../../../Constants/cachedKeys";
-import { useLocation, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import useGetListBot, { Bot } from "../../../../Hooks/Bot/useGetListBot";
-import { useEffect,  } from "react";
+import { useEffect } from "react";
 import { useAuth } from "../../../../Providers/AuthenticationProvider";
 import Mansory from "@mui/lab/Masonry";
 
@@ -21,27 +21,28 @@ export interface Workspace {
   value: string;
 }
 
-
-const BotCard = (props: Bot) => {
+export const BotCard = (props: Bot) => {
   //! State
-  const { userData } = useAuth();
+  const { userData, userId } = useAuth();
   const { bot_id, bot_name, description, avatar_url } = props;
   const openDialog = useGet("OPEN_DIALOG");
 
   const navigate = useNavigate();
-  const location = useLocation();
   const theme = useTheme();
 
   //! Function
   const handleClick = (e: any) => {
     if (openDialog) return;
     e.stopPropagation();
-    navigate(location.pathname + "/bot/" + bot_id + "?isOwner=true");
+    navigate(
+      `/workspace/${userId}/bot/${bot_id}?isOwner=true`
+    );
   };
 
   //! Render
   return (
     <Box
+      className="botCard"
       onClick={handleClick}
       sx={{
         color: "unset",

@@ -7,6 +7,10 @@ export interface UserData {
   email: string;
   address: string;
   phone_num: string;
+  credit: number;
+  tier: string;
+  created_at: Date;
+  avatar_url: string;
 }
 
 const useGetUserData = (userId: string | null, isTrigger = true) => {
@@ -19,11 +23,9 @@ const useGetUserData = (userId: string | null, isTrigger = true) => {
     return userService.getUserData(userId);
   }, [userId]);
 
-
   const transformResponse = useCallback((response: any) => {
     if (response) {
       setData(response.data.user_data);
-      localStorage.setItem("userData", JSON.stringify(response.data.user_data));
     }
   }, []);
 

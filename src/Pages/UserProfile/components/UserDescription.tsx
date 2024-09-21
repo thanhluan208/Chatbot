@@ -9,7 +9,7 @@ interface UserDescriptionProps {
 const UserDescription = (props: UserDescriptionProps) => {
   const { description, ableToEdit } = props;
   return (
-    <CommonStyles.Typography type="normal14" color="#06070980">
+    <CommonStyles.Typography type="normal14" sx={{opacity:".5"}}>
       {description}
       {ableToEdit && (
         <CommonStyles.Typography component="span">

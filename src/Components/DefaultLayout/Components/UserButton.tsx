@@ -4,6 +4,7 @@ import React, { Fragment } from "react";
 import CommonStyles from "../../CommonStyles";
 import { useAuth } from "../../../Providers/AuthenticationProvider";
 import { useNavigate } from "react-router-dom";
+import DefaultAvatar from '@/assets/avatar.png'
 
 function UserButton() {
   //! State
@@ -15,7 +16,7 @@ function UserButton() {
   const theme = useTheme()
 
   const open = !!anchorEl;
-  const { logout, userData } = useAuth();
+  const { logout, userData, userId } = useAuth();
   //! Function
 
   //! Render
@@ -24,13 +25,14 @@ function UserButton() {
       <Box onBlur={() => setAnchorEl(null)}>
         <NavItem
           icon={
-            <Avatar src="https://lh3.googleusercontent.com/ogw/AF2bZyiUe-0HqdEyjNfKkkYM8ULbAwTiS0y9gqiDuJ8cvadeXw=s32-c-mo" />
+            <Avatar src={userData?.avatar_url || DefaultAvatar} />
           }
           title={userData?.user_name}
           navActive
           buttonSx={{
             mt: "12px",
             height: "fit-content",
+            width: '100%'
           }}
           onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
             setAnchorEl(event.currentTarget);
@@ -62,10 +64,10 @@ function UserButton() {
             >
               <CommonStyles.Button
                 onClick={() => {
-                  navigate("/user/123123?isOwner=true");
+                  navigate(`/user/${userId}?isOwner=true`);
                 }}
               >
-                My profile
+                Settings
               </CommonStyles.Button>
               <CommonStyles.Button onClick={logout}>
                 Log out

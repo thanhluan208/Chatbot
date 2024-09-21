@@ -33,7 +33,7 @@ export default function ChatDrawer() {
   const data = useGet("BOT_DATA");
   //! Function
   const handleClose = (_: {}, reason: "backdropClick" | "escapeKeyDown") => {
-    if(reason === 'backdropClick') return
+    if (reason === "backdropClick") return;
     save(cachedKeys.OPEN_CHAT, false);
   };
 
@@ -62,7 +62,13 @@ export default function ChatDrawer() {
 
   //! Render
   return (
-    <Drawer variant="persistent" anchor="right" open={openDrawer} onClose={handleClose} hideBackdrop>
+    <Drawer
+      variant="persistent"
+      anchor="right"
+      open={openDrawer}
+      onClose={handleClose}
+      hideBackdrop
+    >
       <Box
         id="wrapper"
         sx={{
@@ -92,9 +98,13 @@ export default function ChatDrawer() {
             },
           }}
         >
-          <CommonStyles.Button isIcon className="iconButton" onClick={() => {
-            save(cachedKeys.OPEN_CHAT, false)
-          }}>
+          <CommonStyles.Button
+            isIcon
+            className="iconButton"
+            onClick={() => {
+              save(cachedKeys.OPEN_CHAT, false);
+            }}
+          >
             <CommonIcons.Close />
           </CommonStyles.Button>
           {/* <CommonStyles.Button
@@ -133,7 +143,7 @@ export default function ChatDrawer() {
             {isBrandNew && (
               <Fragment>
                 <img
-                  src="https://lf16-alice-tos-sign.oceanapi-i18n.com/obj/ocean-cloud-tos-sg/FileBizType.BIZ_BOT_ICON/7342794110727701510_1724933118523505822_yxm0POQ2JJ.gif?lk3s=50ccb0c5&x-expires=1726843125&x-signature=33gB0Q3PT8%2FCKhBm3paQslW%2Fvzo%3D"
+                  src={data?.avatar_url}
                   style={{
                     width: 82,
                     height: 82,

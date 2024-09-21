@@ -291,7 +291,7 @@ const Chatbot = () => {
             <Options />
             <CommonStyles.Button
               isIcon
-              sx={{               
+              sx={{
                 background: theme.colors.custom.backgroundCard,
                 padding: "8px",
                 borderRadius: "8px",
@@ -360,7 +360,7 @@ const Chatbot = () => {
               {isBrandNew && (
                 <Fragment>
                   <img
-                    src="https://lf16-alice-tos-sign.oceanapi-i18n.com/obj/ocean-cloud-tos-sg/FileBizType.BIZ_BOT_ICON/7342794110727701510_1724933118523505822_yxm0POQ2JJ.gif?lk3s=50ccb0c5&x-expires=1726843125&x-signature=33gB0Q3PT8%2FCKhBm3paQslW%2Fvzo%3D"
+                    src={data?.avatar_url}
                     style={{
                       width: 48,
                       height: 48,

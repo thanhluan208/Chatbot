@@ -21,9 +21,12 @@ export interface ListKnowledge {
   user_name: string;
   permission_level: string;
   visibility: string;
-  sharing_with_bots: string[];
+  sharing_with_bots: any[];
   list_files: ListFiles;
+  avatar_url: string;
 }
+
+export interface ListFiles {}
 
 export interface ListFiles {
   [key: string]: TestPDF;
@@ -78,6 +81,7 @@ const useGetListFolderKnowledge = (filters?: Filters, isTrigger = true) => {
             userName: item.user_name,
             owner_id: item.owner_id,
             permission_level: item.permission_level,
+            avatar: item.avatar_url,
           };
         });
 

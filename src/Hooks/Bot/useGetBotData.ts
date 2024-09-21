@@ -14,6 +14,7 @@ export interface BotResponse {
 }
 
 export interface BotData {
+  avatar_url: string;
   user_id: string;
   tools: any[];
   system_prompt: string;

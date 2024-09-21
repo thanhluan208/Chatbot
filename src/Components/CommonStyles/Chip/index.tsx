@@ -3,11 +3,12 @@ import { Chip, SxProps,  } from "@mui/material";
 interface IMuiChip {
   label: string;
   sx?: SxProps;
+  handleDelete?: () => void;
 }
 
 function MuiChip(props: IMuiChip) {
   //! State
-  const { label, sx } = props;
+  const { label, sx,handleDelete } = props;
 
   //! Function
 
@@ -24,6 +25,7 @@ function MuiChip(props: IMuiChip) {
         height: "fit-content",
         ...sx,
       }}
+      onDelete={handleDelete}
     />
   );
 }

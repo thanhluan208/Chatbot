@@ -167,6 +167,7 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
                   createdAt={item.createdAt}
                   sharingWithBots={item.sharingWithBots}
                   owner_id={item.owner_id}
+                  avatar={item.avatar}
                 />
                 {index < data.length - 1 && <Divider />}
               </Fragment>

@@ -160,15 +160,39 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
                   maxChar={2000}
                 />
 
-                <CommonStyles.UploadFile
-                  label="Upload Image"
-                  files={values.avatar_file_input}
-                  dropzoneProps={{
-                    onDrop: (acceptedFiles) => {
-                      setFieldValue("avatar_file_input", acceptedFiles);
-                    },
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: "16px",
+                    marginTop: "16px",
                   }}
-                />
+                >
+                  {values.avatar_file_input?.[0] && (
+                    <img
+                      src={URL.createObjectURL(values.avatar_file_input[0])}
+                      alt="avatar"
+                      style={{
+                        width: "100px",
+                        height: "100px",
+                        objectFit: "cover",
+                        borderRadius: "8px",
+                      }}
+                    />
+                  )}
+                  <CommonStyles.UploadFile
+                    label="Upload Image"
+                    files={values.avatar_file_input}
+                    dropzoneProps={{
+                      onDrop: (acceptedFiles) => {
+                        setFieldValue("avatar_file_input", acceptedFiles);
+                      },
+                    }}
+                    handleDeleteFile={() => {
+                      setFieldValue("avatar_file_input", undefined);
+                    }}
+                  />
+                </Box>
               </DialogContent>
 
               <DialogActions>

@@ -26,7 +26,7 @@ const ReArrangeFlow = () => {
       const nodes = getNodes();
       const edges = getEdges();
       const isHorizontal = direction === "LR";
-      dagreGraph.setGraph({ rankdir: direction });
+      dagreGraph.setGraph({ rankdir: direction, ranksep: 300, nodesep: 300 });
 
       nodes.forEach((node) => {
         dagreGraph.setNode(node.id, {
@@ -84,7 +84,6 @@ const ReArrangeFlow = () => {
           }
         });
 
-        console.log("failedNode", failedNode);
         !isEmpty(failedNode) &&
           setNodes((prevNodes) => {
             return prevNodes.map((node) => {

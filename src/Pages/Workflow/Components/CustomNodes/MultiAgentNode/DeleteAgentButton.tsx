@@ -17,7 +17,7 @@ function DeleteAgentButton(props: IDeleteButton) {
   //! State
   const { id } = props;
   const { open, shouldRender, toggle } = useToggleDialog();
-  const save = useSave()
+  const save = useSave();
   const params = useParams();
   const botId = params.botId;
 
@@ -44,7 +44,8 @@ function DeleteAgentButton(props: IDeleteButton) {
           isLoading: false,
         });
 
-        save(`${id}_remove`, true)
+        save(`${id}_remove`, true);
+        localStorage.removeItem(id);
       } else {
         throw new Error(response.data.message);
       }
