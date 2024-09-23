@@ -22,6 +22,7 @@ export const isDefined = (value: any) => {
 };
 
 export const convertSize = (size: number) => {
+  if(!size || isNaN(size)) return '0 bytes';
   if (size < 0.001) {
     return `${Math.floor(size * 1048576)} bytes`;
   } else if (size < 1) {

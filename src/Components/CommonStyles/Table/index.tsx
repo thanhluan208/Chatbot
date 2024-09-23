@@ -1,11 +1,10 @@
 import { Box, SxProps, useTheme } from "@mui/material";
-import { isArray, isEmpty } from "lodash";
+import { isArray, isEmpty, isString } from "lodash";
 import { Fragment, useMemo } from "react";
 import CommonStyles from "..";
 import PaginationButton from "./component/PaginationButton";
 import { isDefined } from "../../../Helpers";
 import CommonIcons from "../../CommonIcons";
-import PerfectScrollbar from "react-perfect-scrollbar";
 import { pageSizeOption } from "../../../Constants/options";
 import EmptyCard from "@/Pages/Users/Components/ListBot/components/EmptyCard";
 import Empty from "@/Pages/Users/Components/ListBot/components/Empty";
@@ -19,7 +18,8 @@ interface ITable<T> {
   columns: Column<T>[];
   sxContainer?: SxProps;
   sxHeader?: SxProps;
-  sxRow?: SxProps;
+  sxHeaderCell?: SxProps;
+  sxCell?: SxProps;
   data: T[];
   onClickRow?: (row: T) => void;
   filters?: any;
@@ -27,6 +27,10 @@ interface ITable<T> {
   changePage?: (page: number) => void;
   changePageSize?: (pageSize: number) => void;
   styleBody?: any;
+  sxRow?: {
+    index: number;
+    style: SxProps;
+  }[];
 }
 
 export type Column<T> = {
@@ -34,7 +38,7 @@ export type Column<T> = {
   label?: string;
   customRender?: (row: T, rowIndex: number) => JSX.Element;
   customerHeader?: () => JSX.Element;
-  width?: number;
+  width?: number | string;
 };
 
 const Table = <T extends BaseRow>(props: ITable<T>) => {
@@ -43,18 +47,29 @@ const Table = <T extends BaseRow>(props: ITable<T>) => {
     columns,
     sxContainer,
     sxHeader,
+    sxHeaderCell,
     data,
+    sxCell,
     sxRow,
     filters,
     total,
     styleBody,
   } = props;
   const { page, pageSize } = filters || {};
-  const theme = useTheme()
+  const theme = useTheme();
   const gridTemplateColumns = useMemo(() => {
     if (!isArray(columns)) return "";
     return columns.reduce((acc, columns) => {
-      return acc + `${columns.width ? columns?.width + "px " : "1fr "}`;
+      return (
+        acc +
+        `${
+          columns.width
+            ? isString(columns.width)
+              ? columns.width
+              : columns?.width + "px "
+            : "1fr "
+        }`
+      );
     }, "");
   }, [columns]);
 
@@ -101,6 +116,11 @@ const Table = <T extends BaseRow>(props: ITable<T>) => {
   return (
     <Box
       sx={{
+        maxWidth: "100%",
+        overflowX: "auto",
+        "&::-webkit-scrollbar": {
+          display: "none",
+        },
         ...sxContainer,
       }}
     >
@@ -112,6 +132,10 @@ const Table = <T extends BaseRow>(props: ITable<T>) => {
           padding: 1,
           backgroundColor: theme.colors.custom.backgroundSecondary,
           borderRadius: "4px 4px 0 0 ",
+          minWidth: "900px",
+          maxWidth: "100%",
+          overflowX: "auto",
+          ...sxHeader,
         }}
       >
         {isArray(columns) &&
@@ -122,20 +146,27 @@ const Table = <T extends BaseRow>(props: ITable<T>) => {
             return (
               <Box
                 key={column.id as string}
-                sx={{ fontWeight: "bold", alignItems: "center", ...sxHeader }}
+                sx={{
+                  fontWeight: "bold",
+                  alignItems: "center",
+                  ...sxHeaderCell,
+                }}
               >
-                <CommonStyles.Typography type="bold14" >
+                <CommonStyles.Typography type="bold14">
                   {column.label}
                 </CommonStyles.Typography>
               </Box>
             );
           })}
       </Box>
-      <PerfectScrollbar
-        style={{
+      <Box
+        sx={{
           minHeight: "480px",
           maxHeight: `${pageSize > 10 ? pageSize * 48 : 480}px`,
           ...styleBody,
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
         }}
       >
         {isEmpty(data) && (
@@ -187,13 +218,18 @@ const Table = <T extends BaseRow>(props: ITable<T>) => {
                   gridTemplateColumns: gridTemplateColumns,
                   gap: 1,
                   padding: 1,
-                  backgroundColor: rowIndex % 2 === 0 ? theme.colors.custom.backgroundCard : theme.colors.custom.backgroundDialog,
+                  backgroundColor:
+                    rowIndex % 2 === 0
+                      ? theme.colors.custom.backgroundCard
+                      : theme.colors.custom.backgroundDialog,
                   transition: "all 0.3s",
                   "&:hover": {
                     backgroundColor: theme.colors.custom.backgroundCardHover,
                     cursor: "pointer",
                   },
-                  borderRadius: rowIndex === data?.length - 1 ? "0 0 4px 4px" : "0",
+                  borderRadius:
+                    rowIndex === data?.length - 1 ? "0 0 4px 4px" : "0",
+                  ...sxRow?.[rowIndex]?.style,
                 }}
               >
                 {columns.map((column) => {
@@ -206,7 +242,7 @@ const Table = <T extends BaseRow>(props: ITable<T>) => {
                   }
                   return (
                     <Box
-                      sx={{ display: "flex", alignItems: "center", ...sxRow }}
+                      sx={{ display: "flex", alignItems: "center", ...sxCell }}
                       key={`${row._id}_${column.id as string}`}
                     >
                       {row[column.id as keyof typeof row] as string}
@@ -216,7 +252,7 @@ const Table = <T extends BaseRow>(props: ITable<T>) => {
               </Box>
             );
           })}
-      </PerfectScrollbar>
+      </Box>
       {shouldShowPagination && (
         <Box
           sx={{

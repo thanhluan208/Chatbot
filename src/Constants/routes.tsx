@@ -14,7 +14,7 @@ const useRoutes = () => {
         path: `/workspace/${userId}`,
         icon: <CommonIcons.Person />,
       },
-      PLUGIN_STORE: {
+      KNOWLEDGE_STORE: {
         path: "/knowledge-store",
         icon: <CommonIcons.Article />,
       },

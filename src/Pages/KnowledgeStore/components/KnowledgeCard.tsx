@@ -2,7 +2,7 @@ import CommonIcons from "@/Components/CommonIcons";
 import CommonStyles from "@/Components/CommonStyles/index";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import { Box, Tooltip, useTheme } from "@mui/material";
-import { useState } from "react";
+import {   useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "@/assets/logo.png";
 
@@ -21,6 +21,8 @@ interface KnowledgeCardProps {
   isFavorite?: boolean;
   id: string;
   owner_id: string;
+  size?: string;
+  quantity?: string;
 }
 
 const MaxChar = 60;
@@ -35,14 +37,15 @@ const Knowledgecard = (props: KnowledgeCardProps) => {
     title,
     publisher,
     description,
-    botUsed,
-    favorite,
+    size,
+    quantity,
     isFavorite,
   } = props;
   const [isReadMore, setIsReadMore] = useState(false);
   const { userId } = useAuth();
   const theme = useTheme();
   const navigate = useNavigate();
+
   //! Function
   const handleNavigate = () => {
     navigate(`/knowledge-store/${id}?isOwner=${owner_id === userId}`);
@@ -58,12 +61,12 @@ const Knowledgecard = (props: KnowledgeCardProps) => {
         border: "solid 1px #0607091a",
         borderRadius: "8px",
         cursor: "pointer",
+        transition: "box-shadow 0.3s",
         "&:hover": {
-          boxShadow: "0 6px 8px 0 rgba(28,31,35,.06)",
+          boxShadow: theme.colors.custom.boxShadow,
           "& .favorite": {
             opacity: 1,
           },
-          background: theme.colors.custom.backgroundCardHover,
         },
         position: "relative",
       }}
@@ -177,13 +180,13 @@ const Knowledgecard = (props: KnowledgeCardProps) => {
             {publisher?.email}
           </CommonStyles.Typography>
         </Box>
-        <p style={{ marginTop: "20px" }}>
-          <CommonStyles.Typography type="normal12" color="#06070980">
-            {description.length <= MaxChar || isReadMore
+        <p style={{ margin: "20px 0" }}>
+          <CommonStyles.Typography type="normal12" >
+            {description?.length <= MaxChar || isReadMore
               ? description
               : description.substring(0, MaxChar) + "..."}
           </CommonStyles.Typography>
-          {description.length > MaxChar && (
+          {description?.length > MaxChar && (
             <CommonStyles.Typography
               type="normal12"
               color="#06070980"
@@ -203,22 +206,12 @@ const Knowledgecard = (props: KnowledgeCardProps) => {
         <Box
           sx={{
             display: "flex",
-            marginTop: "16px",
+            gap: "12px",
+            flexWrap: "wrap",
           }}
         >
-          <CommonStyles.Typography>
-            {botUsed ?? 0} bots used
-          </CommonStyles.Typography>
-          <Box
-            sx={{
-              width: "3px",
-              height: "3px",
-              borderRadius: "99999px",
-            }}
-          />
-          <CommonStyles.Typography>
-            {favorite ?? 0} favourites
-          </CommonStyles.Typography>
+          <CommonStyles.Chip label={`${quantity} document(s)`} />
+          <CommonStyles.Chip label={`${size}`} />
         </Box>
       </Box>
     </Box>

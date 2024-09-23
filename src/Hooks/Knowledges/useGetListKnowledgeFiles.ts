@@ -3,7 +3,7 @@ import knowledgeService, {
   PayloadKnowledgeDetail,
 } from "../../Services/knowledge.service";
 import { AxiosResponse } from "axios";
-import { ListFiles, TestPDF } from "./useGetListFolderKnowledge";
+import { ListFiles, FileData } from "./useGetListFolderKnowledge";
 
 export interface KnowledgeFile {
   status_code: number;
@@ -15,7 +15,7 @@ const useGetListKnowledgeFiles = (
   payload?: PayloadKnowledgeDetail,
   isTrigger = true
 ) => {
-  const [data, setData] = useState<TestPDF[]>([]);
+  const [data, setData] = useState<FileData[]>([]);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState();
 

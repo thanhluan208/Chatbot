@@ -57,7 +57,7 @@ const AuthenticationProvider = ({
   const save = useSave();
 
   const userData = localStorage.getItem("userData");
-  const { data, refetch } = useGetUserData(userId, !!userId && !userData);
+  const { data, refetch } = useGetUserData(userId, !!userId);
   if(data) {
     localStorage.setItem("userData", JSON.stringify(data));
   }

@@ -83,6 +83,9 @@ export const KnowledgeActionDialog = (props: IKnowledgeActionDialog) => {
       if (values.description) {
         formData.append("knowledge_storage_description", values.description);
       }
+      if (values.avatar_file_input?.[0]) {
+        formData.append("avatar", values.avatar_file_input[0]);
+      }
 
       const response = await httpServices.axios.post(
         createFolderKnowledge,

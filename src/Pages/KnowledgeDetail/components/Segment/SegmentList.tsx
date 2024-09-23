@@ -9,24 +9,31 @@ import {
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import useGetListSegment from "@/Hooks/Knowledges/useGetListSegments";
-import { isEmpty } from "lodash";
+import { cloneDeep, isEmpty } from "lodash";
 import { Column } from "@/Components/CommonStyles/Table";
 import { convertSize } from "@/Helpers";
 import { useSave } from "@/Stores/useStore";
 import cachedKeys from "@/Constants/cachedKeys";
 import Eye from "@/Components/CommonIcons/Eye";
-import { TestPDF } from "@/Hooks/Knowledges/useGetListFolderKnowledge";
+import {
+  FileStatus,
+  FileData,
+} from "@/Hooks/Knowledges/useGetListFolderKnowledge";
 import CommonStyles from "@/Components/CommonStyles";
 import DeleteFileButton from "../DeleteFileButton";
 import CommonIcons from "@/Components/CommonIcons";
+import SegmentFile from "./SegmentFile";
+import RetryButton from "./RetryButton";
+import SegmentStatus from "./SegmentStatus";
 
 interface ISegmentList {
-  data: TestPDF[] | [];
+  data: FileData[] | [];
+  isOwner: boolean;
 }
 
 const SegmentList = (props: ISegmentList) => {
   //! State
-  const { data } = props;
+  const { data, isOwner } = props;
   const [currentSegment, setCurrentSegment] = useState("All");
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -50,7 +57,7 @@ const SegmentList = (props: ISegmentList) => {
 
   const { data: segment, isLoading } = useGetListSegment(payload, !!payload);
 
-  const columns: Column<TestPDF>[] = [
+  const columns: Column<FileData>[] = [
     {
       id: "id",
       label: "STT",
@@ -66,6 +73,7 @@ const SegmentList = (props: ISegmentList) => {
     {
       id: "name",
       label: "Name",
+      width: "max(200px, 20%)",
       customRender: (row) => {
         return (
           <Tooltip title={row.name} placement="top-end">
@@ -75,7 +83,7 @@ const SegmentList = (props: ISegmentList) => {
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
-                  maxWidth: "200px",
+                  maxWidth: "90%",
                   display: "block",
                 }}
               >
@@ -85,6 +93,11 @@ const SegmentList = (props: ISegmentList) => {
           </Tooltip>
         );
       },
+    },
+    {
+      id: "status",
+      label: "Status",
+      customRender: (row) => <SegmentStatus row={row} />,
     },
     {
       id: "fileType",
@@ -97,7 +110,7 @@ const SegmentList = (props: ISegmentList) => {
       id: "segments",
       label: "Segment",
       customRender: (row) => {
-        return <Box sx={{ pr: "10px" }}>{row.n_points} segment(s)</Box>;
+        return <Box sx={{ pr: "10px" }}>{row.n_points || 0} segment(s)</Box>;
       },
     },
     {
@@ -122,37 +135,62 @@ const SegmentList = (props: ISegmentList) => {
               display: "flex",
               alignItems: "center",
               gap: "12px",
-              justifyContent: "center",
+              justifyContent: "end",
             }}
           >
-            <CommonStyles.Button
+            {!!row.file_type && <CommonStyles.Button
               isIcon
               isRound={false}
               tooltip="View raw file"
+              disabled={row.process_status === FileStatus.PROCESSING}
               onClick={(e) => {
+                if (row.process_status === FileStatus.PROCESSING) return;
                 e.stopPropagation();
                 save(cachedKeys.SEGMENT_RAW, row);
               }}
             >
               <Eye />
-            </CommonStyles.Button>
-            <DeleteFileButton file={row} />
+            </CommonStyles.Button>}
+            {row.process_status !== FileStatus.PROCESSING && isOwner && (
+              <DeleteFileButton file={row} />
+            )}
+            {isOwner && <RetryButton row={row} />}
           </Box>
         );
       },
     },
   ];
 
+  const sxRow = useMemo(() => {
+    return cloneDeep(data).map((item, index) => {
+      return {
+        index,
+        style: {
+          width: "max(900px, 100%)",
+          opacity:
+            item.process_status === FileStatus.PROCESSING ||
+            item.process_status === FileStatus.IN_QUEUE
+              ? 0.5
+              : 1,
+        },
+      };
+    });
+  }, [data]);
   //! Function
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl((prev) => (prev ? null : event.currentTarget));
   };
 
-  const handleClickRow = (row: TestPDF) => {
+  const handleClickRow = (row: FileData) => {
+    if (
+      row.process_status === FileStatus.PROCESSING ||
+      row.process_status === FileStatus.IN_QUEUE
+    )
+      return;
     setCurrentSegment(row.name);
   };
 
-  const handleClickSegment = (item: TestPDF) => {
+  const handleClickSegment = (item: FileData) => {
     save(cachedKeys.SEGMENT_DETAIL, item);
   };
 
@@ -177,6 +215,7 @@ const SegmentList = (props: ISegmentList) => {
         >
           <CommonStyles.Button
             onClick={handleClick}
+            tooltip={currentSegment ? currentSegment : "All"}
             endIcon={
               <CommonIcons.KeyboardArrowDown
                 sx={{
@@ -186,7 +225,17 @@ const SegmentList = (props: ISegmentList) => {
               />
             }
           >
-            {currentSegment ? currentSegment : "All"}
+            <CommonStyles.Typography
+              type="semiBold14"
+              sx={{
+                maxWidth: "200px",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {currentSegment ? currentSegment : "All"}
+            </CommonStyles.Typography>
           </CommonStyles.Button>
           <Popper
             sx={{ zIndex: 1200 }}
@@ -236,38 +285,19 @@ const SegmentList = (props: ISegmentList) => {
                   </CommonStyles.Button>
                   {data.map((item) => {
                     return (
-                      <CommonStyles.Button
-                        onClick={() => setCurrentSegment(item.name)}
-                        sx={{
-                          display: "flex",
-                          justifyContent: "start",
-                          alignItems: "center",
-                          gap: "10px",
-                          padding: "10px",
-                        }}
-                        key={`${item.name}_${item.creation_date}`}
-                      >
-                        {currentSegment === item.name ? (
-                          <CommonIcons.Check />
-                        ) : (
-                          <Box
-                            sx={{
-                              width: 24,
-                              height: 24,
-                            }}
-                          />
-                        )}
-                        <CommonStyles.Typography type="normal12">
-                          {item.name}
-                        </CommonStyles.Typography>
-                      </CommonStyles.Button>
+                      <SegmentFile
+                        key={`${item.name}_${item.creation_date}_${item.process_status}`}
+                        currentSegment={currentSegment}
+                        item={item}
+                        setCurrentSegment={setCurrentSegment}
+                      />
                     );
                   })}
                 </Box>
               </Fade>
             )}
           </Popper>
-          {currentFile && <DeleteFileButton file={currentFile} />}
+          {currentFile && isOwner && <DeleteFileButton file={currentFile} />}
         </Box>
       </ClickAwayListener>
       <Box
@@ -296,6 +326,10 @@ const SegmentList = (props: ISegmentList) => {
             columns={columns}
             data={data ?? []}
             onClickRow={handleClickRow}
+            sxRow={sxRow}
+            sxHeader={{
+              width: "max(900px, 100%)",
+            }}
           />
         )}
       </Box>

@@ -2,19 +2,16 @@ import CommonStyles from "@/Components/CommonStyles";
 import { deleteFromStore, publishKnowledge } from "@/Constants/api";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import httpServices from "@/Services/httpServices";
-import { useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useGet } from "@/Stores/useStore";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Fragment } from "react/jsx-runtime";
 
-const PublicButton = () => {
+const PublicButton = ({ isPublic }: { isPublic?: boolean }) => {
   //! State
-  const pathName = useLocation().pathname;
   const { userId } = useAuth();
+  const refetchDetails = useGet('REFETCH_KNOWLEDGE_DETAILS')
 
-  const [isPublic, setIsPublic] = useState(
-    pathName.includes("knowledge-store") 
-  );
   const params = useParams();
 
   const knowledgeId = params.knowledgeId;
@@ -32,7 +29,8 @@ const PublicButton = () => {
         knowledge_storage_id: knowledgeId,
       });
 
-      setIsPublic(true);
+      refetchDetails && await refetchDetails()
+
       toast.update(toastId, {
         render: "Knowledge published successfully",
         type: "success",
@@ -62,7 +60,6 @@ const PublicButton = () => {
         knowledge_storage_id: knowledgeId,
       });
 
-      setIsPublic(false);
       toast.update(toastId, {
         render: "Knowledge removed successfully",
         type: "success",

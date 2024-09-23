@@ -163,21 +163,14 @@ const KnowledgeStore = () => {
                   id={item.id as string}
                   key={item.id}
                   title={item.title || "Anonymous knowledge"}
-                  description={item.description || ""}
+                  description={item.description || "--"}
                   publisher={{
                     name: item.userName || "Anonymous",
                     avatar: "https://i.pravatar.cc/300",
-                    email: "@luandang123",
                   }}
                   avatar={item.avatar}
-                  // botUsed={formatNumber(
-                  //   Math.floor(Math.random() * 345678 + 800000)
-                  // )}
-                  // favorite={formatNumber(
-                  //   Math.floor(Math.random() * 34567 + 80000)
-                  // )}
-                  // isOfficial={Math.random() > 0.3}
-                  isFavorite={Math.random() > 0.5}
+                  size={item.size}
+                  quantity={item.quantity}
                 />
               );
             })}

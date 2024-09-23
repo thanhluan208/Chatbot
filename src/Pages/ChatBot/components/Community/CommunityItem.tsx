@@ -32,7 +32,7 @@ const CommunityItem = ({
       sx={{
         padding: "8px 10px 8px 12px",
         borderRadius: "8px",
-        background: theme.colors.custom.backgroundCard,
+        background: theme.colors.custom.backgroundSecondary,
         "&:hover": {
           background: theme.colors.custom.backgroundCardHover,
           boxShadow: "0px 4px 8px rgba(6, 7, 9, 0.04)",

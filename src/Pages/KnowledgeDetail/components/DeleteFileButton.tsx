@@ -1,6 +1,6 @@
 import { Fragment } from "react/jsx-runtime";
 import { toast } from "react-toastify";
-import { TestPDF } from "../../../Hooks/Knowledges/useGetListFolderKnowledge";
+import { FileData } from "../../../Hooks/Knowledges/useGetListFolderKnowledge";
 import useToggleDialog from "../../../Hooks/useToggleDialog";
 import { useGet } from "../../../Stores/useStore";
 import CommonStyles from "../../../Components/CommonStyles";
@@ -9,9 +9,11 @@ import CommonIcons from "../../../Components/CommonIcons";
 import httpServices from "../../../Services/httpServices";
 import { deleteFile } from "../../../Constants/api";
 import { useParams } from "react-router-dom";
+import { useState } from "react";
+import { CircularProgress } from "@mui/material";
 
 interface IDeleteFileButton {
-  file: TestPDF;
+  file: FileData;
 }
 
 function DeleteFileButton(props: IDeleteFileButton) {
@@ -21,12 +23,14 @@ function DeleteFileButton(props: IDeleteFileButton) {
   const params = useParams();
   const userId = params.id;
   const knowledgeFolderId = params.knowledgeId;
-  const refetchListFiles = useGet("REFETCH_KNOWLEDGE_FILES");
+  const refetchListFiles = useGet("REFETCH_KNOWLEDGE_DETAILS");
+  const [loading, setLoading] = useState(false);
 
   //! Function
   const handleDelete = async () => {
     if (!file.name || !userId || !knowledgeFolderId) return;
 
+    setLoading(true);
     const toastId = toast.loading(`Deleting ${file.name}...`, {
       isLoading: true,
       autoClose: false,
@@ -49,6 +53,7 @@ function DeleteFileButton(props: IDeleteFileButton) {
       });
 
       toggle();
+      setLoading(false);
     } catch (error: any) {
       toast.update(toastId, {
         isLoading: false,
@@ -56,6 +61,7 @@ function DeleteFileButton(props: IDeleteFileButton) {
         type: toast.TYPE.ERROR,
         autoClose: 2000,
       });
+      setLoading(false);
 
       console.log("Delete failed", error);
     }
@@ -76,6 +82,7 @@ function DeleteFileButton(props: IDeleteFileButton) {
             handleConfirm={handleDelete}
             content={`Confirm delete ${file.name}`}
             toggle={toggle}
+            loading={loading}
           />
         </CommonStyles.Dialog>
       )}
@@ -83,16 +90,22 @@ function DeleteFileButton(props: IDeleteFileButton) {
         isIcon
         isRound={false}
         color="error"
+        disabled={loading}
         onClick={(e) => {
           e.stopPropagation();
+          if (loading) return;
           toggle();
         }}
       >
-        <CommonIcons.Delete
-          sx={{
-            fill: "red",
-          }}
-        />
+        {loading ? (
+          <CircularProgress size={14} />
+        ) : (
+          <CommonIcons.Delete
+            sx={{
+              fill: "red",
+            }}
+          />
+        )}
       </CommonStyles.Button>
     </Fragment>
   );

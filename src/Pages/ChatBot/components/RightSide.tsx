@@ -57,7 +57,7 @@ export const RightSide = ({
   configuration,
 }: RightSideProps) => {
   //! State
-  const save = useSave()
+  const save = useSave();
 
   const queryParams = new URLSearchParams(location.search);
 
@@ -82,10 +82,10 @@ export const RightSide = ({
       <PerfectScrollbar
         className="main-scrollbar"
         style={{
-          background: "#f9f9f9",
+          background: theme.colors.custom.backgroundCard,
           padding: "24px",
-          maxHeight: "calc(100vh - 74px)",
-          minHeight: "calc(100vh - 74px)",
+          maxHeight: "calc(100vh)",
+          minHeight: "calc(100vh)",
         }}
       >
         {community ? (
@@ -111,12 +111,11 @@ export const RightSide = ({
                     display: "flex",
                     alignItems: "center",
                     padding: "4px",
-                    border: "1px solid #0607090a",
+                    border: `1px solid ${theme.colors.custom.borderColor}`,
                     borderRadius: "8px",
                     svg: {
                       width: 12,
                       height: 12,
-                      border: "1px solid #0607090a",
                       borderRadius: "8px",
                     },
                   }}
@@ -139,7 +138,6 @@ export const RightSide = ({
                     sx={{
                       height: "12px",
                       width: "1px",
-                      background: "#0607091a",
                       margin: "0 4px",
                     }}
                   />
@@ -159,7 +157,7 @@ export const RightSide = ({
                   sx={{
                     height: "24px",
                     width: "1px",
-                    background: "#0607091a",
+                    background: theme.colors.custom.borderColor,
                     margin: "0 12px",
                   }}
                 />
@@ -180,7 +178,7 @@ export const RightSide = ({
                   sx={{
                     height: "24px",
                     width: "1px",
-                    background: "#0607091a",
+                    background: theme.colors.custom.borderColor,
                     margin: "0 12px",
                   }}
                 />
@@ -201,7 +199,7 @@ export const RightSide = ({
               <CommonStyles.Button
                 isIcon
                 onClick={() => {
-                  save(cachedKeys.OPEN_DRAWER, false)
+                  save(cachedKeys.OPEN_DRAWER, false);
                 }}
               >
                 <CommonIcons.Close />
@@ -260,7 +258,7 @@ export const RightSide = ({
                   sx={{
                     height: "12px",
                     width: "1px",
-                    background: "#0607091a",
+                    background: theme.colors.custom.borderColor,
                   }}
                 />
                 <Box

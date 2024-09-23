@@ -270,11 +270,8 @@ const Chatbot = () => {
             padding: "20px 14px 105px 14px",
             height: "calc(100vh - 74px)",
             position: "relative",
-            width: "100vw",
-            transition: "all 0.5s ease",
-            [theme.breakpoints.down("lg")]: {
-              flex: 1,
-            },
+            width: openConversation ? "calc(100vw - 300px)" : "100vw",
+            background: theme.colors.custom.backgroundCard
           }}
         >
           <Box
@@ -385,7 +382,7 @@ const Chatbot = () => {
               width: "100%",
               bottom: 0,
               left: 0,
-              background: theme.colors.custom.backgroundSecondary,
+              background: theme.colors.custom.backgroundCard,
             }}
           >
             <Box
@@ -417,30 +414,6 @@ const Chatbot = () => {
             </Box>
           </Box>
         </Box>
-
-        {/* <Box
-          sx={{
-            maxWidth: "500px",
-            width: openComment ? "500px" : "0px",
-            transition: "all 0.5s ease",
-            [theme.breakpoints.down("lg")]: {
-              display: "none",
-            },
-          }}
-        >
-          <RightSide
-            configuration={{
-              model: "GPT-3 (16K)",
-              items: [
-                ConfigurationItemEnum.PRIVATE_KNOWLEDGE,
-                ConfigurationItemEnum.PRIVATE_PLUGIN,
-              ],
-            }}
-            conversation={Math.floor(Math.random() * 456789 + 3000000)}
-            user={Math.floor(Math.random() * 34567 + 100000)}
-            like={Math.floor(Math.random() * 1000)}
-          />
-        </Box> */}
       </Box>
     </Box>
   );

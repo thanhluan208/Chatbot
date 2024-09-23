@@ -29,16 +29,24 @@ export interface ListKnowledge {
 export interface ListFiles {}
 
 export interface ListFiles {
-  [key: string]: TestPDF;
+  [key: string]: FileData;
 }
 
-export interface TestPDF {
+export interface FileData {
   name: string;
   creation_date: Date;
   last_modified_date: Date;
   file_size: number;
   file_type: string;
   n_points: number;
+  process_status: FileStatus;
+}
+
+export enum FileStatus {
+  PROCESSING = 'processing',
+  SUCCESS = 'success',
+  IN_QUEUE = 'in_queue',
+  FAILED = 'failed',
 }
 
 interface Filters {
@@ -76,7 +84,7 @@ const useGetListFolderKnowledge = (filters?: Filters, isTrigger = true) => {
                 0
               )
             ),
-            quantity: `${Object.keys(item.list_files).length || 0}`,
+            quantity: `${Object.keys(item.list_files)?.length || 0}`,
             sharingWithBots: item.sharing_with_bots,
             userName: item.user_name,
             owner_id: item.owner_id,

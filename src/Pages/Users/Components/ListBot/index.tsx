@@ -201,6 +201,10 @@ function ListBot() {
 
   useEffect(() => {
     save(cachedKeys.LOADING_APP, isLoading);
+
+    return () => {
+      save(cachedKeys.LOADING_APP, false);
+    }
   }, [isLoading]);
 
   //! Render

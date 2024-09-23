@@ -1,6 +1,5 @@
 import { Box, useTheme } from "@mui/material";
 import CommonStyles from "../../Components/CommonStyles";
-import useGetListKnowledgeFiles from "../../Hooks/Knowledges/useGetListKnowledgeFiles";
 import { useNavigate, useParams } from "react-router-dom";
 import { Fragment, useEffect, useMemo } from "react";
 import { useSave } from "../../Stores/useStore";
@@ -11,13 +10,13 @@ import { useAuth } from "../../Providers/AuthenticationProvider";
 import { isEmpty } from "lodash";
 import EditKnowledge from "./components/EditKnowledge";
 import PublicButton from "./components/PublicButton";
-import { boolean } from "@/Helpers";
 import httpServices from "@/Services/httpServices";
 import { updateKnowledgeToBot } from "@/Constants/api";
 import { toast } from "react-toastify";
 import SegmentDetail from "./components/Segment/SegmentDetail";
 import SegmentList from "./components/Segment/SegmentList";
 import SegmentRawFile from "./components/Segment/SegmentRawFile";
+import useGetKnowledgeDetail from "@/Hooks/Knowledges/useGetKnowledgeDetail";
 
 const KnowledgeDetail = () => {
   //! State
@@ -26,11 +25,10 @@ const KnowledgeDetail = () => {
   const save = useSave();
   const navigate = useNavigate();
   const { knowledgeId, botId } = params || {};
-  const queryParams = new URLSearchParams(location.search);
-
-  const isOwner = boolean(queryParams.get("isOwner") as string);
 
   const { userId } = useAuth();
+
+
 
   const payload = useMemo(() => {
     if (knowledgeId && userId) {
@@ -42,17 +40,19 @@ const KnowledgeDetail = () => {
 
     return undefined;
   }, [knowledgeId, userId]);
-  const { data, isLoading, refetch } = useGetListKnowledgeFiles(
-    payload,
-    !!payload
-  );
+  const {data: knowledgeDetail, isLoading, refetch} = useGetKnowledgeDetail(payload, !!payload);
+
+  const isOwner = userId === knowledgeDetail?.owner_id;
+
+  
+  const data = knowledgeDetail ? Object.values(knowledgeDetail.list_files) : [];
 
   const numOfDocs = useMemo(() => {
-    return data.length;
+    return data?.length;
   }, [data]);
 
   const numsOfSegments = useMemo(() => {
-    return data.reduce((acc, cur) => {
+    return data?.reduce((acc, cur) => {
       return acc + cur.n_points;
     }, 0);
   }, [data]);
@@ -94,7 +94,7 @@ const KnowledgeDetail = () => {
 
   //! Effect
   useEffect(() => {
-    save(cachedKeys.REFETCH_KNOWLEDGE_FILES, refetch);
+    save(cachedKeys.REFETCH_KNOWLEDGE_DETAILS, refetch);
   }, [save, refetch]);
 
   //! Render
@@ -128,10 +128,11 @@ const KnowledgeDetail = () => {
               <CommonStyles.Button isIcon onClick={() => navigate(-1)}>
                 <CommonIcons.Clear />
               </CommonStyles.Button>
-              <CommonIcons.Topic
-                color="primary"
-                sx={{ width: 48, height: 48 }}
-              />
+              <img src={knowledgeDetail?.avatar_url} alt="avatar" style={{
+                width: "48px",
+                height: "48px",
+                borderRadius:'8px'
+              }}/>
               <Box
                 sx={{ display: "flex", flexDirection: "column", gap: "6px" }}
               >
@@ -150,7 +151,7 @@ const KnowledgeDetail = () => {
                       textWrap: "nowrap",
                     }}
                   >
-                    {knowledgeId || "Anonymous knowledge"}
+                    {knowledgeDetail?.knowledge_storage_name || "Anonymous knowledge"}
                   </CommonStyles.Typography>
                   <EditKnowledge />
                 </Box>
@@ -169,7 +170,7 @@ const KnowledgeDetail = () => {
             <Box sx={{ display: "flex", gap: "8px" }}>
               {isOwner && (
                 <Fragment>
-                  <PublicButton />
+                  <PublicButton isPublic={knowledgeDetail?.visibility === 'public'}/>
                   <AddContentButton />
                   {botId && (
                     <CommonStyles.Button
@@ -231,7 +232,7 @@ const KnowledgeDetail = () => {
                 </CommonStyles.Typography>
               </Box>
             ) : (
-              <SegmentList data={data} />
+              <SegmentList data={data} isOwner={isOwner}/>
             )}
           </Box>
         </Box>

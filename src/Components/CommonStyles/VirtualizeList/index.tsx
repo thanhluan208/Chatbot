@@ -32,7 +32,7 @@ const DynamicHeightList = ({ items, onClick }: any) => {
           <Box
             sx={{
               ...style,
-              padding: "25px 20px",
+              padding: "12px 20px",
               boxSizing: "border-box",
               cursor: onClick ? "pointer" : "default",
             }}
@@ -79,7 +79,7 @@ const DynamicHeightList = ({ items, onClick }: any) => {
         <List
           width={width}
           height={height}
-          rowCount={items.length}
+          rowCount={items?.length}
           deferredMeasurementCache={cache.current}
           rowHeight={cache.current.rowHeight}
           rowRenderer={rowRenderer}

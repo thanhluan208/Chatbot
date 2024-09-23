@@ -1,5 +1,5 @@
-// const baseAPI = "https://edc2-2001-ee0-442d-8ef0-e918-80c6-aba5-ff1c.ngrok-free.app";
-const baseAPI = "https://chatbot-api.alphiiai.com";
+const baseAPI = "https://593f-123-25-21-211.ngrok-free.app";
+// const baseAPI = "https://chatbot-api.alphiiai.com";
 export const getFolderKnowledge =
   baseAPI + "/knowledge/list_knowledge_storages";
 export const getListKnowledgeFile = baseAPI + "/knowledge/list_files";
@@ -20,6 +20,9 @@ export const publishKnowledge = baseAPI + "/knowledge/update_on_store";
 export const deleteFromStore = baseAPI + "/knowledge/delete_from_store";
 export const getSegments = baseAPI + "/knowledge/get_file_segments";
 export const getFileRaw = baseAPI + "/knowledge/get_file_url";
+export const getFileData = baseAPI + "/knowledge/get_file_data"
+export const retryUploadFile = baseAPI + '/knowledge/retry_upload'
+export const getKnowledgeDetail = baseAPI + "/knowledge/get_knowledge_storage_data";
 
 export const signInApi = baseAPI + "/user/validate_user";
 export const signUpApi = baseAPI + "/user/create_user";

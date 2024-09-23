@@ -9,11 +9,12 @@ interface IConfirmDialog {
   handleConfirm: () => void;
   toggle: () => void;
   content: ReactNode | string;
+  loading?: boolean;
 }
 
 const ConfirmDialog = (props: IConfirmDialog) => {
   //! State
-  const { toggle, handleConfirm, content } = props;
+  const { toggle, handleConfirm, content, loading } = props;
   const save = useSave();
   //! Function
   useEffect(() => {
@@ -36,7 +37,13 @@ const ConfirmDialog = (props: IConfirmDialog) => {
           <CommonStyles.Typography type="bold18">
             Confirm delete
           </CommonStyles.Typography>
-          <CommonStyles.Button isIcon onClick={toggle}>
+          <CommonStyles.Button
+            isIcon
+            onClick={(e) => {
+              e.stopPropagation();
+              toggle();
+            }}
+          >
             <CommonIcons.Clear />
           </CommonStyles.Button>
         </Box>
@@ -84,10 +91,14 @@ const ConfirmDialog = (props: IConfirmDialog) => {
             }}
             type="submit"
             color="error"
+            disabled={loading}
             onClick={(e) => {
-              e.stopPropagation()
-              handleConfirm()
+              e.stopPropagation();
+
+              if (loading) return;
+              handleConfirm();
             }}
+            isLoading={loading}
           >
             Confirm
           </CommonStyles.Button>

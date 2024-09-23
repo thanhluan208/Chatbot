@@ -3,30 +3,50 @@ import knowledgeService, {
   PayloadKnowledgeDetail,
 } from "../../Services/knowledge.service";
 import { AxiosResponse } from "axios";
+import { FileData } from "./useGetListFolderKnowledge";
 
-export interface KnowledgeFileRaw {
+export interface KnowledgeDetailResponse {
   status_code: number;
   message: string;
-  file_url: string;
+  knowledge_storage_data: KnowledgeStorageData;
 }
 
-const useGetRawKnowledge = (
+export interface KnowledgeStorageData {
+  knowledge_storage_id: string;
+  knowledge_storage_name: string;
+  description: string;
+  owner_id: string;
+  created_at: Date;
+  user_name: string;
+  visibility: string;
+  sharing_with_bots: any[];
+  list_files: ListFiles;
+  avatar_url: string;
+}
+
+export interface ListFiles {
+  [key: string]: FileData;
+}
+
+
+
+const useGetKnowledgeDetail = (
   payload?: PayloadKnowledgeDetail,
   isTrigger = true
 ) => {
-  const [data, setData] = useState<string>('');
+  const [data, setData] = useState<KnowledgeStorageData | null>(null);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState();
 
   const callApi = useCallback(() => {
     if (!payload) return;
-    return knowledgeService.getRawFile(payload);
+    return knowledgeService.getDetail(payload);
   }, [payload]);
 
   const transformResponse = useCallback(
-    (response?: AxiosResponse<KnowledgeFileRaw>) => {
+    (response?: AxiosResponse<KnowledgeDetailResponse>) => {
       if (response && response?.data?.status_code === 200) {
-        setData(response.data.file_url);
+        setData(response.data.knowledge_storage_data);
       }
     },
     []
@@ -39,11 +59,11 @@ const useGetRawKnowledge = (
     } catch (error: any) {
       setError(error);
     }
-  }, []);
+  }, [callApi]);
 
   useEffect(() => {
     let shouldSetData = true;
-
+    console.log("trigger", isTrigger);
     if (isTrigger) {
       (async () => {
         try {
@@ -64,7 +84,7 @@ const useGetRawKnowledge = (
         shouldSetData = false;
       };
     }
-  }, [isTrigger]);
+  }, [isTrigger, callApi]);
 
   return {
     data,
@@ -74,4 +94,4 @@ const useGetRawKnowledge = (
   };
 };
 
-export default useGetRawKnowledge;
+export default useGetKnowledgeDetail;

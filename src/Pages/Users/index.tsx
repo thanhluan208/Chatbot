@@ -5,6 +5,7 @@ import { useCallback, useState } from "react";
 import ListBot from "./Components/ListBot";
 import CreateKnowledgeButton from "./Components/CreateKnowledgeButton";
 import ListKnowledge from "./Components/ListKnowledge";
+import { useAuth } from "@/Providers/AuthenticationProvider";
 
 
 const sectionList = ["Bots","Knowledge" ];
@@ -13,6 +14,7 @@ function Users() {
   //! State
   const [personalSection, setPersonalSection] = useState("Bots");
   const theme = useTheme()
+  const {userData} = useAuth()
 
   //! Function
 
@@ -62,7 +64,7 @@ function Users() {
       >
         <Box display={"flex"} gap="8px">
           <img
-            src="https://lf16-alice-tos-sign.oceanapi-i18n.com/obj/ocean-cloud-tos-sg/FileBizType.BIZ_BOT_SPACE/personal.png?lk3s=50ccb0c5&x-expires=1717328691&x-signature=%2BTkPCkEyA%2Fx%2FG4NpeoobsIK0kAk%3D"
+            src={userData?.avatar_url}
             style={{
               height: "32px",
               width: "32px",

@@ -1,7 +1,7 @@
 import CommonIcons from "@/Components/CommonIcons";
 import CommonStyles from "@/Components/CommonStyles";
 import cachedKeys from "@/Constants/cachedKeys";
-import { TestPDF } from "@/Hooks/Knowledges/useGetListFolderKnowledge";
+import { FileData } from "@/Hooks/Knowledges/useGetListFolderKnowledge";
 import useGetRawKnowledge from "@/Hooks/Knowledges/useGetRawKnowledge";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import { useGet, useSave } from "@/Stores/useStore";
@@ -18,7 +18,7 @@ const SegmentRawFile = () => {
   //! State
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
-  const detail: TestPDF = useGet("SEGMENT_RAW");
+  const detail: FileData = useGet("SEGMENT_RAW");
   const save = useSave();
   const theme = useTheme();
   const { userId } = useAuth();

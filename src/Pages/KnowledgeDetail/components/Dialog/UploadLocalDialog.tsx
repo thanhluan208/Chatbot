@@ -29,7 +29,7 @@ const UploadLocalDialog = (props: IUploadLocalDialog) => {
   const userId = params.id;
   const knowledgeId = params.knowledgeId;
 
-  const refectListFile = useGet(cachedKeys.REFETCH_KNOWLEDGE_FILES);
+  const refectListFile = useGet(cachedKeys.REFETCH_KNOWLEDGE_DETAILS);
 
   const initialValues = useMemo<UploadValue>(() => {
     return {

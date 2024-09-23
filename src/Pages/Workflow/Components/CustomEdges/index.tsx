@@ -26,6 +26,7 @@ const AnimatedSVGEdge = ({
   animated,
   source,
   target,
+  ...props
 }: EdgeProps) => {
   //! State
   const [edgePath, labelX, labelY] = getSmoothStepPath({
@@ -74,7 +75,7 @@ const AnimatedSVGEdge = ({
           stroke: "#4e40e5",
         }}
       />
-      {animated && (
+      {(animated || props.selected) && (
         <EdgeLabelRenderer>
           <button
             style={{
@@ -90,7 +91,7 @@ const AnimatedSVGEdge = ({
           </button>
         </EdgeLabelRenderer>
       )}
-      {!disabledCircle && (
+      {(!disabledCircle || props.selected) && (
         <circle r="10" fill="#4e40e5">
           <animateMotion dur="2s" repeatCount="indefinite" path={edgePath} />
         </circle>

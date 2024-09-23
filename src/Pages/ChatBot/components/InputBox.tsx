@@ -1,7 +1,7 @@
 import CommonIcons from "@/Components/CommonIcons";
 import CommonStyles from "@/Components/CommonStyles";
 import { Box, useTheme } from "@mui/material";
-import {  useId,  useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import PerfectScrollBar from "react-perfect-scrollbar";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { chatBot } from "@/Constants/api";
@@ -37,12 +37,12 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
   const { userId, userData } = useAuth();
   const save = useSave();
   const botId = params.botId;
-  const theme = useTheme()
+  const theme = useTheme();
 
   const controller = new AbortController();
 
   const abortFetch = (id?: string, reason?: string) => {
-    console.log("reason", reason);
+    console.error(reason);
     if (controller) {
       controller.abort();
     }
@@ -201,20 +201,8 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
     >
       <Box
         id={id}
-        onFocus={() => {
-          const element = document.getElementById(id);
-          if (element) {
-            element.style.background = `${theme.colors.custom.backgroundCard}`;
-          }
-        }}
-        onBlur={() => {
-          const element = document.getElementById(id);
-          if (element) {
-            element.style.background = theme.colors.custom.backgroundSecondary;
-          }
-        }}
         onClick={() => {
-          textAreaRef?.current && textAreaRef.current.focus()
+          textAreaRef?.current && textAreaRef.current.focus();
         }}
         sx={{
           padding: "8px 8px 8px 20px",
@@ -226,7 +214,8 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
           flexWrap: "wrap",
           justifyContent: "end",
           background: theme.colors.custom.backgroundCard,
-          boxShadow:theme.colors.custom.boxShadow,
+          boxShadow: theme.colors.custom.boxShadow,
+         
           textarea: {
             border: "none",
             resize: "none",
