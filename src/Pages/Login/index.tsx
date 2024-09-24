@@ -6,16 +6,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import CommonStyles from "../../Components/CommonStyles";
 import CommonField from "../../Components/CommonFields";
-import { Viewer, Worker } from "@react-pdf-viewer/core";
-import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
-
-import "@react-pdf-viewer/core/lib/styles/index.css";
-import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 
 const Login = () => {
   //! State
-  const defaultLayoutPluginInstance = defaultLayoutPlugin();
-
   const { userId, signIn } = useAuth();
   const navigate = useNavigate();
   const initialValues = {
@@ -51,21 +44,6 @@ const Login = () => {
         alignItems: "center",
       }}
     >
-      <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}>
-              <div
-                style={{
-                  height: "750px",
-                  maxWidth: "900px",
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                }}
-              >
-                <Viewer
-                  fileUrl={'https://alphii-test-s3.s3.amazonaws.com/85a557f6-affc-44f9-9672-30a66d55fab4/e3890bad-4db4-4734-aacc-9ec52e8837f6/luat252018QH14.-pages-1.pdf?AWSAccessKeyId=AKIA3LET5RMWTV3ZYVEV&Signature=FJvH5qSOUDFyeOAokHvIX8Wxonw%3D&Expires=1727213599'}
-                  plugins={[defaultLayoutPluginInstance]}
-                />
-              </div>
-            </Worker>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
