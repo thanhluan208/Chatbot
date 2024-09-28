@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { TextBoxType } from "./TextBox";
 import { useEffect, useMemo } from "react";
 import cachedKeys from "@/Constants/cachedKeys";
+import { BotData } from "@/Hooks/Bot/useGetBotData";
 
 export interface Chat {
   id: string;
@@ -25,6 +26,7 @@ const ChatField = (props: IChatField) => {
   //! State
   const { setIsBrandNew, isBrandNew } = props;
   const listChat: Chat[] = useGet("LIST_CHAT") || [];
+  const botData: BotData = useGet("BOT_DATA");
   const params = useParams();
   const botId = params?.botId;
 
@@ -33,17 +35,19 @@ const ChatField = (props: IChatField) => {
   const save = useSave();
 
   const payload = useMemo(() => {
-    if (!botId) return;
+    if (!botId || !botData?.all_conversation?.[0] || !botData?.mode) return;
     return {
       botId,
-      conversationId,
+      conversationId: botData?.all_conversation?.[0],
+      platform: botData?.mode,
     };
-  }, [botId, conversationId]);
+  }, [botId, conversationId, botData?.mode, botData?.all_conversation?.[0]]);
 
   const { data, refetch } = useGetBotChatHistory(
     payload as {
       botId: string;
       conversationId: string;
+      platform: string;
     },
     !!payload?.botId
   );
@@ -70,16 +74,16 @@ const ChatField = (props: IChatField) => {
   useEffect(() => {
     return () => {
       save(cachedKeys.LIST_CHAT, null);
-    }
-  },[])
+    };
+  }, []);
 
   useEffect(() => {
-    if(renderChats.length === 0) {
-      save(cachedKeys.IS_BRANDNEW_CHAT, true)
+    if (renderChats.length === 0) {
+      save(cachedKeys.IS_BRANDNEW_CHAT, true);
     } else {
-      save(cachedKeys. IS_BRANDNEW_CHAT, false)
+      save(cachedKeys.IS_BRANDNEW_CHAT, false);
     }
-  },[renderChats])
+  }, [renderChats]);
 
   //! Render
   if (isBrandNew) return null;

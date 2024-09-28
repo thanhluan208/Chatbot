@@ -1,7 +1,7 @@
 import CommonIcons from "@/Components/CommonIcons";
 import CommonStyles from "@/Components/CommonStyles";
 import { Box, useTheme } from "@mui/material";
-import { useId, useRef, useState } from "react";
+import { useCallback, useId, useRef, useState } from "react";
 import PerfectScrollBar from "react-perfect-scrollbar";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { chatBot } from "@/Constants/api";
@@ -12,7 +12,6 @@ import { v4 as uuid } from "uuid";
 import cachedKeys from "@/Constants/cachedKeys";
 import { TextBoxType } from "./TextBox";
 import { BotData } from "@/Hooks/Bot/useGetBotData";
-import { modelOptions } from "@/Constants/options";
 
 interface InputBoxProps {
   setIsBrandNew: React.Dispatch<React.SetStateAction<boolean>>;
@@ -39,31 +38,37 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
   const botId = params.botId;
   const theme = useTheme();
 
-  const controller = new AbortController();
-
-  const abortFetch = (id?: string, reason?: string) => {
-    console.error(reason);
-    if (controller) {
-      controller.abort();
-    }
-    setLoading(false);
-    id &&
-      save(`chat-${id}`, {
-        id: id,
-        status: "responded",
-        type: TextBoxType.ERROR,
-        msg: "Sorry, I'm having trouble processing your request.",
-      });
-  };
-
-  const requestTimeoutId = setTimeout(
-    () => controller.abort(),
-    REQUEST_TIMEOUT_MS
+  const abortFetch = useCallback(
+    (id: string, reason: string, controller: AbortController) => {
+      console.error(reason);
+      if (controller) {
+        console.log("aborting fetch");
+        controller.abort();
+      }
+      setLoading(false);
+      id &&
+        save(`chat-${id}`, {
+          id: id,
+          status: "responded",
+          type: TextBoxType.ERROR,
+          msg: "Sorry, I'm having trouble processing your request. Retrying...",
+        });
+    },
+    []
   );
 
   //! Function
   const handleSubmit = async () => {
-    if (loading || !botId || !userId || !text) return;
+    const controller = new AbortController();
+
+    if (
+      loading ||
+      !botId ||
+      !userId ||
+      !text ||
+      !botData?.all_conversation?.[0]
+    )
+      return;
 
     setLoading(true);
     setIsBrandNew(false);
@@ -85,8 +90,8 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
           {
             id: id,
             avatar:
-              modelOptions.find((elm) => elm.value === botData.llm.model)
-                ?.img || "https://www.w3schools.com/w3images/avatar2.png",
+              botData?.avatar_url ||
+              "https://www.w3schools.com/w3images/avatar2.png",
             name: botData.bot_name,
           },
         ];
@@ -104,6 +109,12 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
       status: "pending",
       type: TextBoxType.BOT_CHAT,
     });
+
+    const requestTimeoutId = setTimeout(() => {
+      abortFetch(id, "Request timeout", controller);
+      setLoading(false);
+      controller.abort();
+    }, REQUEST_TIMEOUT_MS);
     let botResponse = "";
     let count = 0;
     let isFinished = false;
@@ -121,75 +132,84 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
 
     scrollChatbot?.addEventListener("scroll", checkScrollUp);
 
-    fetchEventSource(chatBot, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        bot_id: botId,
-        user_id: userId,
-        query: text,
-      }),
-      signal: controller.signal,
+    try {
+      fetchEventSource(chatBot, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          bot_id: botId,
+          user_id: userId,
+          query: text,
+          // conversation_id: botData?.all_conversation?.[0],
+        }),
+        signal: controller.signal,
 
-      async onopen() {
-        clearTimeout(requestTimeoutId);
-      },
-      onmessage(msg: BotResponse) {
-        if (msg.event === "done") {
-          isFinished = true;
-          return;
-        }
-        botResponse += `${msg.data} `;
-        if (!interval) {
-          interval = setInterval(() => {
-            const text = botResponse.slice(0, count);
-            count++;
-            save(`chat-${id}`, {
-              id: id,
-              status: "responding",
-              type: TextBoxType.BOT_CHAT,
-              msg: text,
-            });
-            if (count > botResponse.length && isFinished) {
-              clearInterval(interval);
+        async onopen() {
+          clearTimeout(requestTimeoutId);
+        },
+        onmessage(msg: BotResponse) {
+          if (msg.event === "done") {
+            isFinished = true;
+            return;
+          }
+          botResponse += `${msg.data} `;
+          if (!interval) {
+            interval = setInterval(() => {
+              const text = botResponse.slice(0, count);
+              count++;
               save(`chat-${id}`, {
                 id: id,
-                status: "responded",
+                status: "responding",
                 type: TextBoxType.BOT_CHAT,
-                msg: botResponse,
+                msg: text,
               });
-              scrollChatbot?.removeEventListener("scroll", checkScrollUp);
-            }
-            const scollbarChatbot =
-              document.getElementById("scrollbar-chatbot");
-            shouldScrollToBottom &&
-              scollbarChatbot?.scrollTo({
-                top: scollbarChatbot.scrollHeight,
-                behavior: "smooth",
-              });
-          }, 20);
-        }
-      },
-      onclose() {
-        abortFetch(undefined, "Connection closed by server.");
-        isFinished = true;
-        save(`chat-${id}`, {
-          id: id,
-          status: "responded",
-          type: TextBoxType.BOT_CHAT,
-          msg: botResponse,
-        });
-        scrollChatbot?.removeEventListener("scroll", checkScrollUp);
-        // You may want to handle cleanup here
-      },
-      onerror(err: any) {
-        abortFetch(id, "There was an error from server" + JSON.stringify(err));
-        interval && clearInterval(interval);
-      },
-    });
+              if (count > botResponse.length && isFinished) {
+                clearInterval(interval);
+                save(`chat-${id}`, {
+                  id: id,
+                  status: "responded",
+                  type: TextBoxType.BOT_CHAT,
+                  msg: botResponse,
+                });
+                scrollChatbot?.removeEventListener("scroll", checkScrollUp);
+              }
+              const scollbarChatbot =
+                document.getElementById("scrollbar-chatbot");
+              shouldScrollToBottom &&
+                scollbarChatbot?.scrollTo({
+                  top: scollbarChatbot.scrollHeight,
+                  behavior: "smooth",
+                });
+            }, 20);
+          }
+        },
+        onclose() {
+          abortFetch("", "Connection closed by server.", controller);
+          isFinished = true;
+          save(`chat-${id}`, {
+            id: id,
+            status: "responded",
+            type: TextBoxType.BOT_CHAT,
+            msg: botResponse,
+          });
+          scrollChatbot?.removeEventListener("scroll", checkScrollUp);
+          // You may want to handle cleanup here
+        },
+        onerror(err: any) {
+          abortFetch(
+            id,
+            "There was an error from server" + JSON.stringify(err),
+            controller
+          );
+          interval && clearInterval(interval);
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   //! Render
@@ -215,7 +235,7 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
           justifyContent: "end",
           background: theme.colors.custom.backgroundCard,
           boxShadow: theme.colors.custom.boxShadow,
-         
+
           textarea: {
             border: "none",
             resize: "none",

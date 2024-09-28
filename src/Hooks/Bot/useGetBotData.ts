@@ -14,6 +14,7 @@ export interface BotResponse {
 }
 
 export interface BotData {
+  all_conversation?: string[];
   avatar_url: string;
   user_id: string;
   tools: any[];

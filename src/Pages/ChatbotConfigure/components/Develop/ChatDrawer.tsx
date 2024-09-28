@@ -1,17 +1,17 @@
 import CommonIcons from "@/Components/CommonIcons";
 import CommonStyles from "@/Components/CommonStyles";
-import { newConversation } from "@/Constants/api";
+import { clearConversation } from "@/Constants/api";
 import cachedKeys from "@/Constants/cachedKeys";
+import { BotData } from "@/Hooks/Bot/useGetBotData";
 import ChatField from "@/Pages/ChatBot/components/ChatField";
 import InputBox from "@/Pages/ChatBot/components/InputBox";
 import { CreateNewConversation } from "@/Pages/ChatBot/components/LeftSide";
-import { useAuth } from "@/Providers/AuthenticationProvider";
 import httpServices from "@/Services/httpServices";
 import { useGet, useSave } from "@/Stores/useStore";
 import { Box, Drawer, useTheme } from "@mui/material";
 import { AxiosResponse } from "axios";
 import { Fragment, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export default function ChatDrawer() {
@@ -22,15 +22,10 @@ export default function ChatDrawer() {
   const navigate = useNavigate();
   const [isBrandNew, setIsBrandNew] = useState(true);
 
-  const params = useParams();
-  const botId = params?.botId;
-
-  const { userId } = useAuth();
-
   const query = new URLSearchParams(window.location.search);
   const conversationId = query.get("conversation");
 
-  const data = useGet("BOT_DATA");
+  const data: BotData = useGet("BOT_DATA");
   //! Function
   const handleClose = (_: {}, reason: "backdropClick" | "escapeKeyDown") => {
     if (reason === "backdropClick") return;
@@ -38,13 +33,12 @@ export default function ChatDrawer() {
   };
 
   const handleNewConversation = async () => {
-    if (isBrandNew) return;
+    if (isBrandNew || !data?.all_conversation?.[0]) return;
     setIsBrandNew(true);
     try {
       const response: AxiosResponse<CreateNewConversation> =
-        await httpServices.post(newConversation, {
-          bot_id: botId,
-          user_id: userId,
+        await httpServices.post(clearConversation, {
+          conversation_id: data?.all_conversation?.[0],
         });
 
       if (response.data.status_code === 200 && response.data.conversation_id) {
@@ -107,15 +101,6 @@ export default function ChatDrawer() {
           >
             <CommonIcons.Close />
           </CommonStyles.Button>
-          {/* <CommonStyles.Button
-            isIcon
-            className="iconButton"
-            onClick={() => {
-              save(cachedKeys.OPEN_CONVERSATION, true);
-            }}
-          >
-            <CommonIcons.Note />
-          </CommonStyles.Button> */}
         </Box>
         <Box
           id="scrollbar-chatbot"

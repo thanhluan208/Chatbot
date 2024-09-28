@@ -6,18 +6,17 @@ import { Fragment } from "react/jsx-runtime";
 import InputBox from "./components/InputBox";
 import Options from "./components/Options";
 import Memory from "./components/Memory";
-import { useSave } from "@/Stores/useStore";
+import { useGet, useSave } from "@/Stores/useStore";
 import cachedKeys from "@/Constants/cachedKeys";
 import CommunityDrawer from "./components/Community/CommunityDrawer";
 import { useEffect, useMemo, useState } from "react";
 import useGetBotData from "@/Hooks/Bot/useGetBotData";
 import ChatField from "./components/ChatField";
-import LeftSide, { CreateNewConversation } from "./components/LeftSide";
+import { CreateNewConversation } from "./components/LeftSide";
 import ConversationDrawer from "./components/ConversationDrawer";
 import { AxiosResponse } from "axios";
 import httpServices from "@/Services/httpServices";
-import { newConversation } from "@/Constants/api";
-import { useAuth } from "@/Providers/AuthenticationProvider";
+import { clearConversation } from "@/Constants/api";
 import { toast } from "react-toastify";
 
 const Chatbot = () => {
@@ -26,17 +25,13 @@ const Chatbot = () => {
   const navigate = useNavigate();
   const save = useSave();
   const [isBrandNew, setIsBrandNew] = useState(false);
-  const [openConversation, setOpenConversation] = useState(
-    window.innerWidth > 900
-  );
 
   const params = useParams();
   const botId = params?.botId;
 
-  const { userId } = useAuth();
-
   const query = new URLSearchParams(window.location.search);
   const conversationId = query.get("conversation");
+  const refetchHistory = useGet("REFETCH_LIST_CHAT");
 
   const payload = useMemo(() => {
     return {
@@ -49,21 +44,16 @@ const Chatbot = () => {
   //! Function
 
   const handleNewConversation = async () => {
-    if (isBrandNew) return;
+    if (isBrandNew || !data?.all_conversation?.[0]) return;
     setIsBrandNew(true);
     try {
       const response: AxiosResponse<CreateNewConversation> =
-        await httpServices.post(newConversation, {
-          bot_id: botId,
-          user_id: userId,
+        await httpServices.post(clearConversation, {
+          conversation_id: data?.all_conversation?.[0],
         });
 
       if (response.data.status_code === 200 && response.data.conversation_id) {
-        const isOwner = query.get("isOwner");
-        navigate(
-          window.location.pathname +
-            `?isOwner=${isOwner}&conversation=${response.data.conversation_id}`
-        );
+        refetchHistory && (await refetchHistory());
       }
     } catch (error) {
       console.error(error);
@@ -251,27 +241,13 @@ const Chatbot = () => {
         }}
       >
         <Box
-          sx={{
-            maxWidth: "300px",
-            width: openConversation ? "300px" : "0px",
-            transition: "all 0.5s ease",
-            [theme.breakpoints.down("md")]: {
-              display: "none",
-            },
-            overflow: "hidden",
-          }}
-        >
-          <LeftSide setOpenConversation={setOpenConversation} />
-        </Box>
-
-        <Box
           id="wrapper"
           sx={{
             padding: "20px 14px 105px 14px",
             height: "calc(100vh - 74px)",
             position: "relative",
-            width: openConversation ? "calc(100vw - 300px)" : "100vw",
-            background: theme.colors.custom.backgroundCard
+            width: "100vw",
+            background: theme.colors.custom.backgroundCard,
           }}
         >
           <Box
@@ -302,36 +278,7 @@ const Chatbot = () => {
               <CommonIcons.Menu />
             </CommonStyles.Button>
           </Box>
-          {!openConversation && (
-            <Box
-              sx={{
-                position: "absolute",
-                top: "20px",
-                left: "20px",
-                zIndex: 100,
-              }}
-            >
-              <CommonStyles.Button
-                isIcon
-                sx={{
-                  background: theme.colors.custom.backgroundCard,
-                  padding: "8px",
-                  borderRadius: "8px",
-                  boxShadow:
-                    "0 2px 4px 0 rgba(0,0,0,.04),0 0 1px 0 rgba(0,0,0,.08)",
-                }}
-                onClick={() => {
-                  if (window.innerWidth < 900) {
-                    save(cachedKeys.OPEN_CONVERSATION, true);
-                  } else {
-                    setOpenConversation(true);
-                  }
-                }}
-              >
-                <CommonIcons.Note />
-              </CommonStyles.Button>
-            </Box>
-          )}
+
           <Box
             id="scrollbar-chatbot"
             sx={{

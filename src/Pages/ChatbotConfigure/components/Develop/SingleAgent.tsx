@@ -3,54 +3,39 @@ import Configure from "../Configure";
 import { Box, useTheme } from "@mui/material";
 import ChatField from "@/Pages/ChatBot/components/ChatField";
 import CommonStyles from "@/Components/CommonStyles";
-import { useGet, useSave } from "@/Stores/useStore";
+import { useGet } from "@/Stores/useStore";
 import CommonIcons from "@/Components/CommonIcons";
 import InputBox from "@/Pages/ChatBot/components/InputBox";
-import ConversationDrawer from "@/Pages/ChatBot/components/ConversationDrawer";
 import { AxiosResponse } from "axios";
 import { CreateNewConversation } from "@/Pages/ChatBot/components/LeftSide";
 import httpServices from "@/Services/httpServices";
-import { newConversation } from "@/Constants/api";
-import { useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "@/Providers/AuthenticationProvider";
+import { clearConversation } from "@/Constants/api";
 import { toast } from "react-toastify";
 import { BotData } from "@/Hooks/Bot/useGetBotData";
-import cachedKeys from "@/Constants/cachedKeys";
 
 const SingleAgent = () => {
   //! State
   const theme = useTheme();
   const [isBrandNew, setIsBrandNew] = useState(true);
-  const navigate = useNavigate();
-
-  const save = useSave();
-  const params = useParams();
-  const botId = params?.botId;
-
-  const { userId } = useAuth();
 
   const data: BotData = useGet("BOT_DATA");
+  const refetchHistory = useGet("REFETCH_LIST_CHAT");
 
   const query = new URLSearchParams(window.location.search);
   const conversationId = query.get("conversation");
 
   //! Function
   const handleNewConversation = async () => {
-    if (isBrandNew) return;
+    if (isBrandNew || !data?.all_conversation?.[0]) return;
     setIsBrandNew(true);
     try {
       const response: AxiosResponse<CreateNewConversation> =
-        await httpServices.post(newConversation, {
-          bot_id: botId,
-          user_id: userId,
+        await httpServices.post(clearConversation, {
+          conversation_id: data?.all_conversation?.[0],
         });
 
       if (response.data.status_code === 200 && response.data.conversation_id) {
-        const isOwner = query.get("isOwner");
-        navigate(
-          window.location.pathname +
-            `?isOwner=${isOwner}&conversation=${response.data.conversation_id}`
-        );
+        refetchHistory && (await refetchHistory());
       }
     } catch (error) {
       console.error(error);
@@ -61,7 +46,7 @@ const SingleAgent = () => {
   //! Render
   return (
     <Fragment>
-      <ConversationDrawer />
+      {/* <ConversationDrawer /> */}
       <Box
         id="wrapper"
         sx={{
@@ -72,16 +57,6 @@ const SingleAgent = () => {
           transition: "all 0.5s ease",
         }}
       >
-        <CommonStyles.Button
-          isIcon
-          tooltip="Open Conversation"
-          isRound={false}
-          onClick={() => {
-            save(cachedKeys.OPEN_CONVERSATION, true);
-          }}
-        >
-          <CommonIcons.Note />
-        </CommonStyles.Button>
         <Box
           id="scrollbar-chatbot"
           sx={{

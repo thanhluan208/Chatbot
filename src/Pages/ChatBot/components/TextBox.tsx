@@ -35,7 +35,7 @@ const TextBox = ({
 }: TextBoxProps) => {
   //! State
   const data: Data = useGet(`chat-${id}` as any);
-  const theme = useTheme()
+  const theme = useTheme();
 
   const botType = data ? data.type : type;
 
@@ -43,8 +43,10 @@ const TextBox = ({
     switch (botType) {
       case TextBoxType.ERROR:
         return {
-          background: "#f6d2d2",
-          color: "#f00",
+          background: theme.palette.error.light,
+          span: {
+            color: "#fff",
+          },
         };
       case TextBoxType.BOT_CHAT:
         return {
@@ -75,33 +77,50 @@ const TextBox = ({
   //! Function
 
   const renderContent = () => {
-    if (!data) return <CommonStyles.Typography sx={{
-      whiteSpace: "pre-line"
-    }}>{text}</CommonStyles.Typography>;
+    if (!data)
+      return (
+        <CommonStyles.Typography
+          sx={{
+            whiteSpace: "pre-line",
+          }}
+        >
+          {text}
+        </CommonStyles.Typography>
+      );
     switch (data.status) {
       case "pending":
         return <CircularProgress size={14} />;
       case "responding":
         return (
-          <CommonStyles.Typography sx={{
-            whiteSpace: "pre-line"
-          }}>
+          <CommonStyles.Typography
+            sx={{
+              whiteSpace: "pre-line",
+            }}
+          >
             <span id={data.id}></span>{" "}
             <CircularProgress size={14} sx={{ marginLeft: "4px" }} />
           </CommonStyles.Typography>
         );
       case "responded":
         return (
-          <CommonStyles.Typography sx={{
-            whiteSpace: "pre-line"
-          }}>
+          <CommonStyles.Typography
+            sx={{
+              whiteSpace: "pre-line",
+            }}
+          >
             <span id={data.id}></span>
           </CommonStyles.Typography>
         );
       default:
-        return <CommonStyles.Typography sx={{
-          whiteSpace: "pre-line"
-        }}>{text}</CommonStyles.Typography>;
+        return (
+          <CommonStyles.Typography
+            sx={{
+              whiteSpace: "pre-line",
+            }}
+          >
+            {text}
+          </CommonStyles.Typography>
+        );
     }
   };
 
