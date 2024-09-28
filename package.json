@@ -12,6 +12,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@hookform/resolvers": "^3.9.0",
     "@microsoft/fetch-event-source": "^2.0.1",
     "@mui/icons-material": "^5.14.16",
     "@mui/lab": "^5.0.0-alpha.151",
@@ -39,6 +40,7 @@
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
     "react-flow": "^1.0.3",
+    "react-hook-form": "^7.53.0",
     "react-icons": "^4.11.0",
     "react-perfect-scrollbar": "^1.5.8",
     "react-resizable-panels": "^2.1.2",
