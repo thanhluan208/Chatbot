@@ -1,4 +1,6 @@
-const baseAPI = "https://e000-14-191-165-144.ngrok-free.app";
+// const baseAPI = "https://d446-58-187-228-91.ngrok-free.app";
+// const baseAPI = "https://e5d1-123-25-21-211.ngrok-free.app";
+const baseAPI = "https://85c9-42-113-61-122.ngrok-free.app"; //local a Manh
 // const baseAPI = "https://chatbot-api.alphiiai.com";
 export const getFolderKnowledge =
   baseAPI + "/knowledge/list_knowledge_storages";

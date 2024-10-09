@@ -7,23 +7,31 @@ import BotCard from "./components/BotCard";
 import Mansory from "@mui/lab/Masonry";
 import CommonIcons from "../../Components/CommonIcons";
 import useGetBotsStore from "@/Hooks/Bot/useGetBotsStore";
+import { useTranslation } from "react-i18next";
 
 export enum BotStoreCategory {
-  RECOMENDED = "recomended",
-  NEW = "new",
-  POPULAR = "popular",
-  WRITING = "writing",
-  DESIGN = "design",
-  MARKETING = "marketing",
-  DEVELOPMENT = "development",
-  OTHERS = "others",
-  EFFICIENCY_HACKATHON = "efficiency hackathon",
+  
 }
 
 const BotStore = () => {
+  //translation
+  const { t } = useTranslation("store");
+
+  const BotStoreCategory = {
+    RECOMMENDED: t("botStoreCategory.recommended"),
+    NEW: t("botStoreCategory.new"),
+    POPULAR: t("botStoreCategory.popular"),
+    WRITING: t("botStoreCategory.writing"),
+    DESIGN: t("botStoreCategory.design"),
+    MARKETING: t("botStoreCategory.marketing"),
+    DEVELOPMENT: t("botStoreCategory.development"),
+    OTHERS: t("botStoreCategory.others"),
+    EFFICIENCY_HACKATHON: t("botStoreCategory.efficiency_hackathon"),
+  }
+
   //! State
   const [filters, setFilters] = useState({
-    category: "recomended",
+    category: "recommended",
   });
   const theme = useTheme();
 
