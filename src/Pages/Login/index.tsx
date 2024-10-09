@@ -6,10 +6,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import CommonStyles from "../../Components/CommonStyles";
 import CommonField from "../../Components/CommonFields";
+import { useTranslation } from "react-i18next";
 
 const Login = () => {
   //! State
   const { userId, signIn } = useAuth();
+  const { t } = useTranslation("store");
+
+  console.log("t", t("hello"));
   const navigate = useNavigate();
   const initialValues = {
     email_or_username: "",
@@ -21,7 +25,7 @@ const Login = () => {
     password: yup.string().required("Password is required"),
   });
 
-  const theme = useTheme()
+  const theme = useTheme();
 
   //! Function
 
@@ -78,8 +82,8 @@ const Login = () => {
                   display: "flex",
                   flexDirection: "column",
                   gap: "8px",
-                  width:'100%',
-                  marginTop:'20px'
+                  width: "100%",
+                  marginTop: "20px",
                 }}
               >
                 <FastField
