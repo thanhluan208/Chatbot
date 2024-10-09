@@ -1,0 +1,26 @@
+{
+  "botStoreCategory":{
+    "recommended" : "Đề xuất",
+    "new" : "Mới",
+    "popular" : "Phổ biến",
+    "writing" : "Viết",
+    "design" : "Thiết kế",
+    "marketing" : "Marketing",
+    "development" : "Phát triển",
+    "others" : "Khác",
+    "efficiency_hackathon" : "Efficiency Hackathon"
+  },
+
+  "knowledgeStoreCategory": {
+    "recommended" : "Đề xuất",
+    "recent" : "Gần đây",
+    "news_reading" : "Tin tức",
+    "writing" : "Viết",
+    "photography" : "Nhiếp ảnh",
+    "design" : "Thiết kế",
+    "tool" : "Công cụ",
+    "lifestyle" : "Lối sống",
+    "science_education" : "Khoa học & Giáo dục",
+    "social" : "Xã hội"
+  }
+}

@@ -1,3 +1,26 @@
 {
-  "hello": "Hello World"
+  "botStoreCategory":{
+    "recommended" : "recommended",
+    "new" : "new",
+    "popular" : "popular",
+    "writing" : "writing",
+    "design" : "design",
+    "marketing" : "marketing",
+    "development" : "development",
+    "others" : "others",
+    "efficiency_hackathon" : "efficiency hackathon"
+  },
+
+  "knowledgeStoreCategory": {
+    "recommended" : "recommended",
+    "recent" : "recent",
+    "news_reading" : "news and reading",
+    "writing" : "writing",
+    "photography" : "photography",
+    "design" : "design",
+    "tool" : "tool",
+    "lifestyle" : "lifestyle",
+    "science_education" : "science and education",
+    "social" : "social"
+  }
 }
