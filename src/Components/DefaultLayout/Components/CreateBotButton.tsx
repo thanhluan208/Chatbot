@@ -15,6 +15,7 @@ import { createBot } from "../../../Constants/api";
 import { useGet } from "../../../Stores/useStore";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../../Providers/AuthenticationProvider";
+import { useTranslation } from "react-i18next";
 
 interface ICreateBotDialog {
   toggle: () => void;
@@ -27,6 +28,9 @@ interface InitValues {
 }
 
 export const CreateBotDialog = (props: ICreateBotDialog) => {
+  //translation
+  const { t } = useTranslation("store");
+
   //! State
   const { toggle } = props;
   const params = useParams();
@@ -234,6 +238,10 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
 };
 
 function CreateBotButton() {
+
+  //translation
+  const { t } = useTranslation("store");
+
   //! State
 
   const { open, shouldRender, toggle } = useToggleDialog();
@@ -259,7 +267,7 @@ function CreateBotButton() {
         startIcon={<CommonIcons.Add />}
         onClick={toggle}
       >
-        Create bot
+        {t("sidebar.button.createBot")}
       </CommonStyles.Button>
     </Fragment>
   );

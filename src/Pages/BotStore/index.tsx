@@ -76,7 +76,7 @@ const BotStore = () => {
         }}
       >
         <CommonStyles.Typography type="semiBold20">
-          Bot store
+          {t("botStore.heading.main")}
         </CommonStyles.Typography>
         <Box
           sx={{
@@ -93,7 +93,7 @@ const BotStore = () => {
         >
           <CommonStyles.Input
             fullWidth
-            placeholder="Search"
+            placeholder={t("botStore.placeholder.search")}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start" sx={{ marginLeft: "16px" }}>
@@ -118,7 +118,7 @@ const BotStore = () => {
           }}
         >
           <CommonStyles.Button variant="contained">
-            Submit bot
+            {t("botStore.button.submitBot")}
           </CommonStyles.Button>
         </Box>
       </Box>
@@ -154,10 +154,10 @@ const BotStore = () => {
               display: "-webkit-box",
             }}
           >
-            📝 Your content writing assistant powered by AI
+            📝 {t("botStore.leadParagraph.shortSummary")}
           </CommonStyles.Typography>
           <CommonStyles.Typography type="normal16" color={"#1d1c2399"}>
-            Generate high-quality content with just a few clicks
+            {t("botStore.leadParagraph.shortDesc")}
           </CommonStyles.Typography>
 
           <CommonStyles.Button
@@ -174,7 +174,7 @@ const BotStore = () => {
             }}
           >
             <CommonStyles.Typography type="semiBold14" color="#fff">
-              Try it now
+              {t("botStore.button.try")}
             </CommonStyles.Typography>
           </CommonStyles.Button>
         </Box>
@@ -201,8 +201,7 @@ const BotStore = () => {
         }}
       >
         {Object.values(BotStoreCategory).map((cate) => {
-          console.log(t("recommended"));
-          const name = t(`botStoreCategory.${cate}`)
+          const name = t(`botStore.category.${cate}`)
             .split(" ")
             .map((word) => capitalize(word))
             .join(" ");
