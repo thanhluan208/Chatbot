@@ -26,6 +26,22 @@
       "Workflow Store":"Workflow store"
     }
   },
+  "login":{
+    "title":"Welcome to Alphii",
+    "smallTitle":"Sign in to access your dashboard, chatbots, and more...",
+    "emailLabel":"Email or username",
+    "emailPlaceholder":"Enter your email or username",
+    "emailWarning":"Password is required",
+    "pwLabel":"Password",
+    "pwPlaceholder":"Enter your password",
+    "pwWarning":"Email or username is required",
+    "btnSubmit":"Sign in",
+    "naviText":"Don't have an account?",
+    "signUpLink":"Sign up"
+  },
+  "signup":{
+    
+  },
   "botStore":{
     "heading":{
       "main":"Bot store"
