@@ -29,8 +29,7 @@ i18n
   });
 
 const LanguageProvider = ({ children }: PropsWithChildren) => {
-  // const lang = localStorage.getItem("lang") || LANGUAGES.EN;
-  const lang =  LANGUAGES.VI;
+  const lang = localStorage.getItem("lang") || LANGUAGES.EN;
 
   const { i18n } = useTranslation();
   useEffect(() => {

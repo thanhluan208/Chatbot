@@ -10,28 +10,24 @@ import useGetBotsStore from "@/Hooks/Bot/useGetBotsStore";
 import { useTranslation } from "react-i18next";
 
 export enum BotStoreCategory {
-  
+  RECOMMENDED = "recommended",
+  NEW = "new",
+  POPULAR = "popular",
+  WRITING = "writing",
+  DESIGN = "design",
+  MARKETING = "marketing",
+  DEVELOPMENT = "development",
+  OTHERS = "others",
+  EFFICIENCY_HACKATHON = "efficiency hackathon",
 }
 
 const BotStore = () => {
   //translation
   const { t } = useTranslation("store");
 
-  const BotStoreCategory = {
-    RECOMMENDED: t("botStoreCategory.recommended"),
-    NEW: t("botStoreCategory.new"),
-    POPULAR: t("botStoreCategory.popular"),
-    WRITING: t("botStoreCategory.writing"),
-    DESIGN: t("botStoreCategory.design"),
-    MARKETING: t("botStoreCategory.marketing"),
-    DEVELOPMENT: t("botStoreCategory.development"),
-    OTHERS: t("botStoreCategory.others"),
-    EFFICIENCY_HACKATHON: t("botStoreCategory.efficiency_hackathon"),
-  }
-
   //! State
   const [filters, setFilters] = useState({
-    category: "recommended",
+    category: BotStoreCategory.RECOMMENDED,
   });
   const theme = useTheme();
 
@@ -205,7 +201,8 @@ const BotStore = () => {
         }}
       >
         {Object.values(BotStoreCategory).map((cate) => {
-          const name = cate
+          console.log(t("recommended"));
+          const name = t(`botStoreCategory.${cate}`)
             .split(" ")
             .map((word) => capitalize(word))
             .join(" ");

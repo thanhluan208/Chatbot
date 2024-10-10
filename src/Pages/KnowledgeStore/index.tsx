@@ -8,22 +8,22 @@ import Knowledgecard from "./components/KnowledgeCard";
 import useGetListFolderKnowledge from "@/Hooks/Knowledges/useGetListFolderKnowledge";
 import { useTranslation } from "react-i18next";
 
+export enum BotStoreCategory {
+  RECOMENDED = "recommended",
+  RECENT = "recent",
+  NEWS_AND_READING = "news and reading",
+  WRITING = "writing",
+  PHOTOGRAPHY = "photography",
+  DESIGN = "design",
+  TOOL = "tool",
+  LIFESTYLE = "lifestyle",
+  SCIENCE_AND_EDUCATION = "science and education",
+  SOCIAL = "social",
+}
+
 const KnowledgeStore = () => {
   //translation
   const { t } = useTranslation("store");
-
-  const BotStoreCategory = {
-    RECOMMENDED: t("knowledgeStoreCategory.recommended"),
-    RECENT: t("knowledgeStoreCategory.recent"),
-    NEWS_AND_READING: t("knowledgeStoreCategory.news_reading"),
-    WRITING: t("knowledgeStoreCategory.writing"),
-    PHOTOGRAPHY: t("knowledgeStoreCategory.photography"),
-    DESIGN: t("knowledgeStoreCategory.design"),
-    TOOL: t("knowledgeStoreCategory.tool"),
-    LIFESTYLE: t("knowledgeStoreCategory.lifestyle"),
-    SCIENCE_AND_EDUCATION: t("knowledgeStoreCategory.science_education"),
-    SOCIAL: t("knowledgeStoreCategory.social"),
-  }
 
   //! State
   const [filters, setFilters] = useState({
@@ -124,7 +124,7 @@ const KnowledgeStore = () => {
         }}
       >
         {Object.values(BotStoreCategory).map((cate) => {
-          const name = cate
+          const name = t(`knowledgeStoreCategory.${cate}`)
             .split(" ")
             .map((word) => capitalize(word))
             .join(" ");

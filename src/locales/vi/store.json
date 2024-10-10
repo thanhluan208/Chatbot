@@ -8,19 +8,19 @@
     "marketing" : "Marketing",
     "development" : "Phát triển",
     "others" : "Khác",
-    "efficiency_hackathon" : "Efficiency Hackathon"
+    "efficiency hackathon" : "Efficiency Hackathon"
   },
 
   "knowledgeStoreCategory": {
     "recommended" : "Đề xuất",
     "recent" : "Gần đây",
-    "news_reading" : "Tin tức",
+    "news and reading" : "Tin tức",
     "writing" : "Viết",
     "photography" : "Nhiếp ảnh",
     "design" : "Thiết kế",
     "tool" : "Công cụ",
     "lifestyle" : "Lối sống",
-    "science_education" : "Khoa học & Giáo dục",
+    "science and education" : "Khoa học & Giáo dục",
     "social" : "Xã hội"
   }
 }
