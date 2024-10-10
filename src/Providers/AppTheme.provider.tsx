@@ -9,6 +9,7 @@ import { useSave } from "../Stores/useStore";
 import { CustomColors } from "./type";
 import CommonStyles from "@/Components/CommonStyles";
 import CommonIcons from "@/Components/CommonIcons";
+import i18n from "i18next";
 
 declare module "@mui/material/styles" {
   interface Theme {
@@ -271,6 +272,10 @@ if (!!window.matchMedia && !initTheme) {
   }
 }
 
+const changeLanguage = (lang: string) => {
+  i18n.changeLanguage(lang);
+}
+
 export default function AppThemeProvider(props: { children: React.ReactNode }) {
   const { children } = props;
   const save = useSave();
@@ -309,6 +314,17 @@ export default function AppThemeProvider(props: { children: React.ReactNode }) {
         }}
       />
       {children}
+
+      <div style={{ position: "fixed", bottom: "20px", right: "80px" }}>
+        <select
+          onChange={(e) => changeLanguage(e.target.value)}
+          defaultValue={i18n.language}
+        >
+          <option value="en">English</option>
+          <option value="vi">Vietnamese</option>
+        </select>
+      </div>
+
       <CommonStyles.Button isIcon variant="outlined" sx={{
         position:"fixed",
         bottom:'20px',
