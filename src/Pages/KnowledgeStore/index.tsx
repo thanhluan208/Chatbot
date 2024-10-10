@@ -77,11 +77,11 @@ const KnowledgeStore = () => {
         }}
       >
         <CommonStyles.Typography type="semiBold20">
-          Knowledge store
+          {t("knowledgeStore.heading.main")}
         </CommonStyles.Typography>
         <CommonStyles.Input
           fullWidth
-          placeholder="Search"
+          placeholder={t("knowledgeStore.placeholder.search")}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start" sx={{ marginLeft: "16px" }}>
@@ -104,7 +104,7 @@ const KnowledgeStore = () => {
             maxWidth:'unset',
             textWrap:"nowrap"
           }}>
-            Publish knowledge
+            {t("knowledgeStore.button.publish")}
           </CommonStyles.Button>
         </Box>
       </Box>
@@ -124,7 +124,7 @@ const KnowledgeStore = () => {
         }}
       >
         {Object.values(BotStoreCategory).map((cate) => {
-          const name = t(`knowledgeStoreCategory.${cate}`)
+          const name = t(`knowledgeStore.category.${cate}`)
             .split(" ")
             .map((word) => capitalize(word))
             .join(" ");

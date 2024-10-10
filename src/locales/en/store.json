@@ -1,26 +1,66 @@
 {
-  "botStoreCategory":{
-    "recommended" : "recommended",
-    "new" : "new",
-    "popular" : "popular",
-    "writing" : "writing",
-    "design" : "design",
-    "marketing" : "marketing",
-    "development" : "development",
-    "others" : "others",
-    "efficiency hackathon" : "efficiency hackathon"
+  "sidebar":{
+    "button":{
+      "createBot": "Create bot",
+      "logOut":"Log out",
+      "settings":"Settings"
+    },
+    "naviItem":{
+      "Home":"Home",
+      "Personal":"Personal",
+      "Knowledge Store": "Knowledge store",
+      "Workflow Store":"Workflow store"
+    }
   },
-
-  "knowledgeStoreCategory": {
-    "recommended" : "recommended",
-    "recent" : "recent",
-    "news and reading" : "news and reading",
-    "writing" : "writing",
-    "photography" : "photography",
-    "design" : "design",
-    "tool" : "tool",
-    "lifestyle" : "lifestyle",
-    "science and education" : "science and education",
-    "social" : "social"
+  "botStore":{
+    "heading":{
+      "main":"Bot store"
+    },
+    "leadParagraph":{
+      "shortSummary":"Your content writing assistant powered by AI",
+      "shortDesc":"Generate high-quality content with just a few clicks"
+    },
+    "button":{
+      "submitBot": "Submit bot",
+      "try": "Try it now"
+    },
+    "placeholder":{
+      "search": "Search"
+    },
+    "category":{
+      "recommended" : "recommended",
+      "new" : "new",
+      "popular" : "popular",
+      "writing" : "writing",
+      "design" : "design",
+      "marketing" : "marketing",
+      "development" : "development",
+      "others" : "others",
+      "efficiency hackathon" : "efficiency hackathon"
+    }
+  },
+  "knowledgeStore":{
+    "heading":{
+      "main":"Knowledge store"
+    },
+    "button":{
+      "publish": "Publish knowledge"
+    },
+    "placeholder":{
+      "search": "Search"
+    },
+    "category": {
+      "recommended" : "recommended",
+      "recent" : "recent",
+      "news and reading" : "news and reading",
+      "writing" : "writing",
+      "photography" : "photography",
+      "design" : "design",
+      "tool" : "tool",
+      "lifestyle" : "lifestyle",
+      "science and education" : "science and education",
+      "social" : "social"
+    }
   }
+  
 }

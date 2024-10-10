@@ -1,26 +1,68 @@
 {
-  "botStoreCategory":{
-    "recommended" : "Đề xuất",
-    "new" : "Mới",
-    "popular" : "Phổ biến",
-    "writing" : "Viết",
-    "design" : "Thiết kế",
-    "marketing" : "Marketing",
-    "development" : "Phát triển",
-    "others" : "Khác",
-    "efficiency hackathon" : "Efficiency Hackathon"
+  "sidebar":{
+    "button":{
+      "createBot": "Tạo bot",
+      "logOut":"Đăng xuất",
+      "settings":"Cài đặt"
+    },
+    "naviItem":{
+      "Home":"Trang chủ",
+      "Personal":"Cá nhân",
+      "Knowledge Store": "Cửa hàng tri thức",
+      "Workflow Store":"Cửa hàng quy trình làm việc"
+    }
   },
-
-  "knowledgeStoreCategory": {
-    "recommended" : "Đề xuất",
-    "recent" : "Gần đây",
-    "news and reading" : "Tin tức",
-    "writing" : "Viết",
-    "photography" : "Nhiếp ảnh",
-    "design" : "Thiết kế",
-    "tool" : "Công cụ",
-    "lifestyle" : "Lối sống",
-    "science and education" : "Khoa học & Giáo dục",
-    "social" : "Xã hội"
+  "botStore":{
+    "heading":{
+      "main":"Cửa hàng bot"
+    },
+    "leadParagraph":{
+      "shortSummary":"Trợ lý viết nội dung của bạn được hỗ trợ bởi AI",
+      "shortDesc":"Tạo nội dung chất lượng cao chỉ với vài cú nhấp chuột"
+    },
+    "button":{
+      "submitBot": "Nộp bot",
+      "try": "Thử ngay"
+    },
+    "placeholder":{
+      "search": "Tìm kiếm"
+    },
+    "category":{
+      "recommended" : "Đề xuất",
+      "new" : "Mới",
+      "popular" : "Phổ biến",
+      "writing" : "Viết",
+      "design" : "Thiết kế",
+      "marketing" : "Marketing",
+      "development" : "Phát triển",
+      "others" : "Khác",
+      "efficiency hackathon" : "Efficiency Hackathon"
+    }
   }
+  ,
+
+  "knowledgeStore":{
+    "heading":{
+      "main":"Cửa hàng tri thức"
+    },
+    "button":{
+      "publish": "Xuất bản kiến thức"
+    },
+    "placeholder":{
+      "search": "Tìm kiếm"
+    },
+    "category": {
+      "recommended" : "Đề xuất",
+      "recent" : "Gần đây",
+      "news and reading" : "Tin tức",
+      "writing" : "Viết",
+      "photography" : "Nhiếp ảnh",
+      "design" : "Thiết kế",
+      "tool" : "Công cụ",
+      "lifestyle" : "Lối sống",
+      "science and education" : "Khoa học & Giáo dục",
+      "social" : "Xã hội"
+    }
+  }
+  
 }

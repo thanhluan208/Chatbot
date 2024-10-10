@@ -11,6 +11,7 @@ import CommonStyles from "@/Components/CommonStyles";
 import CreateBotButton from "./CreateBotButton";
 import { capitalize } from "lodash";
 import { processNavLabel } from "@/Helpers";
+import { useTranslation } from "react-i18next";
 
 export default function Sidebar({
   open,
@@ -19,6 +20,9 @@ export default function Sidebar({
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+    //translation
+    const { t } = useTranslation("store");
+
   //! State
   const Routes = useRoutes();
   const theme = useTheme();
@@ -110,10 +114,11 @@ export default function Sidebar({
                 )}
 
                 {Object.entries(valPar).map(([keyChi, valChi]) => {
+                  console.log(processNavLabel(keyChi))
                   return (
                     <NavItem
                       icon={valChi.icon}
-                      title={processNavLabel(keyChi)}
+                      title={t(`sidebar.naviItem.${processNavLabel(keyChi)}`)}
                       path={valChi.path}
                       key={keyChi}
                     />
