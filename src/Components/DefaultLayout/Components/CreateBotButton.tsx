@@ -133,7 +133,7 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
                   mb={3}
                 >
                   <CommonStyles.Typography type="semiBold18">
-                    Create Bot
+                    {t("dialog.createBot.title")}
                   </CommonStyles.Typography>
                   <CommonStyles.Button isIcon onClick={toggle}>
                     <CommonIcons.Clear />
@@ -148,17 +148,17 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
                   name="name"
                   component={CommonField.InputField}
                   fullWidth
-                  label="Bot name"
+                  label={t("dialog.createBot.botNameLabel")}
                   required
-                  placeholder="Give the bot a unique name"
+                  placeholder={t("dialog.createBot.botNamePlaceholder")}
                   maxChar={50}
                 />
                 <FastField
                   name="description"
                   component={CommonField.InputField}
                   fullWidth
-                  label="Bot description"
-                  placeholder="Introduce the bot's features. The description will be displayed to the bot's users"
+                  label={t("dialog.createBot.botDescLabel")}
+                  placeholder={t("dialog.createBot.botDescPlaceholder")}
                   multiline
                   minRows={6}
                   maxChar={2000}
@@ -185,7 +185,7 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
                     />
                   )}
                   <CommonStyles.UploadFile
-                    label="Upload Image"
+                    label={t("dialog.createBot.uploadImg")}
                     files={values.avatar_file_input}
                     dropzoneProps={{
                       onDrop: (acceptedFiles) => {
@@ -217,7 +217,7 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
                     disabled={isSubmitting}
                     type="button"
                   >
-                    Cancel
+                    {t("dialog.button.cancel")}
                   </CommonStyles.Button>
                   <CommonStyles.Button
                     variant="contained"
@@ -225,7 +225,7 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
                     isLoading={isSubmitting}
                     disabled={isSubmitting || !isEmpty(errors)}
                   >
-                    Confirm
+                    {t("dialog.button.confirm")}
                   </CommonStyles.Button>
                 </Box>
               </DialogActions>

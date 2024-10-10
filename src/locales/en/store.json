@@ -1,4 +1,18 @@
 {
+  "dialog":{
+    "createBot":{
+      "title":"Create Bot",
+      "botNameLabel":"Bot name",
+      "botNamePlaceholder":"Give the bot an unique name",
+      "botDescLabel":"Bot description",
+      "botDescPlaceholder":"Introduce the bot's features. The description will be displayed to the bot's users",
+      "uploadImg": "Upload Image"
+    },
+    "button":{
+      "cancel":"Cancel",
+      "confirm":"Confirm"
+    }
+  },
   "sidebar":{
     "button":{
       "createBot": "Create bot",
