@@ -26,6 +26,22 @@
       "Workflow Store":"Cửa hàng quy trình làm việc"
     }
   },
+  "login":{
+    "title": "Chào mừng tới Alphii",
+    "smallTitle": "Đăng nhập để truy cập bảng điều khiển, chatbot và nhiều hơn nữa...",
+    "emailLabel": "Email hoặc tên người dùng",
+    "emailPlaceholder": "Nhập email hoặc tên người dùng của bạn",
+    "emailWarning": "Yêu cầu mật khẩu",
+    "pwLabel": "Mật khẩu",
+    "pwPlaceholder": "Nhập mật khẩu của bạn",
+    "pwWarning": "Yêu cầu email hoặc tên người dùng",
+    "btnSubmit": "Đăng nhập",
+    "naviText": "Chưa có tài khoản?",
+    "signUpLink": "Đăng ký"
+  },
+  "signup":{
+    
+  },
   "botStore":{
     "heading":{
       "main":"Cửa hàng bot"
