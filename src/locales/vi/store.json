@@ -1,4 +1,18 @@
 {
+  "dialog":{
+    "createBot":{
+      "title":"Tạo bot",
+      "botNameLabel":"Tên bot",
+      "botNamePlaceholder":"Đặt cho bot một cái tên độc đáo.",
+      "botDescLabel":"Mô tả bot",
+      "botDescPlaceholder":"Giới thiệu các tính năng của bot. Mô tả sẽ được hiển thị cho những người dùng bot",
+      "uploadImg": "Tải lên hình ảnh"
+    },
+    "button":{
+      "cancel":"Hủy",
+      "confirm":"Xác nhận"
+    }
+  },
   "sidebar":{
     "button":{
       "createBot": "Tạo bot",
