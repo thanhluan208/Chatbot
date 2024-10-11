@@ -1,10 +1,10 @@
 import { Fragment } from "react/jsx-runtime";
-import useToggleDialog from "../../../../../Hooks/useToggleDialog";
+import useToggleDialog from "@/Hooks/useToggleDialog";
 import { toast } from "react-toastify";
-import httpServices from "../../../../../Services/httpServices";
-import { deleteBotNode } from "../../../../../Constants/api";
-import CommonStyles from "../../../../../Components/CommonStyles";
-import ConfirmDialog from "../../../../../Components/CommonStyles/ConfirmDialog";
+import httpServices from "@/Services/httpServices";
+import { deleteBotNode } from "@/Constants/api";
+import CommonStyles from "@/Components/CommonStyles";
+import ConfirmDialog from "@/Components/CommonStyles/ConfirmDialog";
 import CommonIcons from "@/Components/CommonIcons";
 import { useParams } from "react-router-dom";
 import { useSave } from "@/Stores/useStore";

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import {
   Handle,
   MarkerType,
@@ -8,53 +8,27 @@ import {
 } from "@xyflow/react";
 import { Box, useTheme } from "@mui/material";
 import { v4 as uuid } from "uuid";
-import CommonIcons from "@/Components/CommonIcons";
 import CommonStyles from "@/Components/CommonStyles";
-import CollapseArea from "../../../../../Components/CommonStyles/CollapseArea";
-import { FastField, Form, Formik } from "formik";
-import CommonField from "@/Components/CommonFields";
-import { useGet, useSave } from "@/Stores/useStore";
-import DeleteAgentButton from "./DeleteAgentButton";
-import logo from "@/assets/logo.png";
-import { modelOptions } from "@/Constants/options";
-import GenerationDiversity from "@/Pages/ChatbotConfigure/components/GenerationDiversity";
-import Advance from "@/Pages/ChatbotConfigure/components/GenerateDiversity/components/Advance";
-import InputAndOutputSettings from "@/Pages/ChatbotConfigure/components/InputAndOutputSettings";
-import EngineSelect from "../LLMNode/SingleTab/EngineSelect";
+import CollapseArea from "@/Components/CommonStyles/CollapseArea";
+import { AllQueryKeys, useGet, useSave } from "@/Stores/useStore";
 import reactFlowService from "@/Services/reactFlowService";
 import { useParams } from "react-router-dom";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import { toast } from "react-toastify";
-import httpServices from "@/Services/httpServices";
-import {
-  updateNodeLLM,
-  updateScenario,
-  updateSystemPrompt,
-} from "@/Constants/api";
 
 import "./index.css";
-import cachedKeys from "@/Constants/cachedKeys";
+import WrapperNodeLabel from "./components/WrapperNodeLabel";
+import NodeForm from "./components/NodeForm";
 
 const MultiAgentNode = (props: NodeProps) => {
   //! State
   const { data } = props;
-  const shouldRemove = useGet(`${props.id}_remove` as any);
-  console.log("data", data);
-  const {
-    setNodes,
-    setEdges,
-    updateNode,
-    updateEdge,
-    getNodes,
-    getNode,
-    setCenter,
-  } = useReactFlow();
+  const shouldRemove = useGet(`${props.id}_remove` as AllQueryKeys);
+  const { setNodes, setEdges, updateNode, updateEdge, getNode } =
+    useReactFlow();
   const [isAdding, setIsAdding] = React.useState(false);
-  const [isRenaming, setIsRenaming] = React.useState(false);
 
   const placeholderId = useRef<string | null>(uuid());
-  const nameRef = useRef<HTMLInputElement | null>(null);
-  const timeoutRef = useRef<any>(null);
 
   const save = useSave();
   const theme = useTheme();
@@ -63,30 +37,6 @@ const MultiAgentNode = (props: NodeProps) => {
   const botId = params?.botId;
 
   const { userId } = useAuth();
-
-  const initialValue = useMemo(() => {
-    const botData: any = {
-      llm: data.llm,
-      scenario: data.scenario,
-      system_prompt: data.system_prompt,
-    };
-
-    const foundModel = modelOptions.find((elm) => {
-      return elm.value === botData?.llm?.model;
-    });
-    return {
-      scenario: botData?.scenario ?? "",
-      system_prompt: botData?.system_prompt ?? "",
-      model: foundModel ?? modelOptions[0],
-      generationDiversity: "precise",
-      temperature: botData?.llm?.temperature ?? 1.21,
-      top_p: botData?.llm?.top_p ?? 0.9,
-      history_turn: botData?.llm?.history_turn ?? 3,
-      max_tokens: botData?.llm?.max_tokens ?? 2048,
-      frequency_penalty: botData?.llm?.frequency_penalty ?? 0,
-      presence_penalty: botData?.llm?.presence_penalty ?? 0,
-    };
-  }, [data]);
 
   const classname = useMemo(() => {
     if (data?.currentNode && data?.startNode) return "chatting-start";
@@ -199,148 +149,6 @@ const MultiAgentNode = (props: NodeProps) => {
     placeholderId.current = null;
     setIsAdding(false);
   };
-
-  const afterOnChangePrompt = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      timeoutRef.current = setTimeout(() => {
-        httpServices
-          .post(updateSystemPrompt, {
-            bot_id: botId,
-            node_id: props.id,
-            system_prompt: event.target.value,
-          })
-          .catch((err) => {
-            console.log("err", err);
-            toast.error("Failed to update system prompt");
-          });
-      }, 500);
-    },
-    [botId, props.id]
-  );
-
-  const afterOnChangeScenario = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      timeoutRef.current = setTimeout(() => {
-        httpServices
-          .post(updateScenario, {
-            bot_id: botId,
-            node_id: props.id,
-            scenario: event.target.value,
-          })
-          .catch((err) => {
-            console.log("err", err);
-            toast.error("Failed to update system prompt");
-          });
-      }, 500);
-    },
-    [botId, props.id]
-  );
-
-  const handleRename = useCallback(() => {
-    if (!botId) return;
-    const info = {
-      position: {
-        x: props.positionAbsoluteX,
-        y: props.positionAbsoluteY,
-      },
-      data: {
-        ...props.data,
-        label: nameRef?.current?.value,
-      },
-    };
-
-    reactFlowService
-      .updateFlow(botId, props.id, JSON.stringify(info))
-      .catch((err) => {
-        console.log("err", err);
-      });
-
-    updateNode(props?.id, {
-      data: {
-        ...props.data,
-        label: nameRef?.current?.value,
-      },
-    });
-    setIsRenaming(false);
-  }, [updateNode, props?.id, props?.data]);
-
-  const handleSubmit = useCallback(async (values: any) => {
-    const toastId = toast.loading(`Saving agent ${props.id}...`, {
-      isLoading: true,
-      autoClose: false,
-    });
-
-    try {
-      const response = await httpServices.post(updateNodeLLM, {
-        bot_id: botId,
-        node_id: props.id,
-        llm_name: values.model.value,
-        model_params: {
-          temperature: values.temperature ?? 1.21,
-          top_p: values.top_p ?? 0.9,
-          history_turn: values.history_turn ?? 3,
-          max_tokens: values.max_tokens ?? 2048,
-          frequency_penalty: values.frequency_penalty ?? 0,
-          presence_penalty: values.presence_penalty ?? 0,
-        },
-      });
-
-      if (response?.data?.status_code === 200) {
-        toast.update(toastId, {
-          isLoading: false,
-          render: "Agent saved successfully!",
-          type: toast.TYPE.SUCCESS,
-          autoClose: 2000,
-        });
-      } else {
-        toast.update(toastId, {
-          isLoading: false,
-          render: "Failed to save agent!",
-          type: toast.TYPE.ERROR,
-          autoClose: 2000,
-        });
-      }
-    } catch (error) {
-      console.log("error", error);
-      toast.update(toastId, {
-        isLoading: false,
-        render: "Failed to save agent!",
-        type: toast.TYPE.ERROR,
-        autoClose: 2000,
-      });
-    }
-  }, []);
-
-  const handleChatWithBot = useCallback(() => {
-    save(cachedKeys.OPEN_CHAT, true);
-    save(cachedKeys.COLLAPSE_TOOLBAR, true);
-    setCenter(props.positionAbsoluteX + 1100, props.positionAbsoluteY + 550, {
-      zoom: 0.55,
-      duration: 1,
-    });
-    const currentNode = getNodes().find((node) => node.data?.currentNode);
-    if (currentNode) {
-      updateNode(currentNode.id, {
-        data: {
-          ...currentNode.data,
-          currentNode: false,
-        },
-      });
-    }
-
-    updateNode(props?.id, {
-      data: {
-        ...props.data,
-        currentNode: true,
-      },
-    });
-  }, [setNodes, props?.id, updateNode, props?.data]);
 
   useEffect(() => {
     const node = document.getElementById(props.id);
@@ -502,148 +310,12 @@ const MultiAgentNode = (props: NodeProps) => {
             initOpen={!!props?.data?.currentNode}
             key={props?.data?.currentNode as any}
             label={
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  width: "100%",
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "12px",
-                  }}
-                >
-                  <img
-                    src={logo}
-                    alt="logo"
-                    style={{
-                      width: "20px",
-                      height: "20px",
-                      borderRadius: "50%",
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      display: "flex",
-                      gap: "4px",
-                      alignItems: "center",
-                    }}
-                  >
-                    {isRenaming ? (
-                      <CommonStyles.Input
-                        ref={nameRef}
-                        initValue={props?.data?.label as string}
-                        key={props?.data?.label as string}
-                        sxContainer={{
-                          "& .MuiInputBase-root": {
-                            height: "23.56px",
-                          },
-                        }}
-                      />
-                    ) : (
-                      <CommonStyles.Typography
-                        type="semiBold16"
-                        sx={{
-                          maxWidth: "200px",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {(props?.data?.label as string) ?? `Agent ${props.id}`}
-                      </CommonStyles.Typography>
-                    )}
-                    {isRenaming ? (
-                      <Box
-                        sx={{
-                          display: "flex",
-                        }}
-                      >
-                        <CommonStyles.Button
-                          isIcon
-                          tooltip="Cancel"
-                          isRound={false}
-                          sx={{
-                            svg: {
-                              width: "16px",
-                              height: "16px",
-                            },
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setIsRenaming(false);
-                          }}
-                        >
-                          <CommonIcons.Close />
-                        </CommonStyles.Button>
-                        <CommonStyles.Button
-                          isIcon
-                          tooltip="Cancel"
-                          isRound={false}
-                          sx={{
-                            svg: {
-                              width: "16px",
-                              height: "16px",
-                            },
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleRename();
-                          }}
-                        >
-                          <CommonIcons.Save />
-                        </CommonStyles.Button>
-                      </Box>
-                    ) : (
-                      <CommonStyles.Button
-                        isIcon
-                        tooltip="Rename"
-                        isRound={false}
-                        sx={{
-                          svg: {
-                            width: "16px",
-                            height: "16px",
-                          },
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setIsRenaming(true);
-                          setTimeout(() => {
-                            nameRef.current?.focus();
-                          }, 1);
-                        }}
-                      >
-                        <CommonIcons.Edit />
-                      </CommonStyles.Button>
-                    )}
-                  </Box>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    gap: "12px",
-                    alignItems: "center",
-                  }}
-                >
-                  <CommonStyles.Button
-                    isIcon
-                    tooltip={
-                      data?.currentNode ? "Chatting..." : "Chat with this bot"
-                    }
-                    onClick={handleChatWithBot}
-                  >
-                    <CommonIcons.Chat
-                      fill={theme.colors.custom.normalColorTypo as string}
-                    />
-                  </CommonStyles.Button>
-
-                  <DeleteAgentButton id={props.id} />
-                </Box>
-              </Box>
+              <WrapperNodeLabel
+                data={props.data}
+                nodeId={props.id}
+                positionAbsoluteX={props.positionAbsoluteX}
+                positionAbsoluteY={props.positionAbsoluteY}
+              />
             }
             sxContainer={{
               marginTop: "0",
@@ -652,108 +324,7 @@ const MultiAgentNode = (props: NodeProps) => {
               },
             }}
           >
-            <Formik initialValues={initialValue} onSubmit={handleSubmit}>
-              {({ isSubmitting }) => {
-                return (
-                  <Form>
-                    <CollapseArea
-                      nodeId={props.id}
-                      dataKey="modelConfiguration"
-                      initOpen={!!props?.data?.currentNode}
-                      key={props?.data?.currentNode + props.id + "modelConfiguration"}
-                      label={
-                        <CommonStyles.Typography type="semiBold14">
-                          Model Configuration
-                        </CommonStyles.Typography>
-                      }
-                    >
-                      <EngineSelect name="model" />
-                      <GenerationDiversity />
-                      <Advance />
-                      <InputAndOutputSettings />
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "flex-end",
-                          marginTop: "20px",
-                        }}
-                      >
-                        <CommonStyles.Button
-                          variant="contained"
-                          type="submit"
-                          startIcon={<CommonIcons.Save />}
-                          disabled={isSubmitting}
-                        >
-                          Save
-                        </CommonStyles.Button>
-                      </Box>
-                    </CollapseArea>
-
-                    <CollapseArea
-                      nodeId={props.id}
-                      dataKey="scenario"
-                      initOpen={!!props?.data?.currentNode}
-                      key={props?.data?.currentNode + props.id + "scenario"}
-                      label={
-                        <CommonStyles.Typography type="semiBold14">
-                          Scenario{" "}
-                          <span
-                            style={{
-                              color: "#FF0000",
-                            }}
-                          >
-                            *
-                          </span>
-                        </CommonStyles.Typography>
-                      }
-                    >
-                      <FastField
-                        name="scenario"
-                        component={CommonField.InputField}
-                        multiline
-                        minRows={3}
-                        maxRows={3}
-                        fullWidth
-                        maxChar={6000}
-                        afterOnChange={afterOnChangeScenario}
-                      />
-                    </CollapseArea>
-
-                    <CollapseArea
-                      nodeId={props.id}
-                      dataKey="agentPrompt"
-                      initOpen={
-                        !!props?.data?.currentNode || !!props?.data?.agentPrompt
-                      }
-                      key={props?.data?.currentNode + props.id + "agentPrompt"}
-                      label={
-                        <CommonStyles.Typography type="semiBold14">
-                          Agent prompt
-                          <span
-                            style={{
-                              color: "#FF0000",
-                            }}
-                          >
-                            *
-                          </span>
-                        </CommonStyles.Typography>
-                      }
-                    >
-                      <FastField
-                        name="system_prompt"
-                        component={CommonField.InputField}
-                        multiline
-                        minRows={3}
-                        maxRows={3}
-                        fullWidth
-                        maxChar={6000}
-                        afterOnChange={afterOnChangePrompt}
-                      />
-                    </CollapseArea>
-                  </Form>
-                );
-              }}
-            </Formik>
+            <NodeForm data={props.data} nodeId={props.id} />
           </CollapseArea>
         </Box>
       </Box>
