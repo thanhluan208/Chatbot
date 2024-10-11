@@ -55,7 +55,6 @@ export default function FlowChart(props: IFlowChart) {
   const [nodes, setNodes, onNodesChange] = useNodesState(
     (initNodes as Node[]) ?? []
   );
-  console.log("nodes", nodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(initEdges);
   const { screenToFlowPosition, updateNode, getNodes, getEdges } =
     useReactFlow();
@@ -307,12 +306,10 @@ export default function FlowChart(props: IFlowChart) {
       save(
         cachedKeys.HISTORY,
         (state: any) => {
-          const validNodes = cloneDeep(nodes).filter(
-            (node) => !node?.data?.isPlaceholder ?? []
-          );
-          const validEdges = cloneDeep(edges).filter(
-            (edge) => !edge?.data?.isPlaceholder ?? []
-          );
+          const validNodes =
+            cloneDeep(nodes).filter((node) => !node?.data?.isPlaceholder) ?? [];
+          const validEdges =
+            cloneDeep(edges).filter((edge) => !edge?.data?.isPlaceholder) ?? [];
 
           const history: HistoryFlow = [...(state[cachedKeys.HISTORY] ?? [])];
 
@@ -390,13 +387,13 @@ export default function FlowChart(props: IFlowChart) {
   const nodeColor = (node: Node) => {
     if (node.selected) {
       return "#4e40e5";
-    } else if(node.data?.startNode) {
+    } else if (node.data?.startNode) {
       return theme.palette.secondary.main;
-    } else if(node.data?.currentNode) {
+    } else if (node.data?.currentNode) {
       return theme.palette.success.main;
     }
 
-    return ""
+    return "";
   };
 
   useEffect(() => {
@@ -470,7 +467,6 @@ export default function FlowChart(props: IFlowChart) {
         panOnScroll={true}
         onNodesDelete={handleDeleteNode}
       >
-        
         <Controls />
         <MiniMap nodeColor={nodeColor} />
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />

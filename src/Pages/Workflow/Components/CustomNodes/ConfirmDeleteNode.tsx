@@ -1,10 +1,10 @@
 import { Fragment } from "react/jsx-runtime";
-import useToggleDialog from "../../../../Hooks/useToggleDialog";
-import CommonStyles from "../../../../Components/CommonStyles";
+import useToggleDialog from "@/Hooks/useToggleDialog";
+import CommonStyles from "@/Components/CommonStyles";
 import { useCallback } from "react";
-import CommonIcons from "../../../../Components/CommonIcons";
-import { useGet } from "../../../../Stores/useStore";
-import cachedKeys from "../../../../Constants/cachedKeys";
+import CommonIcons from "@/Components/CommonIcons";
+import { useGet } from "@/Stores/useStore";
+import cachedKeys from "@/Constants/cachedKeys";
 import { useReactFlow } from "@xyflow/react";
 
 interface IConfirmDeleteNode {

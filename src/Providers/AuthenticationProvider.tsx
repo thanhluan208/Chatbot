@@ -50,7 +50,7 @@ const AuthenticationProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const storageUserID = localStorage.getItem("userId");
+  const storageUserID = localStorage.getItem("userId") || '123123';
   const [userId, setUserId] = React.useState<string | null>(
     storageUserID || null
   );
