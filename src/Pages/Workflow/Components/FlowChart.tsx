@@ -469,7 +469,7 @@ export default function FlowChart(props: IFlowChart) {
       >
         <Controls />
         <MiniMap nodeColor={nodeColor} />
-        <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+        <Background variant={BackgroundVariant.Dots} gap={12} size={1} bgColor={theme.colors.custom.background}/>
       </ReactFlow>
       <Toolbar listNode={props.listNode} />
     </Box>

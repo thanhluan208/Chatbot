@@ -15,6 +15,7 @@ interface IMuiButton {
   isActive?: boolean;
   isRound?: boolean;
   tooltip?: string;
+  hasBorder?: boolean;
 }
 
 function MuiButton(props: IMuiButton & ButtonProps) {
@@ -26,6 +27,7 @@ function MuiButton(props: IMuiButton & ButtonProps) {
     isActive,
     isRound = true,
     tooltip = "",
+    hasBorder = true,
     ...otherProps
   } = props;
   const theme = useTheme();
@@ -40,7 +42,10 @@ function MuiButton(props: IMuiButton & ButtonProps) {
       return {
         background: theme.colors.custom.backgroundSecondary,
         "&:hover": {
-          border: otherProps.color !== 'error' ? `1px solid ${theme.palette.primary.main}` : '1px solid #f44336',
+          border:
+            otherProps.color !== "error"
+              ? `1px solid ${theme.palette.primary.main}`
+              : "1px solid #f44336",
         },
       };
     }
@@ -58,16 +63,20 @@ function MuiButton(props: IMuiButton & ButtonProps) {
   if (isIcon) {
     return (
       <Tooltip title={tooltip} placement="top-end">
-        <div style={{width:'fit-content'}}>
+        <div style={{ width: "fit-content" }}>
           <IconButton
             {...otherProps}
             sx={{
-              height: "32px",
-              width: "32px",
+              height: "40px",
+              width: "40px",
+              padding: 0,
               "&:focus": {
                 outline: "none",
               },
               borderRadius: isRound ? "50%" : "8px",
+              border: hasBorder
+                ? `solid 1px ${theme.colors.custom.borderColor}`
+                : "none",
               ...props.sx,
             }}
           >

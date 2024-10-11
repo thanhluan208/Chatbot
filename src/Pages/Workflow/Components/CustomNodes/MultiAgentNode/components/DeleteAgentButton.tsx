@@ -81,6 +81,7 @@ function DeleteAgentButton(props: IDeleteButton) {
       )}
       <CommonStyles.Button
         isIcon
+        hasBorder={false}
         onClick={(e) => {
           e.stopPropagation();
           toggle();

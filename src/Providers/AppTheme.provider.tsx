@@ -106,13 +106,14 @@ const lightTheme = createTheme({
   },
   colors: {
     custom: {
-
       backgroundCard: "#ffffff ", // Light gray for card background
       backgroundCardHover: "#e0e0e0", // Slightly darker for hover effect
-      borderColor: "#cccccc", // Light gray for borders
-      boxShadow: "0 4px 12px 0px rgba(0,0,0,0.08), 0px 8px 24px 0px rgba(0,0,0,0.04)", // Darker shadow for contrast
+      borderColor: "rgb(39, 39, 42)", // Light gray for borders
+      boxShadow:
+        "0 4px 12px 0px rgba(0,0,0,0.08), 0px 8px 24px 0px rgba(0,0,0,0.04)", // Darker shadow for contrast
 
       //* Main
+      background: "#fbfbfb",
       backgroundSecondary: "#f3f3f3", // Light gray for secondary background
 
       //* Button
@@ -218,12 +219,14 @@ const darkTheme = createTheme({
   },
   colors: {
     custom: {
-      backgroundCard: "#1d1d29",
+      backgroundCard: "#09090b",
       backgroundCardHover: "#1d1d2914",
-      borderColor: "#69696933",
-      boxShadow: "0 4px 8px 0px rgba(255,255,255,0.08), 0px 8px 16px 0px rgba(255,255,255,0.04)",
+      borderColor: "rgb(39, 39, 42)",
+      boxShadow:
+        "0 4px 8px 0px rgba(255,255,255,0.08), 0px 8px 16px 0px rgba(255,255,255,0.04)",
 
       //* Main
+      background: "#151518",
       backgroundSecondary: "#11121e",
 
       //* Button
@@ -262,7 +265,7 @@ const switchTheme = {
   [Theme.light]: lightTheme,
 };
 
-let initTheme = (localStorage.getItem(keyTheme) as Theme);
+let initTheme = localStorage.getItem(keyTheme) as Theme;
 if (!!window.matchMedia && !initTheme) {
   if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
     initTheme = Theme.dark;
@@ -309,12 +312,16 @@ export default function AppThemeProvider(props: { children: React.ReactNode }) {
         }}
       />
       {children}
-      <CommonStyles.Button isIcon variant="outlined" sx={{
-        position:"fixed",
-        bottom:'20px',
-        right:"20px"
-      }}
-      onClick={toggleTheme}
+      <CommonStyles.Button
+        isIcon
+        isRound={false}
+        variant="outlined"
+        sx={{
+          position: "fixed",
+          bottom: "20px",
+          right: "20px",
+        }}
+        onClick={toggleTheme}
       >
         {theme === Theme.light ? (
           <CommonIcons.LightMode />

@@ -24,6 +24,8 @@ const Hint = (props: IHint) => {
     <Box onMouseLeave={() => setAnchorEl(null)}>
       <CommonStyles.Button
         isIcon
+        isRound={false}
+        hasBorder={false}
         onMouseEnter={(e) => {
           setAnchorEl(e.currentTarget);
         }}

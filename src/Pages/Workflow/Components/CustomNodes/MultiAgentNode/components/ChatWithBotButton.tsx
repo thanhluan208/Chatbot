@@ -58,6 +58,7 @@ const ChatWithBotButton = ({
   return (
     <CommonStyles.Button
       isIcon
+      isRound={false}
       tooltip={isCurrentNode ? "Chatting..." : "Chat with this bot"}
       onClick={handleChatWithBot}
     >

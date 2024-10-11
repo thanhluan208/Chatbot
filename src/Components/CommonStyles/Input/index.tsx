@@ -89,7 +89,7 @@ const Input = forwardRef((props: IInput & TextFieldProps, ref: React.ForwardedRe
       )}
       <TextField
         {...otherProps}
-        value={value}
+        value={initValue || value}
         label=""
         onChange={handleChange}
         onFocus={() => {
@@ -101,7 +101,7 @@ const Input = forwardRef((props: IInput & TextFieldProps, ref: React.ForwardedRe
         sx={{
           div: {
             borderRadius: "10px",
-            background: theme.colors.custom.backgroundSecondary,
+            background: theme.colors.custom.backgroundCard,
           },
 
           fieldset: {

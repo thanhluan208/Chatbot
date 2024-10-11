@@ -1,17 +1,21 @@
 import CommonIcons from "@/Components/CommonIcons";
 import CommonStyles from "@/Components/CommonStyles";
 import { useGet } from "@/Stores/useStore";
-import { Box, InputAdornment,  } from "@mui/material";
+import { Box, InputAdornment } from "@mui/material";
 import { useReactFlow } from "@xyflow/react";
+import { useRef } from "react";
 
 export default function ZoomControl() {
   //! State
   const { getZoom, zoomTo } = useReactFlow();
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const zoom = useGet("VIEWPORT") || getZoom();
   //! Function
-  const handleChange = (value: string | number) => {
-    zoomTo(+value / 100);
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    zoomTo(+event.target.value / 100);
   };
 
   //! Render
@@ -26,18 +30,18 @@ export default function ZoomControl() {
       <CommonStyles.Button
         isIcon
         className="iconBtn"
-        onClick={() => handleChange(zoom * 100 + 10)}
+        onClick={() => zoomTo((zoom * 100 + 10) / 100)}
         tooltip="Zoom in"
       >
         <CommonIcons.Add />
       </CommonStyles.Button>
       <CommonStyles.Input
+        ref={inputRef}
         inputProps={{
           min: 0.01,
           max: 2,
         }}
         initValue={(zoom * 100).toFixed(2)}
-        key={zoom}
         type="number"
         InputProps={{
           endAdornment: (
@@ -58,12 +62,12 @@ export default function ZoomControl() {
             paddingRight: "0 !important",
           },
         }}
-        onValueChange={handleChange}
+        afterOnchange={handleChange}
       />
       <CommonStyles.Button
         isIcon
         className="iconBtn"
-        onClick={() => handleChange(zoom * 100 - 10)}
+        onClick={() => zoomTo((zoom * 100 - 10) / 100)}
         tooltip="Zoom out"
       >
         <CommonIcons.Remove />

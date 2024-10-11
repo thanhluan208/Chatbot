@@ -121,6 +121,7 @@ const WrapperNodeLabel = (props: WrapperNodeLabelProps) => {
             >
               <CommonStyles.Button
                 isIcon
+                hasBorder={false}
                 tooltip="Cancel"
                 isRound={false}
                 sx={{
@@ -138,6 +139,7 @@ const WrapperNodeLabel = (props: WrapperNodeLabelProps) => {
               </CommonStyles.Button>
               <CommonStyles.Button
                 isIcon
+                hasBorder={false}
                 tooltip="Cancel"
                 isRound={false}
                 sx={{
@@ -158,6 +160,7 @@ const WrapperNodeLabel = (props: WrapperNodeLabelProps) => {
             <CommonStyles.Button
               isIcon
               tooltip="Rename"
+              hasBorder={false}
               isRound={false}
               sx={{
                 svg: {

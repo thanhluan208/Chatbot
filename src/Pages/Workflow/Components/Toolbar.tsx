@@ -58,8 +58,6 @@ const Toolbar = ({
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (isEditing) return;
-      console.log(e);
-
       if (e.code.toLowerCase() === "keyz" && (e.ctrlKey || e.metaKey)) {
         // historyRef.current?.handleChangeHistory &&
         //   historyRef.current?.handleChangeHistory(1);
@@ -151,10 +149,11 @@ const Toolbar = ({
         position: "absolute",
         bottom: "20px",
         right: "250px",
-        width: !collapse ? "851px" : "52px",
+        border: `solid 1px ${theme.colors.custom.borderColor}`,
+        width: !collapse ? "900px" : "68px",
         transition: "all 0.5s ease",
         overflow: "hidden",
-        background: theme.colors.custom.backgroundCard,
+        background: theme.colors.custom.background,
         padding: !collapse ? "10px 20px" : "10px 20px 10px 0",
         boxShadow: "0 5px 10px rgba(0,0,0,0.2)",
         borderRadius: "12px",
@@ -163,10 +162,8 @@ const Toolbar = ({
         justifyContent: "end",
         "& .iconBtn": {
           borderRadius: "8px",
-          padding: "12px",
+          margin: "0 4px",
           maxWidth: "unset",
-          height: "fit-content",
-          width: "fit-content",
           background: theme.colors.custom.backgroundCard,
           "&:hover": {
             background: theme.colors.custom.backgroundCardHover,
@@ -223,16 +220,13 @@ const Toolbar = ({
 
       <CommonStyles.Button
         isIcon
-        sx={{
-          background: theme.colors.custom.backgroundCard,
-          margin: "0 8px",
-        }}
+        className="iconBtn"
         isRound={false}
         onClick={() => {
           const currentNode = getNodes().find((elm) => elm.data.currentNode);
           if (currentNode) {
             save(cachedKeys.OPEN_CHAT, true);
-            setOpen(false)
+            setOpen(false);
             setCenter(
               currentNode.position.x + 1100,
               currentNode.position.y + 550,
@@ -283,6 +277,7 @@ const Toolbar = ({
             : "translateX(10px) rotate(0deg)",
           transition: "all 0.3s",
         }}
+        className="iconBtn"
       >
         <CommonIcons.KeyboardDoubleArrowLeft />
       </CommonStyles.Button>

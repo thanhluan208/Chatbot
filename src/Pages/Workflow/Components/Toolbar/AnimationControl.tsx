@@ -7,22 +7,17 @@ const AnimationControl = () => {
   //! State
   const disabledCircle = useGet("DISABLE_CIRCLE");
   const save = useSave();
-  const theme = useTheme();
+  const theme = useTheme()
 
   return (
     <CommonStyles.Button
       isIcon
+      className="iconBtn"
       sx={{
-        background: !disabledCircle
-          ? theme.colors.custom.backgroundCardHover
-          : theme.colors.custom.backgroundCard,
-        borderRadius: "8px",
-        padding: "12px",
-        maxWidth: "unset",
-        height: "fit-content",
-        width: "fit-content",
+        background: disabledCircle ? 'transparent !important' : theme.colors.custom.backgroundCard
       }}
       onClick={() => save("DISABLE_CIRCLE", !disabledCircle)}
+      tooltip={disabledCircle ? "Enable animation" : "Disable animation"}
     >
       <CommonIcons.Animation />
     </CommonStyles.Button>
