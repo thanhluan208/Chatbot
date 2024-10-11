@@ -1,28 +1,29 @@
-import { Box,  } from "@mui/material";
+import { Box } from "@mui/material";
 import FlowChart from "./Components/FlowChart";
 import { ReactFlowProvider } from "@xyflow/react";
 import { useEffect } from "react";
 import { useSave } from "@/Stores/useStore";
 import cachedKeys from "@/Constants/cachedKeys";
+import ChatDrawer from "../ChatbotConfigure/components/Develop/ChatDrawer";
 
 const initNodes = [
   {
     id: "c372a3b5-85fa-4b7d-a1e5-1913df8d6721",
-    type: "customNode_mutliAgentStartNode",
+    type: "customNode_multiAgentNode",
     position: {
       x: 1301,
       y: 175,
     },
     data: {
       label: "customNode_mutliAgentStartNode node",
-      isRoot: true
+      startNode: true,
     },
     measured: {
       width: 500,
       height: 367,
     },
     dragging: false,
-    selectable: false
+    selectable: false,
   },
 ];
 
@@ -58,12 +59,11 @@ const Workflow = () => {
       }}
     >
       <ReactFlowProvider>
-        <FlowChart initNodes={initNodes} listNode={listNode} botId="123"/>
+        <FlowChart initNodes={initNodes} listNode={listNode} botId="123" />
+        <ChatDrawer />
       </ReactFlowProvider>
     </Box>
   );
-
-
 };
 
 export default Workflow;
