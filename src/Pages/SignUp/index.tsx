@@ -1,13 +1,17 @@
 import { Box, useTheme } from "@mui/material";
-import { FastField, Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 import * as yup from "yup";
 import { useAuth } from "../../Providers/AuthenticationProvider";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import CommonStyles from "../../Components/CommonStyles";
 import CommonField from "../../Components/CommonFields";
+import { useTranslation } from "react-i18next";
 
 const SignUp = () => {
+  // Translation
+  const { t } = useTranslation("store");
+
   //! State
   const { userId, signUp } = useAuth();
   const theme = useTheme()
@@ -70,10 +74,10 @@ const SignUp = () => {
               }}
             >
               <CommonStyles.Typography type="bold32">
-                Welcome to Alphii
+                {t("signup.title")}
               </CommonStyles.Typography>
               <CommonStyles.Typography type="normal16" textAlign={"center"}>
-                Sign in to access your dashboard, chatbots, and more...
+                {t("signup.smallTitle")}
               </CommonStyles.Typography>
 
               <Box
@@ -93,48 +97,48 @@ const SignUp = () => {
                     gap: "20px",
                   }}
                 >
-                  <FastField
+                  <Field
                     name="user_name"
                     component={CommonField.InputField}
                     fullWidth
-                    label="Username"
+                    label={t("signup.usernameLabel")}
                     required
-                    placeholder="Enter your Username"
+                    placeholder={t("signup.usernamePlaceholder")}
                   />
 
-                  <FastField
+                  <Field
                     name="password"
                     component={CommonField.InputField}
                     fullWidth
-                    label="Password"
+                    label={t("signup.pwLabel")}
                     required
-                    placeholder="Enter your password"
+                    placeholder={t("signup.pwPlaceholder")}
                     type="password"
                   />
                 </Box>
 
-                <FastField
+                <Field
                   name="email"
                   component={CommonField.InputField}
                   fullWidth
                   label="Email"
-                  placeholder="Enter your Email"
+                  placeholder={t("signup.emailPlaceholder")}
                 />
 
-                <FastField
+                <Field
                   name="address"
                   component={CommonField.InputField}
                   fullWidth
-                  label="Address"
-                  placeholder="Enter your Address"
+                  label={t("signup.addressLabel")}
+                  placeholder={t("signup.addressPlaceholder")}
                 />
 
-                <FastField
+                <Field
                   name="phone_num"
                   component={CommonField.InputField}
                   fullWidth
-                  label="Phone Number"
-                  placeholder="Enter your Phone Number"
+                  label={t("signup.phoneLabel")}
+                  placeholder={t("signup.phonePlaceholder")}
                   type="number"
                 />
 
@@ -149,14 +153,14 @@ const SignUp = () => {
                     height: "40px",
                   }}
                 >
-                  Sign up
+                  {t("signup.btnSubmit")}
                 </CommonStyles.Button>
                 <CommonStyles.Typography
                   type="normal14"
                   mt={"16px"}
                   textAlign={"center"}
                 >
-                  Already have an account? <Link to="/login">Sign in</Link>
+                  {t("signup.naviText")} <Link to="/login">{t("signup.signInLink")}</Link>
                 </CommonStyles.Typography>
               </Box>
             </Form>

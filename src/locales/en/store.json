@@ -40,7 +40,22 @@
     "signUpLink":"Sign up"
   },
   "signup":{
-    
+    "title":"Welcome to Alphii",
+    "smallTitle":"Sign in to access your dashboard, chatbots, and more...",
+    "usernameLabel":"Username",
+    "usernamePlaceholder":"Enter your Username",
+    "usernameWarning":"Email or username is required",
+    "pwLabel":"Password",
+    "pwPlaceholder":"Enter your password",
+    "pwWarning":"Email or username is required",
+    "emailPlaceholder":"Enter your Email",
+    "addressLabel":"Address",
+    "addressPlaceholder":"Enter your Address",
+    "phoneLabel":"Phone Number",
+    "phonePlaceholder":"Enter your Phone Number",
+    "btnSubmit":"Sign up",
+    "naviText":"Already have an account?",
+    "signInLink":"Sign in"
   },
   "botStore":{
     "heading":{
