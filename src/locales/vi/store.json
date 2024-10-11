@@ -31,16 +31,31 @@
     "smallTitle": "Đăng nhập để truy cập bảng điều khiển, chatbot và nhiều hơn nữa...",
     "emailLabel": "Email hoặc tên người dùng",
     "emailPlaceholder": "Nhập email hoặc tên người dùng của bạn",
-    "emailWarning": "Yêu cầu mật khẩu",
+    "emailWarning": "Yêu cầu email hoặc tên người dùng",
     "pwLabel": "Mật khẩu",
     "pwPlaceholder": "Nhập mật khẩu của bạn",
-    "pwWarning": "Yêu cầu email hoặc tên người dùng",
+    "pwWarning": "Yêu cầu mật khẩu",
     "btnSubmit": "Đăng nhập",
     "naviText": "Chưa có tài khoản?",
     "signUpLink": "Đăng ký"
   },
   "signup":{
-    
+    "title":"Chào mừng tới Alphii",
+    "smallTitle":"Đăng nhập để truy cập bảng điều khiển, chatbot và nhiều hơn nữa...",
+    "usernameLabel":"Tên người dùng",
+    "usernamePlaceholder":"Nhập tên người dùng của bạn",
+    "usernameWarning":"Yêu cầu tên người dùng",
+    "pwLabel":"Mật khẩu",
+    "pwPlaceholder":"Nhập mật khẩu của bạn",
+    "pwWarning":"Yêu cầu mật khẩu",
+    "emailPlaceholder":"Nhập email của bạn",
+    "addressLabel":"Địa chỉ",
+    "addressPlaceholder":"Nhập địa chỉ của bạn",
+    "phoneLabel":"Số điện thoại",
+    "phonePlaceholder":"Nhập số điện thoại của bạn",
+    "btnSubmit":"Đăng ký",
+    "naviText":"Đã có tài khoản?",
+    "signInLink":"Đăng nhập"
   },
   "botStore":{
     "heading":{

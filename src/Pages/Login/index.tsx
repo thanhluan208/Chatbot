@@ -1,5 +1,5 @@
 import { Box, useTheme } from "@mui/material";
-import { FastField, Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 import * as yup from "yup";
 import { useAuth } from "../../Providers/AuthenticationProvider";
 import { Link, useNavigate } from "react-router-dom";
@@ -85,7 +85,7 @@ const Login = () => {
                   marginTop: "20px",
                 }}
               >
-                <FastField
+                <Field
                   name="email_or_username"
                   component={CommonField.InputField}
                   fullWidth
@@ -93,7 +93,7 @@ const Login = () => {
                   required
                   placeholder={t("login.emailPlaceholder")}
                 />
-                <FastField
+                <Field
                   name="password"
                   component={CommonField.InputField}
                   fullWidth
