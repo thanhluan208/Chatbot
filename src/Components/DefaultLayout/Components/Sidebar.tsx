@@ -114,7 +114,6 @@ export default function Sidebar({
                 )}
 
                 {Object.entries(valPar).map(([keyChi, valChi]) => {
-                  console.log(processNavLabel(keyChi))
                   return (
                     <NavItem
                       icon={valChi.icon}

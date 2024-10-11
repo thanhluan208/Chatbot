@@ -9,9 +9,11 @@ import CommonField from "../../Components/CommonFields";
 import { useTranslation } from "react-i18next";
 
 const Login = () => {
+  //Translation
+  const { t } = useTranslation("store");
+  
   //! State
   const { userId, signIn } = useAuth();
-  const { t } = useTranslation("store");
 
   const navigate = useNavigate();
   const initialValues = {
