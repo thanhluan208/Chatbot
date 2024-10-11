@@ -106,6 +106,12 @@
       "science and education" : "science and education",
       "social" : "social"
     }
+  },
+  "personal":{
+    "title":"Personal",
+    "tabs":{
+      "user profile":"User Profile",
+      "work":"Work"
+    }
   }
-  
 }

@@ -108,6 +108,12 @@
       "science and education" : "Khoa học & Giáo dục",
       "social" : "Xã hội"
     }
+  },
+  "personal":{
+    "title":"Cá nhân",
+    "tabs":{
+      "user profile":"Hồ sơ người dùng",
+      "work":"Công việc"
+    }
   }
-  
 }
