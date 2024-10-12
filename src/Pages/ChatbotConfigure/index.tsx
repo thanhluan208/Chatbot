@@ -150,10 +150,8 @@ function ChatbotConfigure() {
         >
           <CommonStyles.Button
             isIcon
-            sx={{
-              padding: "8px",
-              borderRadius: "8px",
-            }}
+            hasBorder={false}
+            isRound={false}
             onClick={() => navigate(-1)}
           >
             <CommonIcons.ArrowBackIosNew />

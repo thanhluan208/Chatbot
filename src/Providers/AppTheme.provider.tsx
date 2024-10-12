@@ -315,7 +315,6 @@ export default function AppThemeProvider(props: { children: React.ReactNode }) {
       <CommonStyles.Button
         isIcon
         isRound={false}
-        variant="outlined"
         sx={{
           position: "fixed",
           bottom: "20px",

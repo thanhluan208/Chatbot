@@ -53,19 +53,20 @@ function DefaultLayout() {
         <CommonStyles.LoadingOverlay isLoadingApp />
         <Box
           sx={{
-            paddingLeft: !open ? "20px" : "0px",
+            paddingLeft: !open ? "40px" : "0px",
             position: "relative",
           }}
         >
           {!open && (
             <CommonStyles.Button
               isIcon
+              hasBorder={false}
               style={{
                 borderRadius: "8px",
                 position:'absolute',
                 top:'24px',
                 zIndex:1000,
-                left:'5px'
+                left:'10px'
               }}
               onClick={() => setOpen(true)}
             >

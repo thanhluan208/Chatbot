@@ -150,7 +150,7 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
 
         async onopen(response) {
           console.log("onopen", response);
-          if(response.status !== 200) {
+          if (response.status !== 200) {
             abortFetch(id, "Failed to connect to server", controller);
           }
           clearTimeout(requestTimeoutId);
@@ -232,7 +232,7 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
         sx={{
           padding: "8px 8px 8px 20px",
           borderRadius: "16px",
-          border: `1px solid ${theme.palette.primary.main}`,
+          border: `1px solid ${theme.colors.custom.borderColor}`,
           width: "100%",
           display: "flex",
           alignItems: "center",
@@ -301,7 +301,7 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
             },
           }}
         >
-          <CommonStyles.Button isIcon>
+          <CommonStyles.Button isIcon hasBorder={false}>
             <CommonIcons.AddCircle />
           </CommonStyles.Button>
           <Box
@@ -314,6 +314,7 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
           />
           <CommonStyles.Button
             isIcon
+            hasBorder={false}
             disabled={!text || loading}
             onClick={handleSubmit}
           >

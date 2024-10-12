@@ -14,7 +14,7 @@ interface ISectionItem {
   title: string;
   isAutoAwesome?: boolean;
   sectionTitle: string;
-  list: KnowledgeStorage[]
+  list: KnowledgeStorage[];
 }
 
 function SectionItem(props: ISectionItem) {
@@ -109,14 +109,10 @@ function SectionItem(props: ISectionItem) {
                   title={item?.knowledge_storage_name}
                   permission_level={item?.permission_level}
                   id={item?.knowledge_storage_id}
-                  key={item?.knowledge_storage_id + item?.knowledge_storage_name}
+                  key={
+                    item?.knowledge_storage_id + item?.knowledge_storage_name
+                  }
                 />
-                // <SectionButtonItem
-                //   avatar="https://lf16-alice-tos-sign.oceanapi-i18n.com/obj/ocean-cloud-tos-sg/plugin_icon/7304214883296691202_1709124525992516552_523YvDutnS.png?lk3s=cd508e2b&x-expires=1717920653&x-signature=myQw4ZrWUb5h12BW%2FhsxEgDsQe0%3D"
-                //   title="GPT4V/img2text"
-                //   subTitle="answer user's question about the image"
-                //   id="1"
-                // />
               );
             })
           ) : (

@@ -38,7 +38,7 @@ export default function Sidebar({
           height: "100%",
           padding: open ? "24px 16px 200px 16px" : "0px",
           position: "relative",
-          transition: "all .3s ease",
+          transition: "width .3s ease",
           overflow: "hidden",
           p: {
             textWrap: "nowrap",
@@ -75,6 +75,7 @@ export default function Sidebar({
             </Box>
             <CommonStyles.Button
               isIcon
+              hasBorder={false}
               style={{
                 borderRadius: "8px",
               }}

@@ -1,7 +1,7 @@
 import CommonStyles from "@/Components/CommonStyles";
 import { configures } from "../../../Constants/options";
 import Section from "./Configure/Section";
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "@/Providers/AuthenticationProvider";
@@ -15,6 +15,7 @@ const Configure = ({ system_prompt }: { system_prompt: string }) => {
   const botId = params?.botId;
   const { userId } = useAuth();
   const timeoutRef = useRef<any>(null);
+  const theme = useTheme();
 
   //! Function
   const afterOnChangePrompt = useCallback(
@@ -44,7 +45,15 @@ const Configure = ({ system_prompt }: { system_prompt: string }) => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        overflow: "hidden",
+        overflowY: "auto",
+        border: `solid 1px ${theme.colors.custom.borderColor}`,
+        borderRadius: "8px",
+        padding: "12px 16px",
+        height: "calc(100vh - 74px - 104px)",
+        maxHeight: "100%",
+        "&::-webkit-scrollbar": {
+          display: "none",
+        },
       }}
     >
       <CommonStyles.CollapseArea
