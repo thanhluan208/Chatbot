@@ -75,7 +75,7 @@ const useGetBotChatHistory = (
     } catch (error: any) {
       setError(error);
     }
-  }, []);
+  }, [callApi]);
 
   useEffect(() => {
     let shouldSetData = true;
@@ -100,7 +100,7 @@ const useGetBotChatHistory = (
         shouldSetData = false;
       };
     }
-  }, [isTrigger]);
+  }, [isTrigger,callApi]);
 
   return {
     data,

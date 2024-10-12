@@ -1,4 +1,4 @@
-const baseAPI = "https://d446-58-187-228-91.ngrok-free.app";
+const baseAPI = "https://e000-14-191-165-144.ngrok-free.app";
 // const baseAPI = "https://chatbot-api.alphiiai.com";
 export const getFolderKnowledge =
   baseAPI + "/knowledge/list_knowledge_storages";
@@ -50,6 +50,7 @@ export const createMultiAgent = baseAPI + "/bot/create_multi_agent";
 export const updatePrompt = baseAPI + "/bot/update_system_prompt_to_bot";
 export const changeBotMode = baseAPI + "/bot/change_bot_mode";
 export const duplicateBot = baseAPI + "/bot/duplicate_bot";
+export const changeCurrentNode = baseAPI + '/bot/change_current_node'
 
 export const getBotNode = baseAPI + "/node/get_node_data";
 export const deleteBotNode = baseAPI + "/node/delete_node";

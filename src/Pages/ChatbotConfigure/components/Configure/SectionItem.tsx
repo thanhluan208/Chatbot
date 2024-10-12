@@ -83,12 +83,13 @@ function SectionItem(props: ISectionItem) {
             }}
           >
             {isAutoAwesome && (
-              <CommonStyles.Button isIcon>
+              <CommonStyles.Button isIcon hasBorder={false}>
                 <CommonIcons.AutoAwesome sx={{ height: 18, width: 18 }} />
               </CommonStyles.Button>
             )}
             <CommonStyles.Button
               isIcon
+              hasBorder={false}
               onClick={(e) => {
                 e.stopPropagation();
                 toggle();

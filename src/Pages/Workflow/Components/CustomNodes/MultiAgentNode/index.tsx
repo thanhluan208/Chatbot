@@ -138,10 +138,7 @@ const MultiAgentNode = (props: NodeProps) => {
       onSuccess,
       onFailed,
       JSON.stringify({
-        id: newNode?.id,
         position: newNode?.position,
-        measured: newNode?.measured,
-        data: newNode?.data,
       }),
       props.id
     );
@@ -273,7 +270,7 @@ const MultiAgentNode = (props: NodeProps) => {
           padding: "2px",
           minWidth:
             props?.data?.currentNode && props?.selected ? "800px" : "500px",
-          transition: "all 0.5s ease",
+          transition: "width 0.5s ease, height 0.5s ease",
           overflow: "hidden",
           display: "flex",
           boxShadow:
@@ -281,6 +278,7 @@ const MultiAgentNode = (props: NodeProps) => {
           "&:hover": {
             boxShadow: "0 0 1px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.1)",
           },
+          borderColor: theme.colors.custom.borderColor,
         }}
         className={classname}
         onClick={() => {

@@ -93,7 +93,6 @@ const WrapperNodeLabel = (props: WrapperNodeLabelProps) => {
             <CommonStyles.Input
               ref={nameRef}
               initValue={props?.data?.label as string}
-              key={props?.data?.label as string}
               sxContainer={{
                 "& .MuiInputBase-root": {
                   height: "23.56px",
@@ -184,11 +183,11 @@ const WrapperNodeLabel = (props: WrapperNodeLabelProps) => {
       <Box
         sx={{
           display: "flex",
-          gap: "12px",
           alignItems: "center",
         }}
       >
         <ChatWithBotButton
+          nodeId={props.nodeId}
           botId={props.nodeId}
           data={props.data}
           isCurrentNode={!!props.data?.currentNode}

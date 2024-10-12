@@ -30,7 +30,6 @@ const ShortcutItem = memo(
           justifyContent: "space-between",
           alignItems: "center",
           background: theme.colors.custom.backgroundDialog,
-          transition: "background 0.3s ease, boxshadow 0.3s ease",
           borderRadius: "8px",
           padding: "10px 20px",
           border: "1px solid transparent",

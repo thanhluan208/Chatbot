@@ -125,7 +125,14 @@ const GenerationDiversity = () => {
   //! Render
   return (
     <Box mt={"16px"}>
-      <Box sx={{ display: "flex", gap: "8px", alignItems: "center",marginBottom:"12px" }}>
+      <Box
+        sx={{
+          display: "flex",
+          gap: "8px",
+          alignItems: "center",
+          marginBottom: "12px",
+        }}
+      >
         <CommonStyles.Typography type="semiBold16">
           Generation Diversity
         </CommonStyles.Typography>
@@ -173,11 +180,13 @@ const GenerationDiversity = () => {
                 color: isSelected
                   ? theme.palette.primary.main
                   : theme.colors.custom.normalColorTypo,
-                border: isSelected ? `1px solid ${theme.palette.primary.main}` : "0",
+                border: isSelected
+                  ? `1px solid ${theme.palette.primary.main}`
+                  : "0",
                 "&:hover": {
                   border: `1px solid ${theme.palette.primary.main}`,
                   background: theme.colors.custom.backgroundCard,
-                }
+                },
               }}
             >
               <CommonStyles.Typography

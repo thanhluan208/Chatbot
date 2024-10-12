@@ -24,7 +24,7 @@ export interface BotResponse {
   id: string;
 }
 
-const REQUEST_TIMEOUT_MS = 60;
+const REQUEST_TIMEOUT_MS = 10000;
 
 const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
   //! State
@@ -143,11 +143,16 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
           bot_id: botId,
           user_id: userId,
           query: text,
-          // conversation_id: botData?.all_conversation?.[0],
+          bot_mode: botData?.mode,
+          conversation_id: botData?.all_conversation?.[0],
         }),
         signal: controller.signal,
 
-        async onopen() {
+        async onopen(response) {
+          console.log("onopen", response);
+          if(response.status !== 200) {
+            abortFetch(id, "Failed to connect to server", controller);
+          }
           clearTimeout(requestTimeoutId);
         },
         onmessage(msg: BotResponse) {

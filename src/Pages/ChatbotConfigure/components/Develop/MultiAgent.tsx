@@ -1,15 +1,19 @@
 import FlowChart from "@/Pages/Workflow/Components/FlowChart";
-import { useGet } from "@/Stores/useStore";
+import { useGet, useSave } from "@/Stores/useStore";
 import { Edge, Node, ReactFlowProvider } from "@xyflow/react";
 import { isArray } from "lodash";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import ChatDrawer from "./ChatDrawer";
 import { BotData } from "@/Hooks/Bot/useGetBotData";
+import CommonStyles from "@/Components/CommonStyles";
+import CommonIcons from "@/Components/CommonIcons";
+import cachedKeys from "@/Constants/cachedKeys";
 
 const MultiAgent = () => {
   //! State
   const params = useParams();
+  const save = useSave();
   const botId = params.botId;
   const listNode = [
     {
@@ -50,7 +54,6 @@ const MultiAgent = () => {
         dragging: false,
       };
 
-
       nodes.push(agentNode);
     });
 
@@ -82,6 +85,9 @@ const MultiAgent = () => {
   }, [botData]);
 
   //! Function
+  useEffect(() => {
+    return () => save(cachedKeys.OPEN_CHAT, false);
+  }, []);
 
   //! Render
 
@@ -98,6 +104,20 @@ const MultiAgent = () => {
         />
       )}
       <ChatDrawer />
+      <CommonStyles.Button
+        isIcon
+        isRound={false}
+        sx={{
+          position: "fixed",
+          top: "150px",
+          right: "10px",
+        }}
+        onClick={() => {
+          save(cachedKeys.OPEN_CHAT, true);
+        }}
+      >
+        <CommonIcons.ChatBubble />
+      </CommonStyles.Button>
     </ReactFlowProvider>
   );
 };

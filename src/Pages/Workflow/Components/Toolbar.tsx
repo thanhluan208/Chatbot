@@ -151,7 +151,7 @@ const Toolbar = ({
         right: "250px",
         border: `solid 1px ${theme.colors.custom.borderColor}`,
         width: !collapse ? "900px" : "68px",
-        transition: "all 0.5s ease",
+        transition: "width 0.5s ease",
         overflow: "hidden",
         background: theme.colors.custom.background,
         padding: !collapse ? "10px 20px" : "10px 20px 10px 0",
@@ -275,7 +275,7 @@ const Toolbar = ({
           transform: !collapse
             ? "translateX(0) rotate(180deg)"
             : "translateX(10px) rotate(0deg)",
-          transition: "all 0.3s",
+          transition: "transform 0.3s",
         }}
         className="iconBtn"
       >

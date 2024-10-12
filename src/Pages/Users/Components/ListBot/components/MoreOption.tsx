@@ -79,6 +79,8 @@ function MoreOption(props: IMoreOption) {
       <Box>
         <CommonStyles.Button
           isIcon
+          isRound={false}
+          hasBorder={false}
           className={anchorEl ? "" : "btnGroup"}
           onClick={(e) => {
             e.stopPropagation();

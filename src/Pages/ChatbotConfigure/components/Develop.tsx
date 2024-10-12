@@ -46,8 +46,9 @@ const Develop = (props : IDevelop) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          background: theme.colors.custom.backgroundSecondary,
+          background: theme.colors.custom.backgroundCard,
           height:'64px',
+          gap:'16px',
           borderBottom:`solid 0.5px ${theme.colors.custom.borderColor}`
         }}
       >

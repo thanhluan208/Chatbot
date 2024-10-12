@@ -74,7 +74,7 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
           <CommonStyles.Typography type="semiBold18">
             Select knowledge
           </CommonStyles.Typography>
-          <CommonStyles.Button isIcon onClick={toggle}>
+          <CommonStyles.Button isIcon hasBorder={false} onClick={toggle}>
             <CommonIcons.Clear />
           </CommonStyles.Button>
         </Box>

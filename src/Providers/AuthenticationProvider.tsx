@@ -12,7 +12,7 @@ interface AuthContextType {
   logout: () => void;
   signUp: (payload: SignUpPayload) => void;
   changePass: (payload: IPayloadChangePass) => void;
-  userData: UserData | null
+  userData: UserData | null;
 }
 
 interface SignInPayload {
@@ -40,7 +40,7 @@ const AuthContext = createContext<AuthContextType>({
   logout: () => {},
   signUp: () => {},
   changePass: () => {},
-  userData: null
+  userData: null,
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -50,7 +50,7 @@ const AuthenticationProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const storageUserID = localStorage.getItem("userId") || '123123';
+  const storageUserID = localStorage.getItem("userId");
   const [userId, setUserId] = React.useState<string | null>(
     storageUserID || null
   );
@@ -58,7 +58,7 @@ const AuthenticationProvider = ({
 
   const userData = localStorage.getItem("userData");
   const { data, refetch } = useGetUserData(userId, !!userId);
-  if(data) {
+  if (data) {
     localStorage.setItem("userData", JSON.stringify(data));
   }
 
@@ -102,7 +102,8 @@ const AuthenticationProvider = ({
       formData.append("password", payload.password);
       payload.email && formData.append("email", payload.email || "");
       payload.address && formData.append("address", payload.address || "");
-      payload.phone_num  && formData.append("phone_num", payload.phone_num || "");
+      payload.phone_num &&
+        formData.append("phone_num", payload.phone_num || "");
       formData.append("credit", "0.0");
       formData.append("tier", "0");
 
@@ -164,8 +165,8 @@ const AuthenticationProvider = ({
   const logout = () => {
     setUserId(null);
     localStorage.removeItem("userId");
-    localStorage.removeItem("userData")
-    location.reload()
+    localStorage.removeItem("userData");
+    location.reload();
   };
 
   useEffect(() => {

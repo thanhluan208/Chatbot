@@ -124,6 +124,7 @@ function SectionButtonItem(props: ISectionButtonItem) {
         {/* <InfoButton id="1" /> */}
         <CommonStyles.Button
           isIcon
+          hasBorder={false}
           tooltip="Copy"
           isRound={false}
           onClick={handleCopy}

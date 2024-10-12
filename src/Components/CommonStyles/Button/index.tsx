@@ -77,6 +77,7 @@ function MuiButton(props: IMuiButton & ButtonProps) {
               border: hasBorder
                 ? `solid 1px ${theme.colors.custom.borderColor}`
                 : "none",
+              transition: "none",
               ...props.sx,
             }}
           >

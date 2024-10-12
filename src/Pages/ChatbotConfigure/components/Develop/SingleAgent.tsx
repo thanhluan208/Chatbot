@@ -54,7 +54,7 @@ const SingleAgent = () => {
           height: "calc(100vh - 74px - 64px)",
           position: "relative",
           width: "67vw",
-          transition: "all 0.5s ease",
+          background: theme.colors.custom.background,
         }}
       >
         <Box
@@ -146,7 +146,7 @@ const SingleAgent = () => {
           width: "33vw",
           padding: "8px 10px 0 20px",
           borderLeft: `solid 0.5px ${theme.colors.custom.borderColor}`,
-          background: theme.colors.custom.backgroundSecondary,
+          background: theme.colors.custom.backgroundCard,
         }}
       >
         <Configure system_prompt={data?.system_prompt} />

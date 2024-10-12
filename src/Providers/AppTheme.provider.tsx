@@ -108,13 +108,13 @@ const lightTheme = createTheme({
     custom: {
       backgroundCard: "#ffffff ", // Light gray for card background
       backgroundCardHover: "#e0e0e0", // Slightly darker for hover effect
-      borderColor: "rgb(39, 39, 42)", // Light gray for borders
+      borderColor: "rgb(228, 228, 231)", // Light gray for borders
       boxShadow:
         "0 4px 12px 0px rgba(0,0,0,0.08), 0px 8px 24px 0px rgba(0,0,0,0.04)", // Darker shadow for contrast
 
       //* Main
       background: "#fbfbfb",
-      backgroundSecondary: "#f3f3f3", // Light gray for secondary background
+      backgroundSecondary: "#fbfbfb", // Light gray for secondary background
 
       //* Button
       backgroundButtonHover: "#e3f2fd", // Light blue with transparency for button hover
@@ -227,7 +227,7 @@ const darkTheme = createTheme({
 
       //* Main
       background: "#151518",
-      backgroundSecondary: "#11121e",
+      backgroundSecondary: "#151518",
 
       //* Button
       backgroundButtonHover: "#1976d214",

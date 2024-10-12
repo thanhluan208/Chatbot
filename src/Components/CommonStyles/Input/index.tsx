@@ -89,7 +89,7 @@ const Input = forwardRef((props: IInput & TextFieldProps, ref: React.ForwardedRe
       )}
       <TextField
         {...otherProps}
-        value={initValue || value}
+        value={value}
         label=""
         onChange={handleChange}
         onFocus={() => {

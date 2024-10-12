@@ -40,6 +40,7 @@ const CustomAdornment = (props: ICustomAdornment) => {
     >
       <CommonStyles.Button
         isIcon
+        hasBorder={false}
         disabled={value - step < min}
         onClick={() => handleChange(value ? value - step : max - step)}
       >
@@ -47,6 +48,7 @@ const CustomAdornment = (props: ICustomAdornment) => {
       </CommonStyles.Button>
       <CommonStyles.Button
         isIcon
+        hasBorder={false}
         disabled={value + step > max}
         onClick={() => handleChange(value ? value + step : min + step)}
       >
