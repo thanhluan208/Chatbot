@@ -121,10 +121,6 @@ const ReArrangeFlow = () => {
       className="iconBtn"
       disabled={loading}
       isLoading={loading}
-      sx={{
-        minWidth: 48,
-        minHeight: 48,
-      }}
     >
       {loading ? <CircularProgress size={16} /> : <Layout />}
     </CommonStyles.Button>

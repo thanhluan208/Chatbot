@@ -115,6 +115,7 @@ const AgentButton = ({
         sx={{
           gap: "8px",
           color: theme.colors.custom.normalColorTypo,
+          border: `1px solid ${theme.colors.custom.borderColor}`,
         }}
       >
         <CommonIcons.LooksOne sx={{ width: 16, height: 16 }} />

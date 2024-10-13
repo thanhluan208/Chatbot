@@ -93,7 +93,6 @@ const WrapperNodeLabel = (props: WrapperNodeLabelProps) => {
             <CommonStyles.Input
               ref={nameRef}
               initValue={props?.data?.label as string}
-              key={props?.data?.label as string}
               sxContainer={{
                 "& .MuiInputBase-root": {
                   height: "23.56px",
@@ -121,6 +120,7 @@ const WrapperNodeLabel = (props: WrapperNodeLabelProps) => {
             >
               <CommonStyles.Button
                 isIcon
+                hasBorder={false}
                 tooltip="Cancel"
                 isRound={false}
                 sx={{
@@ -138,6 +138,7 @@ const WrapperNodeLabel = (props: WrapperNodeLabelProps) => {
               </CommonStyles.Button>
               <CommonStyles.Button
                 isIcon
+                hasBorder={false}
                 tooltip="Cancel"
                 isRound={false}
                 sx={{
@@ -158,6 +159,7 @@ const WrapperNodeLabel = (props: WrapperNodeLabelProps) => {
             <CommonStyles.Button
               isIcon
               tooltip="Rename"
+              hasBorder={false}
               isRound={false}
               sx={{
                 svg: {
@@ -181,12 +183,12 @@ const WrapperNodeLabel = (props: WrapperNodeLabelProps) => {
       <Box
         sx={{
           display: "flex",
-          gap: "12px",
           alignItems: "center",
         }}
       >
         <ChatWithBotButton
-          botId={props.nodeId}
+          nodeId={props.nodeId}
+          botId={botId || ''}
           data={props.data}
           isCurrentNode={!!props.data?.currentNode}
           positionAbsoluteX={props.positionAbsoluteX}

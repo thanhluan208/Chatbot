@@ -46,7 +46,6 @@ const History = ({
       sx={{
         display: "flex",
         alignItems: "center",
-        gap: "6px",
       }}
     >
       <CommonStyles.Button
@@ -55,6 +54,7 @@ const History = ({
         onClick={() => {
           handleChangeHistory(1);
         }}
+        className="iconBtn"
         disabled={history?.length - 1 - currentIndex < 1}
       >
         <CommonIcons.Undo />
@@ -65,6 +65,7 @@ const History = ({
         onClick={() => {
           handleChangeHistory(-1);
         }}
+        className="iconBtn"
         disabled={currentIndex === 0 || history?.length === 0}
       >
         <CommonIcons.Redo />

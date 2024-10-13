@@ -69,7 +69,7 @@ export default function ChatDrawer() {
           width: "50vw",
           padding: "60px 14px 105px 14px",
           height: "100vh",
-          background: theme.colors.custom.backgroundSecondary,
+          background: theme.colors.custom.background,
           transition: "all 0.5s ease",
           position: "relative",
         }}
@@ -79,7 +79,7 @@ export default function ChatDrawer() {
           sx={{
             position: "absolute",
             top: "20px",
-            left: "20px",
+            right: "20px",
             zIndex: 100,
             display: "flex",
             gap: "8px",
@@ -94,6 +94,7 @@ export default function ChatDrawer() {
         >
           <CommonStyles.Button
             isIcon
+            hasBorder={false}
             className="iconButton"
             onClick={() => {
               save(cachedKeys.OPEN_CHAT, false);
@@ -138,11 +139,13 @@ export default function ChatDrawer() {
                 />
               </Fragment>
             )}
-            <ChatField
-              setIsBrandNew={setIsBrandNew}
-              isBrandNew={isBrandNew}
-              key={conversationId}
-            />
+            {openDrawer && (
+              <ChatField
+                setIsBrandNew={setIsBrandNew}
+                isBrandNew={isBrandNew}
+                key={conversationId}
+              />
+            )}
           </Box>
         </Box>
         <Box

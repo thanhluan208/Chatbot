@@ -58,6 +58,7 @@ const CollapseArea = (props: ICollapseArea) => {
       >
         <CommonStyles.Button
           isIcon
+          hasBorder={false}
           onClick={() => setOpen((prev) => !prev)}
           isRound={false}
         >

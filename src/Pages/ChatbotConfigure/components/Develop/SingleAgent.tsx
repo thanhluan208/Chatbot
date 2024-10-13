@@ -48,105 +48,117 @@ const SingleAgent = () => {
     <Fragment>
       {/* <ConversationDrawer /> */}
       <Box
-        id="wrapper"
         sx={{
-          padding: "20px 35px 105px 20px",
-          height: "calc(100vh - 74px - 64px)",
-          position: "relative",
-          width: "67vw",
-          transition: "all 0.5s ease",
+          padding: "20px",
+          background: theme.colors.custom.backgroundCard,
         }}
       >
         <Box
-          id="scrollbar-chatbot"
+          id="wrapper"
           sx={{
-            maxHeight: "100%",
-            mask: "linear-gradient(180deg,#fff 91.89%,hsla(0,0%,100%,0))",
-            paddingBottom: "30px",
-            overflowY: "auto",
+            padding: "20px 35px 105px 20px",
+            height: "calc(100vh - 74px - 104px)",
             position: "relative",
-            "&::-webkit-scrollbar": {
-              display: "none",
-            },
+            width: "67vw",
+            borderRadius: "8px",
+            border: `solid 1px ${theme.colors.custom.borderColor}`,
+            background: theme.colors.custom.background,
           }}
         >
           <Box
+            id="scrollbar-chatbot"
             sx={{
-              maxWidth: "640px",
-              display: "flex",
-              alignItems: "center",
-              paddingTop: isBrandNew ? "50px" : "0",
-              flexDirection: "column",
-              margin: "auto",
-            }}
-          >
-            {isBrandNew && (
-              <Fragment>
-                <img
-                  src={data?.avatar_url}
-                  style={{
-                    width: 82,
-                    height: 82,
-                    borderRadius: "8px",
-                    marginBottom: "12px",
-                    objectFit: "cover",
-                  }}
-                />
-              </Fragment>
-            )}
-            <ChatField
-              setIsBrandNew={setIsBrandNew}
-              isBrandNew={isBrandNew}
-              key={conversationId}
-            />
-          </Box>
-        </Box>
-        <Box
-          id="textbox"
-          sx={{
-            paddingBottom: "20px",
-            position: "absolute",
-            width: "80%",
-            bottom: 0,
-            left: "50%",
-            transform: "translateX(-50%)",
-          }}
-        >
-          <Box
-            sx={{
-              maxWidth: "640px",
-              margin: "auto",
+              maxHeight: "100%",
+              mask: "linear-gradient(180deg,#fff 91.89%,hsla(0,0%,100%,0))",
+              paddingBottom: "30px",
+              overflowY: "auto",
               position: "relative",
-              display: "flex",
-              alignItems: "end",
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
             }}
           >
-            <CommonStyles.Button
-              isIcon
-              tooltip="New Conversation"
-              isRound={false}
+            <Box
               sx={{
-                left: "-20px",
-                svg: {
-                  width: 20,
-                  height: 20,
-                },
+                maxWidth: "640px",
+                display: "flex",
+                alignItems: "center",
+                paddingTop: isBrandNew ? "50px" : "0",
+                flexDirection: "column",
+                margin: "auto",
               }}
-              disabled={isBrandNew}
-              onClick={handleNewConversation}
             >
-              <CommonIcons.Message />
-            </CommonStyles.Button>
-            {data && <InputBox setIsBrandNew={setIsBrandNew} botData={data} />}
+              {isBrandNew && (
+                <Fragment>
+                  <img
+                    src={data?.avatar_url}
+                    style={{
+                      width: 82,
+                      height: 82,
+                      borderRadius: "8px",
+                      marginBottom: "12px",
+                      objectFit: "cover",
+                    }}
+                  />
+                </Fragment>
+              )}
+              <ChatField
+                setIsBrandNew={setIsBrandNew}
+                isBrandNew={isBrandNew}
+                key={conversationId}
+              />
+            </Box>
+          </Box>
+          <Box
+            id="textbox"
+            sx={{
+              paddingBottom: "20px",
+              position: "absolute",
+              width: "80%",
+              bottom: 0,
+              left: "50%",
+              transform: "translateX(-50%)",
+            }}
+          >
+            <Box
+              sx={{
+                maxWidth: "640px",
+                margin: "auto",
+                position: "relative",
+                display: "flex",
+                alignItems: "end",
+              }}
+            >
+              <CommonStyles.Button
+                isIcon
+                hasBorder={false}
+                tooltip="New Conversation"
+                isRound={false}
+                sx={{
+                  left: "-20px",
+                  svg: {
+                    width: 20,
+                    height: 20,
+                  },
+                }}
+                disabled={isBrandNew}
+                onClick={handleNewConversation}
+              >
+                <CommonIcons.Message />
+              </CommonStyles.Button>
+              {true && (
+                <InputBox setIsBrandNew={setIsBrandNew} botData={data} />
+              )}
+            </Box>
           </Box>
         </Box>
       </Box>
       <Box
         sx={{
           width: "33vw",
-          padding: "8px 10px 0 20px",
-          borderLeft: `solid 0.5px ${theme.colors.custom.borderColor}`,
-          background: theme.colors.custom.backgroundSecondary,
+          padding: "20px 20px 20px 0",
+          background: theme.colors.custom.backgroundCard,
+
         }}
       >
         <Configure system_prompt={data?.system_prompt} />

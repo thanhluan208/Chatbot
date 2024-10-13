@@ -1,6 +1,4 @@
-// const baseAPI = "https://d446-58-187-228-91.ngrok-free.app";
-// const baseAPI = "https://e5d1-123-25-21-211.ngrok-free.app";
-const baseAPI = "https://85c9-42-113-61-122.ngrok-free.app"; //local a Manh
+const baseAPI = "https://6a8e-42-113-61-122.ngrok-free.app"; //local a Manh
 // const baseAPI = "https://chatbot-api.alphiiai.com";
 export const getFolderKnowledge =
   baseAPI + "/knowledge/list_knowledge_storages";
@@ -52,6 +50,7 @@ export const createMultiAgent = baseAPI + "/bot/create_multi_agent";
 export const updatePrompt = baseAPI + "/bot/update_system_prompt_to_bot";
 export const changeBotMode = baseAPI + "/bot/change_bot_mode";
 export const duplicateBot = baseAPI + "/bot/duplicate_bot";
+export const changeCurrentNode = baseAPI + '/bot/change_current_node'
 
 export const getBotNode = baseAPI + "/node/get_node_data";
 export const deleteBotNode = baseAPI + "/node/delete_node";
@@ -61,6 +60,6 @@ export const updateMetadata = baseAPI + "/node/update_node_metadata";
 export const updateSystemPrompt =
   baseAPI + "/node/update_system_prompt_to_node";
 export const updateBotEdge = baseAPI + "/node/add_edge";
-export const removeEdge = baseAPI + "node/remove_edge";
-export const updateScenario = baseAPI + "node/update_scenario_to_node";
+export const removeEdge = baseAPI + "/node/remove_edge";
+export const updateScenario = baseAPI + "/node/update_scenario_to_node";
 export const updateNodeLLM = baseAPI + "/node/update_model_params_for_node";

@@ -61,7 +61,6 @@ const Advance = () => {
   //! State
   const [open, setOpen] = useState(true);
   const { values } = useFormikContext<initialValueEngine>();
-
   const { model } = values || {};
 
   //! Function
@@ -114,14 +113,22 @@ const Advance = () => {
             <SlideAndNumField
               name="frequency_penalty"
               title="Frequency penalty"
-              min={model.frequency_penalty?.min ? model.frequency_penalty?.min : 0}
-              max={model.frequency_penalty?.min ? model.frequency_penalty?.min : 2}
+              min={
+                model.frequency_penalty?.min ? model.frequency_penalty?.min : 0
+              }
+              max={
+                model.frequency_penalty?.min ? model.frequency_penalty?.min : 2
+              }
             />
-             <SlideAndNumField
+            <SlideAndNumField
               name="presence_penalty"
               title="Presence penalty"
-              min={model.presence_penalty?.min ? model.presence_penalty?.min : 0}
-              max={model.presence_penalty?.min ? model.presence_penalty?.min : 2}
+              min={
+                model.presence_penalty?.min ? model.presence_penalty?.min : 0
+              }
+              max={
+                model.presence_penalty?.min ? model.presence_penalty?.min : 2
+              }
             />
           </Fragment>
         )}

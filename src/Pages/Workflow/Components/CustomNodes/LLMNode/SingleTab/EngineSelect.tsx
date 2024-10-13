@@ -17,11 +17,11 @@ import CommonField from "../../../../../../Components/CommonFields";
 const EngineOption = ({
   option,
   isValue,
-  name
+  name,
 }: {
   option: ModelOption;
   isValue?: boolean;
-  name?:string
+  name?: string;
 }) => {
   //! State
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
@@ -40,9 +40,13 @@ const EngineOption = ({
   return (
     <Fragment>
       {option?.group && !isValue && (
-        <ListSubheader sx={{
-          background:"transparent !important",
-        }}>{option.group}</ListSubheader>
+        <ListSubheader
+          sx={{
+            background: "transparent !important",
+          }}
+        >
+          {option.group}
+        </ListSubheader>
       )}
       <MenuItem
         value={JSON.stringify(option)}
@@ -149,7 +153,7 @@ const EngineOption = ({
   );
 };
 
-const EngineSelect = ({name}: {name?:string}) => {
+const EngineSelect = ({ name }: { name?: string }) => {
   //! State
   const { setFieldValue } = useFormikContext();
   const [open, setOpen] = React.useState(true);
@@ -189,7 +193,12 @@ const EngineSelect = ({name}: {name?:string}) => {
           marginBottom: "12px",
         }}
       >
-        <CommonStyles.Button isIcon onClick={() => setOpen((prev) => !prev)}>
+        <CommonStyles.Button
+          isIcon
+          hasBorder={false}
+          isRound={false}
+          onClick={() => setOpen((prev) => !prev)}
+        >
           <CommonIcons.ExpandMore
             sx={{
               transform: !open ? "rotate(180deg)" : "rotate(0deg)",

@@ -56,7 +56,7 @@ const BotCard = (props: BotCardProps) => {
 
   const isOwner = permission_level === "owner";
 
-  const theme = useTheme()
+  const theme = useTheme();
   //! Function
 
   //! Render
@@ -68,28 +68,8 @@ const BotCard = (props: BotCardProps) => {
         position: "relative",
         maxWidth: "400px",
         width: "100%",
-        // "&:before": {
-        //   content: '""',
-        //   position: "absolute",
-        //   height: "100%",
-        //   width: "100%",
-        //   bottom: "-12px",
-        //   left: 0,
-        //   background: "rgba(0,0,0,0.03)",
-        //   borderRadius: "8px",
-        //   transition: "all 0.3s ease",
-        // },
-        // "&:after": {
-        //   content: '""',
-        //   position: "absolute",
-        //   height: "100%",
-        //   width: "100%",
-        //   bottom: "-24px",
-        //   left: 0,
-        //   background: "rgba(0,0,0,0.03)",
-        //   borderRadius: "8px",
-        //   transition: "all 0.3s ease",
-        // },
+        borderRadius: "8px",
+        border: `solid 1px ${theme.colors.custom.borderColor}`,
         "&:hover": {
           boxShadow: "0 4px 12px 0px rgba(0,0,0,0.1)",
           "& .img": {
@@ -169,7 +149,7 @@ const BotCard = (props: BotCardProps) => {
             opacity: 0.5,
             "&:hover": {
               opacity: 1,
-            }
+            },
           }}
           onClick={(e) => {
             e.stopPropagation();
@@ -233,7 +213,7 @@ const BotCard = (props: BotCardProps) => {
             textAlign: "justify",
           }}
         >
-          {description || "..."} 
+          {description || "..."}
         </CommonStyles.Typography>
 
         <Box
@@ -257,10 +237,10 @@ const BotCard = (props: BotCardProps) => {
           >
             <Stats icon={<CommonIcons.People />} value={users} />
           </Box>
-          <CommonStyles.Button>Try it now</CommonStyles.Button>
+          <CommonStyles.Button variant="outlined">Try it now</CommonStyles.Button>
         </Box>
 
-        <CommonStyles.Button
+        {/* <CommonStyles.Button
           isIcon
           className="star"
           sx={{
@@ -272,7 +252,7 @@ const BotCard = (props: BotCardProps) => {
           }}
         >
           <CommonIcons.StarOutline />
-        </CommonStyles.Button>
+        </CommonStyles.Button> */}
       </Box>
     </Box>
   );

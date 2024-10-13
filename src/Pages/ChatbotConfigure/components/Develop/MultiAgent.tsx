@@ -1,15 +1,19 @@
 import FlowChart from "@/Pages/Workflow/Components/FlowChart";
-import { useGet } from "@/Stores/useStore";
+import { useGet, useSave } from "@/Stores/useStore";
 import { Edge, Node, ReactFlowProvider } from "@xyflow/react";
 import { isArray } from "lodash";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import ChatDrawer from "./ChatDrawer";
 import { BotData } from "@/Hooks/Bot/useGetBotData";
+import CommonStyles from "@/Components/CommonStyles";
+import CommonIcons from "@/Components/CommonIcons";
+import cachedKeys from "@/Constants/cachedKeys";
 
 const MultiAgent = () => {
   //! State
   const params = useParams();
+  const save = useSave();
   const botId = params.botId;
   const listNode = [
     {
@@ -31,6 +35,12 @@ const MultiAgent = () => {
 
       const agentInfo = JSON.parse(agent?.info);
 
+      console.log(
+        "agent.node_id",
+        agent.node_id,
+        botData.flow_nodes.current_node
+      );
+
       const agentNode = {
         id: agent?.node_id,
         type: "customNode_multiAgentNode",
@@ -39,17 +49,16 @@ const MultiAgent = () => {
           y: agentInfo?.position?.y ?? 8,
         },
         data: {
+          ...agentInfo?.data,
+          ...agent?.metadata,
           label: agentInfo?.data?.label ?? `Agent ${agent?.node_id}`,
           startNode: agent.node_id === botData.flow_nodes.start_node,
           currentNode: agent.node_id === botData.flow_nodes.current_node,
-          ...agentInfo?.data,
-          ...agent?.metadata,
         },
         selectable: agent.node_id !== botData.flow_nodes.start_node,
         selected: false,
         dragging: false,
       };
-
 
       nodes.push(agentNode);
     });
@@ -82,6 +91,11 @@ const MultiAgent = () => {
   }, [botData]);
 
   //! Function
+  useEffect(() => {
+    return () => save(cachedKeys.OPEN_CHAT, false);
+  }, []);
+
+  console.log("initNodes", initNodes);
 
   //! Render
 
@@ -98,6 +112,20 @@ const MultiAgent = () => {
         />
       )}
       <ChatDrawer />
+      <CommonStyles.Button
+        isIcon
+        isRound={false}
+        sx={{
+          position: "fixed",
+          top: "150px",
+          right: "10px",
+        }}
+        onClick={() => {
+          save(cachedKeys.OPEN_CHAT, true);
+        }}
+      >
+        <CommonIcons.ChatBubble />
+      </CommonStyles.Button>
     </ReactFlowProvider>
   );
 };

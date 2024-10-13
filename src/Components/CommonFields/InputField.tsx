@@ -128,7 +128,7 @@ function InputField(props: IInputField & FieldProps & TextFieldProps) {
         sx={{
           div: {
             borderRadius: "10px",
-            background: theme.colors.custom.backgroundSecondary,
+            background: theme.colors.custom.backgroundCard,
           },
           textarea: {
             display: !shouldMaxRow ? undefined : "-webkit-box",

@@ -15,7 +15,7 @@ import { publishBot, removeBotFromStore } from "@/Constants/api";
 
 function ChatbotConfigure() {
   //! State
-  const theme: any = useTheme();
+  const theme = useTheme();
   const navigate = useNavigate();
   const params = useParams();
   const save = useSave();
@@ -39,7 +39,6 @@ function ChatbotConfigure() {
     },
     !!botId && !!userId
   );
-
 
   const isOwner = data?.permission_level === "owner";
   const isPublished = data?.visibility === "public";
@@ -136,7 +135,7 @@ function ChatbotConfigure() {
         sx={{
           height: "74px",
           padding: "16px",
-          background: theme.colors.custom.backgroundSecondary,
+          background: theme.colors.custom.backgroundCard,
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -151,10 +150,8 @@ function ChatbotConfigure() {
         >
           <CommonStyles.Button
             isIcon
-            sx={{
-              padding: "8px",
-              borderRadius: "8px",
-            }}
+            hasBorder={false}
+            isRound={false}
             onClick={() => navigate(-1)}
           >
             <CommonIcons.ArrowBackIosNew />
@@ -183,8 +180,9 @@ function ChatbotConfigure() {
                 <CommonStyles.Typography type="semiBold14">
                   {data?.bot_name}
                 </CommonStyles.Typography>
-                <CommonStyles.Button
+                {/* <CommonStyles.Button
                   isIcon
+                  hasBorder={false}
                   sx={{
                     padding: "4px",
                     width: "fit-content",
@@ -193,7 +191,7 @@ function ChatbotConfigure() {
                   }}
                 >
                   <CommonIcons.BorderColor sx={{ width: 14, height: 14 }} />
-                </CommonStyles.Button>
+                </CommonStyles.Button> */}
               </Box>
               <Box sx={{ display: "flex", gap: "8px", alignItems: "center" }}>
                 <CommonIcons.Person sx={{ width: 12, height: 12 }} />
@@ -210,15 +208,6 @@ function ChatbotConfigure() {
             gap: "24px",
           }}
         >
-          <CommonStyles.Button
-            isIcon
-            sx={{
-              borderRadius: "8px",
-              border: `1px solid ${theme.colors.custom.normalColorTypo}`,
-            }}
-          >
-            <CommonIcons.Restore />
-          </CommonStyles.Button>
           {isOwner && (
             <CommonStyles.Button
               variant="contained"
@@ -260,7 +249,7 @@ function ChatbotConfigure() {
           </CommonStyles.Typography> */}
         </Box>
       </Box>
-      {tab === "develop" && data && <Develop data={data} key={data?.mode}/>}
+      {tab === "develop" && data && <Develop data={data} key={data?.mode} />}
 
       {/* {tab === "analysis" && <Analysis />} */}
     </Box>

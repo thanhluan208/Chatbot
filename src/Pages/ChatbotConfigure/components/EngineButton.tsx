@@ -30,7 +30,7 @@ export interface initialValueEngine {
 
 const EngineButton = () => {
   //! State
-  const theme: any = useTheme();
+  const theme = useTheme();
   const engineId = useId();
   const params = useParams();
   const { userId } = useAuth();
@@ -136,6 +136,7 @@ const EngineButton = () => {
         sx={{
           gap: "8px",
           color: theme.colors.custom.normalColorTypo,
+          border: `1px solid ${theme.colors.custom.borderColor}`,
         }}
       >
         <img

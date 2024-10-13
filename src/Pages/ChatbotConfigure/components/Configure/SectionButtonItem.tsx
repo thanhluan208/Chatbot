@@ -121,9 +121,9 @@ function SectionButtonItem(props: ISectionButtonItem) {
           backdropFilter: "blur(400px)",
         }}
       >
-        {/* <InfoButton id="1" /> */}
         <CommonStyles.Button
           isIcon
+          hasBorder={false}
           tooltip="Copy"
           isRound={false}
           onClick={handleCopy}

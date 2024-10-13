@@ -8,6 +8,7 @@ import Mansory from "@mui/lab/Masonry";
 import CommonIcons from "../../Components/CommonIcons";
 import useGetBotsStore from "@/Hooks/Bot/useGetBotsStore";
 import { useTranslation } from "react-i18next";
+import SubmitBotButton from "./components/SubmitBotButton";
 
 export enum BotStoreCategory {
   RECOMMENDED = "recommended",
@@ -108,7 +109,7 @@ const BotStore = () => {
             }}
           />
         </Box>
-        <Box
+        {/* <Box
           sx={{
             display: "flex",
             justifyContent: "flex-end",
@@ -117,10 +118,8 @@ const BotStore = () => {
             },
           }}
         >
-          <CommonStyles.Button variant="contained">
-            {t("botStore.button.submitBot")}
-          </CommonStyles.Button>
-        </Box>
+          <SubmitBotButton />
+        </Box> */}
       </Box>
 
       <Box
@@ -254,7 +253,7 @@ const BotStore = () => {
             }}
             spacing={2}
           >
-            {data.map((item: any) => {
+            {data.map((item) => {
               return (
                 <Box
                   key={item?.bot_id}
@@ -267,7 +266,7 @@ const BotStore = () => {
                 >
                   <BotCard
                     id={item?.bot_id}
-                    avatar="https://p16-flow-product-sign-sg.ibyteimg.com/tos-alisg-i-bfte7mpw5s-sg/9c9ef4e4c6f147339c0cae1408bb1f46~tplv-bfte7mpw5s-resize:128:128.image?rk3s=2e2596fd&x-expires=1727594320&x-signature=VTZfu6FleEdw6gvUsvvssaBeyLg%3D"
+                    avatar={item.avatar_url}
                     category=""
                     name={item?.bot_name || "Bot name"}
                     space={{

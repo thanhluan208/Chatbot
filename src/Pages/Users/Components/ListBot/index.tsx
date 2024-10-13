@@ -9,7 +9,7 @@ import CommonIcons from "../../../../Components/CommonIcons";
 import moment from "moment";
 import MoreOption from "./components/MoreOption";
 import cachedKeys from "../../../../Constants/cachedKeys";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useGetListBot, { Bot } from "../../../../Hooks/Bot/useGetListBot";
 import { useEffect } from "react";
 import { useAuth } from "../../../../Providers/AuthenticationProvider";
@@ -34,9 +34,7 @@ export const BotCard = (props: Bot) => {
   const handleClick = (e: any) => {
     if (openDialog) return;
     e.stopPropagation();
-    navigate(
-      `/workspace/${userId}/bot/${bot_id}?isOwner=true`
-    );
+    navigate(`/workspace/${userId}/bot/${bot_id}?isOwner=true`);
   };
 
   //! Render
@@ -53,6 +51,7 @@ export const BotCard = (props: Bot) => {
         borderRadius: "12px",
         transition: "all 0.3s",
         cursor: "pointer",
+        border: `solid 1px ${theme.colors.custom.borderColor}`,
         ".btnGroup": {
           display: "none",
 
@@ -62,7 +61,7 @@ export const BotCard = (props: Bot) => {
         },
         "&:hover": {
           boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-          background: theme.colors.custom.backgroundCardHover,
+          background: theme.colors.custom.backgroundCard,
           ".btnGroup": {
             display: "flex",
           },
@@ -162,21 +161,6 @@ export const BotCard = (props: Bot) => {
             justifyContent: "flex-end",
           }}
         >
-          {/* <CommonStyles.Button
-            isIcon
-            className={isFavourite ? "" : "btnGroup"}
-            onClick={handleFav}
-          >
-            {isFavourite ? (
-              <CommonIcons.Star
-                sx={{
-                  color: theme.colors.custom.colorStar,
-                }}
-              />
-            ) : (
-              <CommonIcons.StarOutline />
-            )}
-          </CommonStyles.Button> */}
           <MoreOption bot={{ ...props }} />
         </Box>
       </Box>
@@ -204,7 +188,7 @@ function ListBot() {
 
     return () => {
       save(cachedKeys.LOADING_APP, false);
-    }
+    };
   }, [isLoading]);
 
   //! Render

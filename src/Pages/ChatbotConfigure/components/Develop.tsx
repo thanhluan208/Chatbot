@@ -12,14 +12,14 @@ export enum Mode {
 }
 
 interface IDevelop {
-  data: BotData
+  data: BotData;
 }
 
-const Develop = (props : IDevelop) => {
+const Develop = (props: IDevelop) => {
   //! State
-  const {data} = props
-  const [mode, setMode] = useState(data.mode ?? Mode.Multi_agent);
-  const theme = useTheme()
+  const { data } = props;
+  const [mode, setMode] = useState(data?.mode ?? Mode.Single_agent);
+  const theme = useTheme();
   //! Function
 
   //! Render
@@ -30,7 +30,7 @@ const Develop = (props : IDevelop) => {
       case Mode.Multi_agent:
         return <MultiAgent />;
     }
-  }
+  };
 
   return (
     <Box
@@ -46,13 +46,19 @@ const Develop = (props : IDevelop) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          background: theme.colors.custom.backgroundSecondary,
-          height:'64px',
-          borderBottom:`solid 0.5px ${theme.colors.custom.borderColor}`
+          background: theme.colors.custom.backgroundCard,
+          height: "64px",
+          gap: "16px",
+          borderBottom: `solid 0.5px ${theme.colors.custom.borderColor}`,
         }}
       >
-        <AgentButton setMode={setMode} mode={mode} hasMultiAgent={data.has_multi_agent} key={mode + data.has_multi_agent}/>
-        {mode === Mode.Single_agent && (<EngineButton />)}
+        <AgentButton
+          setMode={setMode}
+          mode={mode}
+          hasMultiAgent={data?.has_multi_agent}
+          key={mode + data?.has_multi_agent}
+        />
+        {mode === Mode.Single_agent && <EngineButton />}
       </Box>
       <Box display="flex" height="calc(100vh - 138px)">
         {renderContent && renderContent()}

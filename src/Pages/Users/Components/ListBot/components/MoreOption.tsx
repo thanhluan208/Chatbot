@@ -46,7 +46,7 @@ function MoreOption(props: IMoreOption) {
 
       refetchBotList && (await refetchBotList());
 
-      if(response?.data?.status_code !== 200) {
+      if (response?.data?.status_code !== 200) {
         toast.update(toastId, {
           isLoading: false,
           render: "Failed to duplicate bot!",
@@ -79,6 +79,8 @@ function MoreOption(props: IMoreOption) {
       <Box>
         <CommonStyles.Button
           isIcon
+          isRound={false}
+          hasBorder={false}
           className={anchorEl ? "" : "btnGroup"}
           onClick={(e) => {
             e.stopPropagation();
@@ -92,6 +94,9 @@ function MoreOption(props: IMoreOption) {
           anchorEl={anchorEl}
           placement={"bottom-end"}
           keepMounted={false}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
         >
           {() => (
             <Paper
@@ -106,10 +111,7 @@ function MoreOption(props: IMoreOption) {
               }}
             >
               <CommonStyles.Button onClick={handleDuplicate}>
-                <CommonStyles.Typography
-                  type="semiBold14"
-                  color={theme.colors.custom.semiColorTypo}
-                >
+                <CommonStyles.Typography type="semiBold14">
                   Duplicate
                 </CommonStyles.Typography>
               </CommonStyles.Button>
