@@ -34,9 +34,6 @@ const Toolbar = ({
     fitView,
     getZoom,
     zoomTo,
-    setCenter,
-    getNodes,
-    updateNode,
   } = useReactFlow();
   const handleAddNode = useGet("ADD_NODE");
   const isEditing = useGet("IS_EDITING");

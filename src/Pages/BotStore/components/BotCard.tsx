@@ -132,6 +132,7 @@ const BotCard = (props: BotCardProps) => {
           sx={{
             maxWidth: "100%",
             textAlign: "center",
+            marginBottom: "8px",
           }}
         >
           {name}

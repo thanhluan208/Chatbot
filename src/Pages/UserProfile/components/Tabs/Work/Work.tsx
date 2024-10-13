@@ -5,7 +5,6 @@ import { UserProfileTab } from "../../..";
 import Masonry from "@mui/lab/Masonry";
 import useGetListBot from "@/Hooks/Bot/useGetListBot";
 import { useCallback, useEffect, useMemo } from "react";
-import { isEmpty } from "lodash";
 import { BotCard } from "@/Pages/Users/Components/ListBot";
 import useGetListFolderKnowledge from "@/Hooks/Knowledges/useGetListFolderKnowledge";
 import KnowledgeFolder from "@/Pages/ChatbotConfigure/components/Configure/Knowledge/KnowledgeFolder";
@@ -54,26 +53,17 @@ const Work = () => {
   const renderWorkTab = useCallback(() => {
     switch (subTabQuery) {
       case WorkTab.Bots:
-        return (
-          !isEmpty(listBots) &&
-          listBots?.map((bot) => {
-            return <BotCard key={bot.bot_id} {...bot} />;
-          })
-        );
+        return listBots?.data?.list_bots?.map((bot) => {
+          return <BotCard key={bot.bot_id} {...bot} />;
+        }) || [];
       case WorkTab.Knowledges:
-        return (
-          !isEmpty(listKnowledges) &&
-          listKnowledges.map((item) => {
-            return <KnowledgeFolder key={item.id} {...item} />;
-          })
-        );
+        return listKnowledges.map((item) => {
+          return <KnowledgeFolder key={item.id} {...item} />;
+        }) || [];
       default:
-        return (
-          !isEmpty(listBots) &&
-          listBots?.map((bot) => {
-            return <BotCard key={bot.bot_id} {...bot} />;
-          })
-        );
+        return listBots?.data?.list_bots?.map((bot) => {
+          return <BotCard key={bot.bot_id} {...bot} />;
+        }) || [];
     }
   }, [tabQuery, subTabQuery, listBots, listKnowledges]);
 
@@ -131,7 +121,7 @@ const Work = () => {
           }}
           spacing={2}
           sx={{
-            [theme.breakpoints.between("md",'lg')]: {
+            [theme.breakpoints.between("md", "lg")]: {
               "& .botCard": {
                 position: "relative",
                 left: "50%",
@@ -142,7 +132,7 @@ const Work = () => {
               border: "1px solid transparent",
               "&:hover": {
                 border: `1px solid ${theme.palette.primary.main}`,
-                boxShadow: theme.colors.custom.boxShadow
+                boxShadow: theme.colors.custom.boxShadow,
               },
             },
           }}

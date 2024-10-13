@@ -1,6 +1,6 @@
 import CommonIcons from "../../../../../Components/CommonIcons";
 import CommonStyles from "../../../../../Components/CommonStyles";
-import { Box, ClickAwayListener, Paper, Popper, useTheme } from "@mui/material";
+import { Box, ClickAwayListener, Paper, Popper } from "@mui/material";
 import React from "react";
 
 import { toast } from "react-toastify";
@@ -18,7 +18,6 @@ interface IMoreOption {
 function MoreOption(props: IMoreOption) {
   //! State
   const { bot } = props;
-  const theme: any = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );

@@ -81,7 +81,18 @@ export const BotCard = (props: Bot) => {
           <CommonStyles.Typography type="semiBold16">
             {bot_name}
           </CommonStyles.Typography>
-          <CommonStyles.Typography color={theme.colors.custom.normalColorTypo}>
+          <CommonStyles.Typography
+            color={theme.colors.custom.normalColorTypo}
+            sx={{
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              display: "-webkit-box",
+              paddingRight: "20px",
+              textAlign: "justify",
+              marginTop: "8px",
+            }}
+          >
             {description}
           </CommonStyles.Typography>
         </Box>
@@ -193,7 +204,7 @@ function ListBot() {
 
   //! Render
 
-  if (isEmpty(data)) {
+  if (isEmpty(data?.data?.list_bots)) {
     return (
       <Box
         sx={{
@@ -257,8 +268,8 @@ function ListBot() {
         margin: "auto",
       }}
     >
-      {isArray(data) &&
-        data.map((bot) => {
+      {isArray(data?.data?.list_bots) &&
+        data?.data?.list_bots.map((bot) => {
           return <BotCard key={bot.bot_id} {...bot} />;
         })}
     </Mansory>

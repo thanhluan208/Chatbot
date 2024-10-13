@@ -1,5 +1,5 @@
-const baseAPI = "https://6a8e-42-113-61-122.ngrok-free.app"; //local a Manh
-// const baseAPI = "https://chatbot-api.alphiiai.com";
+// const baseAPI = "https://6a8e-42-113-61-122.ngrok-free.app"; 
+const baseAPI = "https://chatbot-api.alphiiai.com";
 export const getFolderKnowledge =
   baseAPI + "/knowledge/list_knowledge_storages";
 export const getListKnowledgeFile = baseAPI + "/knowledge/list_files";

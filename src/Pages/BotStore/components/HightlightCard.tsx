@@ -41,7 +41,7 @@ const HighlightCard = (props: HighlightCardProps) => {
     creator,
     name,
     space,
-    background = "https://p16-flow-product-sign-sg.ibyteimg.com/tos-alisg-i-bfte7mpw5s-sg/91533b14993a41c1a2c9fe4afc4af4b4~tplv-bfte7mpw5s-crop-center-v1:960:540.image?rk3s=2e2596fd&x-expires=1727591357&x-signature=I2eD0vufGKfiydzcTUREJ6wjiWY%3D",
+    background = "https://i.pinimg.com/564x/83/a5/d4/83a5d4d329ace4b153356a1f59ad38ad.jpg",
   } = props;
 
   //! Function

@@ -6,9 +6,9 @@ import { capitalize, isArray } from "lodash";
 import BotCard from "./components/BotCard";
 import Mansory from "@mui/lab/Masonry";
 import CommonIcons from "../../Components/CommonIcons";
-import useGetBotsStore from "@/Hooks/Bot/useGetBotsStore";
 import { useTranslation } from "react-i18next";
 import SubmitBotButton from "./components/SubmitBotButton";
+import useGetListBot from "@/Hooks/Bot/useGetListBot";
 
 export enum BotStoreCategory {
   RECOMMENDED = "recommended",
@@ -29,10 +29,11 @@ const BotStore = () => {
   //! State
   const [filters, setFilters] = useState({
     category: BotStoreCategory.RECOMMENDED,
+    visual_option: "public",
   });
   const theme = useTheme();
 
-  const { data, isLoading } = useGetBotsStore();
+  const { data, isLoading } = useGetListBot(filters);
 
   //! Function
   useLayoutEffect(() => {
@@ -64,7 +65,11 @@ const BotStore = () => {
         width: "100%",
       }}
     >
-      <CommonStyles.LoadingOverlay isLoading={isLoading} />
+      {isLoading && (
+        <Box className="w-screen fixed h-screen z-[10000000]">
+          <CommonStyles.LoadingOverlay isLoading={isLoading} />
+        </Box>
+      )}
       <Box
         sx={{
           display: "flex",
@@ -109,7 +114,7 @@ const BotStore = () => {
             }}
           />
         </Box>
-        {/* <Box
+        <Box
           sx={{
             display: "flex",
             justifyContent: "flex-end",
@@ -119,7 +124,7 @@ const BotStore = () => {
           }}
         >
           <SubmitBotButton />
-        </Box> */}
+        </Box>
       </Box>
 
       <Box
@@ -239,7 +244,7 @@ const BotStore = () => {
           padding: "24px",
         }}
       >
-        {isArray(data) && (
+        {isArray(data?.data.list_bots) && (
           <Mansory
             columns={{
               xs: 1,
@@ -253,7 +258,7 @@ const BotStore = () => {
             }}
             spacing={2}
           >
-            {data.map((item) => {
+            {data?.data.list_bots.map((item) => {
               return (
                 <Box
                   key={item?.bot_id}

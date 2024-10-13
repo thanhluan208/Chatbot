@@ -5,7 +5,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Fragment } from "react/jsx-runtime";
 import InputBox from "./components/InputBox";
 import Options from "./components/Options";
-import Memory from "./components/Memory";
 import { useGet, useSave } from "@/Stores/useStore";
 import cachedKeys from "@/Constants/cachedKeys";
 import CommunityDrawer from "./components/Community/CommunityDrawer";
@@ -39,8 +38,9 @@ const Chatbot = () => {
     };
   }, [botId]);
 
-  const { data, isLoading } = useGetBotData(payload);
+  const { data: botData, isLoading } = useGetBotData(payload);
 
+  const data = botData?.data.bot_data;
   //! Function
 
   const handleNewConversation = async () => {

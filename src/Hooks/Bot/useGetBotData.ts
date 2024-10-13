@@ -1,10 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
 import botService from "../../Services/bot.service";
 import { AxiosResponse } from "axios";
 import { useAuth } from "@/Providers/AuthenticationProvider";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import { Mode } from "@/Pages/ChatbotConfigure/components/Develop";
+import { useQuery } from "react-query";
+import queryKey from "@/Constants/queryKey";
 
 export interface BotResponse {
   status_code: number;
@@ -130,83 +129,20 @@ const useGetBotData = (
   },
   isTrigger = true
 ) => {
-  const [data, setData] = useState<BotData | null>(null);
-  const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState<string>();
   const { userId } = useAuth();
-  const navigate = useNavigate();
 
-  const callApi = useCallback(() => {
-    if (!payload.bot_id || !userId) return;
-
-    return botService.getBotData({
-      bot_id: payload.bot_id,
-      user_id: userId as string,
-    });
-  }, [payload, userId]);
-
-  const transformResponse = useCallback(
-    (response?: AxiosResponse<BotResponse>) => {
-      if (response?.data.permission_level === "no permission") {
-        toast.error(
-          response.data.message ?? "No permission to access this bot"
-        );
-        setError(response.data.message ?? "No permission to access this bot");
-
-        navigate(-1);
-        return;
-      }
-      if (response) {
-        setData({
-          ...response.data.bot_data,
-          permission_level: response.data.permission_level,
-        });
-      }
+  const query = useQuery<AxiosResponse<BotResponse>>({
+    queryKey: [queryKey.BOT_DATA, payload],
+    queryFn: () => {
+      return botService.getBotData({
+        bot_id: payload.bot_id,
+        user_id: userId as string,
+      });
     },
-    []
-  );
+    enabled: isTrigger && !!userId,
+  });
 
-  const refetch = useCallback(async () => {
-    try {
-      const response = await callApi();
-      transformResponse(response);
-    } catch (error: any) {
-      setError(error);
-    }
-  }, []);
-
-  useEffect(() => {
-    let shouldSetData = true;
-
-    if (isTrigger) {
-      (async () => {
-        try {
-          setLoading(true);
-          const response = await callApi();
-
-          if (shouldSetData) {
-            transformResponse(response);
-          }
-        } catch (error: any) {
-          setError(error);
-          toast.error("Failed to retrieve bot data. Please try again later");
-        } finally {
-          setLoading(false);
-        }
-      })();
-
-      return () => {
-        shouldSetData = false;
-      };
-    }
-  }, [isTrigger]);
-
-  return {
-    data,
-    isLoading,
-    error,
-    refetch,
-  };
+  return query;
 };
 
 export default useGetBotData;
