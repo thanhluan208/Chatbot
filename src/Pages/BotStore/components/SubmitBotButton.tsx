@@ -26,11 +26,16 @@ const SubmitBotButton = () => {
           toggle={toggle}
           maxWidth="sm"
           fullWidth
+          onClick={(e) => e.stopPropagation()}
         >
-          <SubmitBotDialog data={data?.data || []} toggle={toggle} />
+          <SubmitBotDialog data={data?.data?.list_bots.filter(bot => bot.visibility === "private") || []} toggle={toggle} />
         </CommonStyles.Dialog>
       )}
-      <CommonStyles.Button variant="contained" disabled={isLoading}>
+      <CommonStyles.Button
+        variant="contained"
+        disabled={isLoading}
+        onClick={toggle}
+      >
         {t("botStore.button.submitBot")}
       </CommonStyles.Button>
     </Fragment>

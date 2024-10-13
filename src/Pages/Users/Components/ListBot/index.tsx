@@ -193,7 +193,7 @@ function ListBot() {
 
   //! Render
 
-  if (isEmpty(data)) {
+  if (isEmpty(data?.data?.list_bots)) {
     return (
       <Box
         sx={{
@@ -257,8 +257,8 @@ function ListBot() {
         margin: "auto",
       }}
     >
-      {isArray(data) &&
-        data.map((bot) => {
+      {isArray(data?.data?.list_bots) &&
+        data?.data?.list_bots.map((bot) => {
           return <BotCard key={bot.bot_id} {...bot} />;
         })}
     </Mansory>

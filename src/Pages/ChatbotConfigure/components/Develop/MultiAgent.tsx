@@ -23,7 +23,7 @@ const MultiAgent = () => {
     },
   ];
 
-  const botData: BotData = useGet("BOT_DATA");
+  const botData: BotData = useGet("BOT_DATA")?.bot_data;
 
   const initNodes = useMemo(() => {
     const nodes: Node[] = [];
@@ -34,12 +34,6 @@ const MultiAgent = () => {
       const agent = agents?.[key];
 
       const agentInfo = JSON.parse(agent?.info);
-
-      console.log(
-        "agent.node_id",
-        agent.node_id,
-        botData.flow_nodes.current_node
-      );
 
       const agentNode = {
         id: agent?.node_id,

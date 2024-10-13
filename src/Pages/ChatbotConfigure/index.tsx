@@ -9,9 +9,8 @@ import { useEffect, useMemo, useState } from "react";
 import Develop from "./components/Develop";
 import useGetBotData from "../../Hooks/Bot/useGetBotData";
 import cachedKeys from "../../Constants/cachedKeys";
-import { toast } from "react-toastify";
-import httpServices from "@/Services/httpServices";
-import { publishBot, removeBotFromStore } from "@/Constants/api";
+import usePulishBot from "@/Hooks/Bot/usePublishBot";
+import useRemoveBot from "@/Hooks/Bot/useRemoveBot";
 
 function ChatbotConfigure() {
   //! State
@@ -22,8 +21,6 @@ function ChatbotConfigure() {
   const botId = params?.botId;
   const userId = params?.id;
 
-  const [loading, setLoading] = useState(false);
-
   const payload = useMemo(() => {
     return {
       bot_id: botId,
@@ -32,7 +29,11 @@ function ChatbotConfigure() {
   }, [botId, userId]);
 
   const [tab, setTab] = useState("develop");
-  const { data, isLoading, refetch } = useGetBotData(
+  const {
+    data: botData,
+    isLoading,
+    refetch,
+  } = useGetBotData(
     payload as {
       bot_id: string;
       user_id: string;
@@ -40,77 +41,34 @@ function ChatbotConfigure() {
     !!botId && !!userId
   );
 
+  const data = botData?.data;
+
+
   const isOwner = data?.permission_level === "owner";
-  const isPublished = data?.visibility === "public";
+  const isPublished = data?.bot_data.visibility === "public";
+
+  const handlePublish = usePulishBot();
+  const handleRemove = useRemoveBot();
 
   //! Function
+  const handleClick = () => {
+    if (handlePublish.isLoading || handleRemove.isLoading) return;
 
-  const handlePublish = async () => {
-    setLoading(true);
-    const toastId = toast.loading("Publishing...", {
-      isLoading: true,
-      autoClose: false,
-    });
-
-    try {
-      const response = await httpServices.post(publishBot, {
+    !isPublished &&
+      userId &&
+      botId &&
+      handlePublish.mutate({
         user_id: userId,
         bot_id: botId,
       });
 
-      await refetch();
-
-      toast.update(toastId, {
-        render: response?.data?.message ?? "Published successfully",
-        type: "success",
-        isLoading: false,
-        autoClose: 2000,
-      });
-      setLoading(false);
-    } catch (error) {
-      console.log("err", error);
-      toast.update(toastId, {
-        render: "Publish failed",
-        type: "error",
-        isLoading: false,
-        autoClose: 2000,
-      });
-      setLoading(false);
-    }
-  };
-
-  const handleRemove = async () => {
-    setLoading(true);
-    const toastId = toast.loading("Removing...", {
-      isLoading: true,
-      autoClose: false,
-    });
-
-    try {
-      await httpServices.post(removeBotFromStore, {
+    isPublished &&
+      userId &&
+      botId &&
+      handleRemove.mutate({
         user_id: userId,
         bot_id: botId,
       });
-
-      await refetch();
-
-      toast.update(toastId, {
-        render: "Removed successfully",
-        type: "success",
-        isLoading: false,
-        autoClose: 2000,
-      });
-      setLoading(false);
-    } catch (error) {
-      console.log("err", error);
-      toast.update(toastId, {
-        render: "Remove failed",
-        type: "error",
-        isLoading: false,
-        autoClose: 2000,
-      });
-      setLoading(false);
-    }
   };
 
   useEffect(() => {
@@ -130,7 +88,11 @@ function ChatbotConfigure() {
   //! Render
   return (
     <Box sx={{ height: "100vh", width: "100vw" }}>
-      <CommonStyles.LoadingOverlay isLoading={isLoading || loading} />
+      <CommonStyles.LoadingOverlay
+        isLoading={
+          isLoading || handleRemove.isLoading || handlePublish.isLoading
+        }
+      />
       <Box
         sx={{
           height: "74px",
@@ -178,7 +140,7 @@ function ChatbotConfigure() {
             <Box>
               <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <CommonStyles.Typography type="semiBold14">
-                  {data?.bot_name}
+                  {data?.bot_data?.bot_name}
                 </CommonStyles.Typography>
                 {/* <CommonStyles.Button
                   isIcon
@@ -209,10 +171,7 @@ function ChatbotConfigure() {
           }}
         >
           {isOwner && (
-            <CommonStyles.Button
-              variant="contained"
-              onClick={isPublished ? handleRemove : handlePublish}
-            >
+            <CommonStyles.Button variant="contained" onClick={handleClick}>
               {isPublished ? "Remove from store" : "Publish to store"}
             </CommonStyles.Button>
           )}
@@ -249,7 +208,7 @@ function ChatbotConfigure() {
           </CommonStyles.Typography> */}
         </Box>
       </Box>
-      {tab === "develop" && data && <Develop data={data} key={data?.mode} />}
+      {tab === "develop" && data && <Develop data={data?.bot_data} key={data?.bot_data?.mode} />}
 
       {/* {tab === "analysis" && <Analysis />} */}
     </Box>
