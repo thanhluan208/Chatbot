@@ -10,6 +10,7 @@ import useGetListFolderKnowledge from "@/Hooks/Knowledges/useGetListFolderKnowle
 import KnowledgeFolder from "@/Pages/ChatbotConfigure/components/Configure/Knowledge/KnowledgeFolder";
 import { useSave } from "@/Stores/useStore";
 import cachedKeys from "@/Constants/cachedKeys";
+import { useTranslation } from "react-i18next";
 
 enum WorkTab {
   Bots = "Bots",
@@ -17,6 +18,9 @@ enum WorkTab {
 }
 
 const Work = () => {
+  //Translation
+  const { t } = useTranslation("store");
+
   //! State
   const location = useLocation();
   const navigate = useNavigate();
@@ -91,7 +95,7 @@ const Work = () => {
               }}
             >
               <CommonStyles.Typography type="semiBold14">
-                {workTab}
+                {t(`personal.work.tabs.${workTab.toLowerCase()}`)}
               </CommonStyles.Typography>
             </CommonStyles.Button>
           );
