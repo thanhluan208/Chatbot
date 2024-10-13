@@ -11,6 +11,7 @@ import { Fragment, useCallback, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as yup from "yup";
+import { useTranslation } from "react-i18next";
 
 const InfoItem = ({
   name,
@@ -90,6 +91,9 @@ interface InitValues {
 }
 
 const UserInfos = ({ userData }: { userData: UserData }) => {
+  //Translation
+  const { t } = useTranslation("store");
+
   //! State
   const { userId } = useAuth();
   const [isEdit, setIsEdit] = useState(false);
@@ -162,7 +166,7 @@ const UserInfos = ({ userData }: { userData: UserData }) => {
                 <InfoItem
                   isEdit={isEdit}
                   name="user_name"
-                  label="Username"
+                  label={t("personal.userInfos.form.usernameLabel")}
                   icon={<CommonIcons.Person />}
                 />
                 <InfoItem
@@ -174,13 +178,13 @@ const UserInfos = ({ userData }: { userData: UserData }) => {
                 <InfoItem
                   isEdit={isEdit}
                   name="phone"
-                  label="Phone number"
+                  label={t("personal.userInfos.form.phoneLabel")}
                   icon={<CommonIcons.Phone />}
                 />
                 <InfoItem
                   isEdit={isEdit}
                   name="address"
-                  label="Address"
+                  label={t("personal.userInfos.form.addressLabel")}
                   icon={<CommonIcons.Home />}
                 />
               </Box>
@@ -202,14 +206,14 @@ const UserInfos = ({ userData }: { userData: UserData }) => {
                           resetForm();
                         }}
                       >
-                        Cancel
+                        {t("personal.userInfos.button.cancel")}
                       </CommonStyles.Button>
                       <CommonStyles.Button
                         variant="contained"
                         startIcon={<CommonIcons.Save />}
                         type="submit"
                       >
-                        Save
+                        {t("personal.userInfos.button.save")}
                       </CommonStyles.Button>
                     </Fragment>
                   ) : (
@@ -218,7 +222,7 @@ const UserInfos = ({ userData }: { userData: UserData }) => {
                       startIcon={<CommonIcons.Edit />}
                       onClick={() => setIsEdit(true)}
                     >
-                      Edit
+                      {t("personal.userInfos.button.edit")}
                     </CommonStyles.Button>
                   )}
                 </Box>

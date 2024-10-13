@@ -114,6 +114,24 @@
     "tabs":{
       "user profile":"Hồ sơ người dùng",
       "work":"Công việc"
+    },
+    "userInfos":{
+      "button":{
+        "cancel":"Hủy",
+        "save":"Lưu",
+        "edit":"Chỉnh sửa"
+      },
+      "form":{
+        "usernameaLabel":"Tên đăng nhập",
+        "phoneLabel":"Số điện thoại",
+        "addressLabel":"Địa chỉ"
+      }
+    },
+    "work":{
+      "tabs":{
+        "bots":"Bots",
+        "knowledges":"Tri thức"
+      }
     }
   }
 }

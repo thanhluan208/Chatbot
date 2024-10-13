@@ -122,6 +122,24 @@
     "tabs": {
       "user profile": "User Profile",
       "work": "Work"
+    },
+    "userInfos":{
+      "button":{
+        "cancel":"Cancel",
+        "save":"Save",
+        "edit":"Edit"
+      },
+      "form":{
+        "usernameLabel":"Username",
+        "phoneLabel":"Phone Number",
+        "addressLabel":"Address"
+      }
+    },
+    "work":{
+      "tabs":{
+        "bots":"Bots",
+        "knowledges":"Knowledges"
+      }
     }
   }
 }
