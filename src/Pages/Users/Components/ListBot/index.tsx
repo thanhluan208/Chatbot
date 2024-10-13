@@ -14,6 +14,7 @@ import useGetListBot, { Bot } from "../../../../Hooks/Bot/useGetListBot";
 import { useEffect } from "react";
 import { useAuth } from "../../../../Providers/AuthenticationProvider";
 import Mansory from "@mui/lab/Masonry";
+import { useTranslation } from "react-i18next";
 
 export interface Workspace {
   label: string;
@@ -180,6 +181,9 @@ export const BotCard = (props: Bot) => {
 };
 
 function ListBot() {
+  //Translation
+  const { t } = useTranslation("store");
+
   //! State
   const theme: any = useTheme();
   const save = useSave();
@@ -237,7 +241,7 @@ function ListBot() {
           </Box>
         </Box>
         <CommonStyles.Typography type="semiBold20" mt={3}>
-          No results found!
+          {t("personal.work.noResultFound")}
         </CommonStyles.Typography>
         <CommonStyles.Typography
           mt={1}
@@ -246,7 +250,7 @@ function ListBot() {
             color: theme.colors.custom.normalColorTypo,
           }}
         >
-          Build an AI Bot with the power of LLM and plugins in minutes
+          {t("personal.work.knowledge.noResultLabel")}
         </CommonStyles.Typography>
 
         <CreateBotPersonal />

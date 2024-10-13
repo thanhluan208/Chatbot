@@ -12,6 +12,7 @@ import CreateKnowledgeButton from "../CreateKnowledgeButton";
 import { useEffect } from "react";
 import { useSave } from "@/Stores/useStore";
 import cachedKeys from "@/Constants/cachedKeys";
+import { useTranslation } from "react-i18next";
 
 const filters = {
   visual_option: KnowledgeFilter.Shared,
@@ -19,6 +20,9 @@ const filters = {
 };
 
 const ListKnowledge = () => {
+  //Translation
+  const { t } = useTranslation("store");
+
   //! State
   const { data, isLoading, refetch } = useGetListFolderKnowledge(filters);
   const theme = useTheme();
@@ -76,7 +80,7 @@ const ListKnowledge = () => {
           </Box>
         </Box>
         <CommonStyles.Typography type="semiBold20" mt={3}>
-          No results found!
+          {t("personal.work.noResultFound")}
         </CommonStyles.Typography>
         <CommonStyles.Typography
           mt={1}
@@ -85,7 +89,7 @@ const ListKnowledge = () => {
             color: theme.colors.custom.normalColorTypo,
           }}
         >
-          Create a new knowledge folder to get started
+          {t("personal.work.knowledge.noResultLabel")}
         </CommonStyles.Typography>
 
         <CreateKnowledgeButton />

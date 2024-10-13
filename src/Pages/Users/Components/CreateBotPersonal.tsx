@@ -2,10 +2,14 @@ import { Fragment } from "react/jsx-runtime";
 import CommonStyles from "../../../Components/CommonStyles";
 import useToggleDialog from "../../../Hooks/useToggleDialog";
 import { CreateBotDialog } from "../../../Components/DefaultLayout/Components/CreateBotButton";
+import { useTranslation } from "react-i18next";
 
 interface ICreateBotPersonal {}
 
 function CreateBotPersonal(props: ICreateBotPersonal) {
+  //Translation
+  const { t } = useTranslation("store");
+  
   //! State
   const {} = props;
   const { open, shouldRender, toggle } = useToggleDialog();
@@ -35,7 +39,7 @@ function CreateBotPersonal(props: ICreateBotPersonal) {
         }}
       >
         <CommonStyles.Typography type="semiBold16" color="#fff">
-          Create bot
+          {t("personal.work.button.createBot")}
         </CommonStyles.Typography>
       </CommonStyles.Button>
     </Fragment>

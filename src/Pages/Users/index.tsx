@@ -6,11 +6,14 @@ import ListBot from "./Components/ListBot";
 import CreateKnowledgeButton from "./Components/CreateKnowledgeButton";
 import ListKnowledge from "./Components/ListKnowledge";
 import { useAuth } from "@/Providers/AuthenticationProvider";
+import { useTranslation } from "react-i18next";
 
-
-const sectionList = ["Bots","Knowledge" ];
+const sectionList = ["Bots","Knowledges" ];
 
 function Users() {
+  //Translation
+  const { t } = useTranslation("store");
+
   //! State
   const [personalSection, setPersonalSection] = useState("Bots");
   const theme = useTheme()
@@ -26,7 +29,7 @@ function Users() {
         return <div>Plugins</div>;
       case "Workflows":
         return <div>Workflows</div>;
-      case "Knowledge":
+      case "Knowledges":
         return <ListKnowledge />;
       case "Cards":
         return <div>Cards</div>;
@@ -39,7 +42,7 @@ function Users() {
     switch (personalSection) {
       case "Bots":
         return <CreateBotPersonal />;
-      case "Knowledge": 
+      case "Knowledges": 
         return <CreateKnowledgeButton />
       default:
         return null
@@ -72,7 +75,7 @@ function Users() {
             }}
           />
           <CommonStyles.Typography type="semiBold20">
-            Personal
+            {t("personal.title")}
           </CommonStyles.Typography>
         </Box>
         {renderCreateButton()}
@@ -104,7 +107,7 @@ function Users() {
                 type={"semiBold14"}
                 color={isActive ? "#fff" : theme.colors.custom.normalColorTypo}
               >
-                {item}
+                {t(`personal.work.tabs.${item.toLowerCase()}`)}
               </CommonStyles.Typography>
             </CommonStyles.Button>
           );

@@ -131,6 +131,17 @@
       "tabs":{
         "bots":"Bots",
         "knowledges":"Tri thức"
+      },
+      "button":{
+        "createBot":"Tạo bot",
+        "createKnowledge":"Tạo thư mục tri thức"
+      },
+      "noResultFound":"Không tìm thấy kết quả nào!",
+      "bots":{
+        "noResultLabel":"Xây dựng bot AI với sức mạnh của LLM và các plugin chỉ trong vài phút"
+      },
+      "knowledge":{
+        "noResultLabel":"Tạo thư mục tri thức mới để bắt đầu"
       }
     }
   }

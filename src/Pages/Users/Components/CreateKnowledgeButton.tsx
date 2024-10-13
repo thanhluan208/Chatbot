@@ -2,8 +2,12 @@ import { Fragment } from "react/jsx-runtime";
 import CommonStyles from "../../../Components/CommonStyles";
 import useToggleDialog from "../../../Hooks/useToggleDialog";
 import { KnowledgeActionDialog } from "@/Pages/ChatbotConfigure/components/Configure/Knowledge/CreateKnowledgeButton";
+import { useTranslation } from "react-i18next";
 
 function CreateKnowledgeButton() {
+  //Translation
+  const { t } = useTranslation("store");
+
   //! State
   const { open, shouldRender, toggle } = useToggleDialog();
 
@@ -33,7 +37,7 @@ function CreateKnowledgeButton() {
         }}
       >
         <CommonStyles.Typography type="semiBold16" color="#fff">
-          Create knowledge folder
+          {t("personal.work.button.createKnowledge")}
         </CommonStyles.Typography>
       </CommonStyles.Button>
     </Fragment>

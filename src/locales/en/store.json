@@ -139,6 +139,17 @@
       "tabs":{
         "bots":"Bots",
         "knowledges":"Knowledges"
+      },
+      "button":{
+        "createBot":"Create bot",
+        "createKnowledge":"Create knowledge folder"
+      },
+      "noResultFound":"No results found!",
+      "bots":{
+        "noResultLabel":"Build an AI Bot with the power of LLM and plugins in minutes"
+      },
+      "knowledge":{
+        "noResultLabel":"Create a new knowledge folder to get started"
       }
     }
   }
