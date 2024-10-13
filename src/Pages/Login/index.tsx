@@ -1,5 +1,5 @@
 import { Box, useTheme } from "@mui/material";
-import { FastField, Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 import * as yup from "yup";
 import { useAuth } from "../../Providers/AuthenticationProvider";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,11 +9,12 @@ import CommonField from "../../Components/CommonFields";
 import { useTranslation } from "react-i18next";
 
 const Login = () => {
+  //Translation
+  const { t } = useTranslation("store");
+  
   //! State
   const { userId, signIn } = useAuth();
-  const { t } = useTranslation("store");
 
-  console.log("t", t("hello"));
   const navigate = useNavigate();
   const initialValues = {
     email_or_username: "",
@@ -21,8 +22,8 @@ const Login = () => {
   };
 
   const validationSchema = yup.object().shape({
-    email_or_username: yup.string().required("Email or username is required"),
-    password: yup.string().required("Password is required"),
+    email_or_username: yup.string().required(t("login.emailWarning")),
+    password: yup.string().required(t("login.pwWarning")),
   });
 
   const theme = useTheme();
@@ -71,10 +72,10 @@ const Login = () => {
               }}
             >
               <CommonStyles.Typography type="bold32">
-                Welcome to Alphii
+                {t("login.title")}
               </CommonStyles.Typography>
               <CommonStyles.Typography type="normal16" textAlign={"center"}>
-                Sign in to access your dashboard, chatbots, and more...
+                {t("login.smallTitle")}
               </CommonStyles.Typography>
 
               <Box
@@ -86,21 +87,21 @@ const Login = () => {
                   marginTop: "20px",
                 }}
               >
-                <FastField
+                <Field
                   name="email_or_username"
                   component={CommonField.InputField}
                   fullWidth
-                  label="Email or username"
+                  label={t("login.emailLabel")}
                   required
-                  placeholder="Enter your email or username"
+                  placeholder={t("login.emailPlaceholder")}
                 />
-                <FastField
+                <Field
                   name="password"
                   component={CommonField.InputField}
                   fullWidth
-                  label="Password"
+                  label={t("login.pwLabel")}
                   required
-                  placeholder="Enter your password"
+                  placeholder={t("login.pwPlaceholder")}
                   type="password"
                 />
 
@@ -115,14 +116,14 @@ const Login = () => {
                     height: "40px",
                   }}
                 >
-                  Sign in
+                  {t("login.btnSubmit")}
                 </CommonStyles.Button>
                 <CommonStyles.Typography
                   type="normal14"
                   mt={"16px"}
                   textAlign={"center"}
                 >
-                  Don't have an account? <Link to="/signup">Sign up</Link>
+                  {t("login.naviText")} <Link to="/signup">{t("login.signUpLink")}</Link>
                 </CommonStyles.Typography>
               </Box>
             </Form>

@@ -150,7 +150,7 @@ const Toolbar = ({
         bottom: "20px",
         right: "250px",
         border: `solid 1px ${theme.colors.custom.borderColor}`,
-        width: !collapse ? "900px" : "68px",
+        width: !collapse ? "850px" : "68px",
         transition: "width 0.5s ease",
         overflow: "hidden",
         background: theme.colors.custom.background,
@@ -217,32 +217,6 @@ const Toolbar = ({
       />
 
       <History innerRef={historyRef} />
-
-      <CommonStyles.Button
-        isIcon
-        className="iconBtn"
-        isRound={false}
-        onClick={() => {
-          const currentNode = getNodes().find((elm) => elm.data.currentNode);
-          if (currentNode) {
-            save(cachedKeys.OPEN_CHAT, true);
-            setOpen(false);
-            setCenter(
-              currentNode.position.x + 1100,
-              currentNode.position.y + 550,
-              {
-                zoom: 0.57,
-              }
-            );
-            updateNode(currentNode.id, {
-              selected: true,
-            });
-          }
-        }}
-        tooltip="Open chat"
-      >
-        <CommonIcons.ChatBubble />
-      </CommonStyles.Button>
 
       <Box
         sx={{

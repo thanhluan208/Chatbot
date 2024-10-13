@@ -35,6 +35,12 @@ const MultiAgent = () => {
 
       const agentInfo = JSON.parse(agent?.info);
 
+      console.log(
+        "agent.node_id",
+        agent.node_id,
+        botData.flow_nodes.current_node
+      );
+
       const agentNode = {
         id: agent?.node_id,
         type: "customNode_multiAgentNode",
@@ -43,11 +49,11 @@ const MultiAgent = () => {
           y: agentInfo?.position?.y ?? 8,
         },
         data: {
+          ...agentInfo?.data,
+          ...agent?.metadata,
           label: agentInfo?.data?.label ?? `Agent ${agent?.node_id}`,
           startNode: agent.node_id === botData.flow_nodes.start_node,
           currentNode: agent.node_id === botData.flow_nodes.current_node,
-          ...agentInfo?.data,
-          ...agent?.metadata,
         },
         selectable: agent.node_id !== botData.flow_nodes.start_node,
         selected: false,
@@ -88,6 +94,8 @@ const MultiAgent = () => {
   useEffect(() => {
     return () => save(cachedKeys.OPEN_CHAT, false);
   }, []);
+
+  console.log("initNodes", initNodes);
 
   //! Render
 

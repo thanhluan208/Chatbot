@@ -25,7 +25,7 @@ function MuiButton(props: IMuiButton & ButtonProps) {
     isIcon,
     isLoading,
     isActive,
-    isRound = true,
+    isRound = false,
     tooltip = "",
     hasBorder = true,
     ...otherProps

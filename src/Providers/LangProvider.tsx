@@ -5,6 +5,7 @@ import { initReactI18next, useTranslation } from "react-i18next";
 import { LANGUAGES } from "@/Constants/common";
 
 import store_en from "@/locales/en/store.json";
+import store_vi from "@/locales/vi/store.json";
 
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
@@ -22,7 +23,7 @@ i18n
         store: store_en,
       },
       [LANGUAGES.VI]: {
-        store: store_en,
+        store: store_vi,
       },
     },
   });

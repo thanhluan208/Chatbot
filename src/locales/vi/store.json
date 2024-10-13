@@ -1,0 +1,119 @@
+{
+  "dialog":{
+    "createBot":{
+      "title":"Tạo bot",
+      "botNameLabel":"Tên bot",
+      "botNamePlaceholder":"Đặt cho bot một cái tên độc đáo.",
+      "botDescLabel":"Mô tả bot",
+      "botDescPlaceholder":"Giới thiệu các tính năng của bot. Mô tả sẽ được hiển thị cho những người dùng bot",
+      "uploadImg": "Tải lên hình ảnh"
+    },
+    "button":{
+      "cancel":"Hủy",
+      "confirm":"Xác nhận"
+    }
+  },
+  "sidebar":{
+    "button":{
+      "createBot": "Tạo bot",
+      "logOut":"Đăng xuất",
+      "settings":"Cài đặt"
+    },
+    "naviItem":{
+      "Home":"Trang chủ",
+      "Personal":"Cá nhân",
+      "Knowledge Store": "Cửa hàng tri thức",
+      "Workflow Store":"Cửa hàng quy trình làm việc"
+    }
+  },
+  "login":{
+    "title": "Chào mừng tới Alphii",
+    "smallTitle": "Đăng nhập để truy cập bảng điều khiển, chatbot và nhiều hơn nữa...",
+    "emailLabel": "Email hoặc tên người dùng",
+    "emailPlaceholder": "Nhập email hoặc tên người dùng của bạn",
+    "emailWarning": "Yêu cầu email hoặc tên người dùng",
+    "pwLabel": "Mật khẩu",
+    "pwPlaceholder": "Nhập mật khẩu của bạn",
+    "pwWarning": "Yêu cầu mật khẩu",
+    "btnSubmit": "Đăng nhập",
+    "naviText": "Chưa có tài khoản?",
+    "signUpLink": "Đăng ký"
+  },
+  "signup":{
+    "title":"Chào mừng tới Alphii",
+    "smallTitle":"Đăng nhập để truy cập bảng điều khiển, chatbot và nhiều hơn nữa...",
+    "usernameLabel":"Tên người dùng",
+    "usernamePlaceholder":"Nhập tên người dùng của bạn",
+    "usernameWarning":"Yêu cầu tên người dùng",
+    "pwLabel":"Mật khẩu",
+    "pwPlaceholder":"Nhập mật khẩu của bạn",
+    "pwWarning":"Yêu cầu mật khẩu",
+    "emailPlaceholder":"Nhập email của bạn",
+    "addressLabel":"Địa chỉ",
+    "addressPlaceholder":"Nhập địa chỉ của bạn",
+    "phoneLabel":"Số điện thoại",
+    "phonePlaceholder":"Nhập số điện thoại của bạn",
+    "btnSubmit":"Đăng ký",
+    "naviText":"Đã có tài khoản?",
+    "signInLink":"Đăng nhập"
+  },
+  "botStore":{
+    "heading":{
+      "main":"Cửa hàng bot"
+    },
+    "leadParagraph":{
+      "shortSummary":"Trợ lý viết nội dung của bạn được hỗ trợ bởi AI",
+      "shortDesc":"Tạo nội dung chất lượng cao chỉ với vài cú nhấp chuột"
+    },
+    "button":{
+      "submitBot": "Nộp bot",
+      "try": "Thử ngay"
+    },
+    "placeholder":{
+      "search": "Tìm kiếm"
+    },
+    "category":{
+      "recommended" : "Đề xuất",
+      "new" : "Mới",
+      "popular" : "Phổ biến",
+      "writing" : "Viết",
+      "design" : "Thiết kế",
+      "marketing" : "Marketing",
+      "development" : "Phát triển",
+      "others" : "Khác",
+      "efficiency hackathon" : "Efficiency Hackathon"
+    }
+  }
+  ,
+
+  "knowledgeStore":{
+    "heading":{
+      "main":"Cửa hàng tri thức"
+    },
+    "button":{
+      "publish": "Xuất bản kiến thức"
+    },
+    "placeholder":{
+      "search": "Tìm kiếm"
+    },
+    "category": {
+      "recommended" : "Đề xuất",
+      "recent" : "Gần đây",
+      "news and reading" : "Tin tức",
+      "writing" : "Viết",
+      "photography" : "Nhiếp ảnh",
+      "design" : "Thiết kế",
+      "tool" : "Công cụ",
+      "lifestyle" : "Lối sống",
+      "science and education" : "Khoa học & Giáo dục",
+      "social" : "Xã hội"
+    }
+  },
+  "personal":{
+    "title":"Cá nhân",
+    "tabs":{
+      "user profile":"Hồ sơ người dùng",
+      "work":"Công việc"
+    }
+  }
+}

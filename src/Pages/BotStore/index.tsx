@@ -7,9 +7,11 @@ import BotCard from "./components/BotCard";
 import Mansory from "@mui/lab/Masonry";
 import CommonIcons from "../../Components/CommonIcons";
 import useGetBotsStore from "@/Hooks/Bot/useGetBotsStore";
+import { useTranslation } from "react-i18next";
+import SubmitBotButton from "./components/SubmitBotButton";
 
 export enum BotStoreCategory {
-  RECOMENDED = "recomended",
+  RECOMMENDED = "recommended",
   NEW = "new",
   POPULAR = "popular",
   WRITING = "writing",
@@ -21,9 +23,12 @@ export enum BotStoreCategory {
 }
 
 const BotStore = () => {
+  //translation
+  const { t } = useTranslation("store");
+
   //! State
   const [filters, setFilters] = useState({
-    category: "recomended",
+    category: BotStoreCategory.RECOMMENDED,
   });
   const theme = useTheme();
 
@@ -72,7 +77,7 @@ const BotStore = () => {
         }}
       >
         <CommonStyles.Typography type="semiBold20">
-          Bot store
+          {t("botStore.heading.main")}
         </CommonStyles.Typography>
         <Box
           sx={{
@@ -89,7 +94,7 @@ const BotStore = () => {
         >
           <CommonStyles.Input
             fullWidth
-            placeholder="Search"
+            placeholder={t("botStore.placeholder.search")}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start" sx={{ marginLeft: "16px" }}>
@@ -104,7 +109,7 @@ const BotStore = () => {
             }}
           />
         </Box>
-        <Box
+        {/* <Box
           sx={{
             display: "flex",
             justifyContent: "flex-end",
@@ -113,10 +118,8 @@ const BotStore = () => {
             },
           }}
         >
-          <CommonStyles.Button variant="contained">
-            Submit bot
-          </CommonStyles.Button>
-        </Box>
+          <SubmitBotButton />
+        </Box> */}
       </Box>
 
       <Box
@@ -150,10 +153,10 @@ const BotStore = () => {
               display: "-webkit-box",
             }}
           >
-            📝 Your content writing assistant powered by AI
+            📝 {t("botStore.leadParagraph.shortSummary")}
           </CommonStyles.Typography>
           <CommonStyles.Typography type="normal16" color={"#1d1c2399"}>
-            Generate high-quality content with just a few clicks
+            {t("botStore.leadParagraph.shortDesc")}
           </CommonStyles.Typography>
 
           <CommonStyles.Button
@@ -170,7 +173,7 @@ const BotStore = () => {
             }}
           >
             <CommonStyles.Typography type="semiBold14" color="#fff">
-              Try it now
+              {t("botStore.button.try")}
             </CommonStyles.Typography>
           </CommonStyles.Button>
         </Box>
@@ -197,7 +200,7 @@ const BotStore = () => {
         }}
       >
         {Object.values(BotStoreCategory).map((cate) => {
-          const name = cate
+          const name = t(`botStore.category.${cate}`)
             .split(" ")
             .map((word) => capitalize(word))
             .join(" ");
@@ -250,7 +253,7 @@ const BotStore = () => {
             }}
             spacing={2}
           >
-            {data.map((item: any) => {
+            {data.map((item) => {
               return (
                 <Box
                   key={item?.bot_id}
@@ -263,7 +266,7 @@ const BotStore = () => {
                 >
                   <BotCard
                     id={item?.bot_id}
-                    avatar="https://p16-flow-product-sign-sg.ibyteimg.com/tos-alisg-i-bfte7mpw5s-sg/9c9ef4e4c6f147339c0cae1408bb1f46~tplv-bfte7mpw5s-resize:128:128.image?rk3s=2e2596fd&x-expires=1727594320&x-signature=VTZfu6FleEdw6gvUsvvssaBeyLg%3D"
+                    avatar={item.avatar_url}
                     category=""
                     name={item?.bot_name || "Bot name"}
                     space={{

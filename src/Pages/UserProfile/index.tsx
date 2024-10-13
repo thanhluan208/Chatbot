@@ -10,6 +10,7 @@ import Avatar from "@/assets/avatar.png";
 import useGetUserData from "@/Hooks/User/useGetUserData";
 import { useSave } from "@/Stores/useStore";
 import cachedKeys from "@/Constants/cachedKeys";
+import { useTranslation } from "react-i18next";
 
 export enum UserProfileTab {
   USER_PROFILE = "User Profile",
@@ -17,6 +18,9 @@ export enum UserProfileTab {
 }
 
 const UserProfile = () => {
+  //Translation
+  const { t } = useTranslation("store");
+
   //! State
   const theme = useTheme();
   const save = useSave();
@@ -71,7 +75,7 @@ const UserProfile = () => {
           <CommonIcons.KeyboardArrowLeft />
         </CommonStyles.Button>
         <CommonStyles.Typography type="semiBold20">
-          Settings
+          {t("personal.title")}
         </CommonStyles.Typography>
       </Box>
 
@@ -106,7 +110,7 @@ const UserProfile = () => {
                   isSelected ? "#fff" : theme.colors.custom.normalColorTypo
                 }
               >
-                {option}
+                {t(`personal.tabs.${option.toLowerCase()}`)}
               </CommonStyles.Typography>
             </CommonStyles.Button>
           );

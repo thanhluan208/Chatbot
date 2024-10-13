@@ -188,7 +188,7 @@ const WrapperNodeLabel = (props: WrapperNodeLabelProps) => {
       >
         <ChatWithBotButton
           nodeId={props.nodeId}
-          botId={props.nodeId}
+          botId={botId || ''}
           data={props.data}
           isCurrentNode={!!props.data?.currentNode}
           positionAbsoluteX={props.positionAbsoluteX}

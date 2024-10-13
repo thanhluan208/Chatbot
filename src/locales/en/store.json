@@ -1,3 +1,120 @@
 {
-  "hello": "Hello World"
+  "dialog":{
+    "createBot":{
+      "title":"Create Bot",
+      "botNameLabel":"Bot name",
+      "botNamePlaceholder":"Give the bot an unique name",
+      "botDescLabel":"Bot description",
+      "botDescPlaceholder":"Introduce the bot's features. The description will be displayed to the bot's users",
+      "uploadImg": "Upload Image"
+    },
+    "button":{
+      "cancel":"Cancel",
+      "confirm":"Confirm"
+    }
+  },
+  "sidebar":{
+    "button":{
+      "createBot": "Create bot",
+      "logOut":"Log out",
+      "settings":"Settings"
+    },
+    "naviItem":{
+      "Home":"Home",
+      "Personal":"Personal",
+      "Knowledge Store": "Knowledge store",
+      "Workflow Store":"Workflow store"
+    }
+  },
+  "login":{
+    "title":"Welcome to Alphii",
+    "smallTitle":"Sign in to access your dashboard, chatbots, and more...",
+    "emailLabel":"Email or username",
+    "emailPlaceholder":"Enter your email or username",
+    "emailWarning":"Password is required",
+    "pwLabel":"Password",
+    "pwPlaceholder":"Enter your password",
+    "pwWarning":"Email or username is required",
+    "btnSubmit":"Sign in",
+    "naviText":"Don't have an account?",
+    "signUpLink":"Sign up"
+  },
+  "signup":{
+    "title":"Welcome to Alphii",
+    "smallTitle":"Sign in to access your dashboard, chatbots, and more...",
+    "usernameLabel":"Username",
+    "usernamePlaceholder":"Enter your Username",
+    "usernameWarning":"Email or username is required",
+    "pwLabel":"Password",
+    "pwPlaceholder":"Enter your password",
+    "pwWarning":"Email or username is required",
+    "emailPlaceholder":"Enter your Email",
+    "addressLabel":"Address",
+    "addressPlaceholder":"Enter your Address",
+    "phoneLabel":"Phone Number",
+    "phonePlaceholder":"Enter your Phone Number",
+    "btnSubmit":"Sign up",
+    "naviText":"Already have an account?",
+    "signInLink":"Sign in"
+  },
+  "botStore":{
+    "heading":{
+      "main":"Bot store"
+    },
+    "leadParagraph":{
+      "shortSummary":"Your content writing assistant powered by AI",
+      "shortDesc":"Generate high-quality content with just a few clicks"
+    },
+    "button":{
+      "submitBot": "Submit bot",
+      "try": "Try it now"
+    },
+    "placeholder":{
+      "search": "Search"
+    },
+    "category":{
+      "recommended" : "recommended",
+      "new" : "new",
+      "popular" : "popular",
+      "writing" : "writing",
+      "design" : "design",
+      "marketing" : "marketing",
+      "development" : "development",
+      "others" : "others",
+      "efficiency hackathon" : "efficiency hackathon"
+    },
+    "submitBotDialog":{
+      "title":"Select a bot to publish"
+    }
+  },
+  "knowledgeStore":{
+    "heading":{
+      "main":"Knowledge store"
+    },
+    "button":{
+      "publish": "Publish knowledge"
+    },
+    "placeholder":{
+      "search": "Search"
+    },
+    "category": {
+      "recommended" : "recommended",
+      "recent" : "recent",
+      "news and reading" : "news and reading",
+      "writing" : "writing",
+      "photography" : "photography",
+      "design" : "design",
+      "tool" : "tool",
+      "lifestyle" : "lifestyle",
+      "science and education" : "science and education",
+      "social" : "social"
+    }
+  },
+  "personal":{
+    "title":"Personal",
+    "tabs":{
+      "user profile":"User Profile",
+      "work":"Work"
+    }
+  }
 }

@@ -6,9 +6,10 @@ import Mansory from "@mui/lab/Masonry";
 import CommonIcons from "../../Components/CommonIcons";
 import Knowledgecard from "./components/KnowledgeCard";
 import useGetListFolderKnowledge from "@/Hooks/Knowledges/useGetListFolderKnowledge";
+import { useTranslation } from "react-i18next";
 
 export enum BotStoreCategory {
-  RECOMENDED = "recomended",
+  RECOMENDED = "recommended",
   RECENT = "recent",
   NEWS_AND_READING = "news and reading",
   WRITING = "writing",
@@ -21,9 +22,12 @@ export enum BotStoreCategory {
 }
 
 const KnowledgeStore = () => {
+  //translation
+  const { t } = useTranslation("store");
+
   //! State
   const [filters, setFilters] = useState({
-    category: "recomended",
+    category: "recommended",
   });
 
   const { data, isLoading } = useGetListFolderKnowledge();
@@ -73,11 +77,11 @@ const KnowledgeStore = () => {
         }}
       >
         <CommonStyles.Typography type="semiBold20">
-          Knowledge store
+          {t("knowledgeStore.heading.main")}
         </CommonStyles.Typography>
         <CommonStyles.Input
           fullWidth
-          placeholder="Search"
+          placeholder={t("knowledgeStore.placeholder.search")}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start" sx={{ marginLeft: "16px" }}>
@@ -100,7 +104,7 @@ const KnowledgeStore = () => {
             maxWidth:'unset',
             textWrap:"nowrap"
           }}>
-            Publish knowledge
+            {t("knowledgeStore.button.publish")}
           </CommonStyles.Button>
         </Box>
       </Box>
@@ -120,7 +124,7 @@ const KnowledgeStore = () => {
         }}
       >
         {Object.values(BotStoreCategory).map((cate) => {
-          const name = cate
+          const name = t(`knowledgeStore.category.${cate}`)
             .split(" ")
             .map((word) => capitalize(word))
             .join(" ");

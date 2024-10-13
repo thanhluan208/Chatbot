@@ -1,5 +1,7 @@
+import { AxiosResponse } from "axios";
 import { botChatHistory, getBotData, getBotListConversation, getBotNode, getBotsStore, getListBot } from "../Constants/api";
 import httpServices from "./httpServices";
+import { Bot } from "@/Hooks/Bot/useGetListBot";
 
 export interface BotStoreFilter {
   user_id?: string;
@@ -18,7 +20,7 @@ class BotServices {
     return httpServices.post(getBotData, payload);
   }
 
-  getBotStore(filter?: BotStoreFilter) {
+  getBotStore(filter?: BotStoreFilter): Promise<AxiosResponse<Bot[]>> {
     return httpServices.post(getBotsStore, filter);
   }
 

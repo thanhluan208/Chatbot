@@ -73,7 +73,13 @@ const Chatbot = () => {
 
   //! Render
   return (
-    <Box sx={{ height: "100vh", width: "100vw" }}>
+    <Box
+      sx={{
+        height: "100vh",
+        width: "100vw",
+        background: theme.colors.custom.background,
+      }}
+    >
       <CommonStyles.LoadingOverlay isLoading={isLoading} />
       <CommunityDrawer />
       <ConversationDrawer />
@@ -81,7 +87,7 @@ const Chatbot = () => {
         sx={{
           height: "74px",
           padding: "16px",
-          background: theme.colors.custom.backgroundSecondary,
+          background: theme.colors.custom.background,
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -113,7 +119,7 @@ const Chatbot = () => {
             }}
           >
             <img
-              src="https://p19-flow-product-sign-sg.ibyteimg.com/tos-alisg-i-bfte7mpw5s-sg/9c9ef4e4c6f147339c0cae1408bb1f46~tplv-bfte7mpw5s-resize:128:128.image?rk3s=2e2596fd&x-expires=1727684157&x-signature=Ih3gvJWf0wpTxDhC%2BQAi7lpJJ6o%3D"
+              src={data?.avatar_url}
               alt="Team"
               style={{
                 height: "32px",
@@ -247,7 +253,6 @@ const Chatbot = () => {
             height: "calc(100vh - 74px)",
             position: "relative",
             width: "100vw",
-            background: theme.colors.custom.backgroundCard,
           }}
         >
           <Box
@@ -260,7 +265,7 @@ const Chatbot = () => {
               gap: "8px",
             }}
           >
-            <Memory />
+            {/* <Memory /> */}
             <Options />
             <CommonStyles.Button
               isIcon
@@ -329,7 +334,6 @@ const Chatbot = () => {
               width: "100%",
               bottom: 0,
               left: 0,
-              background: theme.colors.custom.backgroundCard,
             }}
           >
             <Box
@@ -341,10 +345,12 @@ const Chatbot = () => {
             >
               <CommonStyles.Button
                 isIcon
+                tooltip="New conversation"
+                hasBorder={false}
                 sx={{
                   position: "absolute",
-                  bottom: "10px",
-                  left: "-40px",
+                  bottom: 0,
+                  left: "-50px",
                   svg: {
                     width: 20,
                     height: 20,

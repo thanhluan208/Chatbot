@@ -5,8 +5,12 @@ import CommonStyles from "../../CommonStyles";
 import { useAuth } from "../../../Providers/AuthenticationProvider";
 import { useNavigate } from "react-router-dom";
 import DefaultAvatar from '@/assets/avatar.png'
+import { useTranslation } from "react-i18next";
 
 function UserButton() {
+  //translation
+  const { t } = useTranslation("store");
+
   //! State
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
@@ -67,10 +71,10 @@ function UserButton() {
                   navigate(`/user/${userId}?isOwner=true`);
                 }}
               >
-                Settings
+                {t("sidebar.button.settings")}
               </CommonStyles.Button>
               <CommonStyles.Button onClick={logout}>
-                Log out
+                {t("sidebar.button.logOut")}
               </CommonStyles.Button>
             </Paper>
           </Fade>
