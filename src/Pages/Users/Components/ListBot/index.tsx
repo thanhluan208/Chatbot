@@ -81,7 +81,18 @@ export const BotCard = (props: Bot) => {
           <CommonStyles.Typography type="semiBold16">
             {bot_name}
           </CommonStyles.Typography>
-          <CommonStyles.Typography color={theme.colors.custom.normalColorTypo}>
+          <CommonStyles.Typography
+            color={theme.colors.custom.normalColorTypo}
+            sx={{
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              display: "-webkit-box",
+              paddingRight: "20px",
+              textAlign: "justify",
+              marginTop: "8px",
+            }}
+          >
             {description}
           </CommonStyles.Typography>
         </Box>

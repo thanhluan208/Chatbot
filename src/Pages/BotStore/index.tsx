@@ -22,7 +22,6 @@ export enum BotStoreCategory {
   EFFICIENCY_HACKATHON = "efficiency hackathon",
 }
 
-
 const BotStore = () => {
   //translation
   const { t } = useTranslation("store");
@@ -66,7 +65,11 @@ const BotStore = () => {
         width: "100%",
       }}
     >
-      <CommonStyles.LoadingOverlay isLoading={isLoading} />
+      {isLoading && (
+        <Box className="w-screen fixed h-screen z-[10000000]">
+          <CommonStyles.LoadingOverlay isLoading={isLoading} />
+        </Box>
+      )}
       <Box
         sx={{
           display: "flex",
