@@ -65,7 +65,7 @@ const ChatWithBotButton = ({
         });
       }
 
-      updateNode(botId, {
+      updateNode(nodeId, {
         data: {
           ...data,
           currentNode: true,

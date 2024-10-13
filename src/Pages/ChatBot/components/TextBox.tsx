@@ -50,6 +50,7 @@ const TextBox = ({
         };
       case TextBoxType.BOT_CHAT:
         return {
+          border: `1px solid ${theme.colors.custom.borderColor}`,
           background: theme.colors.custom.backgroundCard,
         };
       case TextBoxType.USER_CHAT:
@@ -62,7 +63,7 @@ const TextBox = ({
         };
       case TextBoxType.BOT_HINT_CHAT:
         return {
-          border: "1px solid #0607090a",
+          border: `1px solid ${theme.colors.custom.borderColor}`,
           background: theme.colors.custom.backgroundCard,
           "&:hover": {
             background: "#0607091a",

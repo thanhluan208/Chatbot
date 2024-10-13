@@ -10,15 +10,17 @@ export interface BotStoreResponse {
 }
 
 export interface ListBot {
-  bot_id: string;
-  bot_name: string;
-  description: string;
-  owner_id: string;
-  created_at: Date;
-  user_name: string;
+  bot_id:           string;
+  bot_name:         string;
+  description:      string;
+  owner_id:         string;
+  created_at:       Date;
+  user_name:        string;
   permission_level: string;
-  visibility: string;
+  visibility:       string;
+  avatar_url:       string;
 }
+
 
 const useGetBotsStore = (isTrigger = true) => {
   const [data, setData] = useState<ListBot[] | []>([]);

@@ -82,6 +82,9 @@
       "development" : "development",
       "others" : "others",
       "efficiency hackathon" : "efficiency hackathon"
+    },
+    "submitBotDialog":{
+      "title":"Select a bot to publish"
     }
   },
   "knowledgeStore":{

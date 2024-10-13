@@ -9,6 +9,7 @@ import useRoutes from "./Constants/routes";
 import { useAuth } from "./Providers/AuthenticationProvider";
 import { lazy, Suspense } from "react";
 import CommonStyles from "./Components/CommonStyles";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 const KnowledgeDetail = lazy(() => import("./Pages/KnowledgeDetail"));
 const Login = lazy(() => import("./Pages/Login"));
@@ -23,6 +24,13 @@ const Users = lazy(() => import("./Pages/Users"));
 const ChatbotConfigure = lazy(() => import("./Pages/ChatbotConfigure"));
 const Workflow = lazy(() => import("./Pages/Workflow"));
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function App() {
   //! State
@@ -158,14 +166,15 @@ function App() {
     },
   ]);
 
-
   //! Function
 
   //! Render
   return (
-      <Suspense fallback={<CommonStyles.LoadingOverlay isLoading/>}>
+    <QueryClientProvider client={queryClient}>
+      <Suspense fallback={<CommonStyles.LoadingOverlay isLoading />}>
         <RouterProvider router={router} />
       </Suspense>
+    </QueryClientProvider>
   );
 }
 
