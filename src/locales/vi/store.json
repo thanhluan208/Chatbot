@@ -1,4 +1,11 @@
 {
+  "uom":{
+    "month":"tháng",
+    "day":"ngày",
+    "messages":"tin nhắn",
+    "credits":"tín dụng",
+    "msgCredits":"tín dụng tin nhắn"
+  },
   "dialog":{
     "createBot":{
       "title":"Tạo bot",
@@ -157,6 +164,17 @@
       "knowledge":{
         "noResultLabel":"Tạo thư mục tri thức mới để bắt đầu"
       }
+    }
+  },
+  "pricing":{
+    "title":"Các gói giá cao cấp của Alphii",
+    "label":{
+      "curPlan":"Gói hiện tại",
+      "trial":"Dùng thử miễn phí 3 ngày",
+      "models":"Mô hình"
+    },
+    "plans":{
+      "free":"Miễn phí"
     }
   }
 }

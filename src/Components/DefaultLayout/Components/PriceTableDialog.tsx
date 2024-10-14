@@ -4,6 +4,7 @@ import { Fragment } from "react";
 import NavItem from "./NavItem";
 import CommonIcons from "@/Components/CommonIcons";
 import { Box, useTheme } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 interface EachPlanProps {
   name: string;
@@ -19,6 +20,8 @@ interface EachPlanProps {
 }
 
 const EachPlan = (props: EachPlanProps) => {
+  //Translation
+  const { t } = useTranslation("store");
   const { model, isCurrentPlan, shouldHighlight } = props;
   const theme = useTheme()
 
@@ -72,7 +75,7 @@ const EachPlan = (props: EachPlanProps) => {
           }}
         >
           <CommonStyles.Typography type="semiBold16" color="#06070980">
-            {props.name}
+            {t(`pricing.plans.${props.name.toLowerCase()}`)}
           </CommonStyles.Typography>
           <span>
             <CommonStyles.Typography
@@ -95,11 +98,11 @@ const EachPlan = (props: EachPlanProps) => {
                 color: "#06070980",
               }}
             >
-              USD / month
+              USD / {t("uom.month")}
             </CommonStyles.Typography>
           </span>
           <CommonStyles.Typography type="semiBold16" color="#06070980">
-            {props.limit} message credits/day
+            {props.limit} {t("uom.msgCredits")}/{t("uom.day")}
           </CommonStyles.Typography>
         </Box>
         <CommonStyles.Button
@@ -121,7 +124,7 @@ const EachPlan = (props: EachPlanProps) => {
           fullWidth
         >
           <CommonStyles.Typography>
-            {isCurrentPlan ? "Current plan" : "Start 3 days free trial"}
+            {isCurrentPlan ? t("pricing.label.curPlan") : t("pricing.label.trial")}
           </CommonStyles.Typography>
         </CommonStyles.Button>
       </Box>
@@ -133,7 +136,7 @@ const EachPlan = (props: EachPlanProps) => {
           marginBottom: "20px",
         }}
       >
-        Models
+        {t("pricing.label.models")}
       </CommonStyles.Typography>
       <Box
         sx={{
@@ -150,7 +153,7 @@ const EachPlan = (props: EachPlanProps) => {
                 {item.name}
               </CommonStyles.Typography>
               <CommonStyles.Typography color={"#06070980"}>
-                {item.limitCredit} credits / {item.limitMsg} messages
+                {item.limitCredit} {t("uom.credits")} / {item.limitMsg} {t("uom.messages")}
               </CommonStyles.Typography>
             </Box>
           );
@@ -231,6 +234,8 @@ const plans = [
 ];
 
 const PriceTableDialog = () => {
+  //Translation
+  const { t } = useTranslation("store");
   //! State
   const { open, shouldRender, toggle } = useToggleDialog();
   const theme = useTheme()
@@ -260,7 +265,7 @@ const PriceTableDialog = () => {
               alignItems={"center"}
             >
               <CommonStyles.Typography type="semiBold18">
-                Alphii premium pricing plans
+                {t("pricing.title")}
               </CommonStyles.Typography>
               <CommonStyles.Button isIcon onClick={toggle}>
                 <CommonIcons.Clear />

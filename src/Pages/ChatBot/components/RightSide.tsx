@@ -14,6 +14,8 @@ import cachedKeys from "@/Constants/cachedKeys";
 import { useTranslation } from "react-i18next";
 
 const Description = ({ text }: { text: string }) => {
+  //Translation
+  const { t } = useTranslation("store");
   //! State
   const [isShowMore, setIsShowMore] = useState(false);
   //! Function
@@ -35,7 +37,7 @@ const Description = ({ text }: { text: string }) => {
         }}
         onClick={() => setIsShowMore(!isShowMore)}
       >
-        {isShowMore ? "Show less" : "Show more"}
+        {isShowMore ? t("chatBot.button.showLess") : t("chatBot.button.showMore")}
       </CommonStyles.Typography>
     </CommonStyles.Typography>
   );

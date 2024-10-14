@@ -2,12 +2,16 @@ import CommonIcons from "@/Components/CommonIcons";
 import CommonStyles from "@/Components/CommonStyles";
 import useToggleDialog from "@/Hooks/useToggleDialog";
 import { Fragment } from "react/jsx-runtime";
+import { useTranslation } from "react-i18next";
 
 interface ViewmoreConfigProps {
   data?: any;
 }
 
 const AddComment = ({  }: ViewmoreConfigProps) => {
+  //Translation
+  const { t } = useTranslation("store");
+
   //! State
   const { open, shouldRender, toggle } = useToggleDialog();
 
@@ -29,7 +33,9 @@ const AddComment = ({  }: ViewmoreConfigProps) => {
         }}
         startIcon={<CommonIcons.Add />}
       >
-        <CommonStyles.Typography type='semiBold12' color="#06070980">Add comment</CommonStyles.Typography>
+        <CommonStyles.Typography type='semiBold12' color="#06070980">
+          {t("chatBot.button.addComment")}
+        </CommonStyles.Typography>
       </CommonStyles.Button>
     </Fragment>
   );

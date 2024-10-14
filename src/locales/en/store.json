@@ -1,4 +1,11 @@
 {
+  "uom":{
+    "month":"month",
+    "day":"day",
+    "messages":"messages",
+    "credits":"credits",
+    "msgCredits":"message credits"
+  },
   "dialog": {
     "createBot": {
       "title": "Create Bot",
@@ -167,6 +174,17 @@
       "knowledge":{
         "noResultLabel":"Create a new knowledge folder to get started"
       }
+    }
+  },
+  "pricing":{
+    "title":"Alphii premium pricing plans",
+    "label":{
+      "curPlan":"Current plan",
+      "trial":"Starts 3 days free trial",
+      "models":"Models"
+    },
+    "plans":{
+      "free":"Free"
     }
   }
 }
