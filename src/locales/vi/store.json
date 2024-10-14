@@ -83,9 +83,23 @@
       "others" : "Khác",
       "efficiency hackathon" : "Efficiency Hackathon"
     }
-  }
-  ,
-
+  },
+  "chatBot":{
+    "button":{
+      "share": "Chia sẻ",
+      "viewMore":"Xem thêm",
+      "addComment":"Thêm bình luận",
+      "showMore":"Xem thêm",
+      "showLess":"Ẩn"
+    },
+    "label":{
+      "users":"người dùng",
+      "conversations":"cuộc hội thoại",
+      "configItem":"Cấu hình",
+      "openIn":"Mở trong",
+      "community":"Cộng đồng"
+    }
+  },
   "knowledgeStore":{
     "heading":{
       "main":"Cửa hàng tri thức"

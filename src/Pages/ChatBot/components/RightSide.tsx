@@ -11,6 +11,7 @@ import Community from "./Community/Community";
 import CommunityDetail from "./Community/CommunityDetail";
 import { useSave } from "@/Stores/useStore";
 import cachedKeys from "@/Constants/cachedKeys";
+import { useTranslation } from "react-i18next";
 
 const Description = ({ text }: { text: string }) => {
   //! State
@@ -56,6 +57,9 @@ export const RightSide = ({
   like,
   configuration,
 }: RightSideProps) => {
+  //Translation
+  const { t } = useTranslation("store");
+
   //! State
   const save = useSave();
 
@@ -171,7 +175,7 @@ export const RightSide = ({
                       padding: "11px 0 4px",
                     }}
                   >
-                    users
+                    {t("chatBot.label.users")}
                   </CommonStyles.Typography>
                 </Box>
                 <Box
@@ -192,7 +196,7 @@ export const RightSide = ({
                       padding: "11px 0 4px",
                     }}
                   >
-                    conversations
+                    {t("chatBot.label.conversations")}
                   </CommonStyles.Typography>
                 </Box>
               </Box>
@@ -225,7 +229,7 @@ export const RightSide = ({
                 }}
               >
                 <CommonStyles.Typography type="semiBold16">
-                  Configuration items
+                  {t("chatBot.label.configItem")}
                 </CommonStyles.Typography>
                 <ViewmoreConfig />
               </Box>
@@ -281,7 +285,7 @@ export const RightSide = ({
                   marginTop: "24px",
                 }}
               >
-                Open in
+                {t("chatBot.label.openIn")}
               </CommonStyles.Typography>
 
               <Box
@@ -304,7 +308,7 @@ export const RightSide = ({
                   }}
                 >
                   <CommonStyles.Typography type="semiBold16">
-                    Community
+                    {t("chatBot.label.community")}
                   </CommonStyles.Typography>
                   <CommonStyles.Button
                     sx={{

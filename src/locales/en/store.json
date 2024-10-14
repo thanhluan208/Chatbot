@@ -94,6 +94,22 @@
       "removeFailed": "Bot removed failed"
     }
   },
+  "chatBot":{
+    "button":{
+      "share": "Share",
+      "viewMore":"View more",
+      "addComment":"Add comment",
+      "showMore":"Show more",
+      "showLess":"Show less"
+    },
+    "label":{
+      "users":"users",
+      "conversations":"conversations",
+      "configItem":"Configuration items",
+      "openIn":"Open in",
+      "community":"Community"
+    }
+  },
   "knowledgeStore": {
     "heading": {
       "main": "Knowledge store"

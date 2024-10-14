@@ -17,8 +17,12 @@ import { AxiosResponse } from "axios";
 import httpServices from "@/Services/httpServices";
 import { clearConversation } from "@/Constants/api";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const Chatbot = () => {
+  //Translation
+  const { t } = useTranslation("store");
+
   //! State
   const theme = useTheme();
   const navigate = useNavigate();
@@ -207,7 +211,7 @@ const Chatbot = () => {
           </CommonStyles.Button>
           <CommonStyles.Button sx={{ width: "96px" }} variant="outlined">
             <CommonStyles.Typography type="semiBold14">
-              Share
+              {t("chatBot.button.share")}
             </CommonStyles.Typography>
           </CommonStyles.Button>
         </Box>
