@@ -1,4 +1,5 @@
 import MuiButton from "./Button";
+import CenterBox from "./Centerbox";
 import MuiChip from "./Chip";
 import CollapseArea from "./CollapseArea";
 import ConfirmDialog from "./ConfirmDialog";
@@ -13,6 +14,7 @@ import UploadFile from "./UploadFile";
 import VirtualizeList from "./VirtualizeList";
 
 const CommonStyles = {
+  CenterBox,
   Button: MuiButton,
   Typography,
   Dialog: MUIDialog,

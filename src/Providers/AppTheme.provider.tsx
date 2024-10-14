@@ -312,7 +312,7 @@ export default function AppThemeProvider(props: { children: React.ReactNode }) {
         styles={{
           body: {
             // fontFamily: 'Epilogue, sans-serif',
-            fontFamily: "Plus Jakarta Sans",
+            // fontFamily: "Plus Jakarta Sans",
           },
         }}
       />

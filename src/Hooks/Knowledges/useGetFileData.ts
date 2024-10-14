@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from 'react';
 import knowledgeService, {
   PayloadSegment,
-} from "../../Services/knowledge.service";
-import { AxiosResponse } from "axios";
-import { FileData } from "./useGetListFolderKnowledge";
+} from '../../Services/knowledge.service';
+import { AxiosResponse } from 'axios';
+import { FileData } from './useGetListFolderKnowledge';
 
 export interface FileDataResponse {
   status_code: number;
@@ -11,9 +11,11 @@ export interface FileDataResponse {
   file_data: FileData;
 }
 
-
 const useGetFileData = (payload?: PayloadSegment, isTrigger = true) => {
   const [data, setData] = useState<FileData | null>(null);
+  const [botID, setBotId] = useState<string>(
+    '8027893944:AAFDC0EytLzrflJRZr2o5sHz-RqgscDpIVo'
+  );
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState();
 
@@ -32,7 +34,7 @@ const useGetFileData = (payload?: PayloadSegment, isTrigger = true) => {
   );
 
   const refetch = useCallback(async () => {
-    if(!isTrigger) return;
+    if (!isTrigger) return;
     try {
       const response = await callApi();
       transformResponse(response);

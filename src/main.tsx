@@ -1,6 +1,7 @@
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
+import "react-multi-carousel/lib/styles.css";
 import AppThemeProvider from "./Providers/AppTheme.provider.tsx";
 
 import { ToastContainer } from "react-toastify";

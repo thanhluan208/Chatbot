@@ -39,6 +39,7 @@ export const ListRoutes = {
   knowledgeStore: "/knowledge-store",
   userProfile: "/user/:userId",
   chatBot: "/bot-store/:botId",
+  publishPage: "/publish/:botId",
 };
 
 export default useRoutes;

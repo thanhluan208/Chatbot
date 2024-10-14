@@ -75,7 +75,7 @@ input::-webkit-inner-spin-button {
 }
 
 /* Firefox */
-input[type="number"] {
+input[type='number'] {
   -moz-appearance: textfield;
 }
 
@@ -198,4 +198,13 @@ button:focus-visible {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+[dir='rtl'] .carousel-container {
+  direction: ltr;
+}
+
+.carousel-container {
+  width: 100%;
+  height: 100%;
 }
