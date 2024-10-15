@@ -6,6 +6,20 @@
     "credits":"credits",
     "msgCredits":"message credits"
   },
+  "common":{
+    "button":{
+      "delete":"Delete",
+      "duplicate":"Duplicate",
+      "cancel":"Cancel",
+      "confirm":"Confirm",
+      "save":"Save",
+      "edit":"Edit",
+      "share": "Share",
+      "viewMore":"View more",
+      "showMore":"Show more",
+      "showLess":"Show less"
+    }
+  },
   "dialog": {
     "createBot": {
       "title": "Create Bot",

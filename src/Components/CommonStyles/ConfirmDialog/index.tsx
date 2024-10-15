@@ -4,6 +4,7 @@ import CommonStyles from "..";
 import CommonIcons from "../../CommonIcons";
 import { useSave } from "../../../Stores/useStore";
 import cachedKeys from "../../../Constants/cachedKeys";
+import { useTranslation } from "react-i18next";
 
 interface IConfirmDialog {
   handleConfirm: () => void;
@@ -13,6 +14,8 @@ interface IConfirmDialog {
 }
 
 const ConfirmDialog = (props: IConfirmDialog) => {
+  //Translation
+  const { t } = useTranslation("store");
   //! State
   const { toggle, handleConfirm, content, loading } = props;
   const save = useSave();
@@ -35,7 +38,7 @@ const ConfirmDialog = (props: IConfirmDialog) => {
           mb={2}
         >
           <CommonStyles.Typography type="bold18">
-            Confirm delete
+          {t("common.button.confirm")} {t("common.button.delete").toLowerCase()}
           </CommonStyles.Typography>
           <CommonStyles.Button
             isIcon
@@ -51,7 +54,7 @@ const ConfirmDialog = (props: IConfirmDialog) => {
 
       <DialogContent>
         <CommonStyles.Typography type="bold16">
-          {content || "Do you want to delete ?"}
+          {"Do you want to delete ?"}
         </CommonStyles.Typography>
       </DialogContent>
 
@@ -82,7 +85,7 @@ const ConfirmDialog = (props: IConfirmDialog) => {
             }}
             type="button"
           >
-            Cancel
+            {t("common.button.cancel")}
           </CommonStyles.Button>
           <CommonStyles.Button
             variant="contained"
@@ -100,7 +103,7 @@ const ConfirmDialog = (props: IConfirmDialog) => {
             }}
             isLoading={loading}
           >
-            Confirm
+            {t("common.button.confirm")}
           </CommonStyles.Button>
         </Box>
       </DialogActions>

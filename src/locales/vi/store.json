@@ -6,6 +6,20 @@
     "credits":"tín dụng",
     "msgCredits":"tín dụng tin nhắn"
   },
+  "common":{
+    "button":{
+      "delete":"Xóa",
+      "duplicate":"Sao chép",
+      "cancel":"Hủy",
+      "confirm":"Xác nhận",
+      "save":"Lưu",
+      "edit":"Chỉnh sửa",
+      "share": "Chia sẻ",
+      "viewMore":"Xem thêm",
+      "showMore":"Xem thêm",
+      "showLess":"Ẩn"
+    }
+  },
   "dialog":{
     "createBot":{
       "title":"Tạo bot",

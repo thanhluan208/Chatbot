@@ -10,12 +10,15 @@ import httpServices from "@/Services/httpServices";
 import { duplicateBot } from "@/Constants/api";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import { useGet } from "@/Stores/useStore";
+import { useTranslation } from "react-i18next";
 
 interface IMoreOption {
   bot: Bot;
 }
 
 function MoreOption(props: IMoreOption) {
+  //Translation
+  const { t } = useTranslation("store");
   //! State
   const { bot } = props;
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
@@ -111,7 +114,7 @@ function MoreOption(props: IMoreOption) {
             >
               <CommonStyles.Button onClick={handleDuplicate}>
                 <CommonStyles.Typography type="semiBold14">
-                  Duplicate
+                  {t("common.button.duplicate")}
                 </CommonStyles.Typography>
               </CommonStyles.Button>
               <DeleteBotButton bot={bot} />

@@ -9,12 +9,15 @@ import CommonStyles from "../../../../../Components/CommonStyles";
 import ConfirmDialog from "../../../../../Components/CommonStyles/ConfirmDialog";
 import { useTheme } from "@mui/material";
 import { useAuth } from "@/Providers/AuthenticationProvider";
+import { useTranslation } from "react-i18next";
 
 interface IDeleteButton {
   bot: Bot;
 }
 
 function DeleteBotButton(props: IDeleteButton) {
+  //Translation
+  const { t } = useTranslation("store");
   //! State
   const { bot } = props;
   const { open, shouldRender, toggle } = useToggleDialog();
@@ -75,7 +78,7 @@ function DeleteBotButton(props: IDeleteButton) {
         >
           <ConfirmDialog
             handleConfirm={handleDelete}
-            content={`Confirm delete ${bot.bot_name}`}
+            content={`${t("common.button.confirm")} ${t("common.button.delete").toLowerCase()} ${bot.bot_name}`}
             toggle={toggle}
           />
         </CommonStyles.Dialog>
@@ -91,7 +94,7 @@ function DeleteBotButton(props: IDeleteButton) {
           type="semiBold14"
           color={theme.colors.custom.colorErrorTypo}
         >
-         Delete
+         {t("common.button.delete")}
         </CommonStyles.Typography>
       </CommonStyles.Button>
     </Fragment>

@@ -3,6 +3,7 @@ import CommonStyles from "../../../Components/CommonStyles";
 import { ReactNode } from "react";
 import CommonIcons from "../../../Components/CommonIcons";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Stats = (props: { icon: ReactNode; value: number }) => {
   return (
@@ -41,6 +42,9 @@ interface BotCardProps {
 }
 
 const BotCard = (props: BotCardProps) => {
+  //Translation
+  const { t } = useTranslation("store");
+
   //! State
   const {
     creator,
@@ -238,7 +242,7 @@ const BotCard = (props: BotCardProps) => {
           >
             <Stats icon={<CommonIcons.People />} value={users} />
           </Box>
-          <CommonStyles.Button variant="outlined">Try it now</CommonStyles.Button>
+          <CommonStyles.Button variant="outlined">{t("botStore.button.try")}</CommonStyles.Button>
         </Box>
 
         {/* <CommonStyles.Button
