@@ -54,7 +54,7 @@ const ConfirmDialog = (props: IConfirmDialog) => {
 
       <DialogContent>
         <CommonStyles.Typography type="bold16">
-          {"Do you want to delete ?"}
+          {t("common.toast.confirmDeleteMsg")}
         </CommonStyles.Typography>
       </DialogContent>
 

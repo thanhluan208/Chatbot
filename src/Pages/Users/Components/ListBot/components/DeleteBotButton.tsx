@@ -29,7 +29,7 @@ function DeleteBotButton(props: IDeleteButton) {
   const handleDelete = async () => {
     if (!bot.bot_id) return;
 
-    const toastId = toast.loading(`Deleting ${bot.bot_name}...`, {
+    const toastId = toast.loading(t("common.toast.deleting", {param: bot.bot_name}), {
       isLoading: true,
       autoClose: false,
     });
@@ -44,7 +44,7 @@ function DeleteBotButton(props: IDeleteButton) {
 
       if (response.data.status_code === 200) {
         toast.update(toastId, {
-          render: `Delete ${bot.bot_name} successfully`,
+          render: t("common.toast.deleteSuccess", {param: bot.bot_name}),
           type: "success",
           autoClose: 3000,
           isLoading: false,
@@ -55,7 +55,7 @@ function DeleteBotButton(props: IDeleteButton) {
     } catch (error: any) {
       console.log("Delete bot error: ", error.message);
       toast.update(toastId, {
-        render: error?.message || `Delete ${bot.bot_name} failed`,
+        render: error?.message || t("common.toast.deleteFail", {param: bot.bot_name}),
         type: "error",
         autoClose: 2000,
         isLoading: false,

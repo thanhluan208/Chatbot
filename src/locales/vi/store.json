@@ -9,7 +9,7 @@
   "common":{
     "button":{
       "delete":"Xóa",
-      "duplicate":"Sao chép",
+      "duplicate":"Nhân bản",
       "cancel":"Hủy",
       "confirm":"Xác nhận",
       "save":"Lưu",
@@ -18,6 +18,21 @@
       "viewMore":"Xem thêm",
       "showMore":"Xem thêm",
       "showLess":"Ẩn"
+    },
+    "toast":{
+      "confirmDeleteMsg":"Bạn có muốn xóa không?",
+      "deleteSuccess":"Xóa {{param}} thành công!",
+      "deleteFail":"Xóa {{param}} thất bại!",
+      "deleting":"Đang xóa {{param}}...",
+      "createSuccess":"Tạo {{param}} thành công!",
+      "createFail":"Tạo {{param}} thất bại!",
+      "creating":"Đang tạo {{param}}...",
+      "duplicateSuccess":"Nhân bản {{param}} thành công!",
+      "duplicateFail":"Nhân bản {{param}} thất bại!",
+      "duplicating":"Đang nhân bản {{param}}...",
+      "publishing": "Đang xuất bản...",
+      "publishSuccess": "Xuất bản {{param}} thành công!",
+      "publishFailed": "Xuất bản {{param}} thất bại!"
     }
   },
   "dialog":{
@@ -103,6 +118,10 @@
       "development" : "Phát triển",
       "others" : "Khác",
       "efficiency hackathon" : "Efficiency Hackathon"
+    },
+    "submitBotDialog": {
+      "title": "Chọn 1 bot để xuất bản",
+      "createdAt": "Được tạo lúc"
     }
   },
   "chatBot":{

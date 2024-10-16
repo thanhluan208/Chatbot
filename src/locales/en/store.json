@@ -18,6 +18,21 @@
       "viewMore":"View more",
       "showMore":"Show more",
       "showLess":"Show less"
+    },
+    "toast":{
+      "confirmDeleteMsg":"Do you want to delete?",
+      "deleteSuccess":"Delete {{param}} successfully!",
+      "deleteFail":"Delete {{param}} fail!",
+      "deleting":"Deleting {{param}}...",
+      "createSuccess":"{{param}} created successfully!",
+      "createFail":"Create {{param}} fail!",
+      "creating":"Creating {{param}}...",
+      "duplicateSuccess":"{{param}} duplicated successfully!",
+      "duplicateFail":"Fail to duplicate {{param}}!",
+      "duplicating":"Duplicating {{param}}...",
+      "publishing": "Publishing...",
+      "publishSuccess": "{{param}} published successfully",
+      "publishFailed": "{{param}} published failed"
     }
   },
   "dialog": {
@@ -106,13 +121,7 @@
     },
     "submitBotDialog": {
       "title": "Select a bot to publish",
-      "createdAt": "Created at",
-      "publishing": "Publishing",
-      "publishSuccess": "Bot published successfully",
-      "publishFailed": "Bot published failed",
-      "removing": "Removing",
-      "removeSuccess": "Bot removed successfully",
-      "removeFailed": "Bot removed failed"
+      "createdAt": "Created at"
     }
   },
   "chatBot":{

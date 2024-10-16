@@ -147,7 +147,7 @@ const KnowledgeStore = () => {
                 
               }}
             >
-              {name}
+              {name}duy 
             </CommonStyles.Button>
           );
         })}

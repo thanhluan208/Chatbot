@@ -57,7 +57,7 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
   const handleSubmit = useCallback(
     async (values: InitValues) => {
       if (!userId) return;
-      const toastId = toast.info("Creating bot...", {
+      const toastId = toast.info(t("common.toast.creating", {param: "bot"}), {
         isLoading: true,
         autoClose: false,
       });
@@ -79,7 +79,7 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
         refetchListBot && (await refetchListBot());
         if (response.data.status_code === 200) {
           toast.update(toastId, {
-            render: `Bot ${values.name} created successfully!`,
+            render: t("common.toast.createSuccess", {param: "Bot " + values.name}),
             type: "success",
             isLoading: false,
             autoClose: 3000,
@@ -95,7 +95,7 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
       } catch (error: any) {
         console.log("Create bot error: ", error);
         toast.update(toastId, {
-          render: error?.message || "Create bot failed",
+          render: error?.message || t("common.toast.createFail", {param: "bot"}),
           type: "error",
           autoClose: 2000,
           isLoading: false,

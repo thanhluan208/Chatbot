@@ -35,7 +35,7 @@ function MoreOption(props: IMoreOption) {
   ) => {
     e.stopPropagation();
     setAnchorEl(null);
-    const toastId = toast.loading("Duplicating bot...", {
+    const toastId = toast.loading(t("common.toast.duplicating", {param: "bot"}), {
       isLoading: true,
       autoClose: false,
     });
@@ -51,7 +51,7 @@ function MoreOption(props: IMoreOption) {
       if (response?.data?.status_code !== 200) {
         toast.update(toastId, {
           isLoading: false,
-          render: "Failed to duplicate bot!",
+          render: t("common.toast.duplicateFail", {param: "bot"}),
           type: "error",
           autoClose: 3000,
         });
@@ -60,7 +60,7 @@ function MoreOption(props: IMoreOption) {
 
       toast.update(toastId, {
         isLoading: false,
-        render: "Bot duplicated successfully!",
+        render: t("common.toast.duplicateSuccess", {param: "Bot"}),
         type: "success",
         autoClose: 3000,
       });
@@ -68,7 +68,7 @@ function MoreOption(props: IMoreOption) {
       console.log(error);
       toast.update(toastId, {
         isLoading: false,
-        render: "Failed to duplicate bot!",
+        render: t("common.toast.duplicateFail", {param: "bot"}),
         type: "error",
         autoClose: 3000,
       });
