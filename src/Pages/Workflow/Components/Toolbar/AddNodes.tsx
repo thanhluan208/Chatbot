@@ -8,6 +8,8 @@ import MultiAgentStartNode from "../CustomNodes/MultiAgentStartNode";
 import MultiAgentNode from "../CustomNodes/MultiAgentNode";
 import AddNodePopper from "./AddNodePopper";
 import HelperNode from "../CustomNodes/HelperNode";
+import WF_StartNode from "../CustomNodes/WF_StartNode";
+import WF_LlmNode from "../CustomNodes/WF_LlmNode";
 
 export enum NodeTypes {
   startNode = "customNode_startNode",
@@ -25,6 +27,9 @@ export const nodeTypes = {
   customNode_mutliAgentStartNode: MultiAgentStartNode,
   customNode_multiAgentNode: MultiAgentNode,
   customNode_helperNode: HelperNode,
+  customNode_WF_StartNode: WF_StartNode,
+  customNode_WF_LlmNode: WF_LlmNode
+
 };
 
 export enum CustomNodeTypes {
@@ -36,6 +41,7 @@ interface IAddNodes {
     name: string;
     label: string;
     description?: string;
+    hidden?: boolean;
   }[];
 }
 

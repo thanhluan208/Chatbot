@@ -5,6 +5,8 @@ import { initReactI18next, useTranslation } from "react-i18next";
 import { LANGUAGES } from "@/Constants/common";
 
 import store_en from "@/locales/en/store.json";
+import node_en from "@/locales/en/node.json";
+
 import store_vi from "@/locales/vi/store.json";
 
 i18n
@@ -21,6 +23,7 @@ i18n
     resources: {
       [LANGUAGES.EN]: {
         store: store_en,
+        node: node_en,
       },
       [LANGUAGES.VI]: {
         store: store_vi,

@@ -55,6 +55,9 @@ const EngineOption = ({
           display: "flex",
           justifyContent: "space-between",
           padding: isValue ? "0 12px 0 16px" : "12px 16px",
+          "&:hover": {
+            background: isSelected ? "transparent" : "rgba(0, 0, 0, 0.04)",
+          }
         }}
         onClick={() => {
           setFieldValue(name ?? "llm", option);

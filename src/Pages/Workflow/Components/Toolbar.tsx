@@ -24,17 +24,12 @@ export type HistoryRef = {
 const Toolbar = ({
   listNode,
 }: {
-  listNode: { name: string; label: string }[];
+  listNode: { name: string; label: string; hidden?: boolean }[];
 }) => {
   //! State
   const theme = useTheme();
   const save = useSave();
-  const {
-    setNodes,
-    fitView,
-    getZoom,
-    zoomTo,
-  } = useReactFlow();
+  const { setNodes, fitView, getZoom, zoomTo } = useReactFlow();
   const handleAddNode = useGet("ADD_NODE");
   const isEditing = useGet("IS_EDITING");
   const mousePos = useRef<{

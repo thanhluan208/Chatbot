@@ -169,7 +169,7 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
                   owner_id={item.owner_id}
                   avatar={item.avatar}
                 />
-                {index < data.length - 1 && <Divider />}
+                {index < data?.length - 1 && <Divider />}
               </Fragment>
             );
           })}

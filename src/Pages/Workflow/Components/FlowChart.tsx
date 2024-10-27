@@ -211,7 +211,7 @@ export default function FlowChart(props: IFlowChart) {
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
 
-      const type = event.dataTransfer.getData("application/reactflow");
+      const {nodeType: type, label} = JSON.parse(event.dataTransfer.getData("application/reactflow"));
 
       if (typeof type === "undefined" || !type) {
         return;
@@ -225,7 +225,7 @@ export default function FlowChart(props: IFlowChart) {
         id: uuid(),
         type,
         position,
-        data: { label: `${type} node` },
+        data: { label: `${label}` },
       };
 
       setNodes((nds) => {

@@ -37,9 +37,11 @@ const SegmentList = (props: ISegmentList) => {
   const [currentSegment, setCurrentSegment] = useState("All");
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
-  const currentFile = Object.values(data).find((item) => {
+  const currentFile = Object.values(data)?.find((item) => {
     return item.name === currentSegment;
   });
+
+  console.log(data)
 
   const save = useSave();
   const theme = useTheme();

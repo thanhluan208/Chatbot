@@ -26,6 +26,7 @@ interface IAddNodePopper {
     name: string;
     label: string;
     description?: string;
+    hidden?: boolean;
   }[];
   placement?: PopperPlacementType;
   sxContainer?: SxProps;
@@ -44,7 +45,7 @@ const AddNodePopper = (props: IAddNodePopper) => {
     isHelperNode,
     helperPosition,
   } = props;
-  const { setNodes, updateNode,  } = useReactFlow();
+  const { setNodes, updateNode } = useReactFlow();
   const theme = useTheme();
   const save = useSave();
 
@@ -57,9 +58,10 @@ const AddNodePopper = (props: IAddNodePopper) => {
   //! Function
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
-    nodeType: keyof typeof nodeTypes
+    nodeType: keyof typeof nodeTypes,
+    label: string
   ) => {
-    event.dataTransfer.setData("application/reactflow", nodeType);
+    event.dataTransfer.setData("application/reactflow", JSON.stringify({nodeType, label}));
     event.dataTransfer.effectAllowed = "move";
   };
 
@@ -69,7 +71,6 @@ const AddNodePopper = (props: IAddNodePopper) => {
       const nodeId = uuid();
 
       const onSuccess = (id: string) => {
-        console.log(nodeId);
         updateNode(nodeId, {
           id: id,
           data: {
@@ -174,80 +175,83 @@ const AddNodePopper = (props: IAddNodePopper) => {
               Drag the node to the canvas, or double click on the canvas to add
               a node
             </CommonStyles.Typography>
-            {listNode.map((node) => {
-              return (
-                <Box
-                  key={node.name}
-                  onDragStart={(event) =>
-                    onDragStart(event, node.name as keyof typeof nodeTypes)
-                  }
-                  draggable
-                  sx={{
-                    borderRadius: "8px",
-                    border: `1px solid ${theme.palette.primary.main}`,
-                    boxShadow:
-                      "0 6px 8px 0 rgba(29,28,35,.06),0 0 2px 0 rgba(29,28,35,.18)",
-                    padding: "8px 12px",
-                    cursor: "grab",
-                    backdropFilter: "blur(10px)",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <Box>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        gap: "8px",
-                        alignItems: "center",
-                      }}
-                    >
+            <div className="flex flex-col gap-2">
+              {listNode.map((node) => {
+                if (node.hidden) return null;
+                return (
+                  <Box
+                    key={node.name}
+                    onDragStart={(event) =>
+                      onDragStart(event, node.name as keyof typeof nodeTypes, node.label)
+                    }
+                    draggable
+                    sx={{
+                      borderRadius: "8px",
+                      border: `1px solid ${theme.palette.primary.main}`,
+                      boxShadow:
+                        "0 6px 8px 0 rgba(29,28,35,.06),0 0 2px 0 rgba(29,28,35,.18)",
+                      padding: "8px 12px",
+                      cursor: "grab",
+                      backdropFilter: "blur(10px)",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Box>
                       <Box
                         sx={{
-                          padding: "4px",
-                          borderRadius: "8px",
-                          background: "#4e40e5",
+                          display: "flex",
+                          gap: "8px",
+                          alignItems: "center",
                         }}
                       >
-                        <img
-                          src={logo}
-                          alt="logo"
-                          style={{ width: "16px", height: "16px" }}
-                        />
+                        <Box
+                          sx={{
+                            padding: "4px",
+                            borderRadius: "8px",
+                            background: "#4e40e5",
+                          }}
+                        >
+                          <img
+                            src={logo}
+                            alt="logo"
+                            style={{ width: "16px", height: "16px" }}
+                          />
+                        </Box>
+                        <CommonStyles.Typography
+                          type={isHelperNode ? "semiBold12" : "semiBold16"}
+                        >
+                          {node.label}
+                        </CommonStyles.Typography>
                       </Box>
+                      <CommonStyles.Typography
+                        type={isHelperNode ? "normal10" : "normal16"}
+                        sx={{ opacity: 0.5, marginTop: "8px" }}
+                      >
+                        {node.description}
+                      </CommonStyles.Typography>
+                    </Box>
+                    <CommonStyles.Button
+                      variant="outlined"
+                      startIcon={<CommonIcons.Add />}
+                      sx={{
+                        border: `1px solid ${theme.palette.primary.main}`,
+                      }}
+                      onClick={() => {
+                        handleAddNode(node);
+                      }}
+                    >
                       <CommonStyles.Typography
                         type={isHelperNode ? "semiBold12" : "semiBold16"}
                       >
-                        {node.label}
+                        Add
                       </CommonStyles.Typography>
-                    </Box>
-                    <CommonStyles.Typography
-                      type={isHelperNode ? "normal10" : "normal16"}
-                      sx={{ opacity: 0.5, marginTop: "8px" }}
-                    >
-                      {node.description}
-                    </CommonStyles.Typography>
+                    </CommonStyles.Button>
                   </Box>
-                  <CommonStyles.Button
-                    variant="outlined"
-                    startIcon={<CommonIcons.Add />}
-                    sx={{
-                      border: `1px solid ${theme.palette.primary.main}`,
-                    }}
-                    onClick={() => {
-                      handleAddNode(node);
-                    }}
-                  >
-                    <CommonStyles.Typography
-                      type={isHelperNode ? "semiBold12" : "semiBold16"}
-                    >
-                      Add
-                    </CommonStyles.Typography>
-                  </CommonStyles.Button>
-                </Box>
-              );
-            })}
+                );
+              })}
+            </div>
           </Box>
         </Fade>
       )}

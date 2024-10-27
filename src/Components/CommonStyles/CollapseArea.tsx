@@ -18,7 +18,9 @@ const CollapseArea = (props: ICollapseArea) => {
   const { label, sxContainer, initOpen = true, nodeId, dataKey } = props;
   const [open, setOpen] = React.useState(
     initOpen ||
-      !!JSON.parse(localStorage.getItem(nodeId || "") || "{}")[dataKey as string] ||
+      !!JSON.parse(localStorage.getItem(nodeId || "") || "{}")[
+        dataKey as string
+      ] ||
       false
   );
   //! Function
@@ -69,7 +71,7 @@ const CollapseArea = (props: ICollapseArea) => {
             }}
           />
         </CommonStyles.Button>
-        {label || "Inputs"}
+        <CommonStyles.Typography width="100%" type="semiBold16">{label || "Inputs"}</CommonStyles.Typography>
       </Box>
       <Collapse in={open}>{props.children}</Collapse>
     </Box>

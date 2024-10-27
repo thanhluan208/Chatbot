@@ -7,7 +7,7 @@ import {
   BaseEdge,
   EdgeLabelRenderer,
   EdgeProps,
-  getSmoothStepPath,
+  getSimpleBezierPath,
   useReactFlow,
 } from "@xyflow/react";
 import { useCallback } from "react";
@@ -29,7 +29,7 @@ const AnimatedSVGEdge = ({
   ...props
 }: EdgeProps) => {
   //! State
-  const [edgePath, labelX, labelY] = getSmoothStepPath({
+  const [edgePath, labelX, labelY] = getSimpleBezierPath({
     sourceX,
     sourceY,
     sourcePosition,
