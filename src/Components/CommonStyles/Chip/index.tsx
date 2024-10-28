@@ -1,4 +1,4 @@
-import { Chip, SxProps,  } from "@mui/material";
+import { Chip, SxProps } from "@mui/material";
 
 interface IMuiChip {
   label: string;
@@ -8,7 +8,7 @@ interface IMuiChip {
 
 function MuiChip(props: IMuiChip) {
   //! State
-  const { label, sx,handleDelete } = props;
+  const { label, sx, handleDelete } = props;
 
   //! Function
 
@@ -19,10 +19,17 @@ function MuiChip(props: IMuiChip) {
       sx={{
         span: {
           padding: "0 4px",
+          fontSize: "14px",
+          fontWeight: 550,
         },
         padding: "4px 12px",
         borderRadius: "8px",
         height: "fit-content",
+        gap: '8px',
+        svg: {
+          width: "16px",
+          height: "16px",
+        },
         ...sx,
       }}
       onDelete={handleDelete}

@@ -16,6 +16,7 @@ const SegmentStatus = ({ row }: { row: FileData }) => {
   const { userId } = useAuth();
   const { knowledgeId } = useParams();
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  
   const refetchKnowledgeFiles =
     row?.process_status === FileStatus.FAILED ||
     row.process_status === FileStatus.SUCCESS
@@ -24,13 +25,12 @@ const SegmentStatus = ({ row }: { row: FileData }) => {
 
     
   const payload = useMemo(() => {
-    if (!userId || !knowledgeId || row.process_status === FileStatus.FAILED || row.process_status === FileStatus.SUCCESS) return;
     return {
-      user_id: userId,
-      knowledge_storage_id: knowledgeId,
+      user_id: userId || '',
+      knowledge_storage_id: knowledgeId || '',
       file_name: row.name,
     };
-  }, [userId, knowledgeId, row]);
+  }, [userId, knowledgeId, row?.name]);
 
   const { data, refetch } = useGetFileData(
     payload,
@@ -43,6 +43,7 @@ const SegmentStatus = ({ row }: { row: FileData }) => {
     ? data.process_status === FileStatus.IN_QUEUE ||
       data.process_status === FileStatus.PROCESSING
     : false;
+
   //! Function
   useEffect(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);

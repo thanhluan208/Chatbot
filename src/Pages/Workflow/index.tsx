@@ -1,3 +1,5 @@
+import "./index.css";
+
 import { Box } from "@mui/material";
 import FlowChart from "./Components/FlowChart";
 import { ReactFlowProvider } from "@xyflow/react";
@@ -9,13 +11,13 @@ import ChatDrawer from "../ChatbotConfigure/components/Develop/ChatDrawer";
 const initNodes = [
   {
     id: "c372a3b5-85fa-4b7d-a1e5-1913df8d6721",
-    type: "customNode_multiAgentNode",
+    type: "customNode_WF_StartNode",
     position: {
       x: 1301,
       y: 175,
     },
     data: {
-      label: "customNode_mutliAgentStartNode node",
+      label: "Start",
       startNode: true,
     },
     measured: {
@@ -32,6 +34,22 @@ const listNode = [
     name: "customNode_multiAgentNode",
     label: "Multi Agent Node",
     description: "Create an agent",
+  },
+  {
+    name: "customNode_WF_StartNode",
+    label: "Start Node",
+    description: "Create an agent",
+    hidden: true,
+  },
+  {
+    name: "customNode_WF_LlmNode",
+    label: "LLM",
+    description: "Llm Node",
+  },
+  {
+    name: "customNode_WF_ConditionNode",
+    label: "IF/ELSE",
+    description: "If else node",
   },
 ];
 

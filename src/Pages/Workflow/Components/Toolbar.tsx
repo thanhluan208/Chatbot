@@ -5,7 +5,7 @@ import { useReactFlow } from "@xyflow/react";
 import CommonStyles from "@/Components/CommonStyles";
 import { useGet, useSave } from "@/Stores/useStore";
 import FitView from "@/Components/CommonIcons/FitView";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { cloneDeep, isEmpty } from "lodash";
 import { v4 as uuid } from "uuid";
 import Shortcuts from "./Toolbar/Shortcuts";
@@ -24,17 +24,12 @@ export type HistoryRef = {
 const Toolbar = ({
   listNode,
 }: {
-  listNode: { name: string; label: string }[];
+  listNode: { name: string; label: string; hidden?: boolean }[];
 }) => {
   //! State
   const theme = useTheme();
   const save = useSave();
-  const {
-    setNodes,
-    fitView,
-    getZoom,
-    zoomTo,
-  } = useReactFlow();
+  const { setNodes, fitView, getZoom, zoomTo } = useReactFlow();
   const handleAddNode = useGet("ADD_NODE");
   const isEditing = useGet("IS_EDITING");
   const mousePos = useRef<{
@@ -48,7 +43,6 @@ const Toolbar = ({
   const COLLAPSE_TOOLBAR = useGet("COLLAPSE_TOOLBAR") || !open;
   const collapse = COLLAPSE_TOOLBAR || !open;
 
-  console.log("COLLAPSE_TOOLBAR", COLLAPSE_TOOLBAR);
 
   //! Function
 
@@ -256,4 +250,4 @@ const Toolbar = ({
   );
 };
 
-export default Toolbar;
+export default memo(Toolbar);

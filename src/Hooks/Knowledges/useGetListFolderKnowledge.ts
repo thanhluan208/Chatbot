@@ -84,7 +84,7 @@ const useGetListFolderKnowledge = (filters?: Filters, isTrigger = true) => {
                 0
               )
             ),
-            quantity: `${Object.keys(item.list_files)?.length || 0}`,
+            quantity: `${Object.keys(item?.list_files)?.length || 0}`,
             sharingWithBots: item.sharing_with_bots,
             userName: item.user_name,
             owner_id: item.owner_id,

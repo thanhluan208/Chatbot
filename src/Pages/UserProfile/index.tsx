@@ -110,7 +110,7 @@ const UserProfile = () => {
                   isSelected ? "#fff" : theme.colors.custom.normalColorTypo
                 }
               >
-                {t(`personal.tabs.${option.toLowerCase()}`)}
+                {t(`personal.tabs.${option.toLowerCase()}` as unknown as TemplateStringsArray)}
               </CommonStyles.Typography>
             </CommonStyles.Button>
           );

@@ -7,10 +7,10 @@ import {
   BaseEdge,
   EdgeLabelRenderer,
   EdgeProps,
-  getSmoothStepPath,
+  getSimpleBezierPath,
   useReactFlow,
 } from "@xyflow/react";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 const AnimatedSVGEdge = ({
@@ -29,7 +29,7 @@ const AnimatedSVGEdge = ({
   ...props
 }: EdgeProps) => {
   //! State
-  const [edgePath, labelX, labelY] = getSmoothStepPath({
+  const [edgePath, labelX, labelY] = getSimpleBezierPath({
     sourceX,
     sourceY,
     sourcePosition,
@@ -37,11 +37,40 @@ const AnimatedSVGEdge = ({
     targetY,
     targetPosition,
   });
-  const { setEdges } = useReactFlow();
+  const { setEdges, getNode, updateNode } = useReactFlow();
   const botId = useParams()?.botId;
   const { userId } = useAuth();
   const theme = useTheme();
   const disabledCircle = useGet("DISABLE_CIRCLE");
+
+  useEffect(() => {
+    const sourceNode = getNode(source);
+    const targetNode = getNode(target);
+
+    const parentsNodeTarget = (targetNode?.data?.parentNodes as string[]) || [];
+    const parentsNodeSource = (sourceNode?.data?.parentNodes as string[]) || [];
+
+    const newParentNodes: string[] = [];
+
+    parentsNodeSource.forEach((nodeId) => {
+      if (!newParentNodes.includes(nodeId)) {
+        newParentNodes.push(nodeId);
+      }
+    });
+
+    parentsNodeTarget.forEach((nodeId) => {
+      if (!newParentNodes.includes(nodeId)) {
+        newParentNodes.push(nodeId);
+      }
+    });
+
+    updateNode(target, {
+      data: {
+        ...targetNode?.data,
+        parentNodes: [...newParentNodes, source],
+      },
+    });
+  }, [source, target, getNode, updateNode]);
 
   //! Function
   const handleRemoveEdge = useCallback(

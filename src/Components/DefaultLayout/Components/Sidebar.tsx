@@ -118,7 +118,7 @@ export default function Sidebar({
                   return (
                     <NavItem
                       icon={valChi.icon}
-                      title={t(`sidebar.naviItem.${processNavLabel(keyChi)}`)}
+                      title={t(`sidebar.naviItem.${processNavLabel(keyChi)}` as unknown as TemplateStringsArray)}
                       path={valChi.path}
                       key={keyChi}
                     />

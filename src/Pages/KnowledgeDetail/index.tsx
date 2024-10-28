@@ -28,8 +28,6 @@ const KnowledgeDetail = () => {
 
   const { userId } = useAuth();
 
-
-
   const payload = useMemo(() => {
     if (knowledgeId && userId) {
       return {
@@ -40,22 +38,25 @@ const KnowledgeDetail = () => {
 
     return undefined;
   }, [knowledgeId, userId]);
-  const {data: knowledgeDetail, isLoading, refetch} = useGetKnowledgeDetail(payload, !!payload);
+  const {
+    data: knowledgeDetail,
+    isLoading,
+    refetch,
+  } = useGetKnowledgeDetail(payload, !!payload);
 
   const isOwner = userId === knowledgeDetail?.owner_id;
 
-  
-  const data = knowledgeDetail ? Object.values(knowledgeDetail.list_files) : [];
+  const data = knowledgeDetail
+    ? Object.values(knowledgeDetail?.list_files)
+    : [];
 
-  const numOfDocs = useMemo(() => {
-    return data?.length;
-  }, [data]);
+  const numOfDocs = data?.length || 0;
 
-  const numsOfSegments = useMemo(() => {
-    return data?.reduce((acc, cur) => {
-      return acc + cur.n_points;
-    }, 0);
-  }, [data]);
+  const numsOfSegments = !data
+    ? 0
+    : data?.reduce((acc, cur) => {
+        return acc + cur.n_points;
+      }, 0);
 
   //! Function
   const handleAddKnowledgeToBot = async (
@@ -128,11 +129,15 @@ const KnowledgeDetail = () => {
               <CommonStyles.Button isIcon onClick={() => navigate(-1)}>
                 <CommonIcons.Clear />
               </CommonStyles.Button>
-              <img src={knowledgeDetail?.avatar_url} alt="avatar" style={{
-                width: "48px",
-                height: "48px",
-                borderRadius:'8px'
-              }}/>
+              <img
+                src={knowledgeDetail?.avatar_url}
+                alt="avatar"
+                style={{
+                  width: "48px",
+                  height: "48px",
+                  borderRadius: "8px",
+                }}
+              />
               <Box
                 sx={{ display: "flex", flexDirection: "column", gap: "6px" }}
               >
@@ -151,7 +156,8 @@ const KnowledgeDetail = () => {
                       textWrap: "nowrap",
                     }}
                   >
-                    {knowledgeDetail?.knowledge_storage_name || "Anonymous knowledge"}
+                    {knowledgeDetail?.knowledge_storage_name ||
+                      "Anonymous knowledge"}
                   </CommonStyles.Typography>
                   <EditKnowledge />
                 </Box>
@@ -163,14 +169,20 @@ const KnowledgeDetail = () => {
                 >
                   <CommonStyles.Chip label="Auto-segment" />
                   <CommonStyles.Chip label={`${numOfDocs} document(s)`} />
-                  <CommonStyles.Chip label={`${numsOfSegments} segment(s)`} />
+                  <CommonStyles.Chip
+                    label={`${
+                      isNaN(numsOfSegments) ? 0 : numsOfSegments
+                    }  segment(s)`}
+                  />
                 </Box>
               </Box>
             </Box>
             <Box sx={{ display: "flex", gap: "8px" }}>
               {isOwner && (
                 <Fragment>
-                  <PublicButton isPublic={knowledgeDetail?.visibility === 'public'}/>
+                  <PublicButton
+                    isPublic={knowledgeDetail?.visibility === "public"}
+                  />
                   <AddContentButton />
                   {botId && (
                     <CommonStyles.Button
@@ -232,7 +244,7 @@ const KnowledgeDetail = () => {
                 </CommonStyles.Typography>
               </Box>
             ) : (
-              <SegmentList data={data} isOwner={isOwner}/>
+              <SegmentList data={data} isOwner={isOwner} />
             )}
           </Box>
         </Box>
