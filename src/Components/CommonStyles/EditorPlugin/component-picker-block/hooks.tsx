@@ -3,29 +3,30 @@ import { ContextBlockType } from "./types";
 import { useTranslation } from "react-i18next";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { PickerBlockMenuOption } from "./menu";
-import { $getSelection, $isRangeSelection, createCommand, TextNode } from "lexical";
+import { $getSelection, $isRangeSelection, TextNode } from "lexical";
 import { File } from "lucide-react";
 import { PromptMenuItem } from "./promp-options";
-import { MenuTextMatch, TriggerFn } from "@lexical/react/LexicalTypeaheadMenuPlugin";
-
-export const INSERT_CONTEXT_BLOCK_COMMAND = createCommand(
-  "INSERT_CONTEXT_BLOCK_COMMAND"
-);
+import {
+  MenuTextMatch,
+  TriggerFn,
+} from "@lexical/react/LexicalTypeaheadMenuPlugin";
+import { INSERT_CONTEXT_BLOCK_COMMAND } from "../context-block";
+import { WorkflowVariableBlockType } from "../type";
 
 export const usePromptOptions = (contextBlock?: ContextBlockType) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("node");
   const [editor] = useLexicalComposerContext();
 
   const promptOptions: PickerBlockMenuOption[] = [];
   if (contextBlock?.show) {
     promptOptions.push(
       new PickerBlockMenuOption({
-        key: t("common.promptEditor.context.item.title"),
+        key: t("WF_Startnode.context"),
         group: "prompt context",
         render: ({ isSelected, onSelect, onSetHighlight }) => {
           return (
             <PromptMenuItem
-              title={t("common.promptEditor.context.item.title")}
+              title={t("WF_Startnode.context")}
               icon={<File className="w-4 h-4 text-[#6938EF]" />}
               disabled={!contextBlock.selectable}
               isSelected={isSelected}
@@ -45,27 +46,36 @@ export const usePromptOptions = (contextBlock?: ContextBlockType) => {
   return promptOptions;
 };
 
-export const useOptions = (contextBlock?: ContextBlockType) => {
+export const useOptions = (
+  contextBlock?: ContextBlockType,
+  workflowVariableBlockType?: WorkflowVariableBlockType
+) => {
   const promptOptions = usePromptOptions(contextBlock);
+
+  const workflowVariableOptions = useMemo(() => {
+    if (!workflowVariableBlockType?.show) return [];
+
+    return workflowVariableBlockType.variables || [];
+  }, [workflowVariableBlockType]);
 
   return useMemo(() => {
     return {
+      workflowVariableOptions,
       allFlattenOptions: [...promptOptions],
     };
-  }, [promptOptions]);
+  }, [promptOptions,workflowVariableOptions]);
 };
 
 function getFullMatchOffset(
   documentText: string,
   entryText: string,
-  offset: number,
+  offset: number
 ): number {
-  let triggerOffset = offset
+  let triggerOffset = offset;
   for (let i = triggerOffset; i <= entryText.length; i++) {
-    if (documentText.substr(-i) === entryText.substr(0, i))
-      triggerOffset = i
+    if (documentText.substr(-i) === entryText.substr(0, i)) triggerOffset = i;
   }
-  return triggerOffset
+  return triggerOffset;
 }
 
 export function $splitNodeContainingQuery(
@@ -94,66 +104,66 @@ export function $splitNodeContainingQuery(
   return newNode;
 }
 
-export const PUNCTUATION = '\\.,\\+\\*\\?\\$\\@\\|#{}\\(\\)\\^\\-\\[\\]\\\\/!%\'"~=<>_:;'
+export const PUNCTUATION =
+  "\\.,\\+\\*\\?\\$\\@\\|#{}\\(\\)\\^\\-\\[\\]\\\\/!%'\"~=<>_:;";
 export function useBasicTypeaheadTriggerMatch(
   trigger: string,
-  { minLength = 1, maxLength = 75 }: { minLength?: number; maxLength?: number },
+  { minLength = 1, maxLength = 75 }: { minLength?: number; maxLength?: number }
 ): TriggerFn {
   return useCallback(
     (text: string) => {
-      const validChars = `[${PUNCTUATION}\\s]`
+      const validChars = `[${PUNCTUATION}\\s]`;
       const TypeaheadTriggerRegex = new RegExp(
-        '(.*)('
-          + `[${trigger}]`
-          + `((?:${validChars}){0,${maxLength}})`
-          + ')$',
-      )
-      const match = TypeaheadTriggerRegex.exec(text)
+        "(.*)(" + `[${trigger}]` + `((?:${validChars}){0,${maxLength}})` + ")$"
+      );
+      const match = TypeaheadTriggerRegex.exec(text);
       if (match !== null) {
-        const maybeLeadingWhitespace = match[1]
-        const matchingString = match[3]
+        const maybeLeadingWhitespace = match[1];
+        const matchingString = match[3];
         if (matchingString.length >= minLength) {
           return {
             leadOffset: match.index + maybeLeadingWhitespace.length,
             matchingString,
             replaceableString: match[2],
-          }
+          };
         }
       }
-      return null
+      return null;
     },
-    [maxLength, minLength, trigger],
-  )
+    [maxLength, minLength, trigger]
+  );
 }
 
 export function textToEditorState(text: string) {
-  const paragraph = text ? text.split('\n') : ['']
+  const paragraph = text ? text.split("\n") : [""];
 
   return JSON.stringify({
     root: {
       children: paragraph.map((p) => {
         return {
-          children: [{
-            detail: 0,
-            format: 0,
-            mode: 'normal',
-            style: '',
-            text: p,
-            type: 'custom-text',
-            version: 1,
-          }],
-          direction: 'ltr',
-          format: '',
+          children: [
+            {
+              detail: 0,
+              format: 0,
+              mode: "normal",
+              style: "",
+              text: p,
+              type: "custom-text",
+              version: 1,
+            },
+          ],
+          direction: "ltr",
+          format: "",
           indent: 0,
-          type: 'paragraph',
+          type: "paragraph",
           version: 1,
-        }
+        };
       }),
-      direction: 'ltr',
-      format: '',
+      direction: "ltr",
+      format: "",
       indent: 0,
-      type: 'root',
+      type: "root",
       version: 1,
     },
-  })
+  });
 }

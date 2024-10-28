@@ -109,7 +109,7 @@ const EditLabelNode = (props: EditLabelNodeProps) => {
           <CommonStyles.Button
             isIcon
             hasBorder={false}
-            tooltip="Cancel"
+            tooltip="Save"
             isRound={false}
             sx={{
               svg: {

@@ -3,6 +3,7 @@ import CommonStyles from "@/Components/CommonStyles";
 import { cn } from "@/lib/utils";
 import CustomAdornment from "@/Pages/ChatbotConfigure/components/GenerateDiversity/components/CustomAdornment";
 import { Box, useTheme } from "@mui/material";
+import { useReactFlow } from "@xyflow/react";
 import { FastField, FieldArray, Form, Formik, FormikProps } from "formik";
 import { capitalize } from "lodash";
 import {
@@ -16,10 +17,13 @@ import {
 import { useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
+import {v4 as uuid} from "uuid";
 
 interface InputFileProps {
   data?: InputFileInitialValues;
   type: string;
+  nodeId: string;
+  setOpenDialog: (value: boolean) => void;
 }
 
 export interface InputFileInitialValues {
@@ -71,9 +75,10 @@ const SUPPORT_TYPES_LIST = [
   },
 ];
 
-const InputFile = ({ data, type }: InputFileProps) => {
+const InputFile = ({ data, type, nodeId,setOpenDialog }: InputFileProps) => {
   const { t } = useTranslation("node");
   const theme = useTheme();
+  const { updateNode, getNode } = useReactFlow();
   const formikRef = useRef<FormikProps<InputFileInitialValues> | null>(null);
 
   const initialValues = useMemo<InputFileInitialValues>(() => {
@@ -121,7 +126,45 @@ const InputFile = ({ data, type }: InputFileProps) => {
     }
   };
 
-  const handleSubmit = (_: InputFileInitialValues) => {};
+  const handleSubmit = (values: InputFileInitialValues) => {
+    const currentNodeData = getNode(nodeId)?.data;
+    const currentNodeInputs = (currentNodeData?.inputs as unknown[]) || [];
+    if (!currentNodeData) return;
+
+    if(!data) {
+      updateNode(nodeId, {
+        data: {
+          ...currentNodeData,
+          inputs: [
+            ...currentNodeInputs,
+            {
+              ...values,
+              type,
+              id: uuid(),
+            },
+          ],
+        },
+      });
+    } else {
+      const newInputs = currentNodeInputs.map((elm: any) => {
+        if (elm.input_name === data.input_name) {
+          return {
+            ...values,
+            type,
+            id: uuid(),
+          };
+        }
+        return elm;
+      });
+
+      updateNode(nodeId, {
+        data: {
+          ...currentNodeData,
+          inputs: newInputs,
+        },
+      });
+    }
+  };
 
   return (
     <Formik
@@ -223,7 +266,9 @@ const InputFile = ({ data, type }: InputFileProps) => {
                                             key={index}
                                             name={`other_types.${index}`}
                                             component={CommonField.InputField}
-                                            placeholder={t('WF_Startnode.file_type')}
+                                            placeholder={t(
+                                              "WF_Startnode.file_type"
+                                            )}
                                             sx={{
                                               width: "100px",
                                             }}
@@ -352,6 +397,18 @@ const InputFile = ({ data, type }: InputFileProps) => {
               <CommonStyles.Typography type="bold14">
                 {t("WF_Startnode.is_required")}
               </CommonStyles.Typography>
+            </div>
+
+            <div className="w-full flex justify-end gap-2">
+              <CommonStyles.Button
+                variant="outlined"
+                onClick={() => setOpenDialog(false)}
+              >
+                {t("WF_Startnode.cancel")}
+              </CommonStyles.Button>
+              <CommonStyles.Button variant="contained" type="submit">
+                {t("WF_Startnode.save")}
+              </CommonStyles.Button>
             </div>
           </Form>
         );

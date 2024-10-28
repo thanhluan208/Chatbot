@@ -89,20 +89,17 @@
   z-index: -1;
 }
 
-.agent-node {
-  border: 1px solid;
-}
-
-.selected .agent-node {
-  border: none
-}
-
 .agent-node:before {
   content: "";
   position: absolute;
   padding-bottom: 2000px;
   width: 2000px;
-  background: transparent;
+  background: conic-gradient(
+    from -160deg at 50% 50%,
+    #4e40e5 0deg,
+    #ff6b6b 90deg,
+    #4e40e5 360deg
+  );
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);

@@ -1,3 +1,5 @@
+import "./index.css";
+
 import { Box } from "@mui/material";
 import FlowChart from "./Components/FlowChart";
 import { ReactFlowProvider } from "@xyflow/react";
@@ -43,6 +45,11 @@ const listNode = [
     name: "customNode_WF_LlmNode",
     label: "LLM",
     description: "Llm Node",
+  },
+  {
+    name: "customNode_WF_ConditionNode",
+    label: "IF/ELSE",
+    description: "If else node",
   },
 ];
 

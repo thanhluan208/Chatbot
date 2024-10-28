@@ -5,10 +5,14 @@ import * as Yup from "yup";
 import CommonField from "@/Components/CommonFields";
 import CommonStyles from "@/Components/CommonStyles";
 import { Minus } from "lucide-react";
+import { useReactFlow } from "@xyflow/react";
+import { v4 as uuid } from "uuid";
 
 interface InputChoicesProps {
   data?: InputChoicesInitialValues;
   type: string;
+  nodeId: string;
+  setOpenDialog: (value: boolean) => void;
 }
 
 export interface InputChoicesInitialValues {
@@ -17,8 +21,14 @@ export interface InputChoicesInitialValues {
   input_options: string[];
 }
 
-const InputChoices = ({ data }: InputChoicesProps) => {
+const InputChoices = ({
+  data,
+  nodeId,
+  type,
+  setOpenDialog,
+}: InputChoicesProps) => {
   const { t } = useTranslation("node");
+  const { updateNode, getNode } = useReactFlow();
 
   const initialValues = useMemo<InputChoicesInitialValues>(() => {
     return {
@@ -35,7 +45,45 @@ const InputChoices = ({ data }: InputChoicesProps) => {
     });
   }, []);
 
-  const handleSubmit = (_: InputChoicesInitialValues) => {};
+  const handleSubmit = (values: InputChoicesInitialValues) => {
+    const currentNodeData = getNode(nodeId)?.data;
+    const currentNodeInputs = (currentNodeData?.inputs as unknown[]) || [];
+    if (!currentNodeData) return;
+
+    if (!data) {
+      updateNode(nodeId, {
+        data: {
+          ...currentNodeData,
+          inputs: [
+            ...currentNodeInputs,
+            {
+              ...values,
+              type,
+              id: uuid(),
+            },
+          ],
+        },
+      });
+    } else {
+      const newInputs = currentNodeInputs.map((elm: any) => {
+        if (elm.input_name === data.input_name) {
+          return {
+            ...values,
+            type,
+            id: uuid(),
+          };
+        }
+        return elm;
+      });
+
+      updateNode(nodeId, {
+        data: {
+          ...currentNodeData,
+          inputs: newInputs,
+        },
+      });
+    }
+  };
 
   return (
     <Formik
@@ -109,6 +157,17 @@ const InputChoices = ({ data }: InputChoicesProps) => {
                   );
                 }}
               />
+            </div>
+            <div className="w-full flex justify-end gap-2">
+              <CommonStyles.Button
+                variant="outlined"
+                onClick={() => setOpenDialog(false)}
+              >
+                {t("WF_Startnode.cancel")}
+              </CommonStyles.Button>
+              <CommonStyles.Button variant="contained" type="submit">
+                {t("WF_Startnode.save")}
+              </CommonStyles.Button>
             </div>
           </Form>
         );

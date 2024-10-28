@@ -42,6 +42,7 @@ import { ContextBlockType } from '../component-picker-block/types'
         editor.registerCommand(
           INSERT_CONTEXT_BLOCK_COMMAND,
           () => {
+            console.log('INSERT_CONTEXT_BLOCK_COMMAND')
             const contextBlockNode = $createContextBlockNode(datasets, onAddContext, canNotAddContext)
   
             $insertNodes([contextBlockNode])

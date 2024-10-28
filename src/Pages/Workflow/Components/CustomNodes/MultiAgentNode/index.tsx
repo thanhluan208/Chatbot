@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { Fragment, useEffect, useRef } from "react";
 import {
   Handle,
   MarkerType,
@@ -6,9 +6,7 @@ import {
   Position,
   useReactFlow,
 } from "@xyflow/react";
-import { Box, useTheme } from "@mui/material";
 import { v4 as uuid } from "uuid";
-import CommonStyles from "@/Components/CommonStyles";
 import CollapseArea from "@/Components/CommonStyles/CollapseArea";
 import { AllQueryKeys, useGet, useSave } from "@/Stores/useStore";
 import reactFlowService from "@/Services/reactFlowService";
@@ -16,9 +14,9 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import { toast } from "react-toastify";
 
-import "./index.css";
 import WrapperNodeLabel from "./components/WrapperNodeLabel";
 import NodeForm from "./components/NodeForm";
+import GradientBorder from "../../GradientBorder";
 
 const MultiAgentNode = (props: NodeProps) => {
   //! State
@@ -31,19 +29,11 @@ const MultiAgentNode = (props: NodeProps) => {
   const placeholderId = useRef<string | null>(uuid());
 
   const save = useSave();
-  const theme = useTheme();
 
   const params = useParams();
   const botId = params?.botId;
 
   const { userId } = useAuth();
-
-  const classname = useMemo(() => {
-    if (data?.currentNode && data?.startNode) return "chatting-start";
-    else if (data?.currentNode && !data?.startNode) return "agent-chatting";
-    else if (data?.startNode) return "start-node";
-    else return "agent-node";
-  }, [data?.currentNode, data?.startNode]);
 
   //! Function
   const handleAddPlaceholder = () => {
@@ -188,144 +178,32 @@ const MultiAgentNode = (props: NodeProps) => {
 
   //! Render
   return (
-    <Box
-      id={props.id}
-      sx={{
-        opacity: props.data?.isPlaceholder ? 0.5 : 1,
-        display: "flex",
-        borderRadius: "8px",
-        padding: "2px",
-        transition: "all 0.5s ease",
-        position: "relative",
-        "& .handle": {
-          "&::before": {
-            content: '"+"',
-            color: theme.colors.custom.backgroundCard,
-            fontWeight: "bold",
-            width: "100%",
-            height: "100%",
-            borderRadius: "50%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%,-50%)",
-            opacity: 0,
-            transition: "all 0.3s ease",
-          },
-          "&:hover": {
-            "&::before": {
-              opacity: 1,
+    <Fragment>
+      <GradientBorder {...props}>
+        <CollapseArea
+          nodeId={props.id}
+          dataKey="wrapperNode"
+          initOpen={!!props?.data?.currentNode}
+          key={props?.data?.currentNode as any}
+          label={
+            <WrapperNodeLabel
+              data={props.data}
+              nodeId={props.id}
+              positionAbsoluteX={props.positionAbsoluteX}
+              positionAbsoluteY={props.positionAbsoluteY}
+            />
+          }
+          sxContainer={{
+            marginTop: "0",
+            "& .collapse-header": {
+              marginBottom: "0",
             },
-          },
-        },
-      }}
-    >
-      {(!!data?.currentNode || !!data?.startNode) && (
-        <Box
-          sx={{
-            position: "absolute",
-            top: "-50px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
           }}
         >
-          {!!data?.currentNode && (
-            <Box
-              sx={{
-                background: `${theme.palette.success.main}`,
-                borderRadius: "12px",
-                padding: "4px 12px",
-              }}
-            >
-              <CommonStyles.Typography type="semiBold16" color="#fff">
-                Chatting...
-              </CommonStyles.Typography>
-            </Box>
-          )}
-          {!!data?.startNode && (
-            <Box
-              sx={{
-                background: `${theme.palette.secondary.main}`,
-                borderRadius: "12px",
-                padding: "4px 12px",
-              }}
-            >
-              <CommonStyles.Typography type="semiBold16" color="#fff">
-                Start node
-              </CommonStyles.Typography>
-            </Box>
-          )}
-        </Box>
-      )}
-      <Box
-        sx={{
-          borderRadius: "8px",
-          position: "relative",
-          padding: "2px",
-          minWidth:
-            props?.data?.currentNode && props?.selected ? "800px" : "500px",
-          transition: "width 0.5s ease, height 0.5s ease",
-          overflow: "hidden",
-          display: "flex",
-          boxShadow:
-            "0 0 8px 0 rgba(29,28,35,.06),0 0 2px 0 rgba(29,28,35,.18)",
-          "&:hover": {
-            boxShadow: "0 0 1px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.1)",
-          },
-          borderColor: theme.colors.custom.borderColor,
-        }}
-        className={classname}
-        onClick={() => {
-          const updates: any = {
-            selected: true,
-            readyToPaste: true,
-          };
-          updateNode(props?.id, {
-            ...props.data,
-            ...updates,
-          });
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            flexGrow: 1,
-            position: "relative",
-            background: theme.colors.custom.backgroundCard,
-            borderRadius: "8px",
-          }}
-        >
-          <CollapseArea
-            nodeId={props.id}
-            dataKey="wrapperNode"
-            initOpen={!!props?.data?.currentNode}
-            key={props?.data?.currentNode as any}
-            label={
-              <WrapperNodeLabel
-                data={props.data}
-                nodeId={props.id}
-                positionAbsoluteX={props.positionAbsoluteX}
-                positionAbsoluteY={props.positionAbsoluteY}
-              />
-            }
-            sxContainer={{
-              marginTop: "0",
-              "& .collapse-header": {
-                marginBottom: "0",
-              },
-            }}
-          >
-            <NodeForm data={props.data} nodeId={props.id} />
-          </CollapseArea>
-        </Box>
-      </Box>
+          <NodeForm data={props.data} nodeId={props.id} />
+        </CollapseArea>
+      </GradientBorder>
+
       <Handle
         type="source"
         position={Position.Right}
@@ -346,9 +224,12 @@ const MultiAgentNode = (props: NodeProps) => {
           id={`${props?.id}-target`}
           isConnectable={true}
           className="handle"
+          style={{
+            left: "3px",
+          }}
         />
       )}
-    </Box>
+    </Fragment>
   );
 };
 

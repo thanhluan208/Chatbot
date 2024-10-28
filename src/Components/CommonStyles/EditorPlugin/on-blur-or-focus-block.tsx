@@ -8,7 +8,7 @@ import {
 } from 'lexical'
 import { mergeRegister } from '@lexical/utils'
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
-import { CLEAR_HIDE_MENU_TIMEOUT } from './update-block'
+import { CLEAR_HIDE_MENU_TIMEOUT } from './workflow-variable-block'
 
 type OnBlurBlockProps = {
   onBlur?: () => void

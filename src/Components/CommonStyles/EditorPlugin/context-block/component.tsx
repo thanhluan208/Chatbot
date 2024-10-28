@@ -22,7 +22,7 @@ const ContextBlockComponent: FC<ContextBlockComponentProps> = ({
   onAddContext,
   canNotAddContext,
 }) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation('node')
   const [ref, isSelected] = useSelectOrDelete(nodeKey, DELETE_CONTEXT_BLOCK_COMMAND)
   const [triggerRef, open, setOpen] = useTrigger()
   const { eventEmitter } = useEventEmitterContextContext()
@@ -40,7 +40,7 @@ const ContextBlockComponent: FC<ContextBlockComponentProps> = ({
       ${isSelected && '!border-[#9B8AFB]'}
     `} ref={ref}>
       <File className='mr-1 w-[14px] h-[14px]' />
-      <div className='mr-1 text-xs font-medium'>{t('common.promptEditor.context.item.title')}</div>
+      <div className='mr-1 text-xs font-medium'>{t('WF_Startnode.context')}</div>
       {!canNotAddContext && (
         <PortalToFollowElem
           open={open}
@@ -61,7 +61,7 @@ const ContextBlockComponent: FC<ContextBlockComponentProps> = ({
             <div className='w-[360px] bg-white rounded-xl shadow-lg'>
               <div className='p-4'>
                 <div className='mb-2 text-xs font-medium text-gray-500'>
-                  {t('common.promptEditor.context.modal.title', { num: localDatasets.length })}
+                  Title
                 </div>
                 <div className='max-h-[270px] overflow-y-auto'>
                   {
@@ -79,11 +79,11 @@ const ContextBlockComponent: FC<ContextBlockComponentProps> = ({
                   <div className='shrink-0 flex justify-center items-center mr-2 w-6 h-6 rounded-md border-[0.5px] border-gray-100'>
                     <LineChart className='w-[14px] h-[14px]' />
                   </div>
-                  <div className='text-[13px] font-medium' title=''>{t('common.promptEditor.context.modal.add')}</div>
+                  <div className='text-[13px] font-medium' title=''>Add</div>
                 </div>
               </div>
               <div className='px-4 py-3 text-xs text-gray-500 bg-gray-50 border-t-[0.5px] border-gray-50 rounded-b-xl'>
-                {t('common.promptEditor.context.modal.footer')}
+                footer
               </div>
             </div>
           </PortalToFollowElemContent>

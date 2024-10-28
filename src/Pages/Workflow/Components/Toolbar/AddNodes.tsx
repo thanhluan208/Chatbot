@@ -10,6 +10,7 @@ import AddNodePopper from "./AddNodePopper";
 import HelperNode from "../CustomNodes/HelperNode";
 import WF_StartNode from "../CustomNodes/WF_StartNode";
 import WF_LlmNode from "../CustomNodes/WF_LlmNode";
+import WF_ConditionNode from "../CustomNodes/WF_ConditionNode";
 
 export enum NodeTypes {
   startNode = "customNode_startNode",
@@ -28,7 +29,8 @@ export const nodeTypes = {
   customNode_multiAgentNode: MultiAgentNode,
   customNode_helperNode: HelperNode,
   customNode_WF_StartNode: WF_StartNode,
-  customNode_WF_LlmNode: WF_LlmNode
+  customNode_WF_LlmNode: WF_LlmNode,
+  customNode_WF_ConditionNode: WF_ConditionNode
 
 };
 

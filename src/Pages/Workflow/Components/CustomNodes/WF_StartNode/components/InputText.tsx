@@ -1,13 +1,17 @@
 import CommonField from "@/Components/CommonFields";
 import CommonStyles from "@/Components/CommonStyles";
+import { useReactFlow } from "@xyflow/react";
 import { FastField, Form, Formik } from "formik";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
+import {v4 as uuid} from "uuid";
 
 interface InputTextProps {
   data?: InputTextInitialValues;
   type: string;
+  nodeId: string;
+  setOpenDialog: (value: boolean) => void;
 }
 
 export interface InputTextInitialValues {
@@ -17,8 +21,10 @@ export interface InputTextInitialValues {
   is_required: boolean;
 }
 
-const InputText = ({ data, type }: InputTextProps) => {
+const InputText = ({ data, type, nodeId, setOpenDialog, }: InputTextProps) => {
   const { t } = useTranslation("node");
+  const { updateNode, getNode } = useReactFlow();
+
 
   const initialValues = useMemo<InputTextInitialValues>(() => {
     return {
@@ -27,16 +33,56 @@ const InputText = ({ data, type }: InputTextProps) => {
       max_length: data?.max_length || 48,
       is_required: data?.is_required || false,
     };
-  }, []);
+  }, [data]);
 
   const validationSchema = useMemo(() => {
     return Yup.object({
       input_name: Yup.string().required("Required"),
-      input_label: Yup.number().required("Required").min(1),
+      max_length: Yup.number().required("Required").min(1),
     });
   }, []);
 
-  const handleSubmit = (_: InputTextInitialValues) => {};
+  const handleSubmit = (values: InputTextInitialValues) => {
+    const currentNodeData = getNode(nodeId)?.data;
+    const currentNodeInputs = (currentNodeData?.inputs as unknown[]) || [];
+    if (!currentNodeData) return;
+
+    if(!data) {
+      updateNode(nodeId, {
+        data: {
+          ...currentNodeData,
+          inputs: [
+            ...currentNodeInputs,
+            {
+              ...values,
+              type,
+              id: uuid(),
+            },
+          ],
+        },
+      });
+    } else {
+      const newInputs = currentNodeInputs.map((elm: any) => {
+        if (elm.input_name === data.input_name) {
+          return {
+            ...values,
+            type,
+            id: uuid(),
+          };
+        }
+        return elm;
+      });
+
+      updateNode(nodeId, {
+        data: {
+          ...currentNodeData,
+          inputs: newInputs,
+        },
+      });
+    }
+
+    setOpenDialog(false);
+  };
 
   return (
     <Formik
@@ -49,7 +95,7 @@ const InputText = ({ data, type }: InputTextProps) => {
           name="input_name"
           component={CommonField.InputField}
           label={t("WF_Startnode.input_name")}
-          placeholder={t("WF_Startnode.input_name")}  
+          placeholder={t("WF_Startnode.input_name")}
           fullWidth
           required
         />
@@ -82,6 +128,15 @@ const InputText = ({ data, type }: InputTextProps) => {
           <CommonStyles.Typography type="bold14">
             {t("WF_Startnode.is_required")}
           </CommonStyles.Typography>
+        </div>
+
+        <div className="w-full flex justify-end gap-2">
+          <CommonStyles.Button variant="outlined" onClick={() => setOpenDialog(false)}>
+            {t("WF_Startnode.cancel")}
+          </CommonStyles.Button>
+          <CommonStyles.Button variant="contained" type="submit">
+            {t("WF_Startnode.save")}
+          </CommonStyles.Button>
         </div>
       </Form>
     </Formik>

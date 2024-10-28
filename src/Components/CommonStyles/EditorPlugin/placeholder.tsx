@@ -1,6 +1,5 @@
 import { cn } from '@/lib/utils'
 import { memo } from 'react'
-import { useTranslation } from 'react-i18next'
 
 const Placeholder = ({
   compact,
@@ -11,15 +10,14 @@ const Placeholder = ({
   value?: string
   className?: string
 }) => {
-  const { t } = useTranslation()
 
   return (
     <div className={cn(
       className,
-      'absolute top-0 left-0 h-full w-full text-sm text-gray-300 select-none pointer-events-none',
+      'absolute top-0 left-0 h-full w-full text-sm text-gray-300 select-none pointer-events-none px-3 py-2',
       compact ? 'leading-5 text-[13px]' : 'leading-6 text-sm',
     )}>
-      {value || t('common.promptEditor.placeholder')}
+      {value || 'Write your prompt word here, enter \'{\' to insert a variable, enter \'/\' to insert a prompt content block'}
     </div>
   )
 }

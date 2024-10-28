@@ -1,12 +1,12 @@
-import { $insertNodes, createCommand } from 'lexical'
+import { $insertNodes,  } from 'lexical'
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { useEventEmitterContextContext } from './component-picker-block/event-emitter'
 import { CustomTextNode } from './custom-text/node'
 import { textToEditorState } from './component-picker-block/hooks'
+import { CLEAR_HIDE_MENU_TIMEOUT } from './workflow-variable-block'
 
 export const PROMPT_EDITOR_UPDATE_VALUE_BY_EVENT_EMITTER = 'PROMPT_EDITOR_UPDATE_VALUE_BY_EVENT_EMITTER'
 export const PROMPT_EDITOR_INSERT_QUICKLY = 'PROMPT_EDITOR_INSERT_QUICKLY'
-export const CLEAR_HIDE_MENU_TIMEOUT = createCommand('CLEAR_HIDE_MENU_TIMEOUT')
 
 
 type UpdateBlockProps = {

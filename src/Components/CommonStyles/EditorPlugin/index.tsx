@@ -1,5 +1,4 @@
-"use client";
-
+import { memo } from "react";
 import type { FC } from "react";
 import { useEffect } from "react";
 import type { EditorState } from "lexical";
@@ -13,8 +12,6 @@ import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 // import TreeView from './plugins/tree-view'
 
-
-
 import { cn } from "@/lib/utils";
 import { useEventEmitterContextContext } from "./component-picker-block/event-emitter";
 import ComponentPickerBlock from "./component-picker-block";
@@ -26,6 +23,12 @@ import { ContextBlock, ContextBlockNode } from "./context-block";
 import ContextBlockReplacementBlock from "./context-block/context-block-replacement-block";
 import { CustomTextNode } from "./custom-text/node";
 import OnBlurBlock from "./on-blur-or-focus-block";
+import { WorkflowVariableBlockType } from "./type";
+import {
+  WorkflowVariableBlock,
+  WorkflowVariableBlockNode,
+} from "./workflow-variable-block";
+import WorkflowVariableBlockReplacementBlock from "./workflow-variable-block/workflow-variable-block-replacement-block";
 
 export type PromptEditorProps = {
   instanceId?: string;
@@ -40,11 +43,11 @@ export type PromptEditorProps = {
   onBlur?: () => void;
   onFocus?: () => void;
   contextBlock?: ContextBlockType;
-  isSupportFileVar?: boolean;
+  workflowVariableBlock?: WorkflowVariableBlockType;
 };
 
-export const UPDATE_DATASETS_EVENT_EMITTER = 'prompt-editor-context-block-update-datasets'
-
+export const UPDATE_DATASETS_EVENT_EMITTER =
+  "prompt-editor-context-block-update-datasets";
 
 const PromptEditor: FC<PromptEditorProps> = ({
   instanceId,
@@ -59,6 +62,7 @@ const PromptEditor: FC<PromptEditorProps> = ({
   onBlur,
   onFocus,
   contextBlock,
+  workflowVariableBlock,
 }) => {
   const { eventEmitter } = useEventEmitterContextContext();
   const initialConfig = {
@@ -71,13 +75,13 @@ const PromptEditor: FC<PromptEditorProps> = ({
         with: (node: TextNode) => new CustomTextNode(node.__text),
       },
       ContextBlockNode,
+      WorkflowVariableBlockNode,
     ],
     editorState: textToEditorState(value || ""),
     onError: (error: Error) => {
       throw error;
     },
   };
-
   const handleEditorChange = (editorState: EditorState) => {
     const text = editorState.read(() => {
       return $getRoot()
@@ -87,6 +91,7 @@ const PromptEditor: FC<PromptEditorProps> = ({
     });
     if (onChange) onChange(text);
   };
+
 
   useEffect(() => {
     eventEmitter?.emit({
@@ -103,7 +108,7 @@ const PromptEditor: FC<PromptEditorProps> = ({
             <ContentEditable
               className={`${className} outline-none ${
                 compact ? "leading-5 text-[13px]" : "leading-6 text-sm"
-              } text-gray-700`}
+              } `}
               style={style || {}}
             />
           }
@@ -116,12 +121,27 @@ const PromptEditor: FC<PromptEditorProps> = ({
           }
           ErrorBoundary={LexicalErrorBoundary}
         />
-        <ComponentPickerBlock triggerString="/" contextBlock={contextBlock} />
-        <ComponentPickerBlock triggerString="{" contextBlock={contextBlock} />
+        <ComponentPickerBlock
+          triggerString="/"
+          contextBlock={contextBlock}
+          workflowVariableBlock={workflowVariableBlock}
+        />
+        <ComponentPickerBlock
+          triggerString="{"
+          contextBlock={contextBlock}
+          workflowVariableBlock={workflowVariableBlock}
+        />
+
         {contextBlock?.show && (
           <>
             <ContextBlock {...contextBlock} />
             <ContextBlockReplacementBlock {...contextBlock} />
+          </>
+        )}
+        {workflowVariableBlock?.show && (
+          <>
+            <WorkflowVariableBlock {...workflowVariableBlock} />
+            <WorkflowVariableBlockReplacementBlock {...workflowVariableBlock} />
           </>
         )}
 
@@ -135,4 +155,4 @@ const PromptEditor: FC<PromptEditorProps> = ({
   );
 };
 
-export default PromptEditor;
+export default memo(PromptEditor);

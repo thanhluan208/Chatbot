@@ -2,6 +2,7 @@
   "WF_Startnode": {
     "input": "Input",
     "add_input_field": "Add input field",
+    "edit_input_field": "Edit input field",
 
     "text": "Text",
     "variable_name": "Variable name",
@@ -25,6 +26,10 @@
     "list_file": "Files",
 
     "mode_configuration": "Model Configuration",
-    "context": "Context"
+    "context": "Context",
+
+    "save": "Save",
+    "cancel": "Cancel"
+
   }
 }

@@ -5,25 +5,39 @@ import { createCommand, type TextNode } from "lexical";
 import type { MenuRenderFn } from "@lexical/react/LexicalTypeaheadMenuPlugin";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { LexicalTypeaheadMenuPlugin } from "@lexical/react/LexicalTypeaheadMenuPlugin";
-import { $splitNodeContainingQuery, useBasicTypeaheadTriggerMatch, useOptions } from "./hooks";
+import {
+  $splitNodeContainingQuery,
+  useBasicTypeaheadTriggerMatch,
+  useOptions,
+} from "./hooks";
 import { ContextBlockType } from "./types";
 import { useEventEmitterContextContext } from "./event-emitter";
 import { PickerBlockMenuOption } from "./menu";
+import { WorkflowVariableBlockType } from "../type";
+import VarReferenceVars from "../var-reference-vars";
+import { useTheme } from "@mui/material";
 
-
-export const INSERT_VARIABLE_BLOCK_COMMAND = createCommand('INSERT_VARIABLE_BLOCK_COMMAND')
-export const INSERT_VARIABLE_VALUE_BLOCK_COMMAND = createCommand('INSERT_VARIABLE_VALUE_BLOCK_COMMAND')
-export const INSERT_WORKFLOW_VARIABLE_BLOCK_COMMAND = createCommand('INSERT_WORKFLOW_VARIABLE_BLOCK_COMMAND')
-
+export const INSERT_VARIABLE_BLOCK_COMMAND = createCommand(
+  "INSERT_VARIABLE_BLOCK_COMMAND"
+);
+export const INSERT_VARIABLE_VALUE_BLOCK_COMMAND = createCommand(
+  "INSERT_VARIABLE_VALUE_BLOCK_COMMAND"
+);
+export const INSERT_WORKFLOW_VARIABLE_BLOCK_COMMAND = createCommand(
+  "INSERT_WORKFLOW_VARIABLE_BLOCK_COMMAND"
+);
 
 type ComponentPickerProps = {
   triggerString: string;
   contextBlock?: ContextBlockType;
+  workflowVariableBlock?: WorkflowVariableBlockType;
 };
 const ComponentPicker = ({
   triggerString,
   contextBlock,
+  workflowVariableBlock,
 }: ComponentPickerProps) => {
+  const theme = useTheme()
   const { eventEmitter } = useEventEmitterContextContext();
   const { refs, floatingStyles, isPositioned } = useFloating({
     placement: "bottom-start",
@@ -51,7 +65,10 @@ const ComponentPicker = ({
       );
   });
 
-  const { allFlattenOptions } = useOptions(contextBlock);
+  const { allFlattenOptions, workflowVariableOptions } = useOptions(
+    contextBlock,
+    workflowVariableBlock
+  );
 
   const onSelectOption = useCallback(
     (
@@ -107,10 +124,12 @@ const ComponentPicker = ({
             // See https://github.com/facebook/lexical/blob/ac97dfa9e14a73ea2d6934ff566282d7f758e8bb/packages/lexical-react/src/shared/LexicalMenu.ts#L493
             <div className="w-0 h-0">
               <div
-                className="p-1 w-[260px] bg-white rounded-lg border-[0.5px] border-gray-200 shadow-lg"
+                className="p-1 w-[260px]  rounded-lg border-[0.5px]  shadow-lg"
                 style={{
                   ...floatingStyles,
                   visibility: isPositioned ? "visible" : "hidden",
+                  background: theme.colors.custom.background,
+                  border: `1px solid ${theme.colors.custom.borderColor}`,
                 }}
                 ref={refs.setFloating}
               >
@@ -135,6 +154,28 @@ const ComponentPicker = ({
                     })}
                   </Fragment>
                 ))}
+                {
+                  workflowVariableBlock?.show && (
+                    <>
+                      {
+                        (!!options.length) && (
+                          <div className='h-px bg-gray-100 my-1 w-full -translate-x-1'></div>
+                        )
+                      }
+                      <div className='p-1'>
+                        <VarReferenceVars
+                          hideSearch
+                          vars={workflowVariableOptions}
+                          onChange={(variables: string[]) => {
+                            handleSelectWorkflowVariable(variables)
+                          }}
+                          maxHeightClass='max-h-[34vh]'
+                          isSupportFileVar={false}
+                        />
+                      </div>
+                    </>
+                  )
+                }
               </div>
             </div>,
             anchorElementRef.current
@@ -148,6 +189,7 @@ const ComponentPicker = ({
       isPositioned,
       floatingStyles,
       queryString,
+      workflowVariableBlock,
       handleSelectWorkflowVariable,
     ]
   );
