@@ -1,12 +1,8 @@
-import React from "react";
-
 interface VariableSelectProps {
   nodeId: string;
 }
 
-const VariableSelect = ({ nodeId }: VariableSelectProps) => {
-
-    
+const VariableSelect = ({}: VariableSelectProps) => {
   return <div>VariableSelect</div>;
 };
 

@@ -8,7 +8,6 @@ interface EditorProps {
   nodeId: string;
   readOnly?: boolean;
 }
-const instanceId = `-chat-workflow-llm-prompt-editor`;
 
 
 const Editor = ({ controlPromptEditorRerenderKey, nodeId,readOnly }: EditorProps) => {
@@ -17,7 +16,7 @@ const Editor = ({ controlPromptEditorRerenderKey, nodeId,readOnly }: EditorProps
     console.log(value);
   };
 
-  const [isFocus, {
+  const [_, {
     setTrue: setFocus,
     setFalse: setBlur,
   }] = useBoolean(false)
@@ -27,8 +26,8 @@ const Editor = ({ controlPromptEditorRerenderKey, nodeId,readOnly }: EditorProps
         fontFamily: 'SegoeUI'
     }}>
       <PromptEditor
-        key={instanceId}
-        instanceId={instanceId}
+        key={controlPromptEditorRerenderKey}
+        instanceId={nodeId}
         compact
         className="min-h-[56px] px-3 py-2"
         value={""}

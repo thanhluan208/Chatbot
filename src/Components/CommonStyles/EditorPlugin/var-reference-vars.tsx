@@ -284,7 +284,6 @@ const VarReferenceVars: FC<Props> = ({
   itemWidth,
   maxHeightClass,
 }) => {
-  const theme = useTheme();
   const { t } = useTranslation();
   const [searchText, setSearchText] = useState("");
 
