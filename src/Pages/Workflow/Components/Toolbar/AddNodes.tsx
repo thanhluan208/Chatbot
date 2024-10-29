@@ -11,6 +11,7 @@ import HelperNode from "../CustomNodes/HelperNode";
 import WF_StartNode from "../CustomNodes/WF_StartNode";
 import WF_LlmNode from "../CustomNodes/WF_LlmNode";
 import WF_ConditionNode from "../CustomNodes/WF_ConditionNode";
+import WF_AnswerNode from "../CustomNodes/WF_AnswerNode";
 
 export enum NodeTypes {
   startNode = "customNode_startNode",
@@ -30,8 +31,8 @@ export const nodeTypes = {
   customNode_helperNode: HelperNode,
   customNode_WF_StartNode: WF_StartNode,
   customNode_WF_LlmNode: WF_LlmNode,
-  customNode_WF_ConditionNode: WF_ConditionNode
-
+  customNode_WF_ConditionNode: WF_ConditionNode,
+  customNode_WF_AnswerNode: WF_AnswerNode
 };
 
 export enum CustomNodeTypes {

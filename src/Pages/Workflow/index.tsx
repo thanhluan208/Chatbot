@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { useSave } from "@/Stores/useStore";
 import cachedKeys from "@/Constants/cachedKeys";
 import ChatDrawer from "../ChatbotConfigure/components/Develop/ChatDrawer";
+import { Description } from "@mui/icons-material";
 
 const initNodes = [
   {
@@ -32,7 +33,7 @@ const initNodes = [
 const listNode = [
   {
     name: "customNode_multiAgentNode",
-    label: "Multi Agent Node",
+    label: "Multi Agent",
     description: "Create an agent",
   },
   {
@@ -50,6 +51,11 @@ const listNode = [
     name: "customNode_WF_ConditionNode",
     label: "IF/ELSE",
     description: "If else node",
+  },
+  {
+    name: "customNode_WF_AnswerNode",
+    label: "Answer",
+    description: "Answer node"
   },
 ];
 

@@ -31,5 +31,8 @@
     "save": "Save",
     "cancel": "Cancel"
 
+  },
+  "WF_AnswerNode":{
+    "answer":"Answer"
   }
 }
