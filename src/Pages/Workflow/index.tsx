@@ -1,91 +1,71 @@
 import "./index.css";
 
 import { Box } from "@mui/material";
-import FlowChart from "./Components/FlowChart";
-import { ReactFlowProvider } from "@xyflow/react";
-import { useEffect } from "react";
+import { useAuth } from "@/Providers/AuthenticationProvider";
+import CommonStyles from "@/Components/CommonStyles";
+import CreateWorkFlowButton from "./Components/misc/CreatWorkflowButton";
+import useGetWorkflows from "@/Hooks/workflow/useGetWorkFlow";
+import { queryWorkflow, VisualOption } from "@/Types/workflow";
+import { useEffect, useMemo } from "react";
 import { useSave } from "@/Stores/useStore";
 import cachedKeys from "@/Constants/cachedKeys";
-import ChatDrawer from "../ChatbotConfigure/components/Develop/ChatDrawer";
-import { Description } from "@mui/icons-material";
-
-const initNodes = [
-  {
-    id: "c372a3b5-85fa-4b7d-a1e5-1913df8d6721",
-    type: "customNode_WF_StartNode",
-    position: {
-      x: 1301,
-      y: 175,
-    },
-    data: {
-      label: "Start",
-      startNode: true,
-    },
-    measured: {
-      width: 500,
-      height: 367,
-    },
-    dragging: false,
-    selectable: false,
-  },
-];
-
-const listNode = [
-  {
-    name: "customNode_multiAgentNode",
-    label: "Multi Agent",
-    description: "Create an agent",
-  },
-  {
-    name: "customNode_WF_StartNode",
-    label: "Start Node",
-    description: "Create an agent",
-    hidden: true,
-  },
-  {
-    name: "customNode_WF_LlmNode",
-    label: "LLM",
-    description: "Llm Node",
-  },
-  {
-    name: "customNode_WF_ConditionNode",
-    label: "IF/ELSE",
-    description: "If else node",
-  },
-  {
-    name: "customNode_WF_AnswerNode",
-    label: "Answer",
-    description: "Answer node"
-  },
-];
+import EachWorkflow from "./Components/misc/EachWorkflow";
 
 const Workflow = () => {
   //! State
+  const { userData, userId } = useAuth();
   const save = useSave();
+  const queryWorkflow = useMemo<queryWorkflow>(() => {
+    return {
+      user_id: userId as string,
+      visual_option: VisualOption.OWNED,
+    };
+  }, [userId]);
+  const { data, isLoading } = useGetWorkflows(queryWorkflow);
 
   //! Function
-
   useEffect(() => {
-    save(cachedKeys.HISTORY, [
-      {
-        nodes: initNodes,
-        edges: [],
-      },
-    ]);
-  }, [initNodes]);
+    save(cachedKeys.LOADING_APP, isLoading);
+  }, [isLoading]);
 
   //! Render
   return (
     <Box
       sx={{
-        width: "100vw",
-        height: "100vh",
+        padding: "24px",
+        maxWidth: "100%",
+        overflow: "hidden",
       }}
     >
-      <ReactFlowProvider>
-        <FlowChart initNodes={initNodes} listNode={listNode} botId="123" />
-        <ChatDrawer />
-      </ReactFlowProvider>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Box display={"flex"} gap="8px">
+          <img
+            src={userData?.avatar_url}
+            style={{
+              height: "32px",
+              width: "32px",
+              borderRadius: "50%",
+            }}
+          />
+          <CommonStyles.Typography type="semiBold20">
+            Workflow
+          </CommonStyles.Typography>
+        </Box>
+        <CreateWorkFlowButton />
+      </Box>
+
+      <Box mt={"24px"}>
+        {data &&
+          data?.list_workflows?.map((workflow) => {
+            return <EachWorkflow key={workflow.workflow_id} {...workflow} />;
+          })}
+      </Box>
     </Box>
   );
 };

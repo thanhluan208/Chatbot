@@ -1,5 +1,5 @@
-// const baseAPI = "https://6a8e-42-113-61-122.ngrok-free.app"; 
-const baseAPI = "https://chatbot-api.alphiiai.com";
+const baseAPI = "https://e73a-58-186-129-217.ngrok-free.app"; 
+// const baseAPI = "https://chatbot-api.alphiiai.com";
 export const getFolderKnowledge =
   baseAPI + "/knowledge/list_knowledge_storages";
 export const getListKnowledgeFile = baseAPI + "/knowledge/list_files";
@@ -63,3 +63,10 @@ export const updateBotEdge = baseAPI + "/node/add_edge";
 export const removeEdge = baseAPI + "/node/remove_edge";
 export const updateScenario = baseAPI + "/node/update_scenario_to_node";
 export const updateNodeLLM = baseAPI + "/node/update_model_params_for_node";
+
+
+export const createWorkflowAPI = baseAPI + "/workflow/create_workflow";
+export const deleteWorkflowAPI = baseAPI + "/workflow/delete_workflow";
+export const addNodeWorkflowAPI = baseAPI + "/workflow/add_node";
+export const getWorkFlowsAPI = baseAPI + "/workflow/list_workflows";
+export const getWorkflowDetailAPI = baseAPI + "/workflow/get_workflow_data";

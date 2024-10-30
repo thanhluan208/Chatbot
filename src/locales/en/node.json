@@ -1,4 +1,24 @@
 {
+  "WF_mutate_dialog": {
+    "create": {
+      "title": "Create workflow",
+      "workflow_name": "Workflow name",
+      "description": "Description",
+      "save": "Save",
+      "cancel": "Cancel",
+      "avatar": "Avatar",
+      "creating": "Creating workflow",
+      "created": "Workflow created",
+      "error": "Error creating workflow"
+    },
+    "edit" : {
+      "editing": "Editing workflow",
+      "edited": "Workflow edited",
+      "error": "Error editing workflow",
+      "title": "Edit workflow"
+    }
+  },
+
   "WF_Startnode": {
     "input": "Input",
     "add_input_field": "Add input field",

@@ -12,6 +12,8 @@ import WF_StartNode from "../CustomNodes/WF_StartNode";
 import WF_LlmNode from "../CustomNodes/WF_LlmNode";
 import WF_ConditionNode from "../CustomNodes/WF_ConditionNode";
 import WF_AnswerNode from "../CustomNodes/WF_AnswerNode";
+import WF_CodeNode from "../CustomNodes/WF_CodeNode";
+import { NodeTypeWorkflow } from "@/Types/workflow";
 
 export enum NodeTypes {
   startNode = "customNode_startNode",
@@ -29,10 +31,11 @@ export const nodeTypes = {
   customNode_mutliAgentStartNode: MultiAgentStartNode,
   customNode_multiAgentNode: MultiAgentNode,
   customNode_helperNode: HelperNode,
-  customNode_WF_StartNode: WF_StartNode,
-  customNode_WF_LlmNode: WF_LlmNode,
-  customNode_WF_ConditionNode: WF_ConditionNode,
-  customNode_WF_AnswerNode: WF_AnswerNode
+  [`customNode_WF_${NodeTypeWorkflow.START}`]: WF_StartNode,
+  [`customNode_WF_${NodeTypeWorkflow.LLM}`]: WF_LlmNode,
+  [`customNode_WF_${NodeTypeWorkflow.IF_ELSE}`]: WF_ConditionNode,
+  [`customNode_WF_${NodeTypeWorkflow.CODE}`]: WF_CodeNode,
+  [`customNode_WF_${NodeTypeWorkflow.ANSWER}`]: WF_AnswerNode,
 };
 
 export enum CustomNodeTypes {
@@ -65,11 +68,15 @@ const AddNodes = ({ listNode = [] }: IAddNodes) => {
   return (
     <ClickAwayListener onClickAway={() => setAnchorEl(null)}>
       <Box>
-        <AddNodePopper listNode={listNode} anchorEl={anchorEl} open={open}/>
-        <CommonStyles.Button onClick={handleClick} variant="contained" sx={{
-          textWrap:'nowrap',
-          overflow: 'hidden',
-        }}>
+        <AddNodePopper listNode={listNode} anchorEl={anchorEl} open={open} />
+        <CommonStyles.Button
+          onClick={handleClick}
+          variant="contained"
+          sx={{
+            textWrap: "nowrap",
+            overflow: "hidden",
+          }}
+        >
           Add node
         </CommonStyles.Button>
       </Box>

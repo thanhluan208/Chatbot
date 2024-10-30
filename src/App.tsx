@@ -11,6 +11,8 @@ import { lazy, Suspense } from "react";
 import CommonStyles from "./Components/CommonStyles";
 import { QueryClient, QueryClientProvider } from "react-query";
 
+import "./App.css"
+
 const KnowledgeDetail = lazy(() => import("./Pages/KnowledgeDetail"));
 const Login = lazy(() => import("./Pages/Login"));
 const SignUp = lazy(() => import("./Pages/SignUp"));
@@ -23,11 +25,13 @@ const ChatBot = lazy(() => import("./Pages/ChatBot"));
 const Users = lazy(() => import("./Pages/Users"));
 const ChatbotConfigure = lazy(() => import("./Pages/ChatbotConfigure"));
 const Workflow = lazy(() => import("./Pages/Workflow"));
+const WorkflowDetail = lazy(() => import("./Pages/WorkflowDetail"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
+      retry: 0,
     },
   },
 });
@@ -76,6 +80,15 @@ function App() {
             return null;
           },
         },
+        {
+          path: ListRoutes.workflow,
+          element: <Workflow />,
+          loader: () => {
+            if (!userId) return redirect("/login");
+    
+            return null;
+          },
+        },
       ],
     },
     {
@@ -88,8 +101,8 @@ function App() {
       },
     },
     {
-      path: Routes.common.WORKFLOW_STORE.path,
-      element: <Workflow />,
+      path: ListRoutes.workflowDetail(),
+      element: <WorkflowDetail />,
       loader: () => {
         if (!userId) return redirect("/login");
 
@@ -159,11 +172,7 @@ function App() {
         return null;
       },
     },
-
-    {
-      path: "/test",
-      element: <Workflow />,
-    },
+   
   ]);
 
   //! Function

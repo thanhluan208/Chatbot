@@ -1,4 +1,8 @@
 export default {
     LIST_BOT: "LIST_BOT",
     BOT_DATA: "BOT_DATA",
+
+    //! WORKFLOW
+    WORKFLOW: "WORKFLOW",
+    WORKFLOW_DETAIL: "WORKFLOW_DETAIL",
 }
