@@ -61,6 +61,7 @@ export default function FlowChart(props: IFlowChart) {
   const save = useSave();
   const theme = useTheme();
 
+
   const { userId } = useAuth();
 
   const onReconnectStart = useCallback(() => {
@@ -416,9 +417,6 @@ export default function FlowChart(props: IFlowChart) {
     };
   }, []);
 
-  useEffect(() => {
-    reactFlowService.subcribeFlow(setEdges, setNodes, getEdges, getNodes);
-  }, [setEdges, setNodes, getEdges, getNodes]);
 
   return (
     <Box

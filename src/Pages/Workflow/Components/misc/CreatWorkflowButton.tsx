@@ -1,14 +1,13 @@
 import { Fragment } from "react/jsx-runtime";
-import { Box } from "@mui/material";
-import CommonStyles from "@/Components/CommonStyles";
-import useToggleDialog from "@/Hooks/useToggleDialog";
+import CommonStyles from "../../../../Components/CommonStyles";
+import useToggleDialog from "../../../../Hooks/useToggleDialog";
+import { useTranslation } from "react-i18next";
+import CreateOrEditWorkflowDialog from "./CreateOrEditWorkflowDialog";
 
-interface ICreateWorkFlowButton {}
-
-function CreateWorkFlowButton(props: ICreateWorkFlowButton) {
+function CreateWorkFlowButton() {
   //! State
-  const {} = props;
   const { open, shouldRender, toggle } = useToggleDialog();
+  const { t } = useTranslation("node");
 
   //! Function
 
@@ -22,7 +21,7 @@ function CreateWorkFlowButton(props: ICreateWorkFlowButton) {
           maxWidth="sm"
           fullWidth
         >
-          <Box></Box>
+          <CreateOrEditWorkflowDialog toggle={toggle} />
         </CommonStyles.Dialog>
       )}
       <CommonStyles.Button
@@ -34,8 +33,8 @@ function CreateWorkFlowButton(props: ICreateWorkFlowButton) {
           height: "40px",
         }}
       >
-        <CommonStyles.Typography type="semiBold16">
-          Submit workflow
+        <CommonStyles.Typography type="semiBold16" color="#fff">
+          {t("WF_mutate_dialog.create.title")}
         </CommonStyles.Typography>
       </CommonStyles.Button>
     </Fragment>

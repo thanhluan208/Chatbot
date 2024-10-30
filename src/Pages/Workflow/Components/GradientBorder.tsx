@@ -12,12 +12,14 @@ const GradientBorder = ({
   const theme = useTheme();
   const { updateNode } = useReactFlow();
 
+
   const classname = useMemo(() => {
     if (data?.currentNode && data?.startNode) return "chatting-start";
     else if (data?.currentNode && !data?.startNode) return "agent-chatting";
     else if (data?.startNode) return "start-node";
     else return "agent-node";
   }, [data?.currentNode, data?.startNode]);
+
 
   return (
     <Box
@@ -92,8 +94,10 @@ const GradientBorder = ({
             readyToPaste: true,
           };
           updateNode(id, {
-            ...data,
-            ...updates,
+            data: {
+              ...data,
+              ...updates,
+            }
           });
         }}
       >

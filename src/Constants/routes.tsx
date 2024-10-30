@@ -19,7 +19,7 @@ const useRoutes = () => {
         icon: <CommonIcons.Article />,
       },
       WORKFLOW_STORE: {
-        path: "/workflow-store",
+        path: ListRoutes.workflow,
         icon: <CommonIcons.Extension />,
       },
     },
@@ -39,6 +39,8 @@ export const ListRoutes = {
   knowledgeStore: "/knowledge-store",
   userProfile: "/user/:userId",
   chatBot: "/bot-store/:botId",
+  workflow: "/workflow",
+  workflowDetail: (workflowId = ":workflowId") => `/workflow/${workflowId}`,
 };
 
 export default useRoutes;
