@@ -1,5 +1,3 @@
-import "./index.css";
-
 import { Box } from "@mui/material";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import CommonStyles from "@/Components/CommonStyles";

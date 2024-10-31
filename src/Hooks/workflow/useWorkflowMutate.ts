@@ -1,6 +1,6 @@
 import queryKey from "@/Constants/queryKey";
 import workflowService from "@/Services/workflow.service";
-import { createWorkflowPayload, deleteWorkflowPayload } from "@/Types/workflow";
+import {  deleteWorkflowPayload } from "@/Types/workflow";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 

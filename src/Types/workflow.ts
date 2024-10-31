@@ -91,17 +91,17 @@ export interface Graph {
 }
 
 export interface Nodes {
-  start: End;
-  end: End;
+  start: NodeDetail;
+  end: NodeDetail;
 }
 
-export interface End {
-  data: Data;
+export interface NodeDetail {
+  data: NodeData;
   variables_out: VariablesOut[];
   id: string;
 }
 
-export interface Data {
+export interface NodeData {
   title: string;
   desc: string;
   position: string;
@@ -123,9 +123,9 @@ export interface Variable {
   type: string;
   required: boolean;
   max_length: number;
-  options: null;
-  detault: null;
-  hint: null;
+  options?: string;
+  detault?: string;
+  hint?: string;
 }
 
 export interface VariablesOut {
@@ -180,4 +180,11 @@ export enum NodeTypeWorkflow {
   ITERATION_START = "iteration-start",
   PARAMETER_EXTRACTOR = "parameter-extractor",
   CONVERSATION_VARIABLE_ASSIGNER = "assigner",
+}
+
+export enum StartNodeInputType {
+  TEXT_INPUT = "text-input",
+  ARRAY_TEXT_INPUT = "array-text-input",
+  NUMBER = "number",
+  ARRAY_NUMBER = "array_number",
 }
