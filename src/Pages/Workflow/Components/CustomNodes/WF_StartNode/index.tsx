@@ -4,13 +4,15 @@ import { Box, useTheme } from "@mui/material";
 import { v4 as uuid } from "uuid";
 import { House } from "lucide-react";
 import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
-import InputArea, { DefaultInputProps } from "./components/InputArea";
+import InputArea from "./components/InputArea";
 import CollapseArea from "@/Components/CommonStyles/CollapseArea";
 import GradientBorder from "../../GradientBorder";
+import { NodeData } from "@/Types/workflow";
 
 const WF_StartNode = (props: NodeProps) => {
   //! State
   const theme = useTheme();
+  const data = props?.data as unknown as NodeData;
 
   const handleid = useMemo(() => {
     return uuid();
@@ -54,12 +56,7 @@ const WF_StartNode = (props: NodeProps) => {
             </Box>
           }
         >
-          <InputArea
-            nodeId={props.id}
-            inputs={
-              props?.data?.inputs as DefaultInputProps[]
-            }
-          />
+          <InputArea nodeId={props.id} variables={data?.variables} />
         </CollapseArea>
       </GradientBorder>
       <Handle

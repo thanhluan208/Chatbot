@@ -1,13 +1,12 @@
-import EditorMonaco, { Monaco } from "@monaco-editor/react";
+import EditorMonaco from "@monaco-editor/react";
 import { useRef } from "react";
 
 const Editor = () => {
   const editorRef = useRef<unknown | null>(null);
 
-  function handleEditorDidMount(editor: unknown, monaco: Monaco) {
+  function handleEditorDidMount(editor: unknown) {
     editorRef.current = editor;
   }
-
 
   return (
     <EditorMonaco

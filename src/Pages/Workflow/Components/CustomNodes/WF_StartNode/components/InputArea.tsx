@@ -19,6 +19,7 @@ import InputText, { InputTextInitialValues } from "./InputText";
 import InputChoices, { InputChoicesInitialValues } from "./InputChoices";
 import InputFile, { InputFileInitialValues } from "./InputFile";
 import { useReactFlow } from "@xyflow/react";
+import { Variable } from "@/Types/workflow";
 
 export const InputTypeList = [
   {
@@ -49,7 +50,7 @@ export const InputTypeList = [
 
 interface InputAreaProps {
   nodeId: string;
-  inputs?: DefaultInputProps[];
+  variables?: Variable[];
 }
 
 export interface DefaultInputProps {
@@ -60,7 +61,7 @@ export interface DefaultInputProps {
   id: string;
 }
 
-const InputArea = ({ nodeId, inputs }: InputAreaProps) => {
+const InputArea = ({ nodeId, variables }: InputAreaProps) => {
   const { t } = useTranslation("node");
   const { updateNode, getNode } = useReactFlow();
 
@@ -250,12 +251,11 @@ const InputArea = ({ nodeId, inputs }: InputAreaProps) => {
         }
       >
         <div className="flex flex-col gap-2">
-          {inputs?.map((input) => {
-            const icon = InputTypeList.find((elm) => elm.name === input.type);
+          {variables?.map((input) => {
             return (
               <Box
                 className="flex items-center justify-between px-3 py-2 cursor-pointer nodrag relative overflow-hidden"
-                key={input.id}
+                key={input.label}
                 sx={{
                   background: theme.colors.custom.background,
                   border: `1px solid ${theme.colors.custom.borderColor}`,
@@ -296,7 +296,7 @@ const InputArea = ({ nodeId, inputs }: InputAreaProps) => {
                     isIcon
                     className="h-5 w-5"
                     color="error"
-                    onClick={() => handleDelete(input.id)}
+                    onClick={() => handleDelete(input.label)}
                   >
                     <Trash />
                   </CommonStyles.Button>
@@ -310,8 +310,8 @@ const InputArea = ({ nodeId, inputs }: InputAreaProps) => {
                     type="semiBold16"
                     color={theme.palette.primary.main}
                   >
-                    {input.input_name}
-                    {input.is_required && (
+                    {input.label}
+                    {input.required && (
                       <span
                         style={{
                           color: theme.colors.custom.colorErrorTypo,
@@ -322,8 +322,11 @@ const InputArea = ({ nodeId, inputs }: InputAreaProps) => {
                       </span>
                     )}
                   </CommonStyles.Typography>
+                  <CommonStyles.Typography>
+                    ({input?.max_length})
+                  </CommonStyles.Typography>
                 </div>
-                {icon && icon?.icon}
+                <CommonStyles.Typography>{input?.type}</CommonStyles.Typography>
               </Box>
             );
           })}
