@@ -26,6 +26,7 @@ import MessengerPublishModal from './modal/messenger-publish-modal';
 import CenterBox from '@/Components/CommonStyles/Centerbox';
 import AntSwitch from './ant-switch';
 import { MaterialSymbolsCloseRounded } from './icon/material-symbols';
+import { usePublishPage } from '..';
 
 export default function PublishBody() {
   // #form
@@ -41,6 +42,7 @@ export default function PublishBody() {
     () => theme.palette.mode === 'light',
     [theme.palette.mode]
   );
+  const { openModal, setOpenModal } = usePublishPage();
 
   const [changelogHover, setChangelogHover] = useState<boolean>(false);
   const [changelogText, setChangelogText] = useState<string>('');
@@ -49,7 +51,6 @@ export default function PublishBody() {
     publishingPlatformMapping.map(() => true)
   );
 
-  const [openModal, setOpenModal] = useState<boolean>(false);
   const [selectedConfigure, setSelectedConfigure] =
     useState<PublishingPlatFormRecord | null>(null);
 
@@ -597,7 +598,7 @@ export default function PublishBody() {
               padding: '24px',
               borderRadius: '1rem',
               boxSizing: 'border-box',
-              bgcolor: mode?'rgb(245, 247, 250)':'#2f2f2f',
+              bgcolor: mode ? 'rgb(245, 247, 250)' : '#2f2f2f',
               flexDirection: 'column',
               gap: '2rem',
             }}
@@ -619,7 +620,7 @@ export default function PublishBody() {
                   width: '24px !important',
                   aspectRatio: '1/1',
                   height: '24px',
-                //   color: 'black',
+                  //   color: 'black',
                   p: 0,
                 }}
               >

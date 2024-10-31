@@ -1,10 +1,23 @@
-import { Button, IconButton, TextField, Theme, Typography, useTheme } from '@mui/material';
+import {
+  Button,
+  IconButton,
+  TextField,
+  Theme,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import { Fragment } from 'react/jsx-runtime';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { MaterialSymbolsContentCopy } from '../icon/material-symbols';
 import * as y from 'yup';
 import { useFormik } from 'formik';
 import CenterBox from '@/Components/CommonStyles/Centerbox';
+import { usePostDiscordAddBot } from '@/Hooks/Bot/Platform/Discord/usePostDiscordAddBot';
+import { usePostDiscordGetBotConfiguration } from '@/Hooks/Bot/Platform/Discord/usePostDiscordGetBotConfiguration';
+import { usePostMessengerRemoveBot } from '@/Hooks/Bot/Platform/Messenger/usePostMessengerRemoveBot';
+import { usePostMessengerAddBot } from '@/Hooks/Bot/Platform/Messenger/usePostMessengerAddBot';
+import { usePostMessengerGetBotConfiguration } from '@/Hooks/Bot/Platform/Messenger/usePostMessengerGetBotConfiguration';
+import { usePublishPage } from '../..';
 
 export default function MessengerPublishModal() {
   //#region state
@@ -45,11 +58,39 @@ export default function MessengerPublishModal() {
     onSubmit: handleSubmit,
   });
 
+  //#region state
+  const { openModal, currentBotId } = usePublishPage();
+
+  //#region mutation
+  const { mutate: handleAddBot } = usePostMessengerAddBot({});
+
+  const { mutate: handleGetBotConf } = usePostMessengerGetBotConfiguration({
+    onSuccess: (data) => {
+      form.setFieldValue('page_access_token', data.data.page_access_token);
+      form.setFieldValue('page_id', data.data.page_id);
+      form.setFieldValue('app_secret_key', data.data.app_secret_key);
+    },
+  });
+
+  const { mutate: handleRemove } = usePostMessengerRemoveBot({});
+
+  //#region hook
+
+  useEffect(() => {
+    if (openModal && currentBotId) {
+      handleGetBotConf({ payload: { bot_id: currentBotId } });
+    }
+  }, [openModal, currentBotId]);
+
   //#region func
   function handleSubmit(data: y.InferType<typeof yupSchema>) {
-    fetch('', {
-      body: JSON.stringify(data),
+    handleAddBot({
+      payload: { ...data, bot_id: currentBotId },
     });
+  }
+
+  function handleDeleteBot() {
+    handleRemove({ payload: { bot_id: currentBotId } });
   }
 
   //#region render
@@ -297,6 +338,7 @@ export default function MessengerPublishModal() {
                   padding: '.5rem',
                 },
               }}
+              disabled={!!currentBotId}
               name="page_access_token"
               onChange={form.handleChange}
               value={form.values.page_access_token}
@@ -345,6 +387,7 @@ export default function MessengerPublishModal() {
                   padding: '.5rem',
                 },
               }}
+              disabled={!!currentBotId}
               name="page_id"
               onChange={form.handleChange}
               value={form.values.page_id}
@@ -385,6 +428,7 @@ export default function MessengerPublishModal() {
               placeholder=""
               fullWidth
               autoCorrect="off"
+              disabled={!!currentBotId}
               sx={{
                 borderRadius: '8px',
                 border: `none`,

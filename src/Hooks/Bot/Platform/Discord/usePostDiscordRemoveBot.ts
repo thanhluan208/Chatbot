@@ -2,24 +2,24 @@ import httpServices from '@/Services/httpServices';
 import { AxiosRequestConfig } from 'axios';
 import { useMutation } from 'react-query';
 
-export interface PostTelegramAddBotParams {
-  onSuccess?: (data: PostTelegramAddBotFnResponse) => void;
+export interface PostDiscordRemoveBotParams {
+  onSuccess?: (data: PostDiscordRemoveBotFnResponse) => void;
   onError?: (error: unknown) => void;
 }
 
-export function usePostTelegramAddBot({
+export function usePostDiscordRemoveBot({
   onError,
   onSuccess,
-}: PostTelegramAddBotParams) {
+}: PostDiscordRemoveBotParams) {
   return useMutation({
-    mutationKey: ['use-post-telegram-add-bot'],
-    mutationFn: async ({ payload, config = {} }: PostTelegramAddBotFn) => {
+    mutationKey: ['use-post-discord-remove-bot'],
+    mutationFn: async ({ payload, config = {} }: PostDiscordRemoveBotFn) => {
       const url = '';
       const response = (await httpServices.post(
         url,
         payload,
         config
-      )) as unknown as PostTelegramAddBotFnResponse;
+      )) as unknown as PostDiscordRemoveBotFnResponse;
       if (response && response.status_code == 200) {
         return response;
       }
@@ -30,20 +30,19 @@ export function usePostTelegramAddBot({
   });
 }
 
-export interface PostTelegramAddBotFn {
-  payload: PostTelegramAddBotPayload;
+export interface PostDiscordRemoveBotFn {
+  payload: PostDiscordRemoveBotPayload;
   config?: AxiosRequestConfig;
 }
 
-export interface PostTelegramAddBotPayload {
-  token: string;
+export interface PostDiscordRemoveBotPayload {
   bot_id: string;
 }
 
-export interface PostTelegramAddBotFnResponse {
+export interface PostDiscordRemoveBotFnResponse {
   status_code: number;
 }
 
-export interface PostTelegramAddBotFnResponse {
+export interface PostDiscordRemoveBotFnResponse {
   status_code: number;
 }
