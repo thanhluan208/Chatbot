@@ -318,7 +318,7 @@ export default function AppThemeProvider(props: { children: React.ReactNode }) {
       />
       {children}
 
-      <div style={{ position: "fixed", bottom: "20px", right: "80px" }}>
+      <div style={{ position: "fixed", bottom: "20px", right: "80px", zIndex: 100 }}>
         <select
           onChange={(e) => changeLanguage(e.target.value)}
           defaultValue={i18n.language}
@@ -331,7 +331,7 @@ export default function AppThemeProvider(props: { children: React.ReactNode }) {
       <CommonStyles.Button isIcon variant="outlined" sx={{
         position:"fixed",
         bottom:'20px',
-        right:"20px"
+        right:"20px", zIndex: 100
       }}
       onClick={toggleTheme}
       >
