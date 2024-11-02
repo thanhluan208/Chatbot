@@ -15,13 +15,6 @@ const WF_AnswerNode = (props: NodeProps) => {
     const {data, id, positionAbsoluteX, positionAbsoluteY} = props;
     const theme = useTheme();
     const {t} = useTranslation("node");
-    const handleFocus = () => {
-        console.log("Focused!");
-      };
-    
-      const handleBlur = () => {
-        console.log("Blurred!");
-      };
 
     //! Render
     return (
