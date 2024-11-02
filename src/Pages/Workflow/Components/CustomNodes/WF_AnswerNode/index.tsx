@@ -1,12 +1,11 @@
 import { Box, useTheme } from "@mui/material";
 import { Handle, NodeProps, Position } from "@xyflow/react";
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import GradientBorder from "../../GradientBorder";
 import CollapseArea from "@/Components/CommonStyles/CollapseArea";
-import { Component, MessageSquareQuote } from "lucide-react";
+import { MessageSquareQuote } from "lucide-react";
 import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
-import InputArea, { DefaultInputProps } from "../WF_StartNode/components/InputArea";
 import CommonStyles from "@/Components/CommonStyles";
 import Editor from "../WF_LlmNode/Editor";
 import { Form, Formik } from "formik";
@@ -16,12 +15,13 @@ const WF_AnswerNode = (props: NodeProps) => {
     const {data, id, positionAbsoluteX, positionAbsoluteY} = props;
     const theme = useTheme();
     const {t} = useTranslation("node");
-
-    // const initialValues = useMemo(() => {
-    //     const botData: any = {
-
-    //     }
-    // })
+    const handleFocus = () => {
+        console.log("Focused!");
+      };
+    
+      const handleBlur = () => {
+        console.log("Blurred!");
+      };
 
     //! Render
     return (

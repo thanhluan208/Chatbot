@@ -31,6 +31,11 @@ const listNode = [
     label: "Code",
     description: "Code node",
   },
+  {
+    name: `customNode_WF_${NodeTypeWorkflow.ANSWER}`,
+    label: "Answer",
+    description: "Answer node",
+  },
 ];
 
 const WorkflowDetail = () => {
