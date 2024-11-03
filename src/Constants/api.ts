@@ -1,4 +1,4 @@
-const baseAPI = "https://e73a-58-186-129-217.ngrok-free.app"; 
+const baseAPI = "https://helped-dragon-entirely.ngrok-free.app"; 
 // const baseAPI = "https://chatbot-api.alphiiai.com";
 export const getFolderKnowledge =
   baseAPI + "/knowledge/list_knowledge_storages";
@@ -70,3 +70,6 @@ export const deleteWorkflowAPI = baseAPI + "/workflow/delete_workflow";
 export const addNodeWorkflowAPI = baseAPI + "/workflow/add_node";
 export const getWorkFlowsAPI = baseAPI + "/workflow/list_workflows";
 export const getWorkflowDetailAPI = baseAPI + "/workflow/get_workflow_data";
+export const updateWorkflowNodeData = baseAPI + "/workflow/update_node_data";
+export const addEdgeWorkflowAPI = baseAPI + "/workflow/add_edge";
+export const removeEdgeWorkflowAPI = baseAPI + "/workflow/remove_edge";

@@ -13,6 +13,7 @@ interface EditLabelNodeProps {
   data: {
     [key: string]: unknown;
   };
+  handleUpdateName?: (name: string) => Promise<void>;
 }
 
 const EditLabelNode = (props: EditLabelNodeProps) => {
@@ -117,8 +118,12 @@ const EditLabelNode = (props: EditLabelNodeProps) => {
                 height: "16px",
               },
             }}
-            onClick={(e) => {
+            onClick={async (e) => {
               e.stopPropagation();
+              if (props.handleUpdateName) {
+                await props.handleUpdateName(nameRef?.current?.value as string);
+                setIsRenaming(false);
+              }
               handleRename();
             }}
           >

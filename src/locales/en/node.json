@@ -32,6 +32,9 @@
     "is_required": "Is required",
     "add_option": "Add option",
     "options": "Options",
+    "description": "Description",
+    "type": "Type",
+    "hint": "Hint",
 
     "paragraph": "Paragraph",
     "choices": "Choices",
@@ -49,7 +52,10 @@
     "context": "Context",
 
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
 
+    "processing": "Processing",
+    "processed": "Processed successfully",
+    "failed": "Processed failed"
   }
 }

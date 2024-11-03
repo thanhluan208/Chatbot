@@ -107,7 +107,7 @@ export interface NodeData {
   position: string;
   type: string;
   outputs?: Output[];
-  variables?: Variable[];
+  variables?: unknown[];
 }
 
 export interface Output {
@@ -120,7 +120,7 @@ export interface Variable {
   variable: string;
   label: string;
   description: string;
-  type: string;
+  type: StartNodeInputType;
   required: boolean;
   max_length: number;
   options?: string;
@@ -187,4 +187,17 @@ export enum StartNodeInputType {
   ARRAY_TEXT_INPUT = "array-text-input",
   NUMBER = "number",
   ARRAY_NUMBER = "array_number",
+}
+
+export interface AddEdgePayload {
+  user_id: string;
+  workflow_id: string;
+  src_node_id: string;
+  dest_node_id: string;
+}
+
+export interface RemoveEdgePayload {
+  user_id: string;
+  workflow_id: string;
+  edge_id: string;
 }

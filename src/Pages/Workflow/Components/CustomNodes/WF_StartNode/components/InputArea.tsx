@@ -1,7 +1,7 @@
 import CommonIcons from "@/Components/CommonIcons";
 import CommonStyles from "@/Components/CommonStyles";
 import CollapseArea from "@/Components/CommonStyles/CollapseArea";
-import { Box, DialogContent, DialogTitle, useTheme } from "@mui/material";
+import { Box, Tooltip, useTheme } from "@mui/material";
 import {
   ALargeSmall,
   CopyCheck,
@@ -9,17 +9,22 @@ import {
   File,
   FileDigit,
   Files,
+  Info,
   Link2,
   Rows4,
   Trash,
 } from "lucide-react";
-import React, { Fragment, useCallback } from "react";
+import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import InputText, { InputTextInitialValues } from "./InputText";
-import InputChoices, { InputChoicesInitialValues } from "./InputChoices";
-import InputFile, { InputFileInitialValues } from "./InputFile";
+
 import { useReactFlow } from "@xyflow/react";
 import { Variable } from "@/Types/workflow";
+import AddOrEditInputDialog from "./AddOrEditInputDialog";
+import { updateWorkflowNodeData } from "@/Constants/api";
+import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
+import { useAuth } from "@/Providers/AuthenticationProvider";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export const InputTypeList = [
   {
@@ -53,38 +58,51 @@ interface InputAreaProps {
   variables?: Variable[];
 }
 
-export interface DefaultInputProps {
-  input_name: string;
-  input_label: string;
-  is_required: boolean;
-  type: string;
-  id: string;
-}
-
 const InputArea = ({ nodeId, variables }: InputAreaProps) => {
   const { t } = useTranslation("node");
   const { updateNode, getNode } = useReactFlow();
+  const { handleUpdateNodeData } = useWorkflowMutate();
+  const { userId } = useAuth();
+  const { workflowId } = useParams();
 
   const [openDialog, setOpenDialog] = React.useState(false);
-  const [currentInput, setCurrentInput] = React.useState("text");
   const [currentInputdata, setCurrentInputData] = React.useState<
     unknown | null
   >(null);
 
   const theme = useTheme();
 
-  const handleDelete = (id: string) => {
-    const currentNodeInput = getNode(nodeId)?.data
-      ?.inputs as DefaultInputProps[];
-    if (!currentNodeInput) return;
+  const handleDelete = async (name: string) => {
+    const curNode = getNode(nodeId);
 
-    const newInputs = currentNodeInput.filter((elm) => elm.id !== id);
-    updateNode(nodeId, {
-      data: {
-        ...getNode(nodeId)?.data,
-        inputs: newInputs,
+    if (!curNode || !userId || !workflowId || !nodeId) return;
+
+    const curVariables = curNode?.data?.variables as Variable[];
+    const nextVariables = curVariables.filter((item) => item.variable !== name);
+
+    const payload = {
+      user_id: userId,
+      workflow_id: workflowId,
+      node_id: nodeId,
+      node_data: {
+        name: nodeId,
+        desc: "",
+        position: JSON.stringify(curNode?.position),
+        variables: nextVariables,
       },
-    });
+    };
+    const response = await handleUpdateNodeData.mutateAsync(payload);
+
+    if (response.status_code === 200) {
+      updateNode(nodeId, {
+        data: {
+          ...curNode.data,
+          variables: nextVariables,
+        },
+      });
+    } else {
+      toast.error(response.message);
+    }
   };
 
   const handleClose = () => {
@@ -92,141 +110,15 @@ const InputArea = ({ nodeId, variables }: InputAreaProps) => {
     setCurrentInputData(null);
   };
 
-  const renderInputField = useCallback(() => {
-    switch (currentInput) {
-      case "text":
-        return (
-          <InputText
-            type={currentInput}
-            key={currentInput}
-            nodeId={nodeId}
-            setOpenDialog={handleClose}
-            data={currentInputdata as InputTextInitialValues}
-          />
-        );
-      case "paragraph":
-        return (
-          <InputText
-            type={currentInput}
-            key={currentInput}
-            nodeId={nodeId}
-            setOpenDialog={handleClose}
-            data={currentInputdata as InputTextInitialValues}
-          />
-        );
-      case "choices":
-        return (
-          <InputChoices
-            type={currentInput}
-            key={currentInput}
-            nodeId={nodeId}
-            setOpenDialog={handleClose}
-            data={currentInputdata as InputChoicesInitialValues}
-          />
-        );
-      case "number":
-        return (
-          <InputText
-            type={currentInput}
-            key={currentInput}
-            nodeId={nodeId}
-            setOpenDialog={handleClose}
-            data={currentInputdata as InputTextInitialValues}
-          />
-        );
-      case "file":
-        return (
-          <InputFile
-            type={currentInput}
-            key={currentInput}
-            nodeId={nodeId}
-            setOpenDialog={handleClose}
-            data={currentInputdata as InputFileInitialValues}
-          />
-        );
-      case "list_file":
-        return (
-          <InputFile
-            type={currentInput}
-            key={currentInput}
-            nodeId={nodeId}
-            setOpenDialog={handleClose}
-            data={currentInputdata as InputFileInitialValues}
-          />
-        );
-      default:
-        return null;
-    }
-  }, [currentInput, nodeId, currentInputdata, handleClose]);
-
   return (
     <Fragment>
       {openDialog && (
-        <CommonStyles.Dialog
-          open={openDialog}
-          toggle={handleClose}
-          maxWidth="sm"
-          fullWidth
-        >
-          <Box>
-            <DialogTitle>
-              <Box
-                display={"flex"}
-                justifyContent={"space-between"}
-                alignItems={"center"}
-                mb={3}
-              >
-                <CommonStyles.Typography type="semiBold18">
-                  {!currentInputdata
-                    ? t("WF_Startnode.add_input_field")
-                    : t("WF_Startnode.edit_input_field")}
-                </CommonStyles.Typography>
-                <CommonStyles.Button
-                  isIcon
-                  hasBorder={false}
-                  onClick={handleClose}
-                >
-                  <CommonIcons.Clear />
-                </CommonStyles.Button>
-              </Box>
-            </DialogTitle>
-
-            <DialogContent className="flex flex-col gap-3 p-[20px 28px]">
-              <div className="grid grid-cols-3 gap-2">
-                {InputTypeList.map((elm) => {
-                  const name = `WF_Startnode.${elm.name}`;
-                  const isActive = elm.name === currentInput;
-
-                  return (
-                    <Box
-                      key={elm.name}
-                      onClick={() => setCurrentInput(elm.name)}
-                      className="flex flex-col items-center  gap-2 justify-center p-2 rounded-md cursor-pointer transition-all"
-                      sx={{
-                        background: theme.colors.custom.background,
-                        border: `1px solid ${
-                          isActive
-                            ? theme.palette.primary.main
-                            : theme.colors.custom.borderColor
-                        }`,
-                        "&:hover": {
-                          background: theme.colors.custom.backgroundCard,
-                        },
-                      }}
-                    >
-                      {elm.icon}
-                      <CommonStyles.Typography>
-                        {t(name as unknown as TemplateStringsArray)}
-                      </CommonStyles.Typography>
-                    </Box>
-                  );
-                })}
-              </div>
-
-              <div className="mt-5">{renderInputField()}</div>
-            </DialogContent>
-          </Box>
-        </CommonStyles.Dialog>
+        <AddOrEditInputDialog
+          handleClose={handleClose}
+          openDialog={openDialog}
+          data={currentInputdata as Variable}
+          nodeId={nodeId}
+        />
       )}
       <CollapseArea
         label={
@@ -254,7 +146,7 @@ const InputArea = ({ nodeId, variables }: InputAreaProps) => {
           {variables?.map((input) => {
             return (
               <Box
-                className="flex items-center justify-between px-3 py-2 cursor-pointer nodrag relative overflow-hidden"
+                className="flex flex-col px-3 py-2 cursor-pointer nodrag relative overflow-hidden"
                 key={input.label}
                 sx={{
                   background: theme.colors.custom.background,
@@ -276,57 +168,77 @@ const InputArea = ({ nodeId, variables }: InputAreaProps) => {
                   },
                 }}
               >
-                <div
-                  className="action absolute h-full right-0 top-0  flex items-center gap-2 w-0 transition-all"
-                  style={{
-                    background: theme.colors.custom.backgroundCard,
-                  }}
-                >
-                  <CommonStyles.Button
-                    isIcon
-                    className="h-5 w-5"
-                    onClick={() => {
-                      setOpenDialog(true);
-                      setCurrentInputData(input);
+                {input.variable !== "BOT_USER_INPUT" && (
+                  <div
+                    className="action absolute h-full right-0 top-0  flex items-center gap-2 w-0 transition-all"
+                    style={{
+                      background: theme.colors.custom.backgroundCard,
                     }}
                   >
-                    <Edit />
-                  </CommonStyles.Button>
-                  <CommonStyles.Button
-                    isIcon
-                    className="h-5 w-5"
-                    color="error"
-                    onClick={() => handleDelete(input.label)}
-                  >
-                    <Trash />
-                  </CommonStyles.Button>
-                </div>
-                <div className="flex gap-1 items-center ">
-                  <Link2
-                    className="w-5 h-5 translate-y-0.5"
-                    color={theme.palette.primary.main}
-                  />
-                  <CommonStyles.Typography
-                    type="semiBold16"
-                    color={theme.palette.primary.main}
-                  >
-                    {input.label}
-                    {input.required && (
-                      <span
-                        style={{
-                          color: theme.colors.custom.colorErrorTypo,
-                          marginLeft: "4px",
-                        }}
-                      >
-                        *
-                      </span>
+                    <CommonStyles.Button
+                      isIcon
+                      className="h-5 w-5"
+                      onClick={() => {
+                        setOpenDialog(true);
+                        setCurrentInputData(input);
+                      }}
+                    >
+                      <Edit />
+                    </CommonStyles.Button>
+                    <CommonStyles.Button
+                      isIcon
+                      className="h-5 w-5"
+                      color="error"
+                      onClick={() => handleDelete(input.variable)}
+                    >
+                      <Trash />
+                    </CommonStyles.Button>
+                  </div>
+                )}
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-1 items-center ">
+                    <Link2
+                      className="w-5 h-5 translate-y-0.5"
+                      color={theme.palette.primary.main}
+                    />
+                    <CommonStyles.Typography
+                      type="semiBold16"
+                      color={theme.palette.primary.main}
+                    >
+                      {input.label}
+                      {input.required && (
+                        <span
+                          style={{
+                            color: theme.colors.custom.colorErrorTypo,
+                            marginLeft: "4px",
+                          }}
+                        >
+                          *
+                        </span>
+                      )}
+                    </CommonStyles.Typography>
+                    <CommonStyles.Typography>
+                      ({input?.max_length})
+                    </CommonStyles.Typography>
+                    {input?.hint && (
+                      <Tooltip placement="top-start" title={input?.hint}>
+                        <div>
+                          <Info className="h-3 w-3 -translate-y-1" />
+                        </div>
+                      </Tooltip>
                     )}
-                  </CommonStyles.Typography>
+                  </div>
                   <CommonStyles.Typography>
-                    ({input?.max_length})
+                    {input?.type}
                   </CommonStyles.Typography>
                 </div>
-                <CommonStyles.Typography>{input?.type}</CommonStyles.Typography>
+                <div className="mt-2">
+                  {input?.description && (
+                    <CommonStyles.Typography className="opacity-50">
+                      {input?.description}
+                    </CommonStyles.Typography>
+                  )}
+                </div>
               </Box>
             );
           })}
