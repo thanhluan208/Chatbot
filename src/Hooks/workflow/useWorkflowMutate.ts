@@ -1,6 +1,6 @@
 import queryKey from "@/Constants/queryKey";
 import workflowService from "@/Services/workflow.service";
-import {  deleteWorkflowPayload } from "@/Types/workflow";
+import { AddEdgePayload, deleteWorkflowPayload } from "@/Types/workflow";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
@@ -8,8 +8,7 @@ export default function useWorkflowMutate() {
   const queryClient = useQueryClient();
 
   const handleCreateWorkflow = useMutation({
-    mutationFn: (payload: FormData) =>
-      workflowService.createWorkflow(payload),
+    mutationFn: (payload: FormData) => workflowService.createWorkflow(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [queryKey.WORKFLOW],
@@ -35,15 +34,38 @@ export default function useWorkflowMutate() {
 
   const handleAddNodeWorkflow = useMutation({
     mutationFn: (payload: any) => workflowService.addNodeWorkflow(payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [queryKey.WORKFLOW_DETAIL],
-      });
-    },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Something went wrong");
     },
   });
 
-  return { handleCreateWorkflow, handleDeleteWorkflow, handleAddNodeWorkflow };
+  const handleUpdateNodeData = useMutation({
+    mutationFn: (payload: any) => workflowService.updateNodeData(payload),
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    },
+  });
+
+  const handleAddEdge = useMutation({
+    mutationFn: (payload: AddEdgePayload) => workflowService.addEdge(payload),
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    },
+  });
+
+  const handleRemoveEdge = useMutation({
+    mutationFn: (payload: any) => workflowService.removeEdge(payload),
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    },
+  });
+
+  return {
+    handleCreateWorkflow,
+    handleDeleteWorkflow,
+    handleAddNodeWorkflow,
+    handleUpdateNodeData,
+    handleAddEdge,
+    handleRemoveEdge,
+  };
 }
