@@ -8,6 +8,8 @@ import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
 import { MessageSquareQuote } from "lucide-react";
 import CommonStyles from "@/Components/CommonStyles";
 import { useTranslation } from "react-i18next";
+import Hint from "@/Pages/ChatbotConfigure/components/GenerateDiversity/components/Hint";
+import WindowSizeControl from "./components/WindowSizeControl";
 
 const WF_LtmNode = (props: NodeProps) => {
     //! State
@@ -60,28 +62,52 @@ const WF_LtmNode = (props: NodeProps) => {
                                 <CollapseArea
                                     nodeId="{id}"
                                     label={
-                                        <CommonStyles.Typography type="semiBold14">
-                                            Memory
-                                        </CommonStyles.Typography>
+                                        <Box
+                                            sx={{
+                                            display: "flex",
+                                            gap: "8px",
+                                            alignItems: "center"
+                                            }}
+                                        >
+                                            <CommonStyles.Typography type="semiBold14">
+                                                Memory
+                                            </CommonStyles.Typography>
+                                            <Hint content="Chat memory settings" />
+                                        </Box>
                                     }
                                 >
+                                    <WindowSizeControl min={0} max={100}></WindowSizeControl>
                                 </CollapseArea>
 
                                 <CollapseArea
                                     nodeId="{id}"
                                     label={
-                                        <CommonStyles.Typography type="semiBold14">
-                                            Output
-                                        </CommonStyles.Typography>
-
-
+                                        <Box
+                                            sx={{
+                                            display: "flex",
+                                            gap: "8px",
+                                            alignItems: "center"
+                                            }}
+                                        >
+                                            <CommonStyles.Typography type="semiBold14">
+                                                Output
+                                            </CommonStyles.Typography>
+                                            <Hint content="The output list is the information that best match the input parameters, called from Long-term Memory of related Bot." />
+                                        </Box>
                                     }>
+                                    <div 
+                                    className="flex ml-12 items-center" 
+                                    style={{fontFamily: "SegoeUI"}}
+                                    >
+                                        <span>output</span>
 
-                                    <span>output</span>
-                                    <div className="shrink-0 flex items-center py-0.5 px-2 rounded-[6px] ml-2 coz-mg-primary">
-                                        <span className="text-xs coz-fg-primary">
-                                            String
-                                        </span>
+                                        <div 
+                                        className="shrink-0 flex items-center py-0.5 px-2 rounded-[6px] ml-2" 
+                                        style={{backgroundColor: "rgba(6,7,9,0.04)"}}>
+                                            <span className="text-xs">
+                                                String
+                                            </span>
+                                        </div>
                                     </div>
                                 </CollapseArea>
                             </Form>
