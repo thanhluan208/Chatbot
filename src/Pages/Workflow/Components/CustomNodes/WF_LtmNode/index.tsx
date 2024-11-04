@@ -77,7 +77,7 @@ const WF_LtmNode = (props: NodeProps) => {
 
                                     }>
 
-                                    <span>Output</span>
+                                    <span>output</span>
                                     <div className="shrink-0 flex items-center py-0.5 px-2 rounded-[6px] ml-2 coz-mg-primary">
                                         <span className="text-xs coz-fg-primary">
                                             String
