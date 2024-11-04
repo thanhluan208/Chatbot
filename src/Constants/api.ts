@@ -1,4 +1,5 @@
-const baseAPI = "https://e73a-58-186-129-217.ngrok-free.app"; 
+// const baseAPI = "https://e73a-58-186-129-217.ngrok-free.app"; 
+const baseAPI = "https://helped-dragon-entirely.ngrok-free.app"; 
 // const baseAPI = "https://chatbot-api.alphiiai.com";
 export const getFolderKnowledge =
   baseAPI + "/knowledge/list_knowledge_storages";

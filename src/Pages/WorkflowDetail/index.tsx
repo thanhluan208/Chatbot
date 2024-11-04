@@ -31,6 +31,11 @@ const listNode = [
     label: "Code",
     description: "Code node",
   },
+  {
+    name: `customNode_WF_${NodeTypeWorkflow.LONG_TERM_MEMORY}`,
+    label: "LTM",
+    description: "Long-term memory node",
+  },
 ];
 
 const WorkflowDetail = () => {
