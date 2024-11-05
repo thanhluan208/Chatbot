@@ -1,5 +1,5 @@
-import React, { Fragment } from "react";
-import { Handle, NodeProps, Position } from "@xyflow/react";
+import React, { Fragment, useMemo } from "react";
+import { Handle, NodeProps, Position, useReactFlow } from "@xyflow/react";
 import GradientBorder from "../../GradientBorder";
 import CollapseArea from "@/Components/CommonStyles/CollapseArea";
 import { Form, Formik } from "formik";
@@ -10,12 +10,83 @@ import CommonStyles from "@/Components/CommonStyles";
 import { useTranslation } from "react-i18next";
 import Hint from "@/Pages/ChatbotConfigure/components/GenerateDiversity/components/Hint";
 import WindowSizeControl from "./components/WindowSizeControl";
+import { v4 as uuid } from "uuid";
+import { useParams } from "react-router-dom";
+import { useAuth } from "@/Providers/AuthenticationProvider";
+import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
+import { toast } from "react-toastify";
 
 const WF_LtmNode = (props: NodeProps) => {
     //! State
-    const {data, id, positionAbsoluteX, positionAbsoluteY} = props;
+    const { data, id, positionAbsoluteX, positionAbsoluteY} = props;
     const theme = useTheme();
+    const { userId } = useAuth();
+    const { workflowId } = useParams();
+    const { updateNode } = useReactFlow();
+
+    const { handleUpdateNodeData } = useWorkflowMutate();
+    
     const {t} = useTranslation("node");
+
+    const leftHandleId = useMemo(() => {
+        return uuid();
+      }, []);
+
+    const rightHandleId = useMemo(() => {
+        return uuid();
+      }, []);
+
+
+    const handleRename = async (name: string) => {
+        const payload = {
+            user_id: userId,
+            workflow_id: workflowId,
+            node_id: props.id,
+            node_data: {
+                name: name,
+                desc: "",
+                position: JSON.stringify({
+                    x: props.positionAbsoluteX,
+                    y: props.positionAbsoluteY,
+                })
+            },
+        };  
+
+        doRequest(payload);
+    }
+
+    const handleUpdateHistoryTurn = async (history_turn: number) => {
+        const payload = {
+            user_id: userId,
+            workflow_id: workflowId,
+            node_id: props.id,
+            node_data: {
+                desc: "",
+                position: JSON.stringify({
+                    x: props.positionAbsoluteX,
+                    y: props.positionAbsoluteY,
+                }),
+                history_turn: history_turn
+                },
+        };
+
+        doRequest(payload);
+    };
+    
+    const doRequest = async(payload: any) =>{
+        const response = await handleUpdateNodeData.mutateAsync(payload);
+        if (response?.status_code === 200) {
+            updateNode(props.id, {
+            data: {
+                ...props?.data,
+                label: name,
+            },
+            });
+        } else {
+            toast.error(response?.message);
+        }
+    }
+
 
     //!Render
     return (
@@ -49,6 +120,7 @@ const WF_LtmNode = (props: NodeProps) => {
                                 nodeId={id}
                                 positionAbsoluteX={positionAbsoluteX}
                                 positionAbsoluteY={positionAbsoluteY}
+                                handleUpdateName={handleRename}
                             />
                         </Box>
                     }
@@ -76,7 +148,12 @@ const WF_LtmNode = (props: NodeProps) => {
                                         </Box>
                                     }
                                 >
-                                    <WindowSizeControl min={0} max={100}></WindowSizeControl>
+                                    <WindowSizeControl 
+                                        min={0} 
+                                        max={100}
+                                        handleUpdate={handleUpdateHistoryTurn}
+                                    >
+                                    </WindowSizeControl>
                                 </CollapseArea>
 
                                 <CollapseArea
@@ -120,11 +197,22 @@ const WF_LtmNode = (props: NodeProps) => {
             <Handle
                 type="target"
                 position={Position.Left}
-                id={`${props?.id}-target`}
+                id={leftHandleId}
                 isConnectable={true}
                 className="handle"
                 style={{
                 left: "3px",
+                }}
+            />
+
+            <Handle
+                type="target"
+                position={Position.Right}
+                id={rightHandleId}
+                isConnectable={true}
+                className="handle"
+                style={{
+                right: "3px",
                 }}
             />
 

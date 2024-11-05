@@ -5,9 +5,10 @@ import { min } from 'lodash';
 interface WindowSizeControlProps {
     min: number;
     max: number;
+    handleUpdate?: (history_turn: number) => Promise<void>;
   }
 
-const WindowSizeControl : React.FC<WindowSizeControlProps> = ({ min, max }) => {
+const WindowSizeControl : React.FC<WindowSizeControlProps> = ({ min, max, handleUpdate }) => {
   const [isOn, setIsOn] = useState(true);
   const [sliderValue, setSliderValue] = useState(50);
 
@@ -15,8 +16,13 @@ const WindowSizeControl : React.FC<WindowSizeControlProps> = ({ min, max }) => {
     setIsOn(!isOn);
   };
 
-  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSliderValue(parseInt(e.target.value, 10));
+  const handleSliderChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    var value = parseInt(e.target.value, 10);
+    setSliderValue(value);
+
+    if (handleUpdate) {
+      await handleUpdate(value);
+    }
   };
 
   return (
@@ -39,7 +45,6 @@ const WindowSizeControl : React.FC<WindowSizeControlProps> = ({ min, max }) => {
         }}
       />
 
-      {/* Input */}
       <input
         type="number"
         value={sliderValue}
