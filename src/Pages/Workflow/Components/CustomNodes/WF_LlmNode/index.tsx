@@ -22,7 +22,6 @@ const WF_StartNode = (props: NodeProps) => {
   const theme = useTheme();
   const { t } = useTranslation("node");
 
-
   const initialValues = useMemo(() => {
     const botData: any = {
       llm: data.llm,
@@ -134,7 +133,7 @@ const WF_StartNode = (props: NodeProps) => {
                     }
                   >
                     <div className="nodrag cursor-pointer">
-                      <Editor controlPromptEditorRerenderKey={id} nodeId={id} />
+                      <Editor controlPromptEditorRerenderKey={id} nodeId={id} parentNodes={data?.parentNodes as string[] || []}/>
                     </div>
                   </CollapseArea>
                 </Form>
