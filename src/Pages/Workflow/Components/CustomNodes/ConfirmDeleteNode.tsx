@@ -3,8 +3,6 @@ import useToggleDialog from "@/Hooks/useToggleDialog";
 import CommonStyles from "@/Components/CommonStyles";
 import { useCallback } from "react";
 import CommonIcons from "@/Components/CommonIcons";
-import { useGet } from "@/Stores/useStore";
-import cachedKeys from "@/Constants/cachedKeys";
 import { useReactFlow } from "@xyflow/react";
 
 interface IConfirmDeleteNode {
@@ -15,13 +13,13 @@ const ConfirmDeleteNode = (props: IConfirmDeleteNode) => {
   //! State
   const { nodeId } = props;
   const { open, shouldRender, toggle } = useToggleDialog();
-  const { setNodes, setEdges } = useReactFlow();
-
-  const nodes = useGet(cachedKeys.FLOW_NODES);
-  const edges = useGet(cachedKeys.FLOW_EDGES);
+  const { setNodes, setEdges, getNodes, getEdges } = useReactFlow();
 
   //! Function
   const handleDelete = useCallback(() => {
+    const nodes = getNodes();
+    const edges = getEdges();
+
     const newNodes = nodes.filter((node: any) => node.id !== nodeId);
     const newEdges = edges.filter(
       (edge: any) => edge.source !== nodeId && edge.target !== nodeId
@@ -29,7 +27,7 @@ const ConfirmDeleteNode = (props: IConfirmDeleteNode) => {
 
     setNodes(newNodes);
     setEdges(newEdges);
-  }, [nodeId, nodes, edges, setNodes, setEdges]);
+  }, [nodeId, setNodes, setEdges]);
 
   //! Render
   return (

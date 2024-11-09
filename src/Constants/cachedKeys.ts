@@ -33,8 +33,6 @@ export default {
   REFETCH_USER_DATA: "REFETCH_USER_DATA",
 
   //! React flow
-  FLOW_NODES: "FLOW_NODES",
-  FLOW_EDGES: "FLOW_EDGES",
   COLLAPSE_TOOLBAR: "COLLAPSE_TOOLBAR",
 
   //! Community

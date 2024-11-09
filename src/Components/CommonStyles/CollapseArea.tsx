@@ -61,7 +61,11 @@ const CollapseArea = (props: ICollapseArea) => {
         <CommonStyles.Button
           isIcon
           hasBorder={false}
-          onClick={() => setOpen((prev) => !prev)}
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            setOpen((prev) => !prev);
+          }}
           isRound={false}
         >
           <CommonIcons.ExpandMore
@@ -71,7 +75,9 @@ const CollapseArea = (props: ICollapseArea) => {
             }}
           />
         </CommonStyles.Button>
-        <CommonStyles.Typography width="100%" type="semiBold16">{label || "Inputs"}</CommonStyles.Typography>
+        <CommonStyles.Typography width="100%" type="semiBold16">
+          {label || "Inputs"}
+        </CommonStyles.Typography>
       </Box>
       <Collapse in={open}>{props.children}</Collapse>
     </Box>

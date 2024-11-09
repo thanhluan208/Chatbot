@@ -61,7 +61,6 @@ export default function FlowChart(props: IFlowChart) {
   const save = useSave();
   const theme = useTheme();
 
-
   const { userId } = useAuth();
 
   const onReconnectStart = useCallback(() => {
@@ -129,13 +128,6 @@ export default function FlowChart(props: IFlowChart) {
   );
 
   const onDragStop = async (_: React.MouseEvent, node: Node) => {
-    // const newNodes = cloneDeep(nodes).map((item) => {
-    //   if (item.id === node.id) {
-    //     return node;
-    //   } else {
-    //     return item;
-    //   }
-    // });
 
     //TODO: HISTORY FEATURE
     // handleSaveHistory(newNodes, getEdges());
@@ -161,20 +153,6 @@ export default function FlowChart(props: IFlowChart) {
 
       return setEdges((eds: any) => {
         //TODO: HISTORY FEATURE
-        // handleSaveHistory(getNodes(), [
-        //   ...eds,
-        //   {
-        //     ...connection,
-        //     type: "animatedSvg",
-        //     markerEnd: {
-        //       type: MarkerType.ArrowClosed,
-        //       width: 20,
-        //       height: 20,
-        //       color: "#4e40e5",
-        //     },
-        //     deletable: true,
-        //   },
-        // ]);
 
         reactFlowService.updateEdge(
           true,
@@ -212,7 +190,9 @@ export default function FlowChart(props: IFlowChart) {
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
 
-      const {nodeType: type, label} = JSON.parse(event.dataTransfer.getData("application/reactflow"));
+      const { nodeType: type, label } = JSON.parse(
+        event.dataTransfer.getData("application/reactflow")
+      );
 
       if (typeof type === "undefined" || !type) {
         return;
@@ -240,29 +220,29 @@ export default function FlowChart(props: IFlowChart) {
         return newNodes;
       });
 
+      const onSuccess = (id: string) => {
+        updateNode(newNode.id, {
+          id: id,
+          data: {
+            label: `Agent ${id}`,
+          },
+        });
+      };
+
+      const onFailed = () => {
+        save(`${newNode.id}_remove`, true);
+      };
+
+      if(!props.botId) return;
+
       if (isMultiAgent) {
-        const onSuccess = (id: string) => {
-          updateNode(newNode.id, {
-            id: id,
-            data: {
-              label: `Agent ${id}`,
-            },
-          });
-        };
-
-        const onFailed = () => {
-          save(`${newNode.id}_remove`, true);
-        };
-
-        if (props.botId) {
-          reactFlowService.createFlow(
-            props.botId,
-            userId as string,
-            onSuccess,
-            onFailed,
-            JSON.stringify(newNode)
-          );
-        }
+        reactFlowService.createFlow(
+          props.botId,
+          userId as string,
+          onSuccess,
+          onFailed,
+          JSON.stringify(newNode)
+        );
       }
     },
     [screenToFlowPosition, isMultiAgent, setNodes, updateNode, props.botId]
@@ -397,13 +377,7 @@ export default function FlowChart(props: IFlowChart) {
     return "";
   };
 
-  useEffect(() => {
-    save(cachedKeys.FLOW_NODES, nodes);
-  }, [save, nodes]);
 
-  useEffect(() => {
-    save(cachedKeys.FLOW_EDGES, edges);
-  }, [edges, save]);
 
   useEffect(() => {
     save(cachedKeys.SAVE_HISTORY, handleSaveHistory);
@@ -411,12 +385,9 @@ export default function FlowChart(props: IFlowChart) {
 
   useEffect(() => {
     return () => {
-      save(cachedKeys.FLOW_EDGES, undefined);
-      save(cachedKeys.FLOW_NODES, undefined);
       save(cachedKeys.HISTORY, []);
     };
   }, []);
-
 
   return (
     <Box
@@ -467,7 +438,12 @@ export default function FlowChart(props: IFlowChart) {
       >
         <Controls />
         <MiniMap nodeColor={nodeColor} />
-        <Background variant={BackgroundVariant.Dots} gap={12} size={1} bgColor={theme.colors.custom.background}/>
+        <Background
+          variant={BackgroundVariant.Dots}
+          gap={12}
+          size={1}
+          bgColor={theme.colors.custom.background}
+        />
       </ReactFlow>
       <Toolbar listNode={props.listNode} />
     </Box>

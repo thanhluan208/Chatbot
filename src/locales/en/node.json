@@ -57,5 +57,9 @@
     "processing": "Processing",
     "processed": "Processed successfully",
     "failed": "Processed failed"
+  },
+
+  "WF_editor": {
+    "no_var": "No variable"
   }
 }

@@ -15,23 +15,6 @@ class reactFlowServices {
   setNodes: React.Dispatch<React.SetStateAction<Node[]>> | null = null;
   getNodes: () => Node[] | [] = () => [];
 
-  subcribeFlow(
-    setEdges: React.Dispatch<React.SetStateAction<Edge[]>>,
-    setNodes: React.Dispatch<React.SetStateAction<Node[]>>,
-    getEdges: () => Edge[],
-    getNodes: () => Node[]
-  ) {
-    this.setEdges = setEdges;
-    this.setNodes = setNodes;
-    this.getEdges = getEdges;
-    this.getNodes = getNodes;
-  }
-
-  unsubcribeFlow() {
-    this.setEdges = null;
-    this.setNodes = null;
-  }
-
   async createFlow(
     botId: string,
     userId: string,
