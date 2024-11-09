@@ -12,6 +12,7 @@ import WF_StartNode from "../CustomNodes/WF_StartNode";
 import WF_LlmNode from "../CustomNodes/WF_LlmNode";
 import WF_ConditionNode from "../CustomNodes/WF_ConditionNode";
 import WF_CodeNode from "../CustomNodes/WF_CodeNode";
+import WF_LtmNode from "../CustomNodes/WF_LtmNode";
 import { NodeTypeWorkflow } from "@/Types/workflow";
 
 export enum NodeTypes {
@@ -34,6 +35,7 @@ export const nodeTypes = {
   [`customNode_WF_${NodeTypeWorkflow.LLM}`]: WF_LlmNode,
   [`customNode_WF_${NodeTypeWorkflow.IF_ELSE}`]: WF_ConditionNode,
   [`customNode_WF_${NodeTypeWorkflow.CODE}`]: WF_CodeNode,
+  [`customNode_WF_${NodeTypeWorkflow.LONG_TERM_MEMORY}`]: WF_LtmNode,
 };
 
 export enum CustomNodeTypes {
