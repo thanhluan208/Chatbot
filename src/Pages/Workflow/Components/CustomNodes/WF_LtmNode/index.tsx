@@ -7,7 +7,6 @@ import { Box, useTheme } from "@mui/material";
 import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
 import { MessageSquareQuote } from "lucide-react";
 import CommonStyles from "@/Components/CommonStyles";
-import { useTranslation } from "react-i18next";
 import Hint from "@/Pages/ChatbotConfigure/components/GenerateDiversity/components/Hint";
 import WindowSizeControl from "./components/WindowSizeControl";
 import { v4 as uuid } from "uuid";
@@ -26,7 +25,6 @@ const WF_LtmNode = (props: NodeProps) => {
 
     const { handleUpdateNodeData } = useWorkflowMutate();
     
-    const {t} = useTranslation("node");
 
     const leftHandleId = useMemo(() => {
         return uuid();

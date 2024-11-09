@@ -20,7 +20,6 @@ import { useTranslation } from "react-i18next";
 import { useReactFlow } from "@xyflow/react";
 import { Variable } from "@/Types/workflow";
 import AddOrEditInputDialog from "./AddOrEditInputDialog";
-import { updateWorkflowNodeData } from "@/Constants/api";
 import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import { useParams } from "react-router-dom";

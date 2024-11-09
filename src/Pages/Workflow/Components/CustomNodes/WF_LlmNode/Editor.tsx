@@ -3,7 +3,7 @@ import {
   BlockEnum,
   NodeOutPutVar,
 } from "@/Components/CommonStyles/EditorPlugin/type";
-import { StartNodeInputType, Variable } from "@/Types/workflow";
+import {  Variable } from "@/Types/workflow";
 import { Box } from "@mui/material";
 import { Node, useReactFlow } from "@xyflow/react";
 import { useBoolean } from "ahooks";

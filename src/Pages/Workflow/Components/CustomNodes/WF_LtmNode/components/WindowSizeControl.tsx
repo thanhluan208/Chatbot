@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import SwitchButton from './SwitchButton'; // Import SwitchButton
-import { min } from 'lodash';
 
 interface WindowSizeControlProps {
     min: number;
