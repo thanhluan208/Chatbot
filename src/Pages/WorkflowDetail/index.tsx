@@ -47,7 +47,26 @@ const WorkflowDetail = () => {
   const nodes = data?.workflow_data?.graph?.nodes;
 
   const parsedNode = useMemo(() => {
-    const arr: Node[] = [];
+    const arr: Node[] = [
+      {
+        id: "start",
+        position: {
+          x: 8,
+          y: 8,
+        },
+        data: {
+          label: "Start",
+          startNode: true,
+          variables: [{ variable: "output", type: "string" }],
+        },
+        selectable: false,
+        selected: false,
+        dragging: false,
+        type: `customNode_WF_${NodeTypeWorkflow.START}`,
+      },
+    ];
+
+    return arr;
     if (!nodes) return;
 
     Object.keys(nodes).forEach((key) => {
@@ -76,8 +95,6 @@ const WorkflowDetail = () => {
 
     return arr;
   }, [nodes]);
-
-  console.log('parsedNode',parsedNode)
 
   //! Function
 

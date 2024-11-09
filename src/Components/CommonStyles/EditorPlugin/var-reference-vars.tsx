@@ -4,7 +4,7 @@ import { useHover } from "ahooks";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/lib/utils";
-import { FILE_STRUCT, NodeOutPutVar, Var, VarType } from "./type";
+import { NodeOutPutVar, Var } from "./type";
 import { checkKeys, ValueSelector } from "./util";
 import { AlignEndVertical, Bug, ChevronRight, Variable } from "lucide-react";
 import CommonStyles from "..";
@@ -13,8 +13,6 @@ import {
   PortalToFollowElemContent,
   PortalToFollowElemTrigger,
 } from "./portal-to-follow-element";
-import { useTheme } from "@mui/material";
-
 type ObjectChildrenProps = {
   nodeId: string;
   title: string;
@@ -47,13 +45,7 @@ const Item: FC<ItemProps> = ({
   itemWidth,
   isSupportFileVar,
 }) => {
-  const theme = useTheme();
-  console.log(theme.colors.custom.normalColorTypo);
-  const isFile = itemData.type === VarType.file;
-  const isObj =
-    [VarType.object, VarType.file].includes(itemData.type) &&
-    itemData.children &&
-    itemData.children.length > 0;
+  const isObj = itemData.children && itemData.children.length > 0;
   const isSys = itemData.variable.startsWith("sys.");
   const isEnv = itemData.variable.startsWith("env.");
   const isChatVar = itemData.variable.startsWith("conversation.");
@@ -64,13 +56,7 @@ const Item: FC<ItemProps> = ({
       if (hovering) {
         setIsItemHovering(true);
       } else {
-        if (isObj) {
-          setTimeout(() => {
-            setIsItemHovering(false);
-          }, 100);
-        } else {
-          setIsItemHovering(false);
-        }
+        setIsItemHovering(false);
       }
     },
   });
@@ -84,8 +70,6 @@ const Item: FC<ItemProps> = ({
 
   const handleChosen = (e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log("chosen", isSupportFileVar, isFile);
-    if (!isSupportFileVar && isFile) return;
 
     if (isSys || isEnv || isChatVar) {
       // system variable | environment variable | conversation variable
@@ -169,26 +153,13 @@ const Item: FC<ItemProps> = ({
           zIndex: 100,
         }}
       >
-        {isObj && !isFile && (
+        {isObj && (
           // eslint-disable-next-line @typescript-eslint/no-use-before-define
           <ObjectChildren
             nodeId={nodeId}
             title={title}
             objPath={[...objPath, itemData.variable]}
             data={itemData.children as Var[]}
-            onChange={onChange}
-            onHovering={setIsChildrenHovering}
-            itemWidth={itemWidth}
-            isSupportFileVar={isSupportFileVar}
-          />
-        )}
-        {isFile && (
-          // eslint-disable-next-line @typescript-eslint/no-use-before-define
-          <ObjectChildren
-            nodeId={nodeId}
-            title={title}
-            objPath={[...objPath, itemData.variable]}
-            data={FILE_STRUCT}
             onChange={onChange}
             onHovering={setIsChildrenHovering}
             itemWidth={itemWidth}
@@ -359,7 +330,10 @@ const VarReferenceVars: FC<Props> = ({
         <div className={cn("max-h-[85vh] overflow-y-auto", maxHeightClass)}>
           {filteredVars.map((item) => (
             <div key={item.nodeId + item.title}>
-              <CommonStyles.Typography type="semiBold16" className="leading-[22px] px-3 truncate ">
+              <CommonStyles.Typography
+                type="semiBold16"
+                className="leading-[22px] px-3 truncate "
+              >
                 {item.title}
               </CommonStyles.Typography>
               {item.vars.map((v, j) => (
