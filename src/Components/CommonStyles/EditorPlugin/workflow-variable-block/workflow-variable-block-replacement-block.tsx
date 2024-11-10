@@ -10,9 +10,8 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { CustomTextNode } from '../custom-text/node'
 import { $createWorkflowVariableBlockNode } from './node'
 import { WorkflowVariableBlockNode } from './index'
-import { decoratorTransform, VAR_REGEX as REGEX, resetReg } from '../util'
 import { WorkflowVariableBlockType } from '../type'
-import {v4 as uuidv4} from 'uuid'
+import { decoratorTransform, resetReg } from '../util'
 
 const WorkflowVariableBlockReplacementBlock = ({
   workflowNodesMap,
@@ -30,11 +29,11 @@ const WorkflowVariableBlockReplacementBlock = ({
       onInsert()
 
     const nodePathString = textNode.getTextContent().slice(3, -3)
-    return $applyNodeReplacement($createWorkflowVariableBlockNode(nodePathString.split('.'), workflowNodesMap, uuidv4()))
+    return $applyNodeReplacement($createWorkflowVariableBlockNode(nodePathString.split('.'), workflowNodesMap))
   }, [onInsert, workflowNodesMap])
 
   const getMatch = useCallback((text: string) => {
-    const matchArr = REGEX.exec(text)
+    const matchArr = /\{\{(#[a-zA-Z0-9_-]{1,50}(\.[a-zA-Z_][a-zA-Z0-9_]{0,29}){1,10}#)\}\}/gi.exec(text)
 
     if (matchArr === null)
       return null

@@ -5,8 +5,8 @@ import { useTranslation } from "react-i18next";
 
 import { cn } from "@/lib/utils";
 import { NodeOutPutVar, Var } from "./type";
-import { checkKeys, ValueSelector } from "./util";
-import { AlignEndVertical, Bug, ChevronRight, Variable } from "lucide-react";
+import { ValueSelector } from "./util";
+import { ChevronRight } from "lucide-react";
 import CommonStyles from "..";
 import {
   PortalToFollowElem,
@@ -46,8 +46,6 @@ const Item: FC<ItemProps> = ({
   isSupportFileVar,
 }) => {
   const isObj = itemData.children && itemData.children.length > 0;
-  const isSys = itemData.variable.startsWith("sys.");
-  const isEnv = itemData.variable.startsWith("env.");
   const isChatVar = itemData.variable.startsWith("conversation.");
   const itemRef = useRef(null);
   const [isItemHovering, setIsItemHovering] = useState(false);
@@ -62,7 +60,7 @@ const Item: FC<ItemProps> = ({
   });
   const [isChildrenHovering, setIsChildrenHovering] = useState(false);
   const isHovering = isItemHovering || isChildrenHovering;
-  const open = isObj && isHovering;
+  const open =  isHovering;
   useEffect(() => {
     onHovering && onHovering(isHovering);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -71,7 +69,7 @@ const Item: FC<ItemProps> = ({
   const handleChosen = (e: React.MouseEvent) => {
     e.stopPropagation();
 
-    if (isSys || isEnv || isChatVar) {
+    if (isChatVar) {
       // system variable | environment variable | conversation variable
       onChange([...objPath, ...itemData.variable.split(".")], itemData);
     } else {
@@ -95,45 +93,12 @@ const Item: FC<ItemProps> = ({
           onClick={handleChosen}
         >
           <div className="flex items-center w-0 grow">
-            {!isEnv && !isChatVar && (
-              <CommonStyles.Typography>
-                <Variable className="shrink-0 w-3.5 h-3.5 text-text-accent" />
-              </CommonStyles.Typography>
-            )}
-            {isEnv && (
-              <CommonStyles.Typography>
-                <AlignEndVertical className="shrink-0 w-3.5 h-3.5 text-util-colors-violet-violet-600" />
-              </CommonStyles.Typography>
-            )}
-            {isChatVar && (
-              <CommonStyles.Typography>
-                <Bug className="w-3.5 h-3.5 text-util-colors-teal-teal-700" />
-              </CommonStyles.Typography>
-            )}
-            {!isEnv && !isChatVar && (
-              <CommonStyles.Typography
-                title={itemData.variable}
-                className="ml-1 w-0 grow truncate"
-              >
-                {itemData.variable}
-              </CommonStyles.Typography>
-            )}
-            {isEnv && (
-              <CommonStyles.Typography
-                title={itemData.variable}
-                className="ml-1 w-0 grow truncate "
-              >
-                {itemData.variable.replace("env.", "")}
-              </CommonStyles.Typography>
-            )}
-            {isChatVar && (
-              <CommonStyles.Typography
-                title={itemData.des}
-                className="ml-1 w-0 grow truncate "
-              >
-                {itemData.variable.replace("conversation.", "")}
-              </CommonStyles.Typography>
-            )}
+            <CommonStyles.Typography
+              title={itemData.variable}
+              className="ml-1 w-0 grow truncate"
+            >
+              {itemData.variable}
+            </CommonStyles.Typography>
           </div>
           <div className="ml-1 shrink-0 text-xs font-normal text-text-tertiary capitalize">
             <CommonStyles.Typography>{itemData.type}</CommonStyles.Typography>
@@ -247,8 +212,6 @@ type Props = {
   maxHeightClass?: string;
 };
 const VarReferenceVars: FC<Props> = ({
-  hideSearch,
-  searchBoxClassName,
   vars,
   isSupportFileVar,
   onChange,
@@ -256,79 +219,12 @@ const VarReferenceVars: FC<Props> = ({
   maxHeightClass,
 }) => {
   const { t } = useTranslation();
-  const [searchText, setSearchText] = useState("");
-
-  const filteredVars = vars
-    .filter((v) => {
-      const children = v.vars.filter(
-        (v) =>
-          checkKeys([v.variable], false).isValid ||
-          v.variable.startsWith("sys.") ||
-          v.variable.startsWith("env.") ||
-          v.variable.startsWith("conversation.")
-      );
-      return children.length > 0;
-    })
-    .filter((node) => {
-      if (!searchText) return node;
-      const children = node.vars.filter((v) => {
-        const searchTextLower = searchText.toLowerCase();
-        return (
-          v.variable.toLowerCase().includes(searchTextLower) ||
-          node.title.toLowerCase().includes(searchTextLower)
-        );
-      });
-      return children.length > 0;
-    })
-    .map((node) => {
-      let vars = node.vars.filter(
-        (v) =>
-          checkKeys([v.variable], false).isValid ||
-          v.variable.startsWith("sys.") ||
-          v.variable.startsWith("env.") ||
-          v.variable.startsWith("conversation.")
-      );
-      if (searchText) {
-        const searchTextLower = searchText.toLowerCase();
-        if (!node.title.toLowerCase().includes(searchTextLower))
-          vars = vars.filter((v) =>
-            v.variable.toLowerCase().includes(searchText.toLowerCase())
-          );
-      }
-
-      return {
-        ...node,
-        vars,
-      };
-    });
 
   return (
     <>
-      {!hideSearch && (
-        <>
-          <div
-            className={cn("mb-2 mx-1", searchBoxClassName)}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <CommonStyles.Input
-              value={searchText}
-              placeholder={t("workflow.common.searchVar") || ""}
-              onChange={(e) => setSearchText(e.target.value)}
-              autoFocus
-            />
-          </div>
-          <div
-            className="h-[0.5px] bg-black/5 relative left-[-4px]"
-            style={{
-              width: "calc(100% + 8px)",
-            }}
-          ></div>
-        </>
-      )}
-
-      {filteredVars.length > 0 ? (
+      {vars.length > 0 ? (
         <div className={cn("max-h-[85vh] overflow-y-auto", maxHeightClass)}>
-          {filteredVars.map((item) => (
+          {vars.map((item) => (
             <div key={item.nodeId + item.title}>
               <CommonStyles.Typography
                 type="semiBold16"

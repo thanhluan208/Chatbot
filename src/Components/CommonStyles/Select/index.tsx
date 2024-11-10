@@ -7,7 +7,6 @@ import {
   useTheme,
 } from "@mui/material";
 import CommonStyles from "..";
-import { Fragment } from "react/jsx-runtime";
 
 interface ISelect {
   options: any[];
@@ -25,6 +24,7 @@ const CommonSelect = (props: ISelect & SelectProps) => {
     customRenderValue,
     handleChange,
     value,
+    sx,
     ...otherProps
   } = props;
 
@@ -65,7 +65,6 @@ const CommonSelect = (props: ISelect & SelectProps) => {
         </CommonStyles.Typography>
       )}
       <Select
-        {...otherProps}
         label=""
         value={value}
         onChange={handleChange}
@@ -80,6 +79,7 @@ const CommonSelect = (props: ISelect & SelectProps) => {
           fieldset: {
             borderRadius: "10px",
           },
+          ...sx,
         }}
         inputProps={{
           style: {},
@@ -91,14 +91,14 @@ const CommonSelect = (props: ISelect & SelectProps) => {
             return options.find((op) => op.value === selectedValue)?.label;
           }
         }}
-        // input={<BootstrapInput />}
+        {...otherProps}
       >
         {options.map((op: { value: string; label: string; group?: string }) => {
           if (renderOption) {
             return renderOption(op);
           }
           return (
-            <Fragment>
+            <div>
               {op?.group && <ListSubheader>{op?.group}</ListSubheader>}
               <MenuItem
                 value={op?.value}
@@ -109,7 +109,7 @@ const CommonSelect = (props: ISelect & SelectProps) => {
               >
                 {op?.label}
               </MenuItem>
-            </Fragment>
+            </div>
           );
         })}
       </Select>

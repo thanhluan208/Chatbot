@@ -48,7 +48,9 @@
 
     "list_file": "Files",
 
-    "mode_configuration": "Model Configuration",
+    "model_configuration": "Model Configuration",
+    "prompt_configuration": "Prompt Configuration",
+    "memory_configuration": "Memory Configuration",
     "context": "Context",
 
     "save": "Save",
@@ -56,7 +58,10 @@
 
     "processing": "Processing",
     "processed": "Processed successfully",
-    "failed": "Processed failed"
+    "failed": "Processed failed",
+    "system_prompt": "System prompt",
+    "user_prompt": "User prompt",
+    "assistant_prompt": "Assistant prompt"
   },
 
   "WF_editor": {

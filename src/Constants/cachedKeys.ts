@@ -29,6 +29,9 @@ export default {
   DISABLE_CIRCLE: "DISABLE_CIRCLE",
   IS_EDITING: "IS_EDITING", 
 
+  //! Workflow
+  NODE_EDITING: "NODE_EDITING",
+
   //! User
   REFETCH_USER_DATA: "REFETCH_USER_DATA",
 

@@ -5,9 +5,8 @@ import cachedKeys from "@/Constants/cachedKeys";
 import { useParams } from "react-router-dom";
 import useGetWorkflowDetail from "@/Hooks/workflow/useGetWorkFlowDetail";
 import { NodeTypeWorkflow } from "@/Types/workflow";
-import { Node, ReactFlowProvider } from "@xyflow/react";
+import {  Node, ReactFlowProvider } from "@xyflow/react";
 import FlowChart from "../Workflow/Components/FlowChart";
-import ChatDrawer from "../ChatbotConfigure/components/Develop/ChatDrawer";
 
 const listNode = [
   {
@@ -53,30 +52,37 @@ const WorkflowDetail = () => {
 
     Object.keys(nodes).forEach((key) => {
       const node = nodes[key as keyof typeof nodes];
-      const type = `customNode_WF_${key}`;
+      const type = `customNode_WF_${node.data.type}`;
 
       if (!listNode.find((item) => item.name === type)) return;
       arr.push({
         id: node.id,
-        position: {
-          x: 8,
-          y: 8,
-        },
+        position: JSON.parse(node.data.position),
         data: {
           ...node?.data,
-          label: node?.data?.title,
+          label: node?.id,
           variable_out: node?.variables_out,
           startNode: key === NodeTypeWorkflow.START,
         },
         selectable: key !== NodeTypeWorkflow.START,
         selected: false,
         dragging: false,
-        type: `customNode_WF_${key}`,
+        type: `customNode_WF_${node.data.type}`,
       });
     });
 
     return arr;
   }, [nodes]);
+
+  const initEdges = useMemo(() => {
+    return Object.values(data?.workflow_data?.graph?.edges || {}).map(
+      (edge) => {
+        return {
+          ...edge,
+        };
+      }
+    );
+  }, [data?.workflow_data?.graph?.edges]);
 
   //! Function
 
@@ -94,8 +100,12 @@ const WorkflowDetail = () => {
     >
       {parsedNode && (
         <ReactFlowProvider>
-          <FlowChart initNodes={parsedNode || []} listNode={listNode} />
-          <ChatDrawer />
+          <FlowChart
+            initNodes={parsedNode || []}
+            listNode={listNode}
+            workflowId={params.workflowId}
+            initEdges={initEdges || []}
+          />
         </ReactFlowProvider>
       )}
     </Box>

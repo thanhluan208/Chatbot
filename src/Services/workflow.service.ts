@@ -6,16 +6,19 @@ import {
   queryWorkflow,
   queryWorkflowDetail,
   RemoveEdgePayload,
+  UpdateNodeDataPayload,
   WorkflowDetailResponse,
   WorkflowResponse,
 } from "@/Types/workflow";
 import httpServices from "./httpServices";
 import {
+  addEdgeWorkflowAPI,
   addNodeWorkflowAPI,
   createWorkflowAPI,
   deleteWorkflowAPI,
   getWorkflowDetailAPI,
   getWorkFlowsAPI,
+  removeEdgeWorkflowAPI,
   updateWorkflowNodeData,
 } from "@/Constants/api";
 import { AxiosResponse } from "axios";
@@ -44,16 +47,16 @@ class WorkflowService {
   return httpServices.post(getWorkflowDetailAPI, query).then((res) => res.data);
   }
 
-  updateNodeData(payload: any): Promise<CommonResponse> {
+  updateNodeData(payload: UpdateNodeDataPayload): Promise<CommonResponse> {
     return httpServices.post(updateWorkflowNodeData, payload).then(res => res.data);
   }
 
   addEdge(payload: AddEdgePayload): Promise<CommonResponse> {
-    return httpServices.post(updateWorkflowNodeData, payload).then(res => res.data);
+    return httpServices.post(addEdgeWorkflowAPI, payload).then(res => res.data);
   }
 
   removeEdge(payload: RemoveEdgePayload): Promise<CommonResponse> {
-    return httpServices.post(updateWorkflowNodeData, payload).then(res => res.data);
+    return httpServices.post(removeEdgeWorkflowAPI, payload).then(res => res.data);
   }
 }
 

@@ -1,6 +1,6 @@
 import queryKey from "@/Constants/queryKey";
 import workflowService from "@/Services/workflow.service";
-import { AddEdgePayload, deleteWorkflowPayload } from "@/Types/workflow";
+import { AddEdgePayload, addNodeWorkflowPayload, deleteWorkflowPayload, UpdateNodeDataPayload } from "@/Types/workflow";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
@@ -33,14 +33,14 @@ export default function useWorkflowMutate() {
   });
 
   const handleAddNodeWorkflow = useMutation({
-    mutationFn: (payload: any) => workflowService.addNodeWorkflow(payload),
+    mutationFn: (payload: addNodeWorkflowPayload) => workflowService.addNodeWorkflow(payload),
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Something went wrong");
     },
   });
 
   const handleUpdateNodeData = useMutation({
-    mutationFn: (payload: any) => workflowService.updateNodeData(payload),
+    mutationFn: (payload: UpdateNodeDataPayload) => workflowService.updateNodeData(payload),
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Something went wrong");
     },

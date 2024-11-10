@@ -3,17 +3,18 @@ import {
   BlockEnum,
   NodeOutPutVar,
 } from "@/Components/CommonStyles/EditorPlugin/type";
-import {  Variable } from "@/Types/workflow";
-import { Box } from "@mui/material";
+import { Variable } from "@/Types/workflow";
+import { Box, useTheme } from "@mui/material";
 import { Node, useReactFlow } from "@xyflow/react";
 import { useBoolean } from "ahooks";
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 
 interface EditorProps {
   controlPromptEditorRerenderKey: string;
   nodeId: string;
   readOnly?: boolean;
   parentNodes?: string[];
+  initValue?: string;
 }
 
 const Editor = ({
@@ -21,7 +22,9 @@ const Editor = ({
   nodeId,
   readOnly,
   parentNodes,
+  initValue,
 }: EditorProps) => {
+  const theme = useTheme();
   const { getNode } = useReactFlow();
   const onChange = (value: string) => {
     console.log(value);
@@ -41,15 +44,13 @@ const Editor = ({
 
       if (!node) return;
 
-      console.log(node);
-
       varList.push({
         nodeId: nodeId,
         title: node.data.label as string,
         vars: (node.data.variables as Variable[])?.map((elm) => {
           return {
             type: elm.type,
-            variable: elm.variable || '',
+            variable: elm.variable || "",
           };
         }),
       });
@@ -78,13 +79,12 @@ const Editor = ({
         key={controlPromptEditorRerenderKey}
         instanceId={nodeId}
         compact
-        className="min-h-[56px] px-3 py-2"
-        value={""}
-        contextBlock={{
-          show: true,
-          selectable: true,
-          canNotAddContext: true,
+        className="min-h-[128px] px-3 py-2 rounded-md"
+        style={{
+          background: theme.colors.custom.backgroundCard,
+          border: `1px solid ${theme.colors.custom.borderColor}`,
         }}
+        value={initValue || ""}
         workflowVariableBlock={{
           show: true,
           variables: parentNodeInputInfos
@@ -98,9 +98,10 @@ const Editor = ({
         onBlur={setBlur}
         onFocus={setFocus}
         editable={!readOnly}
+        nodeId={nodeId}
       />
     </Box>
   );
 };
 
-export default Editor;
+export default memo(Editor);

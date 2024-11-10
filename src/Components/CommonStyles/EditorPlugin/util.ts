@@ -94,7 +94,7 @@ export const checkKey = (key: string, canBeEmpty?: boolean) => {
 
     return true
   }
-  return 'notValid'
+  return true
 }
 
 export const checkKeys = (keys: string[], canBeEmpty?: boolean) => {
@@ -112,6 +112,5 @@ export const checkKeys = (keys: string[], canBeEmpty?: boolean) => {
       errorMessageKey = res
     }
   })
-  console.log('errorMessageKey',errorMessageKey)
   return { isValid, errorKey, errorMessageKey }
 }

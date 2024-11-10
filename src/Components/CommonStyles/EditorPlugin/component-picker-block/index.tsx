@@ -1,4 +1,4 @@
-import { Fragment, memo, useCallback, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import ReactDOM from "react-dom";
 import { flip, offset, shift, useFloating } from "@floating-ui/react";
 import { createCommand, type TextNode } from "lexical";
@@ -14,8 +14,8 @@ import { ContextBlockType } from "./types";
 import { useEventEmitterContextContext } from "./event-emitter";
 import { PickerBlockMenuOption } from "./menu";
 import { WorkflowVariableBlockType } from "../type";
-import VarReferenceVars from "../var-reference-vars";
 import { useTheme } from "@mui/material";
+import VarReferenceVars from "../var-reference-vars";
 
 export const INSERT_VARIABLE_BLOCK_COMMAND = createCommand(
   "INSERT_VARIABLE_BLOCK_COMMAND"
@@ -31,13 +31,14 @@ type ComponentPickerProps = {
   triggerString: string;
   contextBlock?: ContextBlockType;
   workflowVariableBlock?: WorkflowVariableBlockType;
+  nodeId: string;
 };
 const ComponentPicker = ({
   triggerString,
   contextBlock,
   workflowVariableBlock,
 }: ComponentPickerProps) => {
-  const theme = useTheme()
+  const theme = useTheme();
   const { eventEmitter } = useEventEmitterContextContext();
   const { refs, floatingStyles, isPositioned } = useFloating({
     placement: "bottom-start",
@@ -109,11 +110,8 @@ const ComponentPicker = ({
   );
 
   const renderMenu = useCallback<MenuRenderFn<PickerBlockMenuOption>>(
-    (
-      anchorElementRef,
-      { options, selectedIndex, selectOptionAndCleanUp, setHighlightedIndex }
-    ) => {
-      if (!(anchorElementRef.current && allFlattenOptions.length)) return null;
+    (anchorElementRef) => {
+      if (!anchorElementRef.current) return null;
       refs.setReference(anchorElementRef.current);
 
       return (
@@ -133,7 +131,7 @@ const ComponentPicker = ({
                 }}
                 ref={refs.setFloating}
               >
-                {options.map((option, index) => (
+                {/* {options.map((option, index) => (
                   <Fragment key={option.key}>
                     {
                       // Divider
@@ -153,29 +151,26 @@ const ComponentPicker = ({
                       },
                     })}
                   </Fragment>
-                ))}
-                {
-                  workflowVariableBlock?.show && (
-                    <>
-                      {
-                        (!!options.length) && (
-                          <div className='h-px bg-gray-100 my-1 w-full -translate-x-1'></div>
-                        )
-                      }
-                      <div className='p-1'>
-                        <VarReferenceVars
-                          hideSearch
-                          vars={workflowVariableOptions}
-                          onChange={(variables: string[]) => {
-                            handleSelectWorkflowVariable(variables)
-                          }}
-                          maxHeightClass='max-h-[34vh]'
-                          isSupportFileVar={false}
-                        />
-                      </div>
-                    </>
-                  )
-                }
+                ))} */}
+                {workflowVariableBlock?.show && (
+                  <>
+                    <div className="p-1">
+                      <VarReferenceVars
+                        hideSearch
+                        vars={workflowVariableOptions}
+                        onChange={(variables: string[]) => {
+                          handleSelectWorkflowVariable(variables);
+                        }}
+                        maxHeightClass="max-h-[34vh]"
+                        isSupportFileVar={false}
+                      />
+                      {/* <SelectInput
+                        handleSelectVariable={handleSelectWorkflowVariable}
+                        nodeId={nodeId}
+                      /> */}
+                    </div>
+                  </>
+                )}
               </div>
             </div>,
             anchorElementRef.current

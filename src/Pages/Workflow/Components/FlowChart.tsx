@@ -29,8 +29,11 @@ import { useAuth } from "@/Providers/AuthenticationProvider";
 import { cloneDeep } from "lodash";
 import { detectDiff } from "@/Helpers";
 import httpServices from "@/Services/httpServices";
-import { deleteBotNode } from "@/Constants/api";
+import { deleteBotNode, removeNodeWorkflowAPI } from "@/Constants/api";
 import { toast } from "react-toastify";
+import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
+import { useQueryClient } from "react-query";
+import queryKey from "@/Constants/queryKey";
 
 const edgeTypes = {
   animatedSvg: AnimatedSVGEdge,
@@ -42,6 +45,7 @@ interface IFlowChart {
   botId?: string;
   isMultiAgent?: boolean;
   initEdges?: Edge[];
+  workflowId?: string;
 }
 
 export type HistoryFlow = {
@@ -50,7 +54,7 @@ export type HistoryFlow = {
 }[];
 
 export default function FlowChart(props: IFlowChart) {
-  const { isMultiAgent, initEdges = [], initNodes } = props;
+  const { isMultiAgent, initEdges = [], initNodes, workflowId } = props;
   const edgeReconnectSuccessful = useRef(true);
   const [nodes, setNodes, onNodesChange] = useNodesState(
     (initNodes as Node[]) ?? []
@@ -60,6 +64,9 @@ export default function FlowChart(props: IFlowChart) {
     useReactFlow();
   const save = useSave();
   const theme = useTheme();
+
+  const { handleAddNodeWorkflow, handleAddEdge, handleRemoveEdge } = useWorkflowMutate();
+  const queryClient = useQueryClient();
 
   const { userId } = useAuth();
 
@@ -71,6 +78,16 @@ export default function FlowChart(props: IFlowChart) {
     (oldEdge: Edge, newConnection: Connection) => {
       if (newConnection.source === newConnection.target) return;
 
+      const onFailed = () => {
+        setEdges((eds) =>
+          eds.filter(
+            (edge) =>
+              edge.sourceHandle !== newConnection.sourceHandle ||
+              edge.targetHandle !== newConnection.targetHandle
+          )
+        );
+      };
+
       try {
         edgeReconnectSuccessful.current = true;
         setEdges((els) => {
@@ -81,13 +98,31 @@ export default function FlowChart(props: IFlowChart) {
               true,
               props.botId as string,
               newConnection.source,
-              newConnection.target
+              newConnection.target,
+              onFailed
             );
-
-            //TODO: HISTORY FEATURE
-            // handleSaveHistory(getNodes(), newEdges);
-
             return newEdges;
+          }
+
+          if (workflowId && userId) {
+            handleAddEdge.mutate(
+              {
+                user_id: userId,
+                workflow_id: workflowId,
+                src_node_id: newConnection.source,
+                dest_node_id: newConnection.target,
+              },
+              {
+                onSuccess: (response) => {
+                  if (response.status_code !== 200) {
+                    onFailed();
+                  }
+                },
+                onError: () => {
+                  onFailed();
+                },
+              }
+            );
           }
 
           return els;
@@ -102,6 +137,12 @@ export default function FlowChart(props: IFlowChart) {
   const onReconnectEnd = useCallback(
     (_: any, edge: Edge) => {
       if (!edgeReconnectSuccessful.current) {
+        const onFailed = () => {
+          setEdges((eds) => {
+            return addEdge(edge, eds);
+          });
+        };
+
         setEdges((eds) => {
           const newEdges = eds.filter((e) => e.id !== edge.id);
 
@@ -110,13 +151,32 @@ export default function FlowChart(props: IFlowChart) {
               false,
               props.botId as string,
               edge.source,
-              edge.target
+              edge.target,
+              onFailed
             );
             return newEdges;
           }
 
-          //TODO: HISTORY FEATURE
-          // handleSaveHistory(getNodes(), newEdges);
+          if(workflowId && userId) {
+            handleRemoveEdge.mutate(
+              {
+                user_id: userId,
+                workflow_id: workflowId,
+                src_node_id: edge.source,
+                dest_node_id: edge.target,
+              },
+              {
+                onSuccess: (response) => {
+                  if (response.status_code !== 200) {
+                    onFailed();
+                  }
+                },
+                onError: () => {
+                  onFailed();
+                },
+              }
+            );
+          }
 
           return eds;
         });
@@ -128,7 +188,6 @@ export default function FlowChart(props: IFlowChart) {
   );
 
   const onDragStop = async (_: React.MouseEvent, node: Node) => {
-
     //TODO: HISTORY FEATURE
     // handleSaveHistory(newNodes, getEdges());
     if (isMultiAgent) {
@@ -151,16 +210,47 @@ export default function FlowChart(props: IFlowChart) {
         return;
       }
 
-      return setEdges((eds: any) => {
-        //TODO: HISTORY FEATURE
-
+      const onFailed = () => {
+        setEdges((eds) =>
+          eds.filter(
+            (edge) =>
+              edge.sourceHandle !== connection.sourceHandle ||
+              edge.targetHandle !== connection.targetHandle
+          )
+        );
+      };
+      if (props.botId) {
         reactFlowService.updateEdge(
           true,
-          props.botId as string,
+          props.botId,
           connection.source,
-          connection.target
+          connection.target,
+          onFailed
         );
+      }
 
+      if (workflowId && userId) {
+        handleAddEdge.mutate(
+          {
+            user_id: userId,
+            workflow_id: workflowId,
+            src_node_id: connection.source,
+            dest_node_id: connection.target,
+          },
+          {
+            onSuccess: (response) => {
+              if (response.status_code !== 200) {
+                onFailed();
+              }
+            },
+            onError: () => {
+              onFailed();
+            },
+          }
+        );
+      }
+
+      return setEdges((eds: any) => {
         return addEdge(
           {
             ...connection,
@@ -224,7 +314,7 @@ export default function FlowChart(props: IFlowChart) {
         updateNode(newNode.id, {
           id: id,
           data: {
-            label: `Agent ${id}`,
+            label: id,
           },
         });
       };
@@ -233,9 +323,7 @@ export default function FlowChart(props: IFlowChart) {
         save(`${newNode.id}_remove`, true);
       };
 
-      if(!props.botId) return;
-
-      if (isMultiAgent) {
+      if (isMultiAgent && props.botId) {
         reactFlowService.createFlow(
           props.botId,
           userId as string,
@@ -244,8 +332,34 @@ export default function FlowChart(props: IFlowChart) {
           JSON.stringify(newNode)
         );
       }
+      if (!isMultiAgent && workflowId) {
+        handleAddNodeWorkflow.mutate(
+          {
+            user_id: userId as string,
+            workflow_id: workflowId as string,
+            position: JSON.stringify(position),
+            node_type: type?.replace("customNode_WF_", ""),
+          },
+          {
+            onSuccess: (res) => {
+              onSuccess(res.data.node_id);
+              queryClient.invalidateQueries({
+                queryKey: [queryKey.WORKFLOW_DETAIL],
+              });
+            },
+            onError: onFailed,
+          }
+        );
+      }
     },
-    [screenToFlowPosition, isMultiAgent, setNodes, updateNode, props.botId]
+    [
+      screenToFlowPosition,
+      isMultiAgent,
+      setNodes,
+      updateNode,
+      props.botId,
+      workflowId,
+    ]
   );
 
   const onDoubleClick = useCallback(
@@ -337,16 +451,32 @@ export default function FlowChart(props: IFlowChart) {
       });
 
       nodes.forEach((node) => {
+        const payload = {
+          node_id: node.id,
+          user_id: userId,
+          bot_id: props.botId,
+          workflow_id: workflowId,
+        };
+
         promise.push(
-          httpServices.post(deleteBotNode, {
-            bot_id: props.botId,
-            node_id: node.id,
-            user_id: userId,
-          })
+          httpServices.post(
+            workflowId ? removeNodeWorkflowAPI : deleteBotNode,
+            payload
+          )
         );
       });
 
       const response = await Promise.allSettled(promise);
+      save(cachedKeys.NODE_EDITING, (state: any) => {
+        const nodeEditing = state[cachedKeys.NODE_EDITING];
+        if (nodeEditing) {
+          const found = nodes.find((node) => node.id === nodeEditing.id);
+          if (found) {
+            return null;
+          }
+        }
+        return state[cachedKeys.NODE_EDITING];
+      }, true)
 
       const failedNodes: Node[] = [];
 
@@ -376,8 +506,6 @@ export default function FlowChart(props: IFlowChart) {
 
     return "";
   };
-
-
 
   useEffect(() => {
     save(cachedKeys.SAVE_HISTORY, handleSaveHistory);

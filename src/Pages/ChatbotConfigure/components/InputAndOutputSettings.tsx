@@ -80,32 +80,6 @@ const InputAndOutputSettings = () => {
           name="max_tokens"
           step={1}
         />
-
-        {/* <Box
-          display="flex"
-          justifyContent={"space-between"}
-          alignItems={"center"}
-          mt={"16px"}
-        >
-          <Box display="flex" alignItems={"center"}>
-            <CommonStyles.Typography type="normal12">
-              Output format
-            </CommonStyles.Typography>
-            <Hint content={<HintOutputFormat />} />
-          </Box>
-          <Box
-            sx={{
-              width: "280px",
-            }}
-          >
-            <FastField
-              name="outputFormat"
-              component={CommonField.MuiSelectField}
-              options={outputFormatOptions}
-              fullWidth
-            />
-          </Box>
-        </Box> */}
       </Box>
     </Box>
   );

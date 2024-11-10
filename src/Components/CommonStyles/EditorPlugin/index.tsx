@@ -1,6 +1,5 @@
 import { memo } from "react";
 import type { FC } from "react";
-import { useEffect } from "react";
 import type { EditorState } from "lexical";
 import { $getRoot, TextNode } from "lexical";
 import { CodeNode } from "@lexical/code";
@@ -13,14 +12,11 @@ import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 // import TreeView from './plugins/tree-view'
 
 import { cn } from "@/lib/utils";
-import { useEventEmitterContextContext } from "./component-picker-block/event-emitter";
 import ComponentPickerBlock from "./component-picker-block";
 import { textToEditorState } from "./component-picker-block/hooks";
-import { ContextBlockType } from "./component-picker-block/types";
 import UpdateBlock from "./update-block";
 import Placeholder from "./placeholder";
-import { ContextBlock, ContextBlockNode } from "./context-block";
-import ContextBlockReplacementBlock from "./context-block/context-block-replacement-block";
+import { ContextBlockNode } from "./context-block";
 import { CustomTextNode } from "./custom-text/node";
 import OnBlurBlock from "./on-blur-or-focus-block";
 import { WorkflowVariableBlockType } from "./type";
@@ -42,8 +38,8 @@ export type PromptEditorProps = {
   onChange?: (text: string) => void;
   onBlur?: () => void;
   onFocus?: () => void;
-  contextBlock?: ContextBlockType;
   workflowVariableBlock?: WorkflowVariableBlockType;
+  nodeId: string;
 };
 
 export const UPDATE_DATASETS_EVENT_EMITTER =
@@ -61,10 +57,9 @@ const PromptEditor: FC<PromptEditorProps> = ({
   onChange,
   onBlur,
   onFocus,
-  contextBlock,
   workflowVariableBlock,
+  nodeId
 }) => {
-  const { eventEmitter } = useEventEmitterContextContext();
   const initialConfig = {
     namespace: "prompt-editor",
     nodes: [
@@ -93,12 +88,7 @@ const PromptEditor: FC<PromptEditorProps> = ({
   };
 
 
-  useEffect(() => {
-    eventEmitter?.emit({
-      type: UPDATE_DATASETS_EVENT_EMITTER,
-      payload: contextBlock?.datasets,
-    } as any);
-  }, [eventEmitter, contextBlock?.datasets]);
+  
 
   return (
     <LexicalComposer initialConfig={{ ...initialConfig, editable }}>
@@ -123,21 +113,16 @@ const PromptEditor: FC<PromptEditorProps> = ({
         />
         <ComponentPickerBlock
           triggerString="/"
-          contextBlock={contextBlock}
           workflowVariableBlock={workflowVariableBlock}
+          nodeId={nodeId}
         />
         <ComponentPickerBlock
           triggerString="{"
-          contextBlock={contextBlock}
           workflowVariableBlock={workflowVariableBlock}
+          nodeId={nodeId}
         />
 
-        {contextBlock?.show && (
-          <>
-            <ContextBlock {...contextBlock} />
-            <ContextBlockReplacementBlock {...contextBlock} />
-          </>
-        )}
+        
         {workflowVariableBlock?.show && (
           <>
             <WorkflowVariableBlock {...workflowVariableBlock} />
@@ -149,7 +134,6 @@ const PromptEditor: FC<PromptEditorProps> = ({
         <OnBlurBlock onBlur={onBlur} onFocus={onFocus} />
         <UpdateBlock instanceId={instanceId} />
         <HistoryPlugin />
-        {/* <TreeView /> */}
       </div>
     </LexicalComposer>
   );

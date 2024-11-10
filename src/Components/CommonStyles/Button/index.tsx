@@ -88,7 +88,7 @@ function MuiButton(props: IMuiButton & ButtonProps) {
     );
   }
 
-  return (
+  return tooltip ? (
     <Tooltip title={tooltip} placement="top-end">
       <div>
         <Button
@@ -113,6 +113,27 @@ function MuiButton(props: IMuiButton & ButtonProps) {
         </Button>
       </div>
     </Tooltip>
+  ) : (
+    <Button
+      {...otherProps}
+      sx={{
+        padding: "6px 15px",
+        borderRadius: "8px",
+        textTransform: "none",
+        height: "32px",
+        fontWeight: 600,
+        fontSize: "14px",
+        "&:focus": {
+          outline: "none",
+        },
+        color: theme.colors.custom.normalColorTypo,
+
+        ...styleActive,
+        ...props.sx,
+      }}
+    >
+      {isLoading ? <CircularProgress size={24} /> : children}
+    </Button>
   );
 }
 

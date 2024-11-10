@@ -45,7 +45,6 @@ const CollapseArea = (props: ICollapseArea) => {
       sx={{
         padding: "8px",
         borderRadius: "12px",
-        marginTop: "20px",
         ...sxContainer,
       }}
     >

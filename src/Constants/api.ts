@@ -68,6 +68,7 @@ export const updateNodeLLM = baseAPI + "/node/update_model_params_for_node";
 export const createWorkflowAPI = baseAPI + "/workflow/create_workflow";
 export const deleteWorkflowAPI = baseAPI + "/workflow/delete_workflow";
 export const addNodeWorkflowAPI = baseAPI + "/workflow/add_node";
+export const removeNodeWorkflowAPI = baseAPI + "/workflow/remove_node";
 export const getWorkFlowsAPI = baseAPI + "/workflow/list_workflows";
 export const getWorkflowDetailAPI = baseAPI + "/workflow/get_workflow_data";
 export const updateWorkflowNodeData = baseAPI + "/workflow/update_node_data";

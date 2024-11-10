@@ -23,10 +23,7 @@ export interface deleteWorkflowPayload {
 export interface addNodeWorkflowPayload {
   user_id: string;
   workflow_id: string;
-  position?: {
-    x: number;
-    y: number;
-  };
+  position?: string;
   from_node_id?: string;
   source_handle?: string;
   node_type: NodeTypeWorkflow;
@@ -200,4 +197,11 @@ export interface RemoveEdgePayload {
   user_id: string;
   workflow_id: string;
   edge_id: string;
+}
+
+export interface UpdateNodeDataPayload {
+  user_id: string;
+  workflow_id: string;
+  node_id: string;
+  node_data: any;
 }
