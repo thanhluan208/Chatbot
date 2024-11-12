@@ -79,11 +79,7 @@ const Editor = ({
         key={controlPromptEditorRerenderKey}
         instanceId={nodeId}
         compact
-        className="min-h-[128px] px-3 py-2 rounded-md"
-        style={{
-          background: theme.colors.custom.backgroundCard,
-          border: `1px solid ${theme.colors.custom.borderColor}`,
-        }}
+        className="min-h-[64px] px-3 py-2 rounded-md"
         value={initValue || ""}
         workflowVariableBlock={{
           show: true,

@@ -37,9 +37,14 @@ const dropAnimationConfig: DropAnimation = {
 
 interface PromptAreaProps {
   node: NodeProps;
+  handleUpdate: (
+    payload: Partial<LlmNodeData>,
+    onSuccess?: () => void,
+    onFailed?: () => void
+  ) => void;
 }
 
-const PromptArea = ({ node }: PromptAreaProps) => {
+const PromptArea = ({ node, handleUpdate }: PromptAreaProps) => {
   const data = node.data as unknown as LlmNodeData;
 
   const [listPrompts, setListPrompts] = useState<PromptTemplate[]>([]);
@@ -62,9 +67,33 @@ const PromptArea = ({ node }: PromptAreaProps) => {
       const activeIndex = listPrompts.findIndex(({ id }) => id === active.id);
       const overIndex = listPrompts.findIndex(({ id }) => id === over.id);
 
-      setListPrompts(arrayMove(listPrompts, activeIndex, overIndex));
+      const nextListPrompt = arrayMove(listPrompts, activeIndex, overIndex);
+      handleMutateListPrompt(nextListPrompt);
+      setListPrompts(nextListPrompt);
     }
     setActive(null);
+  };
+
+  const handleMutateListPrompt = (newListPrompt: PromptTemplate[]) => {
+    const memoryIndex = newListPrompt.findIndex(
+      (item) => item.role === PromptRoleEnum.Memory
+    );
+
+    const payload: Partial<LlmNodeData> = {
+      name: node.id,
+      desc: data.desc,
+      memory: {
+        ...data.memory,
+        position_index_in_chat_messages: memoryIndex,
+      },
+      position: data.position,
+      prompt_template: cloneDeep(newListPrompt).filter(
+        (prompt) => prompt.role !== PromptRoleEnum.Memory
+      ),
+      model: data.model,
+    };
+
+    handleUpdate(payload);
   };
 
   useEffect(() => {
@@ -90,17 +119,35 @@ const PromptArea = ({ node }: PromptAreaProps) => {
 
   const handleUpdateListPrompt = (
     id: UniqueIdentifier,
-    payload: PromptTemplate
+    payload?: PromptTemplate,
+    isDelete?: boolean
   ) => {
-    setListPrompts((prev) => {
-      const index = prev.findIndex((item) => item.id === id);
-      const newList = [...prev];
+    if (isDelete) {
+      const newList = listPrompts.filter((item) => item.id !== id);
+      handleMutateListPrompt(newList);
+
+      return setListPrompts(newList);
+    }
+
+    const index = listPrompts.findIndex((item) => item.id === id);
+    const newList = cloneDeep(listPrompts);
+    if (payload) {
       newList[index] = payload;
-      return newList;
-    });
+    }
+    handleMutateListPrompt(newList);
+    setListPrompts(newList);
   };
 
-  console.log("listPrompts", listPrompts);
+  const handleAddPrompt = () => {
+    const nextList = cloneDeep(listPrompts);
+    nextList.push({
+      id: uuid(),
+      role: PromptRoleEnum.USER,
+      text: "",
+    });
+    setListPrompts(nextList);
+    handleMutateListPrompt(nextList);
+  };
 
   return (
     <DndContext
@@ -138,14 +185,8 @@ const PromptArea = ({ node }: PromptAreaProps) => {
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
-            console.log("add prompt");
-            const nextList = cloneDeep(listPrompts)
-            nextList.push({
-              id: uuid(),
-              role: PromptRoleEnum.USER,
-              text: "",
-            });
-            setListPrompts(nextList);
+
+            handleAddPrompt();
           }}
         >
           <Plus size={24} />

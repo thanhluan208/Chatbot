@@ -1,17 +1,17 @@
 import CommonStyles from "@/Components/CommonStyles";
 import { Box, useTheme } from "@mui/material";
 import { NodeProps, useReactFlow } from "@xyflow/react";
-import { PropsWithChildren, useMemo } from "react";
+import { ComponentPropsWithoutRef, useMemo } from "react";
 
 const GradientBorder = ({
   data,
   selected,
   id,
   children,
-}: NodeProps & PropsWithChildren) => {
+  className,
+}: NodeProps & ComponentPropsWithoutRef<"div">) => {
   const theme = useTheme();
   const { updateNode } = useReactFlow();
-
 
   const classname = useMemo(() => {
     if (data?.currentNode && data?.startNode) return "chatting-start";
@@ -20,9 +20,9 @@ const GradientBorder = ({
     else return "agent-node";
   }, [data?.currentNode, data?.startNode]);
 
-
   return (
     <Box
+      className={className}
       sx={{
         display: "flex",
         borderRadius: "8px",
@@ -97,7 +97,7 @@ const GradientBorder = ({
             data: {
               ...data,
               ...updates,
-            }
+            },
           });
         }}
       >

@@ -32,8 +32,6 @@ import httpServices from "@/Services/httpServices";
 import { deleteBotNode, removeNodeWorkflowAPI } from "@/Constants/api";
 import { toast } from "react-toastify";
 import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
-import { useQueryClient } from "react-query";
-import queryKey from "@/Constants/queryKey";
 
 const edgeTypes = {
   animatedSvg: AnimatedSVGEdge,
@@ -65,8 +63,8 @@ export default function FlowChart(props: IFlowChart) {
   const save = useSave();
   const theme = useTheme();
 
-  const { handleAddNodeWorkflow, handleAddEdge, handleRemoveEdge } = useWorkflowMutate();
-  const queryClient = useQueryClient();
+  const { handleAddNodeWorkflow, handleAddEdge, handleRemoveEdge } =
+    useWorkflowMutate();
 
   const { userId } = useAuth();
 
@@ -157,7 +155,7 @@ export default function FlowChart(props: IFlowChart) {
             return newEdges;
           }
 
-          if(workflowId && userId) {
+          if (workflowId && userId) {
             handleRemoveEdge.mutate(
               {
                 user_id: userId,
@@ -304,9 +302,6 @@ export default function FlowChart(props: IFlowChart) {
           .filter((node) => node.type !== NodeTypes.helperNode)
           .concat(newNode as any);
 
-        //TODO: HISTORY FEATURE
-        // handleSaveHistory(newNodes, getEdges());
-
         return newNodes;
       });
 
@@ -343,9 +338,6 @@ export default function FlowChart(props: IFlowChart) {
           {
             onSuccess: (res) => {
               onSuccess(res.data.node_id);
-              queryClient.invalidateQueries({
-                queryKey: [queryKey.WORKFLOW_DETAIL],
-              });
             },
             onError: onFailed,
           }
@@ -467,16 +459,20 @@ export default function FlowChart(props: IFlowChart) {
       });
 
       const response = await Promise.allSettled(promise);
-      save(cachedKeys.NODE_EDITING, (state: any) => {
-        const nodeEditing = state[cachedKeys.NODE_EDITING];
-        if (nodeEditing) {
-          const found = nodes.find((node) => node.id === nodeEditing.id);
-          if (found) {
-            return null;
+      save(
+        cachedKeys.NODE_EDITING,
+        (state: any) => {
+          const nodeEditing = state[cachedKeys.NODE_EDITING];
+          if (nodeEditing) {
+            const found = nodes.find((node) => node.id === nodeEditing.id);
+            if (found) {
+              return null;
+            }
           }
-        }
-        return state[cachedKeys.NODE_EDITING];
-      }, true)
+          return state[cachedKeys.NODE_EDITING];
+        },
+        true
+      );
 
       const failedNodes: Node[] = [];
 

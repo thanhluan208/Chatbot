@@ -8,8 +8,6 @@ import CommonIcons from "../CommonIcons";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
 import { toast } from "react-toastify";
-import { useQueryClient } from "react-query";
-import queryKey from "@/Constants/queryKey";
 
 interface EditLabelNodeProps {
   nodeId: string;
@@ -29,7 +27,6 @@ const EditLabelNode = (props: EditLabelNodeProps) => {
   const { updateNode } = useReactFlow();
   const { userId } = useAuth();
   const { handleUpdateNodeData } = useWorkflowMutate();
-  const queryClient = useQueryClient();
 
   const botId = params?.botId;
 
@@ -43,9 +40,6 @@ const EditLabelNode = (props: EditLabelNodeProps) => {
         },
       });
       setIsRenaming(false);
-      queryClient.invalidateQueries({
-        queryKey: [queryKey.WORKFLOW_DETAIL]
-      })
     };
 
     if (botId) {

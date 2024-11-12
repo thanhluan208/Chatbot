@@ -56,7 +56,7 @@ const InputAndOutputSettings = () => {
   //! Function
   //! Render
   return (
-    <Box>
+    <Box onClick={(e) => e.stopPropagation()}>
       <CommonStyles.Typography type="semiBold16" mt={"16px"} >
         Input and output settings
       </CommonStyles.Typography>
