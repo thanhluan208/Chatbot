@@ -1,5 +1,6 @@
 import queryKey from "@/Constants/queryKey";
 import { LlmNodeData } from "@/Pages/Workflow/Components/CustomNodes/WF_LlmNode/type";
+import { NodeDataVarAgg } from "@/Pages/Workflow/Components/CustomNodes/WF_VariableAggregator/type";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import workflowService from "@/Services/workflow.service";
 import {
@@ -18,7 +19,7 @@ export default function useWorkflowMutate() {
   const queryClient = useQueryClient();
   const { workflowId } = useParams();
   const { userId } = useAuth();
-  const { updateNode } = useReactFlow();
+  const { updateNode, getNode } = useReactFlow();
 
   const handleCreateWorkflow = useMutation({
     mutationFn: (payload: FormData) => workflowService.createWorkflow(payload),
@@ -123,6 +124,59 @@ export default function useWorkflowMutate() {
     );
   },[workflowId, userId]);
 
+  //! WF_VariableAggregator
+  const handleUpdateNodeDataVarAgg = useCallback((
+    nodeId: string,
+    payload: Partial<NodeDataVarAgg>,
+    onSuccess?: () => void,
+    onFailed?: () => void
+  ) => {
+    if (!workflowId || !userId || !nodeId) return;
+
+    const nodeData = getNode(nodeId)?.data as unknown as NodeDataVarAgg;
+
+    const {advanced_settings, ...rest} = payload
+
+    const updatePayload: Partial<NodeDataVarAgg> = {
+      name: nodeId,
+      desc: nodeData.desc,
+      position: nodeData.position,
+      advanced_settings: {
+        ...nodeData.advanced_settings,
+        ...advanced_settings
+      },
+      variables: nodeData.variables,
+      ...rest,
+    };
+
+    handleUpdateNodeData.mutate(
+      {
+        workflow_id: workflowId,
+        user_id: userId,
+        node_id: nodeId,
+        node_data: updatePayload,
+      },
+      {
+        onSuccess: (response) => {
+          if (response?.status_code !== 200) {
+            toast.error(response?.message);
+            onFailed && onFailed();
+          }
+          updateNode && updateNode(nodeId, {
+            data: {
+              ...nodeData,
+              ...updatePayload,
+            },
+          });
+          onSuccess && onSuccess();
+        },
+        onError: () => {
+          onFailed && onFailed();
+        },
+      }
+    );
+  },[workflowId, userId, updateNode, getNode]);
+
   return {
     handleCreateWorkflow,
     handleDeleteWorkflow,
@@ -131,5 +185,6 @@ export default function useWorkflowMutate() {
     handleAddEdge,
     handleRemoveEdge,
     handleUpdateNodeDataLLM,
+    handleUpdateNodeDataVarAgg
   };
 }

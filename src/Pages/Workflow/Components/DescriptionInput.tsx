@@ -1,9 +1,9 @@
 import CommonStyles from "@/Components/CommonStyles";
 import { useRef } from "react";
-import { LlmNodeData } from "./type";
+import { LlmNodeData } from "./CustomNodes/WF_LlmNode/type";
 
 interface DescriptionInputProps {
-  nodeData?: LlmNodeData;
+  value?: string;
   handleUpdate: (
     payload: Partial<LlmNodeData>,
     onSuccess?: () => void,
@@ -12,7 +12,7 @@ interface DescriptionInputProps {
 }
 
 const DescriptionInput = ({
-  nodeData,
+  value,
   handleUpdate,
 }: DescriptionInputProps) => {
   const timeoutRef = useRef<number | null>(null);
@@ -37,7 +37,7 @@ const DescriptionInput = ({
         fullWidth
         multiline
         minRows={2}
-        initValue={nodeData?.desc}
+        initValue={value}
         placeholder="Enter node description... "
         afterOnchange={handleChange}
       />

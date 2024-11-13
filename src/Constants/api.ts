@@ -74,3 +74,4 @@ export const getWorkflowDetailAPI = baseAPI + "/workflow/get_workflow_data";
 export const updateWorkflowNodeData = baseAPI + "/workflow/update_node_data";
 export const addEdgeWorkflowAPI = baseAPI + "/workflow/add_edge";
 export const removeEdgeWorkflowAPI = baseAPI + "/workflow/remove_edge";
+export const getVariableSelectors = baseAPI + "/workflow/get_avaiable_variable_selectors";

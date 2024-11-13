@@ -14,6 +14,7 @@ import WF_ConditionNode from "../CustomNodes/WF_ConditionNode";
 import WF_CodeNode from "../CustomNodes/WF_CodeNode";
 import WF_LtmNode from "../CustomNodes/WF_LtmNode";
 import { NodeTypeWorkflow } from "@/Types/workflow";
+import WF_VariableAggregator from "../CustomNodes/WF_VariableAggregator";
 
 export enum NodeTypes {
   startNode = "customNode_startNode",
@@ -36,6 +37,7 @@ export const nodeTypes = {
   [`customNode_WF_${NodeTypeWorkflow.IF_ELSE}`]: WF_ConditionNode,
   [`customNode_WF_${NodeTypeWorkflow.CODE}`]: WF_CodeNode,
   [`customNode_WF_${NodeTypeWorkflow.LONG_TERM_MEMORY}`]: WF_LtmNode,
+  [`customNode_WF_${NodeTypeWorkflow.VARIABLE_AGGREGATOR}`]: WF_VariableAggregator,
 };
 
 export enum CustomNodeTypes {

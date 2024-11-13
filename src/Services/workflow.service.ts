@@ -3,10 +3,12 @@ import {
   addNodeWorkflowPayload,
   CreateWorkflowResponse,
   deleteWorkflowPayload,
+  QueryVarSelector,
   queryWorkflow,
   queryWorkflowDetail,
   RemoveEdgePayload,
   UpdateNodeDataPayload,
+  VarSelectorResponse,
   WorkflowDetailResponse,
   WorkflowResponse,
 } from "@/Types/workflow";
@@ -16,6 +18,7 @@ import {
   addNodeWorkflowAPI,
   createWorkflowAPI,
   deleteWorkflowAPI,
+  getVariableSelectors,
   getWorkflowDetailAPI,
   getWorkFlowsAPI,
   removeEdgeWorkflowAPI,
@@ -57,6 +60,10 @@ class WorkflowService {
 
   removeEdge(payload: RemoveEdgePayload): Promise<CommonResponse> {
     return httpServices.post(removeEdgeWorkflowAPI, payload).then(res => res.data);
+  }
+
+  getVarSelectors(query: QueryVarSelector): Promise<VarSelectorResponse> {
+    return httpServices.post(getVariableSelectors, query).then(res => res.data);
   }
 }
 

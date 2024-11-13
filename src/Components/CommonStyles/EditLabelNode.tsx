@@ -12,30 +12,32 @@ import { toast } from "react-toastify";
 interface EditLabelNodeProps {
   nodeId: string;
   workflowId?: string;
-  positionAbsoluteX: number;
-  positionAbsoluteY: number;
-  data: {
-    [key: string]: unknown;
-  };
+
   handleUpdateName?: (name: string) => Promise<void>;
 }
 
-const EditLabelNode = (props: EditLabelNodeProps) => {
+const EditLabelNode = ({
+  nodeId,
+  handleUpdateName,
+  workflowId,
+}: EditLabelNodeProps) => {
   const [isRenaming, setIsRenaming] = useState(false);
   const nameRef = useRef<HTMLInputElement | null>(null);
   const params = useParams();
-  const { updateNode } = useReactFlow();
+  const { updateNode, getNode } = useReactFlow();
   const { userId } = useAuth();
   const { handleUpdateNodeData } = useWorkflowMutate();
 
   const botId = params?.botId;
+  const node = getNode(nodeId);
+  const { data, position } = node || {};
 
   const handleRename = useCallback(async () => {
     const onSuccess = () => {
-      updateNode(props?.nodeId, {
-        id: props?.workflowId ? nameRef?.current?.value : props?.nodeId,
+      updateNode(nodeId, {
+        id: workflowId ? nameRef?.current?.value : nodeId,
         data: {
-          ...props.data,
+          ...data,
           label: nameRef?.current?.value,
         },
       });
@@ -45,17 +47,17 @@ const EditLabelNode = (props: EditLabelNodeProps) => {
     if (botId) {
       const info = {
         position: {
-          x: props.positionAbsoluteX,
-          y: props.positionAbsoluteY,
+          x: position?.x,
+          y: position?.y,
         },
         data: {
-          ...props.data,
+          ...data,
           label: nameRef?.current?.value,
         },
       };
 
       reactFlowService
-        .updateFlow(botId, props.nodeId, JSON.stringify(info))
+        .updateFlow(botId, nodeId, JSON.stringify(info))
         .catch((err) => {
           console.log("err", err);
         });
@@ -63,19 +65,13 @@ const EditLabelNode = (props: EditLabelNodeProps) => {
       onSuccess();
     }
 
-    if (props.workflowId && userId) {
+    if (workflowId && userId) {
       const payload = {
         user_id: userId,
-        workflow_id: props.workflowId,
-        node_id: props.nodeId,
+        workflow_id: workflowId,
+        node_id: nodeId,
         node_data: {
           name: nameRef?.current?.value,
-          desc: "",
-          position: JSON.stringify({
-            x: props.positionAbsoluteX,
-            y: props.positionAbsoluteY,
-          }),
-          variables: props?.data.variables,
         },
       };
 
@@ -86,7 +82,7 @@ const EditLabelNode = (props: EditLabelNodeProps) => {
         toast.error(response?.message);
       }
     }
-  }, [updateNode, props?.nodeId, props?.data, props.workflowId]);
+  }, [updateNode, nodeId, data, workflowId, position]);
 
   return (
     <Box
@@ -99,7 +95,7 @@ const EditLabelNode = (props: EditLabelNodeProps) => {
       {isRenaming ? (
         <CommonStyles.Input
           ref={nameRef}
-          initValue={props?.data?.label as string}
+          initValue={data?.label as string}
           sxContainer={{
             "& .MuiInputBase-root": {
               height: "23.56px",
@@ -116,7 +112,7 @@ const EditLabelNode = (props: EditLabelNodeProps) => {
             whiteSpace: "nowrap",
           }}
         >
-          {(props?.data?.label as string) ?? `Agent ${props.nodeId}`}
+          {(data?.label as string) ?? `Agent ${nodeId}`}
         </CommonStyles.Typography>
       )}
       {isRenaming ? (
@@ -156,8 +152,8 @@ const EditLabelNode = (props: EditLabelNodeProps) => {
             }}
             onClick={async (e) => {
               e.stopPropagation();
-              if (props.handleUpdateName) {
-                await props.handleUpdateName(nameRef?.current?.value as string);
+              if (handleUpdateName) {
+                await handleUpdateName(nameRef?.current?.value as string);
                 setIsRenaming(false);
               }
               handleRename();

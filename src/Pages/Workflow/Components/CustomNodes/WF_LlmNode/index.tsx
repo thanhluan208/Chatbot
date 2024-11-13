@@ -21,7 +21,7 @@ import ModelStatsConfig from "./ModelStatsConfig";
 
 const WF_StartNode = (props: NodeProps) => {
   //! State
-  const { data, id, positionAbsoluteX, positionAbsoluteY } = props;
+  const { data, id,  } = props;
   const theme = useTheme();
   const { workflowId } = useParams();
   const save = useSave();
@@ -114,10 +114,7 @@ const WF_StartNode = (props: NodeProps) => {
                   <Component className="w-3.5 h-3.5" color="#fff" />
                 </Box>
                 <EditLabelNode
-                  data={data}
                   nodeId={id}
-                  positionAbsoluteX={positionAbsoluteX}
-                  positionAbsoluteY={positionAbsoluteY}
                   workflowId={workflowId}
                 />
               </Box>

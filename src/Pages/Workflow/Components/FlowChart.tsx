@@ -32,6 +32,8 @@ import httpServices from "@/Services/httpServices";
 import { deleteBotNode, removeNodeWorkflowAPI } from "@/Constants/api";
 import { toast } from "react-toastify";
 import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
+import { useQueryClient } from "react-query";
+import queryKey from "@/Constants/queryKey";
 
 const edgeTypes = {
   animatedSvg: AnimatedSVGEdge,
@@ -57,11 +59,12 @@ export default function FlowChart(props: IFlowChart) {
   const [nodes, setNodes, onNodesChange] = useNodesState(
     (initNodes as Node[]) ?? []
   );
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initEdges);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([] as Edge[]);
   const { screenToFlowPosition, updateNode, getNodes, getEdges } =
     useReactFlow();
   const save = useSave();
   const theme = useTheme();
+  const queryClient = useQueryClient();
 
   const { handleAddNodeWorkflow, handleAddEdge, handleRemoveEdge } =
     useWorkflowMutate();
@@ -72,9 +75,17 @@ export default function FlowChart(props: IFlowChart) {
     edgeReconnectSuccessful.current = false;
   }, []);
 
+  useEffect(() => {
+    setEdges(initEdges as Edge[]);
+  }, [initEdges]);
+
   const onReconnect = useCallback(
     (oldEdge: Edge, newConnection: Connection) => {
-      if (newConnection.source === newConnection.target) return;
+      if (
+        newConnection.source === newConnection.target ||
+        oldEdge.target === newConnection.target
+      )
+        return;
 
       const onFailed = () => {
         setEdges((eds) =>
@@ -121,6 +132,29 @@ export default function FlowChart(props: IFlowChart) {
                 },
               }
             );
+
+            handleRemoveEdge.mutate(
+              {
+                user_id: userId,
+                workflow_id: workflowId,
+                edge_id: `${oldEdge.source}-source-${oldEdge.target}-target`,
+              },
+              {
+                onSuccess: (response) => {
+                  if (response.status_code !== 200) {
+                    onFailed();
+                  }
+                  queryClient.invalidateQueries({
+                    queryKey: [queryKey.WORKFLOW_VAR_SELECTOR],
+                  });
+                },
+                onError: () => {
+                  onFailed();
+                },
+              }
+            );
+
+            return newEdges;
           }
 
           return els;
@@ -160,20 +194,24 @@ export default function FlowChart(props: IFlowChart) {
               {
                 user_id: userId,
                 workflow_id: workflowId,
-                src_node_id: edge.source,
-                dest_node_id: edge.target,
+                edge_id: `${edge.source}-source-${edge.target}-target`,
               },
               {
                 onSuccess: (response) => {
                   if (response.status_code !== 200) {
                     onFailed();
                   }
+                  queryClient.invalidateQueries({
+                    queryKey: [queryKey.WORKFLOW_VAR_SELECTOR],
+                  });
                 },
                 onError: () => {
                   onFailed();
                 },
               }
             );
+
+            return newEdges;
           }
 
           return eds;
@@ -240,6 +278,9 @@ export default function FlowChart(props: IFlowChart) {
               if (response.status_code !== 200) {
                 onFailed();
               }
+              queryClient.invalidateQueries({
+                queryKey: [queryKey.WORKFLOW_VAR_SELECTOR],
+              });
             },
             onError: () => {
               onFailed();

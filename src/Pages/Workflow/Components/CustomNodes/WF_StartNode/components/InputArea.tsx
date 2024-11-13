@@ -24,6 +24,8 @@ import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useQueryClient } from "react-query";
+import queryKey from "@/Constants/queryKey";
 
 export const InputTypeList = [
   {
@@ -70,6 +72,7 @@ const InputArea = ({ nodeId, variables }: InputAreaProps) => {
   >(null);
 
   const theme = useTheme();
+  const queryClient = useQueryClient();
 
   const handleDelete = async (name: string) => {
     const curNode = getNode(nodeId);
@@ -98,6 +101,9 @@ const InputArea = ({ nodeId, variables }: InputAreaProps) => {
           ...curNode.data,
           variables: nextVariables,
         },
+      });
+      queryClient.invalidateQueries({
+        queryKey: [queryKey.WORKFLOW_VAR_SELECTOR],
       });
     } else {
       toast.error(response.message);

@@ -18,7 +18,7 @@ import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
 import { toast } from "react-toastify";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import ModelConfiguration from "./ModelConfiguration";
-import DescriptionInput from "./DescriptionInput";
+import DescriptionInput from "../../DescriptionInput";
 import ModelStatsConfig from "./ModelStatsConfig";
 
 interface LLMNodeDrawerProps {
@@ -35,7 +35,7 @@ const LLMNodeDrawer = ({ node }: LLMNodeDrawerProps) => {
 
   if (!node) return null;
 
-  const { data, positionAbsoluteX, positionAbsoluteY, id } = node;
+  const { data, id } = node;
 
   const nodeData = node?.data as unknown as LlmNodeData;
 
@@ -144,13 +144,7 @@ const LLMNodeDrawer = ({ node }: LLMNodeDrawerProps) => {
             >
               <Component className="w-3.5 h-3.5" color="#fff" />
             </div>
-            <EditLabelNode
-              data={data}
-              nodeId={node.id}
-              positionAbsoluteX={positionAbsoluteX}
-              positionAbsoluteY={positionAbsoluteY}
-              workflowId={workflowId}
-            />
+            <EditLabelNode nodeId={node.id} workflowId={workflowId} />
           </div>
 
           <CommonStyles.Button
@@ -167,7 +161,7 @@ const LLMNodeDrawer = ({ node }: LLMNodeDrawerProps) => {
             <X size={24} />
           </CommonStyles.Button>
         </div>
-        <DescriptionInput nodeData={nodeData} handleUpdate={handleUpdate} />
+        <DescriptionInput value={nodeData.desc} handleUpdate={handleUpdate} />
       </div>
 
       <div className="px-6">

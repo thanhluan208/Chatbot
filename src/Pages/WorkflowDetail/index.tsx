@@ -5,7 +5,7 @@ import cachedKeys from "@/Constants/cachedKeys";
 import { useParams } from "react-router-dom";
 import useGetWorkflowDetail from "@/Hooks/workflow/useGetWorkFlowDetail";
 import { NodeTypeWorkflow } from "@/Types/workflow";
-import {  Node, ReactFlowProvider } from "@xyflow/react";
+import { Edge, Node, ReactFlowProvider } from "@xyflow/react";
 import FlowChart from "../Workflow/Components/FlowChart";
 
 const listNode = [
@@ -34,6 +34,11 @@ const listNode = [
     name: `customNode_WF_${NodeTypeWorkflow.LONG_TERM_MEMORY}`,
     label: "LTM",
     description: "Long-term memory node",
+  },
+  {
+    name: `customNode_WF_${NodeTypeWorkflow.VARIABLE_AGGREGATOR}`,
+    label: "Variable Aggregator",
+    description: "Aggregate multi-branch",
   },
 ];
 
@@ -74,11 +79,23 @@ const WorkflowDetail = () => {
     return arr;
   }, [nodes]);
 
-  const initEdges = useMemo(() => {
+  const initEdges: Edge[] = useMemo(() => {
     return Object.values(data?.workflow_data?.graph?.edges || {}).map(
       (edge) => {
         return {
           ...edge,
+          source: edge.source,
+          target: edge.target,
+          sourceHandle: `${edge.source}-source`,
+          targetHandle: `${edge.target}-target`,
+          markerEnd: {
+            type: "arrowclosed",
+            width: 20,
+            height: 20,
+            color: "#4e40e5",
+          },
+          deletable: true,
+          type: "animatedSvg",
         };
       }
     );
