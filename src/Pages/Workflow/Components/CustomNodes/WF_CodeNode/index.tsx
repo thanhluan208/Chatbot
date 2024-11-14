@@ -46,10 +46,7 @@ const WF_CodeNode = (props: NodeProps) => {
                 <Code className="w-3.5 h-3.5" color="#fff" />
               </Box>
               <EditLabelNode
-                data={props.data}
                 nodeId={props.id}
-                positionAbsoluteX={props.positionAbsoluteX}
-                positionAbsoluteY={props.positionAbsoluteY}
               />
             </Box>
           }

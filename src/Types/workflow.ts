@@ -43,6 +43,18 @@ export interface queryWorkflowDetail {
 export interface WorkflowDetailResponse extends CommonResponse {
   workflow_data: WorkflowDetail;
 }
+export interface QueryVarSelector extends queryWorkflowDetail {
+  node_id: string;
+}
+
+export interface VarSelectorResponse extends CommonResponse {
+  variable_selectors: VariableSelector[];
+}
+
+export interface VariableSelector {
+  value: string[];
+  type: string;
+}
 
 export interface WorkflowDetail {
   created_at: Date;
@@ -180,10 +192,11 @@ export enum NodeTypeWorkflow {
 }
 
 export enum StartNodeInputType {
-  TEXT_INPUT = "text-input",
-  ARRAY_TEXT_INPUT = "array-text-input",
+  TEXT_INPUT = "string",
+  ARRAY_TEXT_INPUT = "array[string]",
   NUMBER = "number",
-  ARRAY_NUMBER = "array_number",
+  ARRAY_NUMBER = "array[number]",
+  OBJECT = "object",
 }
 
 export interface AddEdgePayload {

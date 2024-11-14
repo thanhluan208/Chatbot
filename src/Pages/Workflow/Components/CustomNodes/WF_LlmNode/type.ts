@@ -6,7 +6,8 @@ export enum PromptType {
 }
 
 export interface LlmNodeData {
-  title: string;
+  name?: string;
+  title?: string;
   type: string;
   desc: string;
   position: string;
@@ -15,6 +16,11 @@ export interface LlmNodeData {
   memory: Memory;
   vision: Vision;
   iteration_id: null;
+  variable_out: VariableOut[];
+}
+export interface VariableOut {
+  type: string;
+  variable: string;
 }
 
 export interface Memory {
@@ -58,4 +64,24 @@ export enum PromptRoleEnum {
   USER = "user",
   ASSISTANT = "assistant",
   Memory = "memory",
+}
+
+export interface ModelOption {
+  name: string;
+  history_turn: FrequencyPenalty;
+  max_tokens: FrequencyPenalty;
+  temperature: FrequencyPenalty;
+  top_p: FrequencyPenalty;
+  frequency_penalty: FrequencyPenalty;
+  presence_penalty: FrequencyPenalty;
+  img: string;
+  label: string;
+  value: string;
+  group: string;
+}
+
+export interface FrequencyPenalty {
+  default: number;
+  min: number;
+  max: number;
 }

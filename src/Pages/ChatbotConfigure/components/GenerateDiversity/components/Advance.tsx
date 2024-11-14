@@ -67,18 +67,24 @@ const Advance = () => {
 
   //! Render
   return (
-    <Fragment>
+    <div
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
+    >
       <Box
         sx={{
           display: "flex",
-          mt: "16px",
           alignItems: "center",
           mb: open ? "-18px" : "",
           transition: "margin-bottom 0.3s",
         }}
       >
         <CommonStyles.Button
-          onClick={() => setOpen(!open)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpen(!open);
+          }}
           endIcon={
             <CommonIcons.KeyboardArrowDown
               sx={{
@@ -117,7 +123,7 @@ const Advance = () => {
                 model.frequency_penalty?.min ? model.frequency_penalty?.min : 0
               }
               max={
-                model.frequency_penalty?.min ? model.frequency_penalty?.min : 2
+                model.frequency_penalty?.min ? model.frequency_penalty?.max : 2
               }
             />
             <SlideAndNumField
@@ -127,13 +133,13 @@ const Advance = () => {
                 model.presence_penalty?.min ? model.presence_penalty?.min : 0
               }
               max={
-                model.presence_penalty?.min ? model.presence_penalty?.min : 2
+                model.presence_penalty?.min ? model.presence_penalty?.max : 2
               }
             />
           </Fragment>
         )}
       </Collapse>
-    </Fragment>
+    </div>
   );
 };
 

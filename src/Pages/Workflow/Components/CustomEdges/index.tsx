@@ -1,9 +1,12 @@
 import CommonIcons from "@/Components/CommonIcons";
+import queryKey from "@/Constants/queryKey";
+import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import reactFlowService from "@/Services/reactFlowService";
 import { useGet } from "@/Stores/useStore";
 import { useTheme } from "@mui/material";
 import {
+  addEdge,
   BaseEdge,
   EdgeLabelRenderer,
   EdgeProps,
@@ -11,6 +14,7 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 import { useCallback, useEffect } from "react";
+import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 
 const AnimatedSVGEdge = ({
@@ -37,11 +41,15 @@ const AnimatedSVGEdge = ({
     targetY,
     targetPosition,
   });
-  const { setEdges, getNode, updateNode } = useReactFlow();
   const botId = useParams()?.botId;
   const { userId } = useAuth();
+  const {workflowId} = useParams();
   const theme = useTheme();
   const disabledCircle = useGet("DISABLE_CIRCLE");
+
+  const { setEdges, getNode, updateNode, getEdge } = useReactFlow();
+  const { handleRemoveEdge } = useWorkflowMutate();
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     const sourceNode = getNode(source);
@@ -73,14 +81,48 @@ const AnimatedSVGEdge = ({
   }, [source, target, getNode, updateNode]);
 
   //! Function
-  const handleRemoveEdge = useCallback(
+  const onRemoveEdge = useCallback(
     (e: any) => {
       e.stopPropagation();
+      const thisEdge = getEdge(id);
+
+      const onFailed = () => {
+        setEdges((eds) => {
+          return thisEdge ? addEdge(thisEdge, eds) : eds;
+        });
+      };
+
       setEdges((edges) => {
         const newEdges = edges.filter((edge) => edge.id !== id);
 
         if (botId && userId) {
-          reactFlowService.updateEdge(false, botId, source, target);
+          reactFlowService.updateEdge(false, botId, source, target, onFailed);
+
+          return newEdges;
+        }
+
+        if (workflowId && userId) {
+          handleRemoveEdge.mutate(
+            {
+              user_id: userId,
+              workflow_id: workflowId,
+              edge_id: `${thisEdge?.source}-source-${thisEdge?.target}-target`,
+            },
+            {
+              onSuccess: (response) => {
+                if (response.status_code !== 200) {
+                  onFailed();
+                }
+                console.log("remove edge success");
+                queryClient.invalidateQueries({
+                  queryKey: [queryKey.WORKFLOW_VAR_SELECTOR],
+                });
+              },
+              onError: () => {
+                onFailed();
+              },
+            }
+          );
 
           return newEdges;
         }
@@ -114,7 +156,7 @@ const AnimatedSVGEdge = ({
               background: theme.colors.custom.backgroundSecondary,
             }}
             className="nodrag nopan"
-            onClick={handleRemoveEdge}
+            onClick={onRemoveEdge}
           >
             <CommonIcons.Delete />
           </button>

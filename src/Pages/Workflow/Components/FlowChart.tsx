@@ -59,14 +59,15 @@ export default function FlowChart(props: IFlowChart) {
   const [nodes, setNodes, onNodesChange] = useNodesState(
     (initNodes as Node[]) ?? []
   );
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initEdges);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([] as Edge[]);
   const { screenToFlowPosition, updateNode, getNodes, getEdges } =
     useReactFlow();
   const save = useSave();
   const theme = useTheme();
-
-  const { handleAddNodeWorkflow, handleAddEdge, handleRemoveEdge } = useWorkflowMutate();
   const queryClient = useQueryClient();
+
+  const { handleAddNodeWorkflow, handleAddEdge, handleRemoveEdge } =
+    useWorkflowMutate();
 
   const { userId } = useAuth();
 
@@ -74,9 +75,17 @@ export default function FlowChart(props: IFlowChart) {
     edgeReconnectSuccessful.current = false;
   }, []);
 
+  useEffect(() => {
+    setEdges(initEdges as Edge[]);
+  }, [initEdges]);
+
   const onReconnect = useCallback(
     (oldEdge: Edge, newConnection: Connection) => {
-      if (newConnection.source === newConnection.target) return;
+      if (
+        newConnection.source === newConnection.target ||
+        oldEdge.target === newConnection.target
+      )
+        return;
 
       const onFailed = () => {
         setEdges((eds) =>
@@ -123,6 +132,29 @@ export default function FlowChart(props: IFlowChart) {
                 },
               }
             );
+
+            handleRemoveEdge.mutate(
+              {
+                user_id: userId,
+                workflow_id: workflowId,
+                edge_id: `${oldEdge.source}-source-${oldEdge.target}-target`,
+              },
+              {
+                onSuccess: (response) => {
+                  if (response.status_code !== 200) {
+                    onFailed();
+                  }
+                  queryClient.invalidateQueries({
+                    queryKey: [queryKey.WORKFLOW_VAR_SELECTOR],
+                  });
+                },
+                onError: () => {
+                  onFailed();
+                },
+              }
+            );
+
+            return newEdges;
           }
 
           return els;
@@ -157,25 +189,29 @@ export default function FlowChart(props: IFlowChart) {
             return newEdges;
           }
 
-          if(workflowId && userId) {
+          if (workflowId && userId) {
             handleRemoveEdge.mutate(
               {
                 user_id: userId,
                 workflow_id: workflowId,
-                src_node_id: edge.source,
-                dest_node_id: edge.target,
+                edge_id: `${edge.source}-source-${edge.target}-target`,
               },
               {
                 onSuccess: (response) => {
                   if (response.status_code !== 200) {
                     onFailed();
                   }
+                  queryClient.invalidateQueries({
+                    queryKey: [queryKey.WORKFLOW_VAR_SELECTOR],
+                  });
                 },
                 onError: () => {
                   onFailed();
                 },
               }
             );
+
+            return newEdges;
           }
 
           return eds;
@@ -242,6 +278,9 @@ export default function FlowChart(props: IFlowChart) {
               if (response.status_code !== 200) {
                 onFailed();
               }
+              queryClient.invalidateQueries({
+                queryKey: [queryKey.WORKFLOW_VAR_SELECTOR],
+              });
             },
             onError: () => {
               onFailed();
@@ -304,9 +343,6 @@ export default function FlowChart(props: IFlowChart) {
           .filter((node) => node.type !== NodeTypes.helperNode)
           .concat(newNode as any);
 
-        //TODO: HISTORY FEATURE
-        // handleSaveHistory(newNodes, getEdges());
-
         return newNodes;
       });
 
@@ -343,9 +379,6 @@ export default function FlowChart(props: IFlowChart) {
           {
             onSuccess: (res) => {
               onSuccess(res.data.node_id);
-              queryClient.invalidateQueries({
-                queryKey: [queryKey.WORKFLOW_DETAIL],
-              });
             },
             onError: onFailed,
           }
@@ -467,16 +500,20 @@ export default function FlowChart(props: IFlowChart) {
       });
 
       const response = await Promise.allSettled(promise);
-      save(cachedKeys.NODE_EDITING, (state: any) => {
-        const nodeEditing = state[cachedKeys.NODE_EDITING];
-        if (nodeEditing) {
-          const found = nodes.find((node) => node.id === nodeEditing.id);
-          if (found) {
-            return null;
+      save(
+        cachedKeys.NODE_EDITING,
+        (state: any) => {
+          const nodeEditing = state[cachedKeys.NODE_EDITING];
+          if (nodeEditing) {
+            const found = nodes.find((node) => node.id === nodeEditing.id);
+            if (found) {
+              return null;
+            }
           }
-        }
-        return state[cachedKeys.NODE_EDITING];
-      }, true)
+          return state[cachedKeys.NODE_EDITING];
+        },
+        true
+      );
 
       const failedNodes: Node[] = [];
 

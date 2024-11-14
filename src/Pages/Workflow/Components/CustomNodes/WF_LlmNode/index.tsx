@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useCallback, useMemo } from "react";
 import { Handle, NodeProps, Position } from "@xyflow/react";
 import { Box, useTheme } from "@mui/material";
 import { Component } from "lucide-react";
@@ -11,13 +11,46 @@ import cachedKeys from "@/Constants/cachedKeys";
 import { NodeTypeWorkflow } from "@/Types/workflow";
 import WF_EditDrawer from "../WF_EditDrawer";
 import { createPortal } from "react-dom";
+import CommonStyles from "@/Components/CommonStyles";
+import ModelConfiguration from "./ModelConfiguration";
+import { Form, Formik } from "formik";
+import { LlmNodeData } from "./type";
+import { modelOptions } from "@/Constants/options";
+import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
+import ModelStatsConfig from "./ModelStatsConfig";
 
 const WF_StartNode = (props: NodeProps) => {
   //! State
-  const { data, id, positionAbsoluteX, positionAbsoluteY } = props;
+  const { data, id,  } = props;
   const theme = useTheme();
   const { workflowId } = useParams();
   const save = useSave();
+
+  const { handleUpdateNodeDataLLM } = useWorkflowMutate();
+
+  const nodeData = data as unknown as LlmNodeData;
+
+  const initialValues = useMemo(() => {
+    const foundModel = modelOptions.find((elm) => {
+      return elm.value === nodeData?.model?.name;
+    });
+    return {
+      ...nodeData.model,
+      nodeId: id,
+      nodeData,
+      model: foundModel ?? modelOptions[0],
+      temperature: nodeData?.model?.completion_params?.temperature ?? 1.21,
+      top_p: nodeData?.model?.completion_params?.top_p ?? 0.9,
+      history_turn: nodeData?.model?.completion_params?.history_turn ?? 3,
+      max_tokens: nodeData?.model?.completion_params?.max_tokens ?? 2048,
+      frequency_penalty:
+        nodeData?.model?.completion_params?.frequency_penalty ?? 0,
+      presence_penalty:
+        nodeData?.model?.completion_params?.presence_penalty ?? 0,
+      memory_history_turn: nodeData?.memory?.history_turn ?? 3,
+    };
+  }, [nodeData]);
+
 
   //! Function
 
@@ -27,6 +60,30 @@ const WF_StartNode = (props: NodeProps) => {
       id: id,
     });
   };
+
+  const handleChangeModel = useCallback(
+    (value: string) => {
+      const modelFound = modelOptions.find((elm) => elm.value === value);
+      if (!modelFound) return;
+      const payload: Partial<LlmNodeData> = {
+        model: {
+          ...nodeData?.model,
+          name: modelFound.value,
+          completion_params: {
+            temperature: Number(modelFound.temperature.default),
+            top_p: Number(modelFound.top_p?.default),
+            history_turn: Number(modelFound.history_turn?.default),
+            max_tokens: Number(modelFound.max_tokens?.default),
+            frequency_penalty: Number(modelFound.frequency_penalty?.default),
+            presence_penalty: Number(modelFound.presence_penalty?.default),
+          },
+        },
+      };
+
+      handleUpdateNodeDataLLM(id, nodeData, payload);
+    },
+    [nodeData?.model]
+  );
 
   //! Render
   return (
@@ -57,15 +114,34 @@ const WF_StartNode = (props: NodeProps) => {
                   <Component className="w-3.5 h-3.5" color="#fff" />
                 </Box>
                 <EditLabelNode
-                  data={data}
                   nodeId={id}
-                  positionAbsoluteX={positionAbsoluteX}
-                  positionAbsoluteY={positionAbsoluteY}
                   workflowId={workflowId}
                 />
               </Box>
             }
           ></CollapseArea>
+
+          <Formik
+            initialValues={initialValues}
+            enableReinitialize
+            onSubmit={() => {}}
+          >
+            {() => {
+              return (
+                <Form className="px-3">
+                  <div className="flex gap-2 items-center">
+                    <ModelConfiguration afterOnChange={handleChangeModel} />
+                    <ModelStatsConfig />
+                  </div>
+                </Form>
+              );
+            }}
+          </Formik>
+          <div className="my-2 px-3 py-1 max-w-[500px]">
+            <CommonStyles.Typography>
+              {data?.desc as string}
+            </CommonStyles.Typography>
+          </div>
         </GradientBorder>
 
         <Handle

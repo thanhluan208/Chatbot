@@ -6,10 +6,9 @@ import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
 import GradientBorder from "../../GradientBorder";
 import NodeForm from "./components/NodeForm";
 
-
 const WF_ConditionNode = (props: NodeProps) => {
   //! State
-  const { id, data, positionAbsoluteX, positionAbsoluteY } = props;
+  const { id } = props;
   const theme = useTheme();
 
   //! Function
@@ -33,12 +32,7 @@ const WF_ConditionNode = (props: NodeProps) => {
             >
               <TrendingUpDown className="w-3.5 h-3.5" color="#fff" />
             </Box>
-            <EditLabelNode
-              data={data}
-              nodeId={id}
-              positionAbsoluteX={positionAbsoluteX}
-              positionAbsoluteY={positionAbsoluteY}
-            />
+            <EditLabelNode nodeId={id} />
           </Box>
 
           <NodeForm />

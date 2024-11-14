@@ -1,5 +1,6 @@
 import CommonField from "@/Components/CommonFields";
 import CommonStyles from "@/Components/CommonStyles";
+import queryKey from "@/Constants/queryKey";
 import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import { StartNodeInputType, Variable } from "@/Types/workflow";
@@ -8,6 +9,7 @@ import { useReactFlow } from "@xyflow/react";
 import { FastField, Form, Formik } from "formik";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -23,6 +25,7 @@ const NodeForm = ({ data, nodeId, toggle }: NodeFormProps) => {
   const { getNode, updateNode } = useReactFlow();
   const { userId } = useAuth();
   const { workflowId } = useParams();
+  const queryClient = useQueryClient();
 
   const initialValues = useMemo(() => {
     return {
@@ -96,6 +99,10 @@ const NodeForm = ({ data, nodeId, toggle }: NodeFormProps) => {
           ...curNode?.data,
           variables: nextVariables,
         },
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: [queryKey.WORKFLOW_VAR_SELECTOR],
       });
     } else {
       toast.update(toastId, {

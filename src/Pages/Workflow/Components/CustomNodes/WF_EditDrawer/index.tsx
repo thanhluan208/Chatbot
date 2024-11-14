@@ -4,6 +4,8 @@ import { NodeTypeWorkflow } from "@/Types/workflow";
 import { Box, Drawer } from "@mui/material";
 import LLMNodeDrawer from "../WF_LlmNode/LLMNodeDrawer";
 import { NodeProps } from "@xyflow/react";
+import VarAggNodeDrawer from "../WF_VariableAggregator/VarAggNodeDrawer";
+import { useCallback } from "react";
 
 interface WF_EditDrawerProps {
   node: NodeProps;
@@ -14,29 +16,30 @@ export default function WF_EditDrawer({ node }: WF_EditDrawerProps) {
   const nodeEditing = useGet("NODE_EDITING");
   const save = useSave();
 
-
   //! Function
   const handleClose = (_: {}, reason: "backdropClick" | "escapeKeyDown") => {
     if (reason === "backdropClick") return;
     save(cachedKeys.NODE_EDITING, null);
   };
 
-  const renderEditingNode = () => {
+  const renderEditingNode = useCallback(() => {
     if (!node) return null;
     switch (nodeEditing?.type) {
       case NodeTypeWorkflow.LLM:
         return <LLMNodeDrawer node={node} />;
+      case NodeTypeWorkflow.VARIABLE_AGGREGATOR:
+        return <VarAggNodeDrawer node={node} />;
       default:
         return null;
     }
-  };
+  }, [node, nodeEditing?.type]);
 
   //! Render
   return (
     <Drawer
       variant="persistent"
       anchor="right"
-      open={!!nodeEditing && !!node && node.id === nodeEditing.id}
+      open={!!nodeEditing && !!node && node?.id === nodeEditing?.id}
       onClose={handleClose}
       hideBackdrop
       onKeyDown={(e) => {
@@ -52,14 +55,14 @@ export default function WF_EditDrawer({ node }: WF_EditDrawerProps) {
       <Box
         id="wrapper"
         sx={{
-          width: "50vw",
+          width: "min(50vw, 600px)",
           height: "100vh",
           transition: "all 0.5s ease",
           position: "relative",
         }}
         role="presentation"
       >
-        {renderEditingNode()}
+        {node?.id === nodeEditing?.id && renderEditingNode()}
       </Box>
     </Drawer>
   );

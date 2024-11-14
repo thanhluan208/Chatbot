@@ -1,7 +1,6 @@
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment } from "react";
 import { Handle, NodeProps, Position } from "@xyflow/react";
 import { Box, useTheme } from "@mui/material";
-import { v4 as uuid } from "uuid";
 import { House } from "lucide-react";
 import InputArea from "./components/InputArea";
 import CollapseArea from "@/Components/CommonStyles/CollapseArea";
@@ -13,12 +12,6 @@ const WF_StartNode = (props: NodeProps) => {
   //! State
   const theme = useTheme();
   const data = props?.data as unknown as NodeData;
-
-  const handleid = useMemo(() => {
-    return uuid();
-  }, []);
-
-  
 
   //! Function
 
@@ -64,7 +57,7 @@ const WF_StartNode = (props: NodeProps) => {
       <Handle
         type="source"
         position={Position.Right}
-        id={handleid}
+        id={`${props?.id}-source`}
         isConnectable={true}
         className="handle"
         style={{

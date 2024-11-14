@@ -11,7 +11,7 @@
       "created": "Workflow created",
       "error": "Error creating workflow"
     },
-    "edit" : {
+    "edit": {
       "editing": "Editing workflow",
       "edited": "Workflow edited",
       "error": "Error editing workflow",
@@ -66,5 +66,11 @@
 
   "WF_editor": {
     "no_var": "No variable"
+  },
+
+  "WF_VarAgg": {
+    "aggregation_group": "Aggregation group",
+    "assign_variables": "Assign variables",
+    "choose_variable": "Choose variable"
   }
 }

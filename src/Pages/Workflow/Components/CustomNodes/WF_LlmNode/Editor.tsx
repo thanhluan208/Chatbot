@@ -4,7 +4,7 @@ import {
   NodeOutPutVar,
 } from "@/Components/CommonStyles/EditorPlugin/type";
 import { Variable } from "@/Types/workflow";
-import { Box, useTheme } from "@mui/material";
+import { Box } from "@mui/material";
 import { Node, useReactFlow } from "@xyflow/react";
 import { useBoolean } from "ahooks";
 import { memo, useMemo } from "react";
@@ -24,7 +24,6 @@ const Editor = ({
   parentNodes,
   initValue,
 }: EditorProps) => {
-  const theme = useTheme();
   const { getNode } = useReactFlow();
   const onChange = (value: string) => {
     console.log(value);
@@ -79,11 +78,7 @@ const Editor = ({
         key={controlPromptEditorRerenderKey}
         instanceId={nodeId}
         compact
-        className="min-h-[128px] px-3 py-2 rounded-md"
-        style={{
-          background: theme.colors.custom.backgroundCard,
-          border: `1px solid ${theme.colors.custom.borderColor}`,
-        }}
+        className="min-h-[64px] px-3 py-2 rounded-md"
         value={initValue || ""}
         workflowVariableBlock={{
           show: true,
