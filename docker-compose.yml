@@ -1,0 +1,34 @@
+services:
+  chatbot-web-01:
+    image: alphiiai/chatbot-web:v1.0.1
+    build:
+      context: .
+      dockerfile: ./docker/FE/Dockerfile.v2
+    networks:
+      - alphii-fe-network
+  chatbot-web-02:
+    image: alphiiai/chatbot-web:v1.0.1
+    build:
+      context: .
+      dockerfile: ./docker/FE/Dockerfile.v2
+    networks:
+      - alphii-fe-network
+  chatbot-web-03:
+    image: alphiiai/chatbot-web:v1.0.1
+    build:
+      context: .
+      dockerfile: ./docker/FE/Dockerfile.v2
+    networks:
+      - alphii-fe-network
+  haproxy:
+    image: haproxy:3.0
+    volumes:
+      - ./docker/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    restart: unless-stopped
+    ports:
+      - 8888:5000
+    networks:
+      - alphii-fe-network
+
+networks:
+  alphii-fe-network:
