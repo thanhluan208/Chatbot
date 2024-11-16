@@ -1,26 +1,34 @@
 import React, { Fragment, useMemo } from "react";
 import { Handle, NodeProps, Position } from "@xyflow/react";
 import { Box, useTheme } from "@mui/material";
-import { v4 as uuid } from "uuid";
 import { Code } from "lucide-react";
 import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
 import CollapseArea from "@/Components/CommonStyles/CollapseArea";
 import GradientBorder from "../../GradientBorder";
-import Editor from "./components/Editor";
+import WF_EditDrawer from "../WF_EditDrawer";
+import { createPortal } from "react-dom";
+import { useSave } from "@/Stores/useStore";
+import cachedKeys from "@/Constants/cachedKeys";
+import { NodeTypeWorkflow } from "@/Types/workflow";
 
 const WF_CodeNode = (props: NodeProps) => {
   //! State
   const theme = useTheme();
-
-  const handleid = useMemo(() => {
-    return uuid();
-  }, []);
-
+  const save = useSave();
+  const { data, id,  } = props;
   //! Function
+  const handleClickNode = () => {
+    save(cachedKeys.NODE_EDITING, {
+      type: NodeTypeWorkflow.CODE,
+      id: id,
+    });
+  };
+
 
   //! Render
   return (
     <Fragment>
+      <div onClick={handleClickNode}>
       <GradientBorder {...props}>
         <CollapseArea
           sxContainer={{ marginTop: 0 }}
@@ -51,19 +59,31 @@ const WF_CodeNode = (props: NodeProps) => {
             </Box>
           }
         >
-            <Editor />
         </CollapseArea>
       </GradientBorder>
+
       <Handle
-        type="source"
-        position={Position.Right}
-        id={handleid}
-        isConnectable={true}
-        className="handle"
-        style={{
-          right: "3px",
-        }}
-      />
+          type="source"
+          position={Position.Right}
+          id={`${props?.id}-source`}
+          isConnectable={true}
+          className="handle"
+          style={{
+            right: "3px",
+          }}
+        />
+        <Handle
+          type="target"
+          position={Position.Left}
+          id={`${props?.id}-target`}
+          isConnectable={true}
+          className="handle"
+          style={{
+            left: "3px",
+          }}
+        />
+      </div>
+      {createPortal(<WF_EditDrawer node={props} />, document.body)}
     </Fragment>
   );
 };
