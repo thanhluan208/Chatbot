@@ -6,6 +6,7 @@ import LLMNodeDrawer from "../WF_LlmNode/LLMNodeDrawer";
 import { NodeProps } from "@xyflow/react";
 import VarAggNodeDrawer from "../WF_VariableAggregator/VarAggNodeDrawer";
 import { useCallback } from "react";
+import CodeNodeDrawer from "../WF_CodeNode/components/CodeNodeDrawer";
 
 interface WF_EditDrawerProps {
   node: NodeProps;
@@ -29,6 +30,8 @@ export default function WF_EditDrawer({ node }: WF_EditDrawerProps) {
         return <LLMNodeDrawer node={node} />;
       case NodeTypeWorkflow.VARIABLE_AGGREGATOR:
         return <VarAggNodeDrawer node={node} />;
+      case NodeTypeWorkflow.CODE:
+        return <CodeNodeDrawer node={node} />;
       default:
         return null;
     }
