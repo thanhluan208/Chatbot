@@ -1,5 +1,5 @@
-import { useTheme } from "@mui/material";
-import { Code, X } from "lucide-react";
+import { Box, useTheme } from "@mui/material";
+import { Code, FilePenLine, Plus, X } from "lucide-react";
 import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
 import CommonStyles from "@/Components/CommonStyles";
 import DescriptionInput from "../../../DescriptionInput";
@@ -10,8 +10,10 @@ import cachedKeys from "@/Constants/cachedKeys";
 import { Form, Formik } from "formik";
 import CollapseArea from "@/Components/CommonStyles/CollapseArea";
 import { CodeNodeCode, CodeNodeData, CodeNodeInput, CodeNodeLanguage, CodeNodeOutput, OutputDataType, ParamType } from "../type";
-import { useMemo } from "react";
-import { modelOptions } from "@/Constants/options";
+import { useMemo, useState } from "react";
+import Hint from "@/Pages/ChatbotConfigure/components/GenerateDiversity/components/Hint";
+import Editor from "./Editor";
+import InputRow from "./InputRow";
 
 interface CodeNodeDrawerProps {
     node?: NodeProps;
@@ -75,6 +77,10 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
         };
     }, [nodeData]);
 
+    const handleAddInput = () => {
+      console.log("handle add input")
+    }
+
     const handleUpdate = () => {
         console.log("handle update")
     }
@@ -127,33 +133,137 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
                 {return(
                     <Form>  
                         {/* input */}
-                        <div>
+                        <div style={{background: "#2e2d380a", borderRadius: "8px", marginBottom: "12px"}}>
                             <CollapseArea
                             nodeId={id}
                             initOpen={true}
-                            label="Input"
+                            label={
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  gap: "8px",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <CommonStyles.Typography type="semiBold14">
+                                  Input
+                                </CommonStyles.Typography>
+                                <Hint content="Enter the variable that needs to be added to the code, the code can directly reference the variable added here" />
+                              </Box>
+                            }
                             >
-                                
+                                <div className="flex items-center ml-4"
+                                style={{fontSize: "12px", color: "#1c1d2359"}}>
+                                  <div className="w-40">Parameter name</div>
+                                  <div className="w-40 pl-2">Parameter value</div>
+                                </div>
+
+                                {initialValues.input.map((input)=>(
+                                  <InputRow
+                                  paramName={input.paramName}
+                                  paramType={input.paramType}
+                                  value={input.value}
+                                />
+                                ))}
+
+                                <CommonStyles.Button
+                                  variant="contained"
+                                  sx={{
+                                    marginTop: "1rem",
+                                    marginLeft: "1rem",
+                                    marginBottom: "0.5rem",
+                                    width: "6rem",
+                                  }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+
+                                    handleAddInput();
+                                  }}
+                                >
+                                  <Plus size={24} />
+                                  Add
+                                </CommonStyles.Button>
                             </CollapseArea>
                         </div>
                         {/* code */}
-                        <div>
+                        <div style={{background: "#2e2d380a", borderRadius: "8px", marginBottom: "12px"}}>
                             <CollapseArea
                             nodeId={id}
                             initOpen={true}
-                            label="Code"
+                            label={
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  gap: "8px",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <div className="flex justify-between items-center w-full pr-4">
+                                  <div className="flex items-center">
+                                    <CommonStyles.Typography type="semiBold14">
+                                      Code
+                                    </CommonStyles.Typography>
+                                    <Hint content="Write the structure of a function referring to the code example, where you can directly use the variables in the input parameters, and output the processing result by returning an object. This feature does not support writing multiple functions. Even if there is only one output value, make sure to return it as an object" />
+                                  </div>
+
+                                  <div>
+                                    <CommonStyles.Button variant="contained">
+                                      <FilePenLine className="pr-2"/>
+                                      Edit in IDE
+                                    </CommonStyles.Button>
+                                  </div>
+                                </div>
+                              </Box>
+                            }
                             >
-                                
+                                <Editor></Editor>
                             </CollapseArea>
                         </div>
                         {/* output */}
-                        <div>
+                        <div style={{background: "#2e2d380a", borderRadius: "8px"}}>
                             <CollapseArea
                             nodeId={id}
                             initOpen={true}
-                            label="Output"
+                            label={
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  gap: "8px",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <CommonStyles.Typography type="semiBold14">
+                                  Output
+                                </CommonStyles.Typography>
+                                <Hint content="The variables output after the code runs must ensure that the variable names and variable types defined here are completely consistent with those in the code's return" />
+                              </Box>
+                            }
                             >
-                                
+                                <div className="flex items-center ml-4"
+                                style={{fontSize: "12px", color: "#1c1d2359"}}>
+                                  <div style={{flex: "1 1"}}>Variable name</div>
+                                  <div className="w-40">Variable type</div>
+                                </div>
+
+                                <CommonStyles.Button
+                                  variant="contained"
+                                  sx={{
+                                    marginTop: "1rem",
+                                    marginLeft: "1rem",
+                                    marginBottom: "0.5rem",
+                                    width: "6rem",
+                                  }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+
+                                    // handleAddPrompt();
+                                  }}
+                                >
+                                  <Plus size={24} />
+                                  Add
+                                </CommonStyles.Button>
                             </CollapseArea>
                         </div>
                     </Form>
