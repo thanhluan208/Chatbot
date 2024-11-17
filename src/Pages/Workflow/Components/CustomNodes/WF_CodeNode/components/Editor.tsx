@@ -9,8 +9,9 @@ const Editor = () => {
   }
 
   return (
-    <EditorMonaco
-      height="fit-content"
+    <EditorMonaco className="ml-5 pb-2"
+      height="11rem"
+      width="95%"
       defaultLanguage="javascript"
       defaultValue="function main({arg1, arg2}) {
     return {
