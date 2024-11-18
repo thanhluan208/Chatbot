@@ -40,6 +40,11 @@ const listNode = [
     label: "Variable Aggregator",
     description: "Aggregate multi-branch",
   },
+  {
+    name: `customNode_WF_${NodeTypeWorkflow.KNOWLEDGE_RETRIEVAL}`,
+    label: "Knowledge Retrieval",
+    description: "Knowledge retrieval node ",
+  },
 ];
 
 const WorkflowDetail = () => {
@@ -113,6 +118,7 @@ const WorkflowDetail = () => {
       sx={{
         width: "100vw",
         height: "100vh",
+        minWidth: "1100px",
       }}
     >
       {parsedNode && (

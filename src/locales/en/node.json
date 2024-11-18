@@ -1,4 +1,9 @@
 {
+  "common": {
+    "query_variable": "Query variable",
+    "add": "Add {{content}}"
+  },
+
   "WF_mutate_dialog": {
     "create": {
       "title": "Create workflow",
@@ -72,5 +77,9 @@
     "aggregation_group": "Aggregation group",
     "assign_variables": "Assign variables",
     "choose_variable": "Choose variable"
+  },
+
+  "WF_Knowledge": {
+    "knowledge": "knowledge"
   }
 }

@@ -1,11 +1,10 @@
 import CommonStyles from "@/Components/CommonStyles";
 import { useRef } from "react";
-import { LlmNodeData } from "./CustomNodes/WF_LlmNode/type";
 
 interface DescriptionInputProps {
   value?: string;
   handleUpdate: (
-    payload: Partial<LlmNodeData>,
+    payload: Partial<any>,
     onSuccess?: () => void,
     onFailed?: () => void
   ) => void;

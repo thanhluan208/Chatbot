@@ -2,6 +2,9 @@ export default {
     LIST_BOT: "LIST_BOT",
     BOT_DATA: "BOT_DATA",
 
+    //! Knowledge
+    KNOWLEDGE_FOLDER_LIST: "KNOWLEDGE_FOLDER_LIST",
+
     //! WORKFLOW
     WORKFLOW: "WORKFLOW",
     WORKFLOW_DETAIL: "WORKFLOW_DETAIL",

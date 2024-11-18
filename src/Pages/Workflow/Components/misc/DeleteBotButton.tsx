@@ -1,7 +1,7 @@
 import CommonStyles from "@/Components/CommonStyles";
 import ConfirmDialog from "@/Components/CommonStyles/ConfirmDialog";
 import useToggleDialog from "@/Hooks/useToggleDialog";
-import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
+import useDeleteWorkflow from "@/Hooks/workflow/useDeleteWorkflow";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import { Workflow } from "@/Types/workflow";
 import { useTheme } from "@mui/material";
@@ -18,7 +18,7 @@ function DeleteBotButton(props: IDeleteButton) {
   const { open, shouldRender, toggle } = useToggleDialog();
   const theme: any = useTheme();
   const { userId } = useAuth();
-  const { handleDeleteWorkflow } = useWorkflowMutate();
+  const { handleDeleteWorkflow } = useDeleteWorkflow();
   const { mutateAsync } = handleDeleteWorkflow;
 
   //! Function

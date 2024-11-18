@@ -19,8 +19,9 @@ import CommonField from "../../../../../Components/CommonFields";
 import useToggleDialog from "../../../../../Hooks/useToggleDialog";
 import httpServices from "../../../../../Services/httpServices";
 import { createFolderKnowledge } from "../../../../../Constants/api";
-import { useGet } from "../../../../../Stores/useStore";
 import { useAuth } from "../../../../../Providers/AuthenticationProvider";
+import { useQueryClient } from "react-query";
+import queryKey from "@/Constants/queryKey";
 
 interface IKnowledgeActionDialog {
   toggle: () => void;
@@ -45,8 +46,8 @@ export const KnowledgeActionDialog = (props: IKnowledgeActionDialog) => {
   const { toggle, data } = props;
   const { userId } = useAuth();
   const theme = useTheme();
+  const queryClient = useQueryClient();
 
-  const refetchListFolder = useGet("REFETCH_FOLDER_KNOWLEDGE");
   const isEdit = useMemo(() => {
     return !!data;
   }, []);
@@ -92,7 +93,9 @@ export const KnowledgeActionDialog = (props: IKnowledgeActionDialog) => {
         formData
       );
 
-      await refetchListFolder();
+      await queryClient.invalidateQueries({
+        queryKey: [queryKey.KNOWLEDGE_FOLDER_LIST],
+      });
 
       if (response.data.status_code === 200) {
         toast.update(toastId, {

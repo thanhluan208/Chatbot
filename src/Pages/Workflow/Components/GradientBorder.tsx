@@ -2,6 +2,7 @@ import CommonStyles from "@/Components/CommonStyles";
 import { Box, useTheme } from "@mui/material";
 import { NodeProps, useReactFlow } from "@xyflow/react";
 import { ComponentPropsWithoutRef, useMemo } from "react";
+import UpdateNodePos from "./UpdateNodePos";
 
 const GradientBorder = ({
   data,
@@ -31,6 +32,7 @@ const GradientBorder = ({
         position: "relative",
       }}
     >
+      <UpdateNodePos id={id} />
       {(!!data?.currentNode || !!data?.startNode) && (
         <Box
           sx={{
