@@ -4,7 +4,15 @@ import { useState } from "react";
 
 
 const InputRow = (input : CodeNodeInput) => {
-    const [paramType, setParamType] = useState<ParamType.REFERENCE | ParamType.INPUT>(ParamType.INPUT);
+    const [paramType, setParamType] = useState<string>(input?.paramType);
+
+    const handleSelectChange = (value: string | React.ChangeEvent<{ value: unknown }>) => {
+        if (typeof value === "string") {
+          setParamType(value);
+        } else {
+          setParamType(ParamType.REFERENCE);
+        }
+      };
 
     return (
         <div className="flex items-center ml-4">
@@ -20,11 +28,11 @@ const InputRow = (input : CodeNodeInput) => {
                     {value: ParamType.REFERENCE, label: ParamType.REFERENCE}, 
                     {value: ParamType.INPUT, label: ParamType.INPUT}
                 ]}
-            value={input?.paramType}
-            onChange={(e) => setParamType(e.target.value as ParamType.REFERENCE | ParamType.INPUT)}
+            value={paramType}
+            handleChange={handleSelectChange}
             />
 
-            {paramType === ParamType.INPUT ? (
+            {paramType === ParamType.INPUT.toString() ? (
                 <CommonStyles.Input className="ml-2"
                 placeholder="Enter the parameter value"
                 required
