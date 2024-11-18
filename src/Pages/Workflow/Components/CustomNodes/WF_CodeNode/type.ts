@@ -23,7 +23,7 @@ export interface CodeNodeCode{
 
 export interface CodeNodeOutput{
     varName: string;
-    varDataType: string | CodeNodeOutput;
+    varDataType: string | number | boolean | string[] | number[] | boolean[] | CodeNodeOutput;
 }
 
 export enum ParamType {
