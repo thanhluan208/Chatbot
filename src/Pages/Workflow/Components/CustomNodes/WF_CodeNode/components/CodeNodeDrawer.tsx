@@ -1,5 +1,5 @@
 import { Box, useTheme } from "@mui/material";
-import { CircleMinus, Code, FilePenLine, Plus, X } from "lucide-react";
+import { CircleMinus, Code, FilePenLine, GitPullRequestCreate, Plus, X } from "lucide-react";
 import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
 import CommonStyles from "@/Components/CommonStyles";
 import DescriptionInput from "../../../DescriptionInput";
@@ -14,7 +14,7 @@ import { useMemo, useState } from "react";
 import Hint from "@/Pages/ChatbotConfigure/components/GenerateDiversity/components/Hint";
 import Editor from "./Editor";
 import InputRow from "./InputRow";
-import { size } from "lodash";
+import OutputRow from "./OutputRow";
 
 interface CodeNodeDrawerProps {
     node?: NodeProps;
@@ -90,6 +90,24 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
       //chua xu ly dc
       // setNodeDataInput(prevInput => prevInput.filter((_, i) => i !== index));
     }
+
+    const handleAddOutput = () => {
+      setNodeDataOutput(prevOutput => [...prevOutput, {varName: "", varDataType: OutputDataType.STRING}]);
+   };
+
+   const handleAddOutputForObject = () => {
+
+   };
+
+    const handleDeleteOutput = (index: number) => {
+
+    }
+
+    const handleDataTypeChange = (value: string, index: number) => {
+      const updatedDataOutput = [...nodeDataOutput];
+      updatedDataOutput[index].varDataType = value;
+      setNodeDataOutput(updatedDataOutput);
+    };
 
     const handleUpdate = () => {
         console.log("handle update")
@@ -169,14 +187,14 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
                                 </div>
 
                                 {nodeDataInput.map((input, index)=>(
-                                  <div className="flex items-center justify-between justify-items-center">
+                                  <div className="flex items-center justify-between justify-items-center ml-4 mt-2">
                                     <InputRow
                                       paramName={input.paramName}
                                       paramType={input.paramType}
                                       value={input.value}
                                     />
 
-                                    <CircleMinus
+                                    <CircleMinus className="mr-1"
                                       style={{color : "#1c1d2359", cursor: "pointer"}}
                                       onClick={() => handleDeleteInput(index)}
                                     />
@@ -263,6 +281,29 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
                                   <div className="w-40">Variable type</div>
                                 </div>
 
+                                {nodeDataOutput.map((output, index)=>(
+                                  <div className="flex items-center justify-between justify-items-center ml-2 mt-2">
+                                    <OutputRow
+                                      output={output}
+                                      index ={index}
+                                      onDataTypeChange={handleDataTypeChange}
+                                    />
+
+                                    <div className="flex">
+                                      {(output?.varDataType.includes("Object") ? (
+                                        <GitPullRequestCreate 
+                                        style={{color : "#4d53e8", cursor: "pointer"}}
+                                        onClick={() => handleAddOutputForObject()}/>
+                                      ) : (<div></div>))}
+
+                                      <CircleMinus className="ml-3 mr-1"
+                                        style={{color : "#1c1d2359", cursor: "pointer"}}
+                                        onClick={() => handleDeleteOutput(index)}
+                                      />
+                                    </div>
+                                  </div>
+                                ))}
+
                                 <CommonStyles.Button
                                   variant="contained"
                                   sx={{
@@ -275,7 +316,7 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
                                     e.stopPropagation();
                                     e.preventDefault();
 
-                                    // handleAddPrompt();
+                                    handleAddOutput();
                                   }}
                                 >
                                   <Plus size={24} />

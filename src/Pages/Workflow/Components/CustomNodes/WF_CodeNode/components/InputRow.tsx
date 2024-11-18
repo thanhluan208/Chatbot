@@ -17,7 +17,7 @@ const InputRow = (input: CodeNodeInput) => {
   };
 
   return (
-    <div className="flex items-center ml-4 mt-2">
+    <div className="flex items-center">
       <CommonStyles.Input
         className="w-40"
         initValue={paramName}

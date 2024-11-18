@@ -12,19 +12,31 @@ export const options = [
     {value : "Array<Object>", label : "Array<Object>"},
 ];
 
-const OutputRow = (input: CodeNodeOutput) => {
+interface OutputRowProps {
+    output: CodeNodeOutput;
+    index: number;
+    onDataTypeChange: (value: string, index: number) => void;
+  }
+
+const OutputRow : React.FC<OutputRowProps> = ({ output,index, onDataTypeChange }) => {
     return (
         <div className="flex items-center ml-4">
-            <CommonStyles.Input className="w-40"
-                initValue={input?.varName ?? ""}
+            <CommonStyles.Input className="w-72"
+                initValue={output?.varName ?? ""}
                 placeholder="Enter variable name "
                 required
             />
 
-            <CommonStyles.Select className="ml-2"
-                options={options}
-                value={input?.varDataType}
-            />
+            <select className="ml-2"
+                value={output?.varDataType}
+                onChange={(e) => onDataTypeChange && onDataTypeChange(e.target.value, index)}
+            >
+                {options.map((option) => (
+                    <option key={option.value} value={option.value}>
+                    {option.label}
+                    </option>
+                ))}
+            </select>
         </div>
     );
 }
