@@ -2,10 +2,9 @@ import {
   Command,
   CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandList,
 } from "@/Components/ui/command";
-import { Box, PopperPlacementType, SxProps, useTheme } from "@mui/material";
+import { PopperPlacementType, SxProps, useTheme } from "@mui/material";
 import { NodeTypes, nodeTypes } from "./AddNodes";
 import { useCallback } from "react";
 import { Node, useReactFlow } from "@xyflow/react";
@@ -135,7 +134,6 @@ const ListNode = ({
         color: theme.colors.custom.normalColorTypo,
       }}
     >
-      
       <CommandList>
         <CommandEmpty>No variables found!.</CommandEmpty>
         <CommandGroup>
