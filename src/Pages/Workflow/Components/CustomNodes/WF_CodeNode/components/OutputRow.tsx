@@ -2,46 +2,14 @@ import CommonStyles from "@/Components/CommonStyles";
 import { CodeNodeOutput } from "../type";
 
 export const options = [
-    {
-        value : ,
-        label : 
-    },
-    {
-        value : ,
-        label : 
-    },
-    {
-        value : ,
-        label : 
-    },
-    {
-        value : ,
-        label : 
-    },
-    {
-        value : ,
-        label : 
-    },
-    {
-        value : ,
-        label : 
-    },
-    {
-        value : ,
-        label : 
-    },
-    {
-        value : ,
-        label : 
-    },
-    {
-        value : ,
-        label : 
-    },
-    {
-        value : ,
-        label : 
-    }
+    {value : "String", label : "String"},
+    {value : "Boolean", label : "Boolean"},
+    {value : "Number", label : "Number"},
+    {value : "Object", label : "Object"},
+    {value : "Array<String>", label : "Array<String>"},
+    {value : "Array<Boolean>", label : "Array<Boolean>"},
+    {value : "Array<Number>", label : "Array<Number>"},
+    {value : "Array<Object>", label : "Array<Object>"},
 ];
 
 const OutputRow = (input: CodeNodeOutput) => {

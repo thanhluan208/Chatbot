@@ -1,42 +1,40 @@
 import CommonStyles from "@/Components/CommonStyles";
 import { CodeNodeInput, ParamType } from "../type";
 import { useMemo, useState } from "react";
+import { validate } from "uuid";
+
+export const ParameterTypeOptions = [
+    {value : ParamType.INPUT, label : ParamType.INPUT},
+    {value : ParamType.REFERENCE, label : ParamType.REFERENCE},
+]
 
 const InputRow = (input: CodeNodeInput) => {
+  const [paramName, setParamName] = useState<string>(input?.paramName || "");
   const [paramType, setParamType] = useState<string>(input?.paramType);
 
-  const paramOptions = useMemo(() => {
-    return [
-      { value: ParamType.REFERENCE, label: ParamType.REFERENCE },
-      { value: ParamType.INPUT, label: ParamType.INPUT },
-    ];
-  }, []);
-
-  const handleSelectChange = (
-    value: string | React.ChangeEvent<{ value: unknown }>
-  ) => {
-    if (typeof value === "string") {
+  const handleSelectChange = (value: string) => {
       setParamType(value);
-    } else {
-      setParamType(ParamType.REFERENCE);
-    }
   };
 
   return (
-    <div className="flex items-center ml-4">
+    <div className="flex items-center ml-4 mt-2">
       <CommonStyles.Input
         className="w-40"
-        initValue={input?.paramName ?? ""}
+        initValue={paramName}
         placeholder="Enter parameter name "
+        afterOnchange={(e) => {setParamName(e.target.value)}}
         required
       />
 
-      <CommonStyles.Select
-        className="ml-2 mr-1"
-        options={paramOptions}
+        <select className="ml-2 mr-1"
         value={paramType}
-        handleChange={handleSelectChange}
-      />
+        onChange={(e) => handleSelectChange(e.target.value)}>
+            {ParameterTypeOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                    {option.label}
+                    </option>
+            ))}
+        </select>
 
       {paramType === ParamType.INPUT.toString() ? (
         <CommonStyles.Input
@@ -45,14 +43,14 @@ const InputRow = (input: CodeNodeInput) => {
           required
         />
       ) : (
-        <CommonStyles.Select
-          className="ml-2"
-          options={[
-            { value: 1, label: "var1" },
-            { value: 2, label: "var2" },
-            { value: 3, label: "var3" },
-          ]}
-        />
+        <select className="ml-2 block w-full">
+            <option value="v1">
+                var1
+            </option>
+            <option value="v2">
+                var2
+            </option>
+        </select>
       )}
     </div>
   );

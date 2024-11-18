@@ -1,5 +1,5 @@
 import { Box, useTheme } from "@mui/material";
-import { Code, FilePenLine, Plus, X } from "lucide-react";
+import { CircleMinus, Code, FilePenLine, Plus, X } from "lucide-react";
 import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
 import CommonStyles from "@/Components/CommonStyles";
 import DescriptionInput from "../../../DescriptionInput";
@@ -14,6 +14,7 @@ import { useMemo, useState } from "react";
 import Hint from "@/Pages/ChatbotConfigure/components/GenerateDiversity/components/Hint";
 import Editor from "./Editor";
 import InputRow from "./InputRow";
+import { size } from "lodash";
 
 interface CodeNodeDrawerProps {
     node?: NodeProps;
@@ -28,57 +29,66 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
 
     const { data, id } = node;
     const nodeData = node?.data as unknown as CodeNodeData;
-
     const initialValues = useMemo(() => {
-        const input: CodeNodeInput[] = [
-            {
-                paramName: "input",
-                paramType: ParamType.INPUT,
-            }
-        ];
-        const code : CodeNodeCode= {
-            language: CodeNodeLanguage.JS,
-            code: `async function main({ params }: Args): Promise<Output> {
-                        const ret = {
-                            "key0": params.input + params.input,
-                            "key1": ["hello", "world"],
-                            "key2": {
-                                "key21": "hi"
-                            },
-                        };`
-        };
+      const input: CodeNodeInput[] = [
+          {
+              paramName: "input",
+              paramType: ParamType.INPUT,
+          }
+      ];
+      const code : CodeNodeCode= {
+          language: CodeNodeLanguage.JS,
+          code: `async function main({ params }: Args): Promise<Output> {
+                      const ret = {
+                          "key0": params.input + params.input,
+                          "key1": ["hello", "world"],
+                          "key2": {
+                              "key21": "hi"
+                          },
+                      };`
+      };
 
-        const outputX: CodeNodeOutput = 
-            {
-                varName: "key21",
-                varDataType: OutputDataType.STRING
-            }
-        ;
+      const outputX: CodeNodeOutput = 
+          {
+              varName: "key21",
+              varDataType: OutputDataType.STRING
+          }
+      ;
 
-        const output: CodeNodeOutput[] = [
-            {
-                varName: "key0",
-                varDataType: OutputDataType.STRING
-            },
-            {
-                varName: "key1",
-                varDataType: OutputDataType.ARRAY_STRING
-            },
-            {
-                varName: "key2",
-                varDataType: outputX
-            }
-        ];
+      const output: CodeNodeOutput[] = [
+          {
+              varName: "key0",
+              varDataType: OutputDataType.STRING
+          },
+          {
+              varName: "key1",
+              varDataType: OutputDataType.ARRAY_STRING
+          },
+          {
+              varName: "key2",
+              varDataType: OutputDataType.ARRAY_OBJECT,
+              children: outputX
+          }
+      ];
 
-        return {
-            input: nodeData?.input ?? input,
-            code: nodeData?.code ?? code,
-            output: nodeData?.output ?? output
-        };
+      return {
+          input: nodeData?.input ?? input,
+          code: nodeData?.code ?? code,
+          output: nodeData?.output ?? output
+      };
     }, [nodeData]);
 
+    const [nodeDataInput, setNodeDataInput] = useState(nodeData?.input || initialValues.input);
+    const [nodeDataCode, setNodeDataCode] = useState(nodeData?.code || initialValues.code);
+    const [nodeDataOutput, setNodeDataOutput] = useState(nodeData?.output || initialValues.output);
+
     const handleAddInput = () => {
-      console.log("handle add input")
+      setNodeDataInput(prevInput => [...prevInput, {paramName: "", paramType: ParamType.INPUT,}]);
+   };
+
+    const handleDeleteInput = (index: number) => {
+      //chua xu ly dc
+      // setNodeDataInput(prevInput => prevInput.filter((_, i) => i !== index));
     }
 
     const handleUpdate = () => {
@@ -158,12 +168,19 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
                                   <div className="w-40 pl-2">Parameter value</div>
                                 </div>
 
-                                {initialValues.input.map((input)=>(
-                                  <InputRow
-                                  paramName={input.paramName}
-                                  paramType={input.paramType}
-                                  value={input.value}
-                                />
+                                {nodeDataInput.map((input, index)=>(
+                                  <div className="flex items-center justify-between justify-items-center">
+                                    <InputRow
+                                      paramName={input.paramName}
+                                      paramType={input.paramType}
+                                      value={input.value}
+                                    />
+
+                                    <CircleMinus
+                                      style={{color : "#1c1d2359", cursor: "pointer"}}
+                                      onClick={() => handleDeleteInput(index)}
+                                    />
+                                  </div>
                                 ))}
 
                                 <CommonStyles.Button
