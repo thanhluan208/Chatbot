@@ -1,4 +1,4 @@
-const baseAPI = "https://helped-dragon-entirely.ngrok-free.app"; 
+const baseAPI = import.meta.env.VITE_BACKEND_URL;
 // const baseAPI = "https://chatbot-api.alphiiai.com";
 export const getFolderKnowledge =
   baseAPI + "/knowledge/list_knowledge_storages";
@@ -20,9 +20,10 @@ export const publishKnowledge = baseAPI + "/knowledge/update_on_store";
 export const deleteFromStore = baseAPI + "/knowledge/delete_from_store";
 export const getSegments = baseAPI + "/knowledge/get_file_segments";
 export const getFileRaw = baseAPI + "/knowledge/get_file_url";
-export const getFileData = baseAPI + "/knowledge/get_file_data"
-export const retryUploadFile = baseAPI + '/knowledge/retry_upload'
-export const getKnowledgeDetail = baseAPI + "/knowledge/get_knowledge_storage_data";
+export const getFileData = baseAPI + "/knowledge/get_file_data";
+export const retryUploadFile = baseAPI + "/knowledge/retry_upload";
+export const getKnowledgeDetail =
+  baseAPI + "/knowledge/get_knowledge_storage_data";
 
 export const signInApi = baseAPI + "/user/validate_user";
 export const signUpApi = baseAPI + "/user/create_user";
@@ -50,7 +51,7 @@ export const createMultiAgent = baseAPI + "/bot/create_multi_agent";
 export const updatePrompt = baseAPI + "/bot/update_system_prompt_to_bot";
 export const changeBotMode = baseAPI + "/bot/change_bot_mode";
 export const duplicateBot = baseAPI + "/bot/duplicate_bot";
-export const changeCurrentNode = baseAPI + '/bot/change_current_node'
+export const changeCurrentNode = baseAPI + "/bot/change_current_node";
 
 export const getBotNode = baseAPI + "/node/get_node_data";
 export const deleteBotNode = baseAPI + "/node/delete_node";
@@ -64,7 +65,6 @@ export const removeEdge = baseAPI + "/node/remove_edge";
 export const updateScenario = baseAPI + "/node/update_scenario_to_node";
 export const updateNodeLLM = baseAPI + "/node/update_model_params_for_node";
 
-
 export const createWorkflowAPI = baseAPI + "/workflow/create_workflow";
 export const deleteWorkflowAPI = baseAPI + "/workflow/delete_workflow";
 export const addNodeWorkflowAPI = baseAPI + "/workflow/add_node";
@@ -74,4 +74,5 @@ export const getWorkflowDetailAPI = baseAPI + "/workflow/get_workflow_data";
 export const updateWorkflowNodeData = baseAPI + "/workflow/update_node_data";
 export const addEdgeWorkflowAPI = baseAPI + "/workflow/add_edge";
 export const removeEdgeWorkflowAPI = baseAPI + "/workflow/remove_edge";
-export const getVariableSelectors = baseAPI + "/workflow/get_avaiable_variable_selectors";
+export const getVariableSelectors =
+  baseAPI + "/workflow/get_avaiable_variable_selectors";

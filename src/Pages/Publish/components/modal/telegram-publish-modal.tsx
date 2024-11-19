@@ -6,6 +6,7 @@ import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import CenterBox from '@/Components/CommonStyles/Centerbox';
 
 const BASE_URL = 'https://2aa3-58-187-68-62.ngrok-free.app/';
+const botID = 'd78f0cf7-8895-47f5-a7a1-66a6865c23e9'
 export default function TelegramPublishModal({
   setOpen,
 }: {
@@ -17,9 +18,7 @@ export default function TelegramPublishModal({
     [theme.palette.mode]
   );
 
-  const [botID, setBotId] = useState<string>(
-    'd78f0cf7-8895-47f5-a7a1-66a6865c23e9'
-  );
+
   const yupSchema = y.object().shape({
     token: y
       .string()
