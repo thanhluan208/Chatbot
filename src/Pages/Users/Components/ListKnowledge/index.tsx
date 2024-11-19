@@ -20,27 +20,19 @@ const filters = {
 
 const ListKnowledge = () => {
   //! State
-  const { data, isLoading, refetch } = useGetListFolderKnowledge(filters);
+  const { data, isLoading } = useGetListFolderKnowledge(filters);
   const theme = useTheme();
   const save = useSave();
 
   //! Function
-  useEffect(() => {
-    save(cachedKeys.REFETCH_FOLDER_KNOWLEDGE, refetch);
-
-    return () => {
-      save(cachedKeys.REFETCH_FOLDER_KNOWLEDGE, null);
-    };
-  }, [refetch]);
 
   useEffect(() => {
     save(cachedKeys.LOADING_APP, isLoading);
 
     return () => {
       save(cachedKeys.LOADING_APP, false);
-    }
+    };
   }, [isLoading]);
-
 
   //! Render
   if (isEmpty(data)) {

@@ -13,7 +13,7 @@ import CommonStyles from "@/Components/CommonStyles";
 import CommonIcons from "@/Components/CommonIcons";
 import CommonField from "@/Components/CommonFields";
 import { createWorkflowPayload } from "@/Types/workflow";
-import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
+import useCreateWorkflow from "@/Hooks/workflow/useCreateWorkflow";
 
 interface ICreateOrEditWorkflowDialog {
   toggle: () => void;
@@ -50,7 +50,7 @@ export const CreateOrEditWorkflowDialog = (
     });
   }, []);
 
-  const { handleCreateWorkflow } = useWorkflowMutate();
+  const { handleCreateWorkflow } = useCreateWorkflow();
   const { mutateAsync: createWorkflow } = handleCreateWorkflow;
 
   //! Function

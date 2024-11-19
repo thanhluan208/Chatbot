@@ -7,16 +7,17 @@ import {
 } from "@mui/material";
 import CommonStyles from "../../../../../Components/CommonStyles";
 import CommonIcons from "../../../../../Components/CommonIcons";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import useGetListFolderKnowledge from "../../../../../Hooks/Knowledges/useGetListFolderKnowledge";
-import cachedKeys from "../../../../../Constants/cachedKeys";
-import { useSave } from "../../../../../Stores/useStore";
 import CreateKnowledgeButton from "./CreateKnowledgeButton";
 import KnowledgeFolder, { IKnowledgeFolder } from "./KnowledgeFolder";
 import PerfectScollBar from "react-perfect-scrollbar";
 
 interface IKnowledgeListDialog {
   toggle: () => void;
+  enableButton?: boolean;
+  handleMutate?: (id: string) => void;
+  ownedOnly?: boolean;
 }
 
 export const KnowledgeFilter = {
@@ -32,34 +33,18 @@ export const KnowledgeSortBy = {
 
 const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
   //! State
-  const { toggle } = props;
+  const { toggle, enableButton, handleMutate, ownedOnly } = props;
   const theme = useTheme();
-  const save = useSave();
   const [filters, setFilter] = useState({
-    visual_option: KnowledgeFilter.All,
+    visual_option: KnowledgeFilter.Owned,
     search_input: "",
   });
 
-  const { data, isLoading, refetch } = useGetListFolderKnowledge(filters);
-
-  // const debounceRef = useRef<any>(null);
+  const { data, isLoading } = useGetListFolderKnowledge(filters);
 
   //! Function
 
-  // const handleChangeSearch = (
-  //   e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  // ) => {
-  //   if (debounceRef.current) clearTimeout(debounceRef.current);
-  //   debounceRef.current = setTimeout(() => {
-  //     setFilter((prev) => ({ ...prev, search_input: e.target.value }));
-  //     clearTimeout(debounceRef.current);
-  //   }, 300);
-  // };
-
   //! Effect
-  useEffect(() => {
-    save(cachedKeys.REFETCH_FOLDER_KNOWLEDGE, refetch);
-  }, [save, refetch]);
 
   //! Render
   return (
@@ -85,41 +70,37 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
           padding: "20px 28px",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Box sx={{ display: "flex" }}>
-            {Object.entries(KnowledgeFilter).map(([key, value], index) => {
-              return (
-                <Box
-                  sx={{
-                    padding: "0 12px",
-                    borderRight: index < 2 ? "solid 1px #ccc" : "",
-                    cursor: "pointer",
-                  }}
-                  key={value}
-                  onClick={() =>
-                    setFilter((prev) => ({ ...prev, visual_option: value }))
-                  }
-                >
-                  <CommonStyles.Typography
-                    type="bold14"
-                    color={
-                      filters.visual_option === value
-                        ? theme.palette.primary.main
-                        : theme.colors.custom.normalColorTypo
+        <div className="flex justify-between items-center">
+          {!ownedOnly && (
+            <Box sx={{ display: "flex" }}>
+              {Object.entries(KnowledgeFilter).map(([key, value], index) => {
+                return (
+                  <Box
+                    sx={{
+                      padding: "0 12px",
+                      borderRight: index < 2 ? "solid 1px #ccc" : "",
+                      cursor: "pointer",
+                    }}
+                    key={value}
+                    onClick={() =>
+                      setFilter((prev) => ({ ...prev, visual_option: value }))
                     }
                   >
-                    {key}
-                  </CommonStyles.Typography>
-                </Box>
-              );
-            })}
-          </Box>
+                    <CommonStyles.Typography
+                      type="bold14"
+                      color={
+                        filters.visual_option === value
+                          ? theme.palette.primary.main
+                          : theme.colors.custom.normalColorTypo
+                      }
+                    >
+                      {key}
+                    </CommonStyles.Typography>
+                  </Box>
+                );
+              })}
+            </Box>
+          )}
           <Box
             sx={{
               display: "flex",
@@ -130,20 +111,9 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
               },
             }}
           >
-            {/* <CommonStyles.Input
-              afterOnchange={handleChangeSearch}
-              value={filters.search_input}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start" sx={{ marginLeft: "10px" }}>
-                    <CommonIcons.Search />
-                  </InputAdornment>
-                ),
-              }}
-            /> */}
             <CreateKnowledgeButton />
           </Box>
-        </Box>
+        </div>
 
         <PerfectScollBar
           style={{
@@ -168,6 +138,8 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
                   sharingWithBots={item.sharingWithBots}
                   owner_id={item.owner_id}
                   avatar={item.avatar}
+                  enableButton={enableButton}
+                  handleMutate={handleMutate}
                 />
                 {index < data?.length - 1 && <Divider />}
               </Fragment>

@@ -1,14 +1,15 @@
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
-import { CSSProperties } from "react";
+import { CSSProperties, useRef } from "react";
 import { CSS } from "@dnd-kit/utilities";
 import { PromptRoleEnum, PromptTemplate } from "./type";
 import CommonStyles from "@/Components/CommonStyles";
-import { NodeProps } from "@xyflow/react";
+import { Node, NodeProps } from "@xyflow/react";
 import Editor from "./Editor";
 import { Grip, Trash } from "lucide-react";
 import { Box, useTheme } from "@mui/material";
 import RoleSelect from "./RoleSelect";
+import { NodeOutPutVar } from "@/Components/CommonStyles/EditorPlugin/type";
 
 interface PromptItemProps {
   id: UniqueIdentifier;
@@ -19,6 +20,8 @@ interface PromptItemProps {
     payload?: PromptTemplate,
     isDelete?: boolean
   ) => void;
+  varList: NodeOutPutVar[];
+  workflowNodesMap: Record<string, Pick<Node["data"], "title" | "type">>;
 }
 
 const PromptItem = ({
@@ -26,6 +29,8 @@ const PromptItem = ({
   promptData,
   node,
   handleUpdateListPrompt,
+  varList,
+  workflowNodesMap,
 }: PromptItemProps) => {
   const theme = useTheme();
   const {
@@ -37,6 +42,8 @@ const PromptItem = ({
     transform,
     transition,
   } = useSortable({ id });
+
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   const style: CSSProperties = {
     opacity: isDragging ? 0.4 : undefined,
@@ -60,6 +67,21 @@ const PromptItem = ({
     promptData.role = value;
     handleUpdateListPrompt?.(id, promptData);
   };
+
+  const handleChangeEditor = (value: string) => {
+    if (value === promptData.text) return;
+
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+
+    debounceRef.current = setTimeout(() => {
+      promptData.text = value;
+      handleUpdateListPrompt?.(id, promptData);
+    }, 1500);
+  };
+
+  
 
   return (
     <li className="flex pr-10 relative" ref={setNodeRef} style={style}>
@@ -126,6 +148,9 @@ const PromptItem = ({
                 nodeId={node.id}
                 parentNodes={(node.data?.parentNodes as string[]) || []}
                 initValue={promptData.text}
+                varList={varList}
+                workflowNodesMap={workflowNodesMap}
+                handleChangeEditor={handleChangeEditor}
               />
             </div>
           </div>

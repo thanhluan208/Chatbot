@@ -44,26 +44,29 @@ const Work = () => {
     subTabQuery === WorkTab.Bots || !subTabQuery
   );
   const { data: listKnowledges, isLoading: isLoadingKnowledges } =
-    useGetListFolderKnowledge(
-      knowledgeFilters,
-      subTabQuery === WorkTab.Knowledges
-    );
+    useGetListFolderKnowledge(knowledgeFilters);
 
   //! Function
   const renderWorkTab = useCallback(() => {
     switch (subTabQuery) {
       case WorkTab.Bots:
-        return listBots?.data?.list_bots?.map((bot) => {
-          return <BotCard key={bot.bot_id} {...bot} />;
-        }) || [];
+        return (
+          listBots?.data?.list_bots?.map((bot) => {
+            return <BotCard key={bot.bot_id} {...bot} />;
+          }) || []
+        );
       case WorkTab.Knowledges:
-        return listKnowledges.map((item) => {
-          return <KnowledgeFolder key={item.id} {...item} />;
-        }) || [];
+        return (
+          listKnowledges.map((item) => {
+            return <KnowledgeFolder key={item.id} {...item} />;
+          }) || []
+        );
       default:
-        return listBots?.data?.list_bots?.map((bot) => {
-          return <BotCard key={bot.bot_id} {...bot} />;
-        }) || [];
+        return (
+          listBots?.data?.list_bots?.map((bot) => {
+            return <BotCard key={bot.bot_id} {...bot} />;
+          }) || []
+        );
     }
   }, [tabQuery, subTabQuery, listBots, listKnowledges]);
 

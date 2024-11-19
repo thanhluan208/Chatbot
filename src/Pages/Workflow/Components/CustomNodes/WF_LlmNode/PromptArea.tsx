@@ -19,11 +19,13 @@ import {
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
 import PromptItem from "./PromptItem";
-import { NodeProps } from "@xyflow/react";
+import { Node, NodeProps } from "@xyflow/react";
 import { v4 as uuid } from "uuid";
 import CommonStyles from "@/Components/CommonStyles";
 import { Plus } from "lucide-react";
 import { cloneDeep } from "lodash";
+import useGetVariableSelectors from "@/Hooks/workflow/useGetVariableSelectors";
+import { NodeOutPutVar } from "@/Components/CommonStyles/EditorPlugin/type";
 
 const dropAnimationConfig: DropAnimation = {
   sideEffects: defaultDropAnimationSideEffects({
@@ -49,6 +51,54 @@ const PromptArea = ({ node, handleUpdate }: PromptAreaProps) => {
 
   const [listPrompts, setListPrompts] = useState<PromptTemplate[]>([]);
   const [active, setActive] = useState<Active | null>(null);
+
+  const { data: varSelectors } = useGetVariableSelectors(node?.id);
+
+  console.log(varSelectors);
+
+  const varList = useMemo(() => {
+    if (!varSelectors?.variable_selectors) return [];
+
+    const list: NodeOutPutVar[] = [];
+
+    varSelectors?.variable_selectors?.forEach((item) => {
+      const index = list.findIndex((elm) => elm.nodeId === item.value[0]);
+      if (index !== -1) {
+        list[index].vars.push({
+          type: item.type,
+          variable: item.value[1],
+        });
+      } else {
+        list.push({
+          nodeId: item.value[0],
+          title: item.value[0],
+          vars: [
+            {
+              type: item.type,
+              variable: item.value[1],
+            },
+          ],
+        });
+      }
+    });
+
+    return list;
+  }, [varSelectors?.variable_selectors]);
+
+  const workflowNodesMap = useMemo(() => {
+    const map: Record<string, Pick<Node["data"], "title" | "type">>  = {}
+
+    if (!varSelectors?.variable_selectors) return map;
+
+    varSelectors?.variable_selectors?.forEach((item) => {
+      map[item.value[0]] = {
+        title: item.value[0],
+        type: item.type
+      }
+    });
+
+    return map
+  },[varSelectors?.variable_selectors])
 
   const activeItem = useMemo(
     () => listPrompts.find((item) => item.id === active?.id),
@@ -166,13 +216,21 @@ const PromptArea = ({ node, handleUpdate }: PromptAreaProps) => {
               promptData={item}
               node={node}
               handleUpdateListPrompt={handleUpdateListPrompt}
+              varList={varList}
+              workflowNodesMap={workflowNodesMap}
             />
           ))}
         </ul>
       </SortableContext>
       <DragOverlay dropAnimation={dropAnimationConfig}>
         {activeItem ? (
-          <PromptItem id={activeItem.id} promptData={activeItem} node={node} />
+          <PromptItem
+            id={activeItem.id}
+            promptData={activeItem}
+            node={node}
+            varList={varList}
+            workflowNodesMap={workflowNodesMap}
+          />
         ) : null}
       </DragOverlay>
       <div className="pl-2 pr-12">

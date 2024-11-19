@@ -4,7 +4,6 @@ import moment from "moment";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import DeleteKnowledge from "./DeleteKnowledge";
 import { toast } from "react-toastify";
-import { useGet } from "../../../../../Stores/useStore";
 import httpServices from "../../../../../Services/httpServices";
 import {
   removeKnowledgeFromBot,
@@ -12,6 +11,8 @@ import {
 } from "../../../../../Constants/api";
 import { useMemo } from "react";
 import { useAuth } from "@/Providers/AuthenticationProvider";
+import { useQueryClient } from "react-query";
+import queryKey from "@/Constants/queryKey";
 
 export interface IKnowledgeFolder {
   id?: string;
@@ -25,6 +26,8 @@ export interface IKnowledgeFolder {
   owner_id?: string;
   permission_level?: string;
   avatar: string;
+  enableButton?: boolean;
+  handleMutate?: (knowledgeFolderId: string) => void;
 }
 
 const KnowledgeFolder = (props: IKnowledgeFolder) => {
@@ -40,6 +43,8 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
     owner_id,
     permission_level,
     avatar,
+    enableButton,
+    handleMutate,
   } = props;
   const navigate = useNavigate();
   const theme = useTheme();
@@ -47,6 +52,7 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
   const params = useParams();
   const botId = params.botId;
   const { userId } = useAuth();
+  const queryClient = useQueryClient();
 
   const isOwner = useMemo(() => {
     if (userId === owner_id) {
@@ -63,8 +69,6 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
 
     return false;
   }, [botId, sharingWithBots]);
-
-  const refetchListFolder = useGet("REFETCH_FOLDER_KNOWLEDGE");
 
   //! Function
   const handleAddKnowledgeToBot = async (
@@ -85,7 +89,9 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
         knowledge_storage_ids: [id],
       });
 
-      await refetchListFolder?.();
+      queryClient.invalidateQueries({
+        queryKey: [queryKey.KNOWLEDGE_FOLDER_LIST],
+      });
 
       toast.update(toastId, {
         render: "Added knowledge to bot successfully!",
@@ -121,7 +127,9 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
         knowledge_storage_ids: [id],
       });
 
-      await refetchListFolder?.();
+      queryClient.invalidateQueries({
+        queryKey: [queryKey.KNOWLEDGE_FOLDER_LIST],
+      });
 
       toast.update(toastId, {
         render: "Removed knowledge from bot successfully!",
@@ -197,11 +205,18 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
           gap: "8px",
         }}
       >
-        {botId && (
+        {(botId || enableButton) && (
           <CommonStyles.Button
             variant="outlined"
             onClick={
-              isSharing ? handleRemoveKnowledgeFromBot : handleAddKnowledgeToBot
+              !!handleMutate
+                ? (e) => {
+                    e.stopPropagation();
+                    handleMutate(id || "");
+                  }
+                : isSharing
+                ? handleRemoveKnowledgeFromBot
+                : handleAddKnowledgeToBot
             }
           >
             {isSharing ? "Remove" : "Add"}

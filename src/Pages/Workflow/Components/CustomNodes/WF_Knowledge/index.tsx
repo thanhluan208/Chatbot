@@ -1,7 +1,7 @@
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment } from "react";
 import { Handle, NodeProps, Position } from "@xyflow/react";
 import { Box, useTheme } from "@mui/material";
-import { Variable } from "lucide-react";
+import { Book } from "lucide-react";
 import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
 import CollapseArea from "@/Components/CommonStyles/CollapseArea";
 import GradientBorder from "../../GradientBorder";
@@ -12,37 +12,19 @@ import { NodeTypeWorkflow } from "@/Types/workflow";
 import WF_EditDrawer from "../WF_EditDrawer";
 import { createPortal } from "react-dom";
 import CommonStyles from "@/Components/CommonStyles";
-import { NodeDataVarAgg } from "./type";
-import NodeGroupItem from "./NodeGroupItem";
 
 const WF_VariableAggregator = (props: NodeProps) => {
   //! State
-  const { id } = props;
+  const { data, id } = props;
   const theme = useTheme();
   const { workflowId } = useParams();
   const save = useSave();
-
-  const nodeData = props?.data as unknown as NodeDataVarAgg;
-
-  const groupData = useMemo(() => {
-    if (nodeData?.advanced_settings?.group_enabled) {
-      return nodeData?.advanced_settings?.groups;
-    } else {
-      return [
-        {
-          group_name: "",
-          output_type: nodeData?.output_type,
-          variables: nodeData?.variables,
-        },
-      ];
-    }
-  }, [nodeData?.advanced_settings, nodeData?.output_type, nodeData?.variables]);
 
   //! Function
 
   const handleClickNode = () => {
     save(cachedKeys.NODE_EDITING, {
-      type: NodeTypeWorkflow.VARIABLE_AGGREGATOR,
+      type: NodeTypeWorkflow.KNOWLEDGE_RETRIEVAL,
       id: id,
     });
   };
@@ -73,18 +55,16 @@ const WF_VariableAggregator = (props: NodeProps) => {
                     background: theme.palette.primary.main,
                   }}
                 >
-                  <Variable className="w-3.5 h-3.5" color="#fff" />
+                  <Book className="w-3.5 h-3.5" color="#fff" />
                 </Box>
                 <EditLabelNode nodeId={id} workflowId={workflowId} />
               </Box>
             }
-          >
-            <NodeGroupItem data={groupData} />
-          </CollapseArea>
+          ></CollapseArea>
 
           <div className="my-2 px-3 py-1 max-w-[500px]">
             <CommonStyles.Typography>
-              {nodeData?.desc as string}
+              {data?.desc as string}
             </CommonStyles.Typography>
           </div>
         </GradientBorder>

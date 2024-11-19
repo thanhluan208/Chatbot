@@ -2,12 +2,13 @@ import { Fragment } from "react/jsx-runtime";
 import { toast } from "react-toastify";
 import { IKnowledgeFolder } from "./KnowledgeFolder";
 import useToggleDialog from "../../../../../Hooks/useToggleDialog";
-import { useGet } from "../../../../../Stores/useStore";
 import CommonStyles from "../../../../../Components/CommonStyles";
 import ConfirmDialog from "../../../../../Components/CommonStyles/ConfirmDialog";
 import httpServices from "../../../../../Services/httpServices";
 import { deleteKnowledge } from "../../../../../Constants/api";
-import { useParams } from "react-router-dom";
+import { useQueryClient } from "react-query";
+import queryKey from "@/Constants/queryKey";
+import { useAuth } from "@/Providers/AuthenticationProvider";
 
 interface IDeleteKnowledge {
   data: Omit<IKnowledgeFolder, "avatar">;
@@ -18,9 +19,8 @@ function DeleteKnowledge(props: IDeleteKnowledge) {
   //! State
   const { data, deleteButton } = props;
   const { open, shouldRender, toggle } = useToggleDialog();
-  const params = useParams();
-  const refetchListFolderKnowledge = useGet("REFETCH_FOLDER_KNOWLEDGE");
-  const userId = params?.id;
+  const { userId } = useAuth();
+  const queryClient = useQueryClient();
 
   //! Function
   const handleDelete = async () => {
@@ -39,7 +39,9 @@ function DeleteKnowledge(props: IDeleteKnowledge) {
     try {
       await httpServices.axios.post(deleteKnowledge, payload);
 
-      refetchListFolderKnowledge && (await refetchListFolderKnowledge());
+      queryClient.invalidateQueries({
+        queryKey: [queryKey.KNOWLEDGE_FOLDER_LIST],
+      });
 
       toast.update(toastId, {
         isLoading: false,

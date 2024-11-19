@@ -82,6 +82,7 @@ const ListAssignVars = ({
     return options;
   }, [type, varSelectors]);
 
+
   const handleSelectVar = (vars: Vars, oldVars?: string) => {
     let hasAdded = false;
 
