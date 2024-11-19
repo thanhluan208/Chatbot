@@ -289,18 +289,10 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
                                       onDataTypeChange={handleDataTypeChange}
                                     />
 
-                                    <div className="flex">
-                                      {(output?.varDataType.includes("Object") ? (
-                                        <GitPullRequestCreate 
-                                        style={{color : "#4d53e8", cursor: "pointer"}}
-                                        onClick={() => handleAddOutputForObject()}/>
-                                      ) : (<div></div>))}
-
-                                      <CircleMinus className="ml-3 mr-1"
-                                        style={{color : "#1c1d2359", cursor: "pointer"}}
-                                        onClick={() => handleDeleteOutput(index)}
-                                      />
-                                    </div>
+                                    <CircleMinus className="ml-3 mr-1"
+                                      style={{color : "#1c1d2359", cursor: "pointer"}}
+                                      onClick={() => handleDeleteOutput(index)}
+                                    />
                                   </div>
                                 ))}
 
