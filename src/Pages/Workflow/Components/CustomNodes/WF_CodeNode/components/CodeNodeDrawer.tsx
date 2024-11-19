@@ -1,5 +1,5 @@
 import { Box, useTheme } from "@mui/material";
-import { CircleMinus, Code, FilePenLine, GitPullRequestCreate, Plus, X } from "lucide-react";
+import { Code, FilePenLine, X } from "lucide-react";
 import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
 import CommonStyles from "@/Components/CommonStyles";
 import DescriptionInput from "../../../DescriptionInput";
@@ -13,8 +13,8 @@ import { CodeNodeCode, CodeNodeData, CodeNodeInput, CodeNodeLanguage, CodeNodeOu
 import { useMemo, useState } from "react";
 import Hint from "@/Pages/ChatbotConfigure/components/GenerateDiversity/components/Hint";
 import Editor from "./Editor";
-import InputRow from "./InputRow";
-import OutputRow from "./OutputRow";
+import InputSection from "./InputSection";
+import OutputSection from "./OutputSection";
 
 interface CodeNodeDrawerProps {
     node?: NodeProps;
@@ -41,10 +41,7 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
           code: `async function main({ params }: Args): Promise<Output> {
                       const ret = {
                           "key0": params.input + params.input,
-                          "key1": ["hello", "world"],
-                          "key2": {
-                              "key21": "hi"
-                          },
+                          "key1": ["hello", "world"]
                       };`
       };
 
@@ -63,11 +60,6 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
           {
               varName: "key1",
               varDataType: OutputDataType.ARRAY_STRING
-          },
-          {
-              varName: "key2",
-              varDataType: OutputDataType.ARRAY_OBJECT,
-              children: outputX
           }
       ];
 
@@ -87,16 +79,12 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
    };
 
     const handleDeleteInput = (index: number) => {
-      //chua xu ly dc
+      console.log(nodeDataInput);
       // setNodeDataInput(prevInput => prevInput.filter((_, i) => i !== index));
     }
 
     const handleAddOutput = () => {
       setNodeDataOutput(prevOutput => [...prevOutput, {varName: "", varDataType: OutputDataType.STRING}]);
-   };
-
-   const handleAddOutputForObject = () => {
-
    };
 
     const handleDeleteOutput = (index: number) => {
@@ -161,66 +149,9 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
                 {return(
                     <Form>  
                         {/* input */}
-                        <div style={{background: "#2e2d380a", borderRadius: "8px", marginBottom: "12px"}}>
-                            <CollapseArea
-                            nodeId={id}
-                            initOpen={true}
-                            label={
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  gap: "8px",
-                                  alignItems: "center",
-                                }}
-                              >
-                                <CommonStyles.Typography type="semiBold14">
-                                  Input
-                                </CommonStyles.Typography>
-                                <Hint content="Enter the variable that needs to be added to the code, the code can directly reference the variable added here" />
-                              </Box>
-                            }
-                            >
-                                <div className="flex items-center ml-4"
-                                style={{fontSize: "12px", color: "#1c1d2359"}}>
-                                  <div className="w-40">Parameter name</div>
-                                  <div className="w-40 pl-2">Parameter value</div>
-                                </div>
-
-                                {nodeDataInput.map((input, index)=>(
-                                  <div className="flex items-center justify-between justify-items-center ml-4 mt-2">
-                                    <InputRow
-                                      paramName={input.paramName}
-                                      paramType={input.paramType}
-                                      value={input.value}
-                                    />
-
-                                    <CircleMinus className="mr-1"
-                                      style={{color : "#1c1d2359", cursor: "pointer"}}
-                                      onClick={() => handleDeleteInput(index)}
-                                    />
-                                  </div>
-                                ))}
-
-                                <CommonStyles.Button
-                                  variant="contained"
-                                  sx={{
-                                    marginTop: "1rem",
-                                    marginLeft: "1rem",
-                                    marginBottom: "0.5rem",
-                                    width: "6rem",
-                                  }}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    e.preventDefault();
-
-                                    handleAddInput();
-                                  }}
-                                >
-                                  <Plus size={24} />
-                                  Add
-                                </CommonStyles.Button>
-                            </CollapseArea>
-                        </div>
+                        <InputSection
+                          inputs={nodeDataInput}
+                        />
                         {/* code */}
                         <div style={{background: "#2e2d380a", borderRadius: "8px", marginBottom: "12px"}}>
                             <CollapseArea
@@ -256,66 +187,9 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
                             </CollapseArea>
                         </div>
                         {/* output */}
-                        <div style={{background: "#2e2d380a", borderRadius: "8px"}}>
-                            <CollapseArea
-                            nodeId={id}
-                            initOpen={true}
-                            label={
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  gap: "8px",
-                                  alignItems: "center",
-                                }}
-                              >
-                                <CommonStyles.Typography type="semiBold14">
-                                  Output
-                                </CommonStyles.Typography>
-                                <Hint content="The variables output after the code runs must ensure that the variable names and variable types defined here are completely consistent with those in the code's return" />
-                              </Box>
-                            }
-                            >
-                                <div className="flex items-center ml-4"
-                                style={{fontSize: "12px", color: "#1c1d2359"}}>
-                                  <div style={{flex: "1 1"}}>Variable name</div>
-                                  <div className="w-40">Variable type</div>
-                                </div>
-
-                                {nodeDataOutput.map((output, index)=>(
-                                  <div className="flex items-center justify-between justify-items-center ml-2 mt-2">
-                                    <OutputRow
-                                      output={output}
-                                      index ={index}
-                                      onDataTypeChange={handleDataTypeChange}
-                                    />
-
-                                    <CircleMinus className="ml-3 mr-1"
-                                      style={{color : "#1c1d2359", cursor: "pointer"}}
-                                      onClick={() => handleDeleteOutput(index)}
-                                    />
-                                  </div>
-                                ))}
-
-                                <CommonStyles.Button
-                                  variant="contained"
-                                  sx={{
-                                    marginTop: "1rem",
-                                    marginLeft: "1rem",
-                                    marginBottom: "0.5rem",
-                                    width: "6rem",
-                                  }}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    e.preventDefault();
-
-                                    handleAddOutput();
-                                  }}
-                                >
-                                  <Plus size={24} />
-                                  Add
-                                </CommonStyles.Button>
-                            </CollapseArea>
-                        </div>
+                        <OutputSection
+                          outputs={nodeDataOutput}
+                        />
                     </Form>
                 );}}
             </Formik>
