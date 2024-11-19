@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useMemo } from "react";
 import { Handle, NodeProps, Position } from "@xyflow/react";
 import { Box, useTheme } from "@mui/material";
 import { Variable } from "lucide-react";
@@ -12,13 +12,31 @@ import { NodeTypeWorkflow } from "@/Types/workflow";
 import WF_EditDrawer from "../WF_EditDrawer";
 import { createPortal } from "react-dom";
 import CommonStyles from "@/Components/CommonStyles";
+import { NodeDataVarAgg } from "./type";
+import NodeGroupItem from "./NodeGroupItem";
 
 const WF_VariableAggregator = (props: NodeProps) => {
   //! State
-  const { data, id } = props;
+  const { id } = props;
   const theme = useTheme();
   const { workflowId } = useParams();
   const save = useSave();
+
+  const nodeData = props?.data as unknown as NodeDataVarAgg;
+
+  const groupData = useMemo(() => {
+    if (nodeData?.advanced_settings?.group_enabled) {
+      return nodeData?.advanced_settings?.groups;
+    } else {
+      return [
+        {
+          group_name: "",
+          output_type: nodeData?.output_type,
+          variables: nodeData?.variables,
+        },
+      ];
+    }
+  }, [nodeData?.advanced_settings, nodeData?.output_type, nodeData?.variables]);
 
   //! Function
 
@@ -60,11 +78,13 @@ const WF_VariableAggregator = (props: NodeProps) => {
                 <EditLabelNode nodeId={id} workflowId={workflowId} />
               </Box>
             }
-          ></CollapseArea>
+          >
+            <NodeGroupItem data={groupData} />
+          </CollapseArea>
 
           <div className="my-2 px-3 py-1 max-w-[500px]">
             <CommonStyles.Typography>
-              {data?.desc as string}
+              {nodeData?.desc as string}
             </CommonStyles.Typography>
           </div>
         </GradientBorder>

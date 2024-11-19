@@ -53,7 +53,7 @@ export interface VarSelectorResponse extends CommonResponse {
 
 export interface VariableSelector {
   value: string[];
-  type: string;
+  type: StartNodeInputType;
 }
 
 export interface WorkflowDetail {

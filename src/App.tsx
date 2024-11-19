@@ -12,6 +12,7 @@ import CommonStyles from "./Components/CommonStyles";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import "./App.css"
+import PublishPage from "./Pages/Publish";
 
 const KnowledgeDetail = lazy(() => import("./Pages/KnowledgeDetail"));
 const Login = lazy(() => import("./Pages/Login"));
@@ -41,6 +42,15 @@ function App() {
   const { userId } = useAuth();
   const Routes = useRoutes();
   const router = createBrowserRouter([
+    {
+      path: ListRoutes.publish,
+      element: <PublishPage />,
+      loader: () => {
+        // if (!userId) return redirect("/login");
+
+        return null;
+      },
+    },
     {
       element: <DefaultLayout />,
       children: [
@@ -89,6 +99,7 @@ function App() {
             return null;
           },
         },
+        
       ],
     },
     {

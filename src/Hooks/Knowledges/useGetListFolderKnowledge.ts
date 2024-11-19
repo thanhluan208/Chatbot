@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
-import knowledgeService from "../../Services/knowledge.service";
-import { useAuth } from "../../Providers/AuthenticationProvider";
-import { IKnowledgeFolder } from "../../Pages/ChatbotConfigure/components/Configure/Knowledge/KnowledgeFolder";
+import queryKey from "@/Constants/queryKey";
+import { convertSize } from "@/Helpers";
+import { IKnowledgeFolder } from "@/Pages/ChatbotConfigure/components/Configure/Knowledge/KnowledgeFolder";
+import { useAuth } from "@/Providers/AuthenticationProvider";
+import knowledgeService from "@/Services/knowledge.service";
 import moment from "moment";
-import { AxiosResponse } from "axios";
-import { convertSize } from "../../Helpers";
+import { useMemo } from "react";
+import { useQuery } from "react-query";
 
 export interface KnowledgeFolderResponse {
   status_code: number;
@@ -43,10 +44,10 @@ export interface FileData {
 }
 
 export enum FileStatus {
-  PROCESSING = 'processing',
-  SUCCESS = 'success',
-  IN_QUEUE = 'in_queue',
-  FAILED = 'failed',
+  PROCESSING = "processing",
+  SUCCESS = "success",
+  IN_QUEUE = "in_queue",
+  FAILED = "failed",
 }
 
 interface Filters {
@@ -54,91 +55,49 @@ interface Filters {
   visual_option?: string;
 }
 
-const useGetListFolderKnowledge = (filters?: Filters, isTrigger = true) => {
-  const [data, setData] = useState<IKnowledgeFolder[] | []>([]);
-  const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState();
+export default function useGetListFolderKnowledge(filters?: Filters) {
   const { userId } = useAuth();
 
-  const callApi = useCallback(() => {
-    if (!userId) return;
-    return knowledgeService.getListFolder({
-      user_id: userId,
-      visual_option: "public",
-      ...filters,
-    });
-  }, [userId, filters]);
+  const query = useQuery({
+    queryKey: [queryKey.KNOWLEDGE_FOLDER_LIST, filters],
+    queryFn: () =>
+      knowledgeService.getListFolder({
+        user_id: userId as string,
+        visual_option: "public",
+        ...filters,
+      }),
+    enabled: !!userId,
+  });
 
-  const transformResponse = useCallback(
-    (response?: AxiosResponse<KnowledgeFolderResponse>) => {
-      if (response) {
-        const data = response.data.list_knowledges.map((item) => {
-          return {
-            id: item.knowledge_storage_id,
-            title: item.knowledge_storage_name,
-            description: item.description,
-            createdAt: moment(item.created_at).format("DD/MM/YYYY HH:mm"),
-            size: convertSize(
-              Object.values(item.list_files).reduce(
-                (acc, cur) => acc + cur.file_size,
-                0
-              )
-            ),
-            quantity: `${Object.keys(item?.list_files)?.length || 0}`,
-            sharingWithBots: item.sharing_with_bots,
-            userName: item.user_name,
-            owner_id: item.owner_id,
-            permission_level: item.permission_level,
-            avatar: item.avatar_url,
-          };
-        });
+  const { data, ...rest } = query;
 
-        setData(data);
-      }
-    },
-    []
-  );
+  const parseData: IKnowledgeFolder[] = useMemo(() => {
+    if(!data?.list_knowledges) return [];
 
-  const refetch = useCallback(async () => {
-    try {
-      const response = await callApi();
-      transformResponse(response);
-    } catch (error: any) {
-      setError(error);
-    }
-  }, [callApi]);
-
-  useEffect(() => {
-    let shouldSetData = true;
-
-    if (isTrigger) {
-      (async () => {
-        try {
-          setLoading(true);
-          const response = await callApi();
-
-          if (shouldSetData) {
-            transformResponse(response);
-          }
-        } catch (error: any) {
-          setError(error);
-        } finally {
-          setLoading(false);
-        }
-      })();
-
-      return () => {
-        shouldSetData = false;
+    return data?.list_knowledges.map((item) => {
+      return {
+        id: item.knowledge_storage_id,
+        title: item.knowledge_storage_name,
+        description: item.description,
+        createdAt: moment(item.created_at).format("DD/MM/YYYY HH:mm"),
+        size: convertSize(
+          Object.values(item.list_files).reduce(
+            (acc, cur) => acc + cur.file_size,
+            0
+          )
+        ),
+        quantity: `${Object.keys(item?.list_files)?.length || 0}`,
+        sharingWithBots: item.sharing_with_bots,
+        userName: item.user_name,
+        owner_id: item.owner_id,
+        permission_level: item.permission_level,
+        avatar: item.avatar_url,
       };
-    }
-  }, [isTrigger, callApi]);
+    })
+  },[data])
 
   return {
-    data,
-    isLoading,
-    error,
-    refetch,
+    ...rest,
+    data: parseData,
   };
-};
-
-export default useGetListFolderKnowledge;
+}

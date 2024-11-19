@@ -21,7 +21,7 @@ import ModelStatsConfig from "./ModelStatsConfig";
 
 const WF_StartNode = (props: NodeProps) => {
   //! State
-  const { data, id,  } = props;
+  const { data, id } = props;
   const theme = useTheme();
   const { workflowId } = useParams();
   const save = useSave();
@@ -50,7 +50,6 @@ const WF_StartNode = (props: NodeProps) => {
       memory_history_turn: nodeData?.memory?.history_turn ?? 3,
     };
   }, [nodeData]);
-
 
   //! Function
 
@@ -113,35 +112,32 @@ const WF_StartNode = (props: NodeProps) => {
                 >
                   <Component className="w-3.5 h-3.5" color="#fff" />
                 </Box>
-                <EditLabelNode
-                  nodeId={id}
-                  workflowId={workflowId}
-                />
+                <EditLabelNode nodeId={id} workflowId={workflowId} />
               </Box>
             }
-          ></CollapseArea>
-
-          <Formik
-            initialValues={initialValues}
-            enableReinitialize
-            onSubmit={() => {}}
           >
-            {() => {
-              return (
-                <Form className="px-3">
-                  <div className="flex gap-2 items-center">
-                    <ModelConfiguration afterOnChange={handleChangeModel} />
-                    <ModelStatsConfig />
-                  </div>
-                </Form>
-              );
-            }}
-          </Formik>
-          <div className="my-2 px-3 py-1 max-w-[500px]">
-            <CommonStyles.Typography>
-              {data?.desc as string}
-            </CommonStyles.Typography>
-          </div>
+            <Formik
+              initialValues={initialValues}
+              enableReinitialize
+              onSubmit={() => {}}
+            >
+              {() => {
+                return (
+                  <Form className="px-3">
+                    <div className="flex gap-2 items-center">
+                      <ModelConfiguration afterOnChange={handleChangeModel} />
+                      <ModelStatsConfig />
+                    </div>
+                  </Form>
+                );
+              }}
+            </Formik>
+            <div className="my-2 px-3 py-1 max-w-[500px]">
+              <CommonStyles.Typography>
+                {data?.desc as string}
+              </CommonStyles.Typography>
+            </div>
+          </CollapseArea>
         </GradientBorder>
 
         <Handle

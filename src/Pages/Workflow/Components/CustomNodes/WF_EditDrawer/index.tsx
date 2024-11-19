@@ -7,6 +7,7 @@ import { NodeProps } from "@xyflow/react";
 import VarAggNodeDrawer from "../WF_VariableAggregator/VarAggNodeDrawer";
 import { useCallback } from "react";
 import CodeNodeDrawer from "../WF_CodeNode/components/CodeNodeDrawer";
+import KnowledgeNodeDrawer from "../WF_Knowledge/KnowledgeNodeDrawer";
 
 interface WF_EditDrawerProps {
   node: NodeProps;
@@ -32,6 +33,8 @@ export default function WF_EditDrawer({ node }: WF_EditDrawerProps) {
         return <VarAggNodeDrawer node={node} />;
       case NodeTypeWorkflow.CODE:
         return <CodeNodeDrawer node={node} />;
+      case NodeTypeWorkflow.KNOWLEDGE_RETRIEVAL:
+        return <KnowledgeNodeDrawer node={node} />;
       default:
         return null;
     }

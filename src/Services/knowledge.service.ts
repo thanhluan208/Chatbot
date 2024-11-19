@@ -1,5 +1,13 @@
-import { getFileData, getFileRaw, getFolderKnowledge, getKnowledgeDetail, getListKnowledgeFile, getSegments } from "../Constants/api";
+import {
+  getFileData,
+  getFileRaw,
+  getFolderKnowledge,
+  getKnowledgeDetail,
+  getListKnowledgeFile,
+  getSegments,
+} from "../Constants/api";
 import httpServices from "./httpServices";
+import { KnowledgeFolderResponse } from "@/Hooks/Knowledges/useGetListFolderKnowledge";
 
 interface GetListFilter {
   user_id: string;
@@ -19,8 +27,10 @@ export interface PayloadSegment {
 }
 
 class KnowledgeServices {
-  getListFolder(filters: GetListFilter) {
-    return httpServices.post(getFolderKnowledge,filters);
+  getListFolder(filters: GetListFilter): Promise<KnowledgeFolderResponse> {
+    return httpServices
+      .post(getFolderKnowledge, filters)
+      .then((response) => response.data);
   }
   getListFiles(payload: PayloadKnowledgeDetail) {
     return httpServices.post(getListKnowledgeFile, payload);
@@ -37,7 +47,6 @@ class KnowledgeServices {
   getDetail(payload: PayloadKnowledgeDetail) {
     return httpServices.post(getKnowledgeDetail, payload);
   }
-
 }
 
 export default new KnowledgeServices();

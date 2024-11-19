@@ -346,12 +346,10 @@ export default function FlowChart(props: IFlowChart) {
         return newNodes;
       });
 
-      const onSuccess = (id: string) => {
+      const onSuccess = (id: string, nodeData?: any) => {
         updateNode(newNode.id, {
           id: id,
-          data: {
-            label: id,
-          },
+          data: nodeData,
         });
       };
 
@@ -378,7 +376,11 @@ export default function FlowChart(props: IFlowChart) {
           },
           {
             onSuccess: (res) => {
-              onSuccess(res.data.node_id);
+              onSuccess(res.data.node_id, {
+                ...res.data?.node_data?.data,
+                variables_out: res?.data?.variables_out,
+                label: res.data.node_id
+              });
             },
             onError: onFailed,
           }

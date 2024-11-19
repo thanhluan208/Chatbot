@@ -122,7 +122,7 @@ const VarSelectorSelect = ({
                         {nodes?.node?.toUpperCase()}
                       </CommonStyles.Typography>
                       {nodes?.vars?.map((vars) => {
-                        const isSelected = variables.some(
+                        const isSelected = variables?.some(
                           (elm) => `${elm?.[0]}-${elm?.[1]}` === vars.value
                         );
                         return (
