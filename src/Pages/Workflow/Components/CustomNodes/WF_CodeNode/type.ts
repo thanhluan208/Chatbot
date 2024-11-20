@@ -12,8 +12,7 @@ export interface CodeNodeData {
 export interface CodeNodeInput{
     paramName: string;
     paramType: string;
-    value?: string | number | boolean | object
-            | string[] | number[] | boolean[] | object[]
+    value?: String | any;
 }
 
 export interface CodeNodeCode{

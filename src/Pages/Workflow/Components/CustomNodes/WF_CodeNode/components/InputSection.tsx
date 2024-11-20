@@ -8,12 +8,12 @@ import { Box } from "@mui/material";
 
 interface InputSectionProps{
     inputs: CodeNodeInput[],
-    // handleAddInput: ,
-    // handleDeleteInput: ,
-    // onChangeInput: 
+    handleAddInput: () => void,
+    handleDeleteInput: (index: number) => void,
+    handleInputChange: (index: number, value: CodeNodeInput) => void
 }
 
-const InputSection = ({inputs}: InputSectionProps) => {
+const InputSection = ({inputs, handleAddInput, handleDeleteInput, handleInputChange}: InputSectionProps) => {
 
     return (
         <div style={{background: "#2e2d380a", borderRadius: "8px", marginBottom: "12px"}}>
@@ -44,14 +44,13 @@ const InputSection = ({inputs}: InputSectionProps) => {
                 {inputs.map((input, index)=>(
                     <div className="flex items-center justify-between justify-items-center ml-4 mt-2">
                     <InputRow
-                        paramName={input.paramName}
-                        paramType={input.paramType}
-                        value={input.value}
+                        input={input}
+                        handleOnChange={handleInputChange}
                     />
 
                     <CircleMinus className="mr-1"
                         style={{color : "#1c1d2359", cursor: "pointer"}}
-                        // onClick={() => handleDeleteInput(index)}
+                        onClick={() => handleDeleteInput(index)}
                     />
                     </div>
                 ))}
@@ -59,16 +58,16 @@ const InputSection = ({inputs}: InputSectionProps) => {
                 <CommonStyles.Button
                     variant="contained"
                     sx={{
-                    marginTop: "1rem",
-                    marginLeft: "1rem",
-                    marginBottom: "0.5rem",
-                    width: "6rem",
+                        marginTop: "1rem",
+                        marginLeft: "1rem",
+                        marginBottom: "0.5rem",
+                        width: "6rem",
                     }}
                     onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
+                        e.stopPropagation();
+                        e.preventDefault();
 
-                    // handleAddInput();
+                        handleAddInput();
                     }}
                 >
                     <Plus size={24} />

@@ -45,13 +45,6 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
                       };`
       };
 
-      const outputX: CodeNodeOutput = 
-          {
-              varName: "key21",
-              varDataType: OutputDataType.STRING
-          }
-      ;
-
       const output: CodeNodeOutput[] = [
           {
               varName: "key0",
@@ -78,9 +71,16 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
       setNodeDataInput(prevInput => [...prevInput, {paramName: "", paramType: ParamType.INPUT,}]);
    };
 
+    const handleInputChange = (index: number, value: CodeNodeInput) => {
+      setNodeDataInput(prevInput => 
+        prevInput.map((input, i) => 
+            i === index ? value : input
+        )
+      );
+    }
+
     const handleDeleteInput = (index: number) => {
-      console.log(nodeDataInput);
-      // setNodeDataInput(prevInput => prevInput.filter((_, i) => i !== index));
+      setNodeDataInput(prevInput => prevInput.filter((_, i) => i !== index));
     }
 
     const handleAddOutput = () => {
@@ -151,6 +151,9 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
                         {/* input */}
                         <InputSection
                           inputs={nodeDataInput}
+                          handleAddInput={handleAddInput}
+                          handleDeleteInput={handleDeleteInput}
+                          handleInputChange={handleInputChange}
                         />
                         {/* code */}
                         <div style={{background: "#2e2d380a", borderRadius: "8px", marginBottom: "12px"}}>

@@ -8,9 +8,15 @@ export const ParameterTypeOptions = [
     {value : ParamType.REFERENCE, label : ParamType.REFERENCE},
 ]
 
-const InputRow = (input: CodeNodeInput) => {
+interface InputRowProps{
+  input: CodeNodeInput,
+  handleOnChange: (index: number, value: CodeNodeInput) => void
+}
+
+const InputRow = ({input, handleOnChange}: InputRowProps) => {
   const [paramName, setParamName] = useState<string>(input?.paramName || "");
   const [paramType, setParamType] = useState<string>(input?.paramType);
+  const [paramValue, setParamValue] = useState<String | any>(input?.value);
 
   const handleSelectChange = (value: string) => {
       setParamType(value);
