@@ -15,6 +15,8 @@ interface InputSectionProps{
 
 const InputSection = ({inputs, handleAddInput, handleDeleteInput, handleInputChange}: InputSectionProps) => {
 
+
+
     return (
         <div style={{background: "#2e2d380a", borderRadius: "8px", marginBottom: "12px"}}>
             <CollapseArea
@@ -46,6 +48,7 @@ const InputSection = ({inputs, handleAddInput, handleDeleteInput, handleInputCha
                     <InputRow
                         input={input}
                         handleOnChange={handleInputChange}
+                        index = {index}
                     />
 
                     <CircleMinus className="mr-1"

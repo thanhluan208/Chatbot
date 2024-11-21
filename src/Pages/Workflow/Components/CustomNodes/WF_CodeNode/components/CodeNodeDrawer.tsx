@@ -80,7 +80,8 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
     }
 
     const handleDeleteInput = (index: number) => {
-      setNodeDataInput(prevInput => prevInput.filter((_, i) => i !== index));
+      console.log(nodeDataInput)
+      // setNodeDataInput(prevInput => prevInput.filter((_, i) => i !== index));
     }
 
     const handleAddOutput = () => {
