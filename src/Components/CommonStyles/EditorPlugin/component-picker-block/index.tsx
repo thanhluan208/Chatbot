@@ -164,10 +164,6 @@ const ComponentPicker = ({
                         maxHeightClass="max-h-[34vh]"
                         isSupportFileVar={false}
                       />
-                      {/* <SelectInput
-                        handleSelectVariable={handleSelectWorkflowVariable}
-                        nodeId={nodeId}
-                      /> */}
                     </div>
                   </>
                 )}

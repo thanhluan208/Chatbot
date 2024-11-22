@@ -67,7 +67,7 @@ const WF_VariableAggregator = (props: NodeProps) => {
                   <CommonStyles.Typography className="px-4 opacity-60 my-2">
                     {nodeData?.desc}
                   </CommonStyles.Typography>
-                )}
+                )}  
               </div>
             }
           ></CollapseArea>

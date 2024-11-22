@@ -60,6 +60,9 @@ const ModelStatsConfig = () => {
           onClick={(e) => {
             e.stopPropagation();
           }}
+          style={{
+            background: theme.colors.custom.background
+          }}
         >
           <SlidersHorizontal />
         </button>

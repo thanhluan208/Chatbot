@@ -1,6 +1,6 @@
 import CustomizeSelectField from "@/Components/CommonFields/CustomizeSelectField";
 import { modelOptions } from "@/Constants/options";
-import { FastField } from "formik";
+import { Field } from "formik";
 import { Fragment, memo } from "react";
 import { ModelOption } from "./type";
 import { DropdownMenuItem } from "@/Components/ui/dropdown-menu";
@@ -111,7 +111,7 @@ const ModelConfiguration = ({ afterOnChange }: ModelConfigurationProps) => {
   };
 
   return (
-    <FastField
+    <Field
       name="model"
       component={CustomizeSelectField}
       options={modelOptions}

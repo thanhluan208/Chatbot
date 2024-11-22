@@ -146,7 +146,6 @@ const PromptItem = ({
               <Editor
                 controlPromptEditorRerenderKey={node.id}
                 nodeId={node.id}
-                parentNodes={(node.data?.parentNodes as string[]) || []}
                 initValue={promptData.text}
                 varList={varList}
                 workflowNodesMap={workflowNodesMap}

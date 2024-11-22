@@ -9,7 +9,6 @@ interface EditorProps {
   controlPromptEditorRerenderKey: string;
   nodeId: string;
   readOnly?: boolean;
-  parentNodes?: string[];
   initValue?: string;
   varList: NodeOutPutVar[];
   workflowNodesMap: Record<string, Pick<Node["data"], "title" | "type">>;

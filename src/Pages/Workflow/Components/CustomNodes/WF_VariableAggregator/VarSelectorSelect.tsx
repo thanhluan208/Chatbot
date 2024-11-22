@@ -48,6 +48,9 @@ const VarSelectorSelect = ({
             e.stopPropagation();
             setOpen(true);
           }}
+          style={{
+            background: theme.colors.custom.background
+          }}
         >
           <Box
             className="w-full justify-between flex items-center"

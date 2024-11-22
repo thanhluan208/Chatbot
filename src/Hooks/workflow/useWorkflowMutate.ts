@@ -95,6 +95,10 @@ export default function useWorkflowMutate() {
       delete nodeData?.iteration_id;
       delete nodeData?.variable_out;
       delete nodeData?.startNode;
+      delete nodeData?.user_id
+
+
+      nodeData.name = nodeId
 
       const payload: any = {
         workflow_id: workflowId,
