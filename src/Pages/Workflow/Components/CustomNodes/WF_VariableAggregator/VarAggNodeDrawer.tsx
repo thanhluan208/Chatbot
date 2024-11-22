@@ -29,7 +29,9 @@ const VarAggNodeDrawer = ({ node }: VarAggNodeDrawerProps) => {
 
   const nodeData = node?.data as unknown as NodeDataVarAgg;
 
-  const handleUpdate = () => {};
+  const handleUpdate = (payload: Partial<NodeDataVarAgg>) => {
+    handleUpdateNodeDataVarAgg(node?.id, payload);
+  };
 
   const handleChangeGroupEnable = (_: any, checked: boolean) => {
     handleUpdateNodeDataVarAgg(node.id, {

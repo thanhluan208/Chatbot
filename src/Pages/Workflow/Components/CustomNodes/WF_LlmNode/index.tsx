@@ -92,7 +92,8 @@ const WF_StartNode = (props: NodeProps) => {
           <CollapseArea
             sxContainer={{ marginTop: 0 }}
             label={
-              <Box
+              <div className="flex flex-col gap-2">
+                <Box
                 sx={{
                   display: "flex",
                   alignItems: "center",
@@ -113,7 +114,15 @@ const WF_StartNode = (props: NodeProps) => {
                   <Component className="w-3.5 h-3.5" color="#fff" />
                 </Box>
                 <EditLabelNode nodeId={id} workflowId={workflowId} />
+
+                
               </Box>
+              {nodeData?.desc && (
+                <CommonStyles.Typography className="px-4 opacity-60 my-2">
+                  {nodeData?.desc}
+                </CommonStyles.Typography>
+              )}
+              </div>
             }
           >
             <Formik
@@ -132,11 +141,6 @@ const WF_StartNode = (props: NodeProps) => {
                 );
               }}
             </Formik>
-            <div className="my-2 px-3 py-1 max-w-[500px]">
-              <CommonStyles.Typography>
-                {data?.desc as string}
-              </CommonStyles.Typography>
-            </div>
           </CollapseArea>
         </GradientBorder>
 

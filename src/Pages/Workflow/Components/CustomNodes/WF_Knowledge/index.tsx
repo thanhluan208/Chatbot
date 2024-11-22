@@ -12,13 +12,16 @@ import { NodeTypeWorkflow } from "@/Types/workflow";
 import WF_EditDrawer from "../WF_EditDrawer";
 import { createPortal } from "react-dom";
 import CommonStyles from "@/Components/CommonStyles";
+import { KnowledgeNodeData } from "./type";
 
 const WF_VariableAggregator = (props: NodeProps) => {
   //! State
-  const { data, id } = props;
+  const { id } = props;
   const theme = useTheme();
   const { workflowId } = useParams();
   const save = useSave();
+
+  const nodeData = props.data as unknown as KnowledgeNodeData;
 
   //! Function
 
@@ -37,36 +40,37 @@ const WF_VariableAggregator = (props: NodeProps) => {
           <CollapseArea
             sxContainer={{ marginTop: 0 }}
             label={
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                }}
-              >
+              <div className="flex flex-col gap-2">
                 <Box
                   sx={{
-                    width: "24px",
-                    height: "24px",
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: "8px",
-                    background: theme.palette.primary.main,
+                    gap: "8px",
                   }}
                 >
-                  <Book className="w-3.5 h-3.5" color="#fff" />
+                  <Box
+                    sx={{
+                      width: "24px",
+                      height: "24px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: "8px",
+                      background: theme.palette.primary.main,
+                    }}
+                  >
+                    <Book className="w-3.5 h-3.5" color="#fff" />
+                  </Box>
+                  <EditLabelNode nodeId={id} workflowId={workflowId} />
                 </Box>
-                <EditLabelNode nodeId={id} workflowId={workflowId} />
-              </Box>
+                {nodeData?.desc && (
+                  <CommonStyles.Typography className="px-4 opacity-60 my-2">
+                    {nodeData?.desc}
+                  </CommonStyles.Typography>
+                )}
+              </div>
             }
           ></CollapseArea>
-
-          <div className="my-2 px-3 py-1 max-w-[500px]">
-            <CommonStyles.Typography>
-              {data?.desc as string}
-            </CommonStyles.Typography>
-          </div>
         </GradientBorder>
 
         <Handle

@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { v4 as uuid } from "uuid";
-import { Link2 } from "lucide-react";
 import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { Box, Tooltip, useTheme } from "@mui/material";
 import CommonStyles from "@/Components/CommonStyles";

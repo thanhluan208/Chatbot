@@ -55,38 +55,39 @@ const WF_VariableAggregator = (props: NodeProps) => {
           <CollapseArea
             sxContainer={{ marginTop: 0 }}
             label={
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                }}
-              >
+              <div className="flex flex-col gap-2">
                 <Box
                   sx={{
-                    width: "24px",
-                    height: "24px",
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: "8px",
-                    background: theme.palette.primary.main,
+                    gap: "8px",
                   }}
                 >
-                  <Variable className="w-3.5 h-3.5" color="#fff" />
+                  <Box
+                    sx={{
+                      width: "24px",
+                      height: "24px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: "8px",
+                      background: theme.palette.primary.main,
+                    }}
+                  >
+                    <Variable className="w-3.5 h-3.5" color="#fff" />
+                  </Box>
+                  <EditLabelNode nodeId={id} workflowId={workflowId} />
                 </Box>
-                <EditLabelNode nodeId={id} workflowId={workflowId} />
-              </Box>
+                {nodeData?.desc && (
+                  <CommonStyles.Typography className="px-4 opacity-60 my-2">
+                    {nodeData?.desc}
+                  </CommonStyles.Typography>
+                )}
+              </div>
             }
           >
             <NodeGroupItem data={groupData} />
           </CollapseArea>
-
-          <div className="my-2 px-3 py-1 max-w-[500px]">
-            <CommonStyles.Typography>
-              {nodeData?.desc as string}
-            </CommonStyles.Typography>
-          </div>
         </GradientBorder>
 
         <Handle
