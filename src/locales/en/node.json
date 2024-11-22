@@ -4,6 +4,10 @@
     "add": "Add {{content}}"
   },
 
+  "WF_ConditionNode": {
+    "else_description": "Used to define the logic that should be executed when the if condition is not met."
+  },
+
   "WF_mutate_dialog": {
     "create": {
       "title": "Create workflow",

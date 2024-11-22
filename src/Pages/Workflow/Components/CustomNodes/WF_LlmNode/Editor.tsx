@@ -23,51 +23,12 @@ const Editor = ({
   initValue,
   varList,
   workflowNodesMap,
-  handleChangeEditor
+  handleChangeEditor,
 }: EditorProps) => {
   const onChange = (value: string) => {
     console.log(value);
-    handleChangeEditor && handleChangeEditor(value)
+    handleChangeEditor && handleChangeEditor(value);
   };
-
-  // const parentNodeInputInfos = useMemo(() => {
-  //   const varList: NodeOutPutVar[] = [];
-  //   const workflowNodesMap: Record<
-  //     string,
-  //     Pick<Node["data"], "title" | "type">
-  //   > = {};
-
-  //   if (!parentNodes) return;
-
-  //   parentNodes.forEach((nodeId) => {
-  //     const node = getNode(nodeId);
-
-  //     if (!node) return;
-
-  //     varList.push({
-  //       nodeId: nodeId,
-  //       title: node.data.label as string,
-  //       vars: (node.data.variables as Variable[])?.map((elm) => {
-  //         return {
-  //           type: elm.type,
-  //           variable: elm.variable || "",
-  //         };
-  //       }),
-  //     });
-
-  //     workflowNodesMap[nodeId] = {
-  //       title: node.data.label as string,
-  //       type: BlockEnum.Start,
-  //     };
-  //   });
-
-  //   console.log(varList, workflowNodesMap);
-
-  //   return {
-  //     variables: varList,
-  //     workflowNodesMap,
-  //   };
-  // }, [parentNodes]);
 
   const [_, { setTrue: setFocus, setFalse: setBlur }] = useBoolean(false);
 

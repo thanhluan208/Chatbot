@@ -43,7 +43,7 @@ const VarSelectorSelect = ({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
-          className="w-full "
+          className="!w-full min-h-10 min-w-[200px] !py-0 !px-2 !rounded-lg"
           onClick={(e) => {
             e.stopPropagation();
             setOpen(true);
@@ -72,14 +72,14 @@ const VarSelectorSelect = ({
               <CommonStyles.Typography type="semiBold14">
                 {value || t("WF_VarAgg.choose_variable")}
               </CommonStyles.Typography>
-              {value && (
+              {value && handleRemoveVar && (
                 <CommonStyles.Button
                   className="opacity-0 transition-opacity duration-200 max-h-6 max-w-6"
                   isIcon
                   hasBorder={false}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleRemoveVar && handleRemoveVar(value);
+                    handleRemoveVar(value);
                   }}
                 >
                   <Trash size={14} />
@@ -131,7 +131,13 @@ const VarSelectorSelect = ({
                             value={vars.value}
                             onSelect={() => {
                               if (isSelected) return;
-                              handleSelectVar(vars, value);
+                              handleSelectVar(
+                                {
+                                  ...vars,
+                                  node: vars?.value?.split("-")?.[0],
+                                },
+                                value
+                              );
                               setOpen(false);
                             }}
                             className="flex items-center justify-between hover:opacity-85 cursor-pointer"

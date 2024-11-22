@@ -7,7 +7,7 @@ export default function Layout() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      stroke-width="2"
+      strokeWidth="2"
       stroke-linecap="round"
       stroke-linejoin="round"
       className="lucide lucide-layers-3"

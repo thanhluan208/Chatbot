@@ -29,7 +29,6 @@ const VarAggNodeDrawer = ({ node }: VarAggNodeDrawerProps) => {
 
   const nodeData = node?.data as unknown as NodeDataVarAgg;
 
-
   const handleUpdate = () => {};
 
   const handleChangeGroupEnable = (_: any, checked: boolean) => {
@@ -91,11 +90,20 @@ const VarAggNodeDrawer = ({ node }: VarAggNodeDrawerProps) => {
           />
         </div>
         <div>
-          {nodeData?.advanced_settings?.group_enabled ?  <ListGroup nodeId={node?.id} groups={nodeData?.advanced_settings?.groups}/>: <ListAssignVars output_type={nodeData?.output_type} variables={nodeData?.variables} nodeId={node?.id}/> }
+          {nodeData?.advanced_settings?.group_enabled ? (
+            <ListGroup
+              nodeId={node?.id}
+              groups={nodeData?.advanced_settings?.groups}
+            />
+          ) : (
+            <ListAssignVars
+              output_type={nodeData?.output_type}
+              variables={nodeData?.variables}
+              nodeId={node?.id}
+            />
+          )}
         </div>
       </div>
-
-      <div className="px-6"></div>
     </div>
   );
 };

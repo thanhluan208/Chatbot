@@ -28,6 +28,7 @@ export type Vars = {
   value: string;
   type: string;
   name: string;
+  node?: string;
 };
 
 const ListAssignVars = ({

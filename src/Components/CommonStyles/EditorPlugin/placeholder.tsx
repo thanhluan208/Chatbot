@@ -19,7 +19,7 @@ const Placeholder = ({
       )}
     >
       {value ||
-        "Write your prompt word here, enter '{' to insert a variable, enter '/' to insert a prompt content block"}
+        "Enter value"}
     </div>
   );
 };

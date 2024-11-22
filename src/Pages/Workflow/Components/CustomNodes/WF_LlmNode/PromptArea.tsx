@@ -54,8 +54,6 @@ const PromptArea = ({ node, handleUpdate }: PromptAreaProps) => {
 
   const { data: varSelectors } = useGetVariableSelectors(node?.id);
 
-  console.log(varSelectors);
-
   const varList = useMemo(() => {
     if (!varSelectors?.variable_selectors) return [];
 

@@ -1,4 +1,5 @@
 import queryKey from "@/Constants/queryKey";
+import { ConditionNodeData } from "@/Pages/Workflow/Components/CustomNodes/WF_ConditionNode/type";
 import { KnowledgeNodeData } from "@/Pages/Workflow/Components/CustomNodes/WF_Knowledge/type";
 import { LlmNodeData } from "@/Pages/Workflow/Components/CustomNodes/WF_LlmNode/type";
 import { NodeDataVarAgg } from "@/Pages/Workflow/Components/CustomNodes/WF_VariableAggregator/type";
@@ -88,12 +89,12 @@ export default function useWorkflowMutate() {
 
       const nodeData = cloneDeep(node?.data);
 
-      delete nodeData?.title
-      delete nodeData?.type
-      delete nodeData?.label
-      delete nodeData?.iteration_id
-      delete nodeData?.variable_out
-      delete nodeData?.startNode
+      delete nodeData?.title;
+      delete nodeData?.type;
+      delete nodeData?.label;
+      delete nodeData?.iteration_id;
+      delete nodeData?.variable_out;
+      delete nodeData?.startNode;
 
       const payload: any = {
         workflow_id: workflowId,
@@ -231,7 +232,6 @@ export default function useWorkflowMutate() {
 
       const nodeData = getNode(nodeId)?.data as unknown as KnowledgeNodeData;
 
-
       const updatePayload: Partial<KnowledgeNodeData> = {
         name: nodeId,
         desc: nodeData.desc,
@@ -274,6 +274,67 @@ export default function useWorkflowMutate() {
     [workflowId, userId, updateNode, getNode]
   );
 
+  //! WF_ConditionNode
+  const handleUpdateNodeDataCondition = useCallback(
+    (
+      nodeId: string,
+      payload: Partial<ConditionNodeData>,
+      onSuccess?: () => void,
+      onFailed?: () => void
+    ) => {
+      if (!workflowId || !userId || !nodeId) return;
+
+      const nodeData = getNode(nodeId)?.data as unknown as ConditionNodeData;
+
+      const updatePayload: Partial<ConditionNodeData> = {
+        name: nodeId,
+        desc: nodeData.desc,
+        position: nodeData.position,
+        cases: nodeData?.cases,
+        ...payload,
+      };
+
+      const handleFailed = () => {
+        onFailed && onFailed();
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+          },
+        });
+      };
+
+      updateNode &&
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+            ...updatePayload,
+          },
+        });
+
+      handleUpdateNodeData.mutate(
+        {
+          workflow_id: workflowId,
+          user_id: userId,
+          node_id: nodeId,
+          node_data: updatePayload,
+        },
+        {
+          onSuccess: (response) => {
+            if (response?.status_code !== 200) {
+              toast.error(response?.message);
+              handleFailed();
+            }
+            onSuccess && onSuccess();
+          },
+          onError: () => {
+            handleFailed();
+          },
+        }
+      );
+    },
+    [workflowId, userId, updateNode, getNode]
+  );
+
   return {
     handleCreateWorkflow,
     handleDeleteWorkflow,
@@ -284,6 +345,7 @@ export default function useWorkflowMutate() {
     handleUpdateNodeDataLLM,
     handleUpdateNodeDataVarAgg,
     handleUpdateNodePosition,
-    handleUpdateNodeDataKnowledge
+    handleUpdateNodeDataKnowledge,
+    handleUpdateNodeDataCondition,
   };
 }
