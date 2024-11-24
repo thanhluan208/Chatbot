@@ -2,7 +2,7 @@ import CommonStyles from "@/Components/CommonStyles";
 import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
 import { useTheme } from "@mui/material";
 import { NodeProps } from "@xyflow/react";
-import { Component, Plus, Trash, X } from "lucide-react";
+import { Plus, Shapes, Trash, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import cachedKeys from "@/Constants/cachedKeys";
@@ -159,7 +159,7 @@ const QuestClassifierNodeDrawer = ({ node }: VarAggNodeDrawerProps) => {
                 background: theme.palette.primary.main,
               }}
             >
-              <Component className="w-3.5 h-3.5" color="#fff" />
+              <Shapes className="w-3.5 h-3.5" color="#fff" />
             </div>
             <EditLabelNode nodeId={node.id} workflowId={workflowId} />
           </div>
@@ -188,25 +188,34 @@ const QuestClassifierNodeDrawer = ({ node }: VarAggNodeDrawerProps) => {
           memory={nodeData?.memory}
         />
       </div>
-      <div className="px-6">
-        <div className="flex items-center space-x-2 mt-4">
-          <CommonStyles.Typography type="semiBold16">
-            {t("common.query_variable")}
-          </CommonStyles.Typography>
-        </div>
-        <div className="mt-4 px-3 mb-2">
-          <VarSelectorSelect
-            handleSelectVar={handleSelectVar}
-            varSelectorOptions={varSelectorOptions}
-            variables={[nodeData?.query_variable_selector]}
-            value={
-              isEmpty(nodeData?.query_variable_selector)
-                ? undefined
-                : `${nodeData?.query_variable_selector?.[0]}-${nodeData?.query_variable_selector?.[1]}`
-            }
-          />
-        </div>
+
+      <hr className="my-2 mx-4 opacity-20" />
+
+      <div className="px-4">
+        <CollapseArea
+          label={
+            <CommonStyles.Typography type="semiBold16">
+              {t("common.query_variable")}
+            </CommonStyles.Typography>
+          }
+        >
+          <div className="mt-4 px-3 mb-2">
+            <VarSelectorSelect
+              handleSelectVar={handleSelectVar}
+              varSelectorOptions={varSelectorOptions}
+              variables={[nodeData?.query_variable_selector]}
+              value={
+                isEmpty(nodeData?.query_variable_selector)
+                  ? undefined
+                  : `${nodeData?.query_variable_selector?.[0]}-${nodeData?.query_variable_selector?.[1]}`
+              }
+            />
+          </div>
+        </CollapseArea>
       </div>
+
+      <hr className="my-2 mx-4 opacity-20" />
+
       <div className="px-4">
         <CollapseArea
           label={
@@ -215,7 +224,7 @@ const QuestClassifierNodeDrawer = ({ node }: VarAggNodeDrawerProps) => {
             </CommonStyles.Typography>
           }
         >
-          <div className="my-3 px-6 flex flex-col gap-4">
+          <div className="my-3 px-3 flex flex-col gap-4">
             {nodeData?.classes?.map((elm, index) => {
               return (
                 <div key={elm.id} className="relative">
@@ -257,6 +266,8 @@ const QuestClassifierNodeDrawer = ({ node }: VarAggNodeDrawerProps) => {
           </div>
         </CollapseArea>
 
+        <hr className="my-2 mx-4 opacity-20" />
+
         <CollapseArea
           label={
             <CommonStyles.Typography type="semiBold16">
@@ -271,6 +282,8 @@ const QuestClassifierNodeDrawer = ({ node }: VarAggNodeDrawerProps) => {
             handleChangeEditor={handleUpdateInstruction}
           />
         </CollapseArea>
+
+        <hr className="my-2 mx-4 opacity-20" />
 
         <VarOutList nodeData={nodeData} />
       </div>

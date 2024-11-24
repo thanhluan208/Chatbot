@@ -47,7 +47,7 @@ const WF_VariableAggregator = (props: NodeProps) => {
     });
     setTimeout(() => {
       save(cachedKeys.NODE_EDITING, {
-        type: NodeTypeWorkflow.LLM,
+        type: NodeTypeWorkflow.VARIABLE_AGGREGATOR,
         id: id,
       });
     }, 0);

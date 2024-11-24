@@ -80,7 +80,6 @@ const LLMNodeDrawer = ({ node }: LLMNodeDrawerProps) => {
     );
   };
 
-
   return (
     <div
       className="py-4"
@@ -119,7 +118,7 @@ const LLMNodeDrawer = ({ node }: LLMNodeDrawerProps) => {
         <DescriptionInput value={nodeData.desc} handleUpdate={handleUpdate} />
       </div>
 
-      <div className="px-6">
+      <div className="px-3">
         <FormModel
           handleUpdateNodeData={handleUpdateNodeDataLLM}
           model={nodeData?.model}
@@ -127,38 +126,17 @@ const LLMNodeDrawer = ({ node }: LLMNodeDrawerProps) => {
           memory={nodeData?.memory}
         />
 
+        <hr className="my-2 mx-4 opacity-20" />
+
         <CollapseArea label={t("WF_Startnode.prompt_configuration")}>
           <PromptArea node={node} handleUpdate={handleUpdate} />
         </CollapseArea>
 
-        <div className="my-2">
-          <CommonStyles.Typography type="semiBold16">
-            {t("common.variable_out").toUpperCase()}
-          </CommonStyles.Typography>
-          <div className="flex flex-col gap-2 pl-3 mt-2">
-            {nodeData?.variable_out?.map((elm) => {
-              return (
-                <div key={elm.variable} className="flex gap-2 items-center">
-                  <CommonStyles.Typography type="semiBold16">
-                    {elm.variable}
-                  </CommonStyles.Typography>
-                  <div
-                    className="text-center px-3 py-1 rounded-lg"
-                    style={{
-                      background: theme.colors.custom.backgroundCard,
-                      border: `1px solid ${theme.colors.custom.borderColor}`,
-                    }}
-                  >
-                    {elm.type}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+        <hr className="my-2 mx-4 opacity-20" />
+
+        <div className="px-3">
+          <VarOutList nodeData={nodeData} />
         </div>
-      </div>
-      <div className="px-3">
-        <VarOutList nodeData={nodeData} />
       </div>
     </div>
   );

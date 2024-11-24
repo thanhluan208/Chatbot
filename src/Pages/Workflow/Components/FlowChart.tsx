@@ -67,7 +67,6 @@ export default function FlowChart(props: IFlowChart) {
   const theme = useTheme();
   const queryClient = useQueryClient();
 
-
   const { handleAddNodeWorkflow, handleAddEdge, handleRemoveEdge } =
     useWorkflowMutate();
 
@@ -116,24 +115,33 @@ export default function FlowChart(props: IFlowChart) {
           }
 
           if (workflowId && userId) {
-            handleAddEdge.mutate(
-              {
-                user_id: userId,
-                workflow_id: workflowId,
-                src_node_id: newConnection.source,
-                dest_node_id: newConnection.target,
-              },
-              {
-                onSuccess: (response) => {
-                  if (response.status_code !== 200) {
-                    onFailed();
-                  }
-                },
-                onError: () => {
+            const sourceNode = getNode(newConnection.source);
+            const hasSourceHandle =
+              sourceNode?.type ===
+                `customNode_WF_${NodeTypeWorkflow.IF_ELSE}` ||
+              sourceNode?.type ===
+                `customNode_WF_${NodeTypeWorkflow.QUESTION_CLASSIFIER}`;
+
+            const payload: AddEdgePayload = {
+              user_id: userId,
+              workflow_id: workflowId,
+              src_node_id: newConnection.source,
+              dest_node_id: newConnection.target,
+            };
+
+            if (hasSourceHandle && newConnection.sourceHandle) {
+              payload.source_handle = newConnection.sourceHandle;
+            }
+            handleAddEdge.mutate(payload, {
+              onSuccess: (response) => {
+                if (response.status_code !== 200) {
                   onFailed();
-                },
-              }
-            );
+                }
+              },
+              onError: () => {
+                onFailed();
+              },
+            });
 
             handleRemoveEdge.mutate(
               {
@@ -269,8 +277,10 @@ export default function FlowChart(props: IFlowChart) {
 
       if (workflowId && userId) {
         const sourceNode = getNode(connection.source);
-        const isConditionNode =
-          sourceNode?.type === `customNode_WF_${NodeTypeWorkflow.IF_ELSE}`;
+        const hasSourceHandle =
+          sourceNode?.type === `customNode_WF_${NodeTypeWorkflow.IF_ELSE}` ||
+          sourceNode?.type ===
+            `customNode_WF_${NodeTypeWorkflow.QUESTION_CLASSIFIER}`;
 
         const payload: AddEdgePayload = {
           user_id: userId,
@@ -279,7 +289,7 @@ export default function FlowChart(props: IFlowChart) {
           dest_node_id: connection.target,
         };
 
-        if (isConditionNode && connection.sourceHandle) {
+        if (hasSourceHandle && connection.sourceHandle) {
           payload.source_handle = connection.sourceHandle;
         }
 

@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Handle, NodeProps, Position } from "@xyflow/react";
+import { Handle, NodeProps, Position, useReactFlow } from "@xyflow/react";
 import { Box, useTheme } from "@mui/material";
 import { TrendingUpDown } from "lucide-react";
 import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
@@ -16,18 +16,24 @@ import CollapseArea from "@/Components/CommonStyles/CollapseArea";
 
 const WF_ConditionNode = (props: NodeProps) => {
   //! State
-  const { id } = props;
+  const { id, selected } = props;
   const theme = useTheme();
   const save = useSave();
+  const { updateNode } = useReactFlow();
 
   const nodeData = props?.data as unknown as ConditionNodeData;
 
   //! Function
   const handleClickNode = () => {
-    save(cachedKeys.NODE_EDITING, {
-      type: NodeTypeWorkflow.IF_ELSE,
-      id: id,
+    updateNode(id, {
+      selected: true,
     });
+    setTimeout(() => {
+      save(cachedKeys.NODE_EDITING, {
+        type: NodeTypeWorkflow.IF_ELSE,
+        id: id,
+      });
+    }, 0);
   };
 
   //! Render
@@ -79,7 +85,7 @@ const WF_ConditionNode = (props: NodeProps) => {
           }}
         />
       </div>
-      {createPortal(<WF_EditDrawer node={props} />, document.body)}
+      {selected && createPortal(<WF_EditDrawer node={props} />, document.body)}
     </Fragment>
   );
 };

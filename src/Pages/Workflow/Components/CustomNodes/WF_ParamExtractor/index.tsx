@@ -38,7 +38,7 @@ const WF_ParamExtractor = (props: NodeProps) => {
     });
     setTimeout(() => {
       save(cachedKeys.NODE_EDITING, {
-        type: NodeTypeWorkflow.LLM,
+        type: NodeTypeWorkflow.PARAMETER_EXTRACTOR,
         id: id,
       });
     }, 0);

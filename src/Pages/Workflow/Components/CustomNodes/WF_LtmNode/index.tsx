@@ -14,6 +14,8 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
 import { toast } from "react-toastify";
+import VarOutList from "../../misc/VarOutList";
+import { NodeDataLongTermMemory } from "./type";
 
 const WF_LtmNode = (props: NodeProps) => {
   //! State
@@ -25,6 +27,8 @@ const WF_LtmNode = (props: NodeProps) => {
 
   const { handleUpdateNodeData } = useWorkflowMutate();
 
+  const nodeData = props?.data as unknown as NodeDataLongTermMemory;
+
   const leftHandleId = useMemo(() => {
     return uuid();
   }, []);
@@ -32,24 +36,6 @@ const WF_LtmNode = (props: NodeProps) => {
   const rightHandleId = useMemo(() => {
     return uuid();
   }, []);
-
-  const handleRename = async (name: string) => {
-    const payload = {
-      user_id: userId,
-      workflow_id: workflowId,
-      node_id: props.id,
-      node_data: {
-        name: name,
-        desc: "",
-        position: JSON.stringify({
-          x: props.positionAbsoluteX,
-          y: props.positionAbsoluteY,
-        }),
-      },
-    };
-
-    doRequest(payload);
-  };
 
   const handleUpdateHistoryTurn = async (history_turn: number) => {
     const payload = {
@@ -110,7 +96,7 @@ const WF_LtmNode = (props: NodeProps) => {
               >
                 <MessageSquareQuote className="w-3.5 h-3.5" color="#fff" />
               </Box>
-              <EditLabelNode nodeId={id} handleUpdateName={handleRename} />
+              <EditLabelNode nodeId={id} workflowId={workflowId} />
             </Box>
           }
         >
@@ -144,37 +130,7 @@ const WF_LtmNode = (props: NodeProps) => {
                     ></WindowSizeControl>
                   </CollapseArea>
 
-                  <CollapseArea
-                    nodeId="{id}"
-                    label={
-                      <Box
-                        sx={{
-                          display: "flex",
-                          gap: "8px",
-                          alignItems: "center",
-                        }}
-                      >
-                        <CommonStyles.Typography type="semiBold14">
-                          Output
-                        </CommonStyles.Typography>
-                        <Hint content="The output list is the information that best match the input parameters, called from Long-term Memory of related Bot." />
-                      </Box>
-                    }
-                  >
-                    <div
-                      className="flex ml-12 items-center"
-                      style={{ fontFamily: "SegoeUI" }}
-                    >
-                      <span>output</span>
-
-                      <div
-                        className="shrink-0 flex items-center py-0.5 px-2 rounded-[6px] ml-2"
-                        style={{ backgroundColor: "rgba(6,7,9,0.04)" }}
-                      >
-                        <span className="text-xs">String</span>
-                      </div>
-                    </div>
-                  </CollapseArea>
+                  <VarOutList nodeData={nodeData} />
                 </Form>
               );
             }}

@@ -1,13 +1,7 @@
-import {
-  Box,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  useTheme,
-} from "@mui/material";
+import { Box, DialogContent, DialogTitle, useTheme } from "@mui/material";
 import CommonStyles from "../../../../../Components/CommonStyles";
 import CommonIcons from "../../../../../Components/CommonIcons";
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import useGetListFolderKnowledge from "../../../../../Hooks/Knowledges/useGetListFolderKnowledge";
 import CreateKnowledgeButton from "./CreateKnowledgeButton";
 import KnowledgeFolder, { IKnowledgeFolder } from "./KnowledgeFolder";
@@ -18,6 +12,7 @@ interface IKnowledgeListDialog {
   enableButton?: boolean;
   handleMutate?: (id: string) => void;
   ownedOnly?: boolean;
+  listAddedFolder?: string[];
 }
 
 export const KnowledgeFilter = {
@@ -33,7 +28,8 @@ export const KnowledgeSortBy = {
 
 const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
   //! State
-  const { toggle, enableButton, handleMutate, ownedOnly } = props;
+  const { toggle, enableButton, handleMutate, ownedOnly, listAddedFolder } =
+    props;
   const theme = useTheme();
   const [filters, setFilter] = useState({
     visual_option: KnowledgeFilter.Owned,
@@ -125,10 +121,13 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
           }}
         >
           {isLoading && <CommonStyles.LoadingOverlay isLoading={isLoading} />}
-          {data?.map((item: IKnowledgeFolder, index: number) => {
-            return (
-              <Fragment key={item.id}>
+          <div className="flex flex-col gap-2">
+            {data?.map((item: IKnowledgeFolder) => {
+              const isAdded = !!item.id && listAddedFolder?.includes(item.id);
+
+              return (
                 <KnowledgeFolder
+                  key={item.id}
                   id={item.id}
                   title={item.title}
                   description={item.description}
@@ -140,11 +139,11 @@ const KnowledgeListDialog = (props: IKnowledgeListDialog) => {
                   avatar={item.avatar}
                   enableButton={enableButton}
                   handleMutate={handleMutate}
+                  isAdded={isAdded}
                 />
-                {index < data?.length - 1 && <Divider />}
-              </Fragment>
-            );
-          })}
+              );
+            })}
+          </div>
         </PerfectScollBar>
       </DialogContent>
     </Box>

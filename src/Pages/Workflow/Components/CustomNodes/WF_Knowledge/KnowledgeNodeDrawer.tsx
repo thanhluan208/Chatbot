@@ -5,14 +5,14 @@ import { useSave } from "@/Stores/useStore";
 import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
 import { KnowledgeNodeData } from "./type";
 import useGetVariableSelectors from "@/Hooks/workflow/useGetVariableSelectors";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import {
   Vars,
   VarSelectorOptionInterface,
 } from "../WF_VariableAggregator/ListAssignVars";
-import { cloneDeep } from "lodash";
+import { capitalize, cloneDeep } from "lodash";
 import { useTheme } from "@mui/material";
-import { Book, X } from "lucide-react";
+import { Book, Trash, X } from "lucide-react";
 import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
 import CommonStyles from "@/Components/CommonStyles";
 import cachedKeys from "@/Constants/cachedKeys";
@@ -20,6 +20,9 @@ import DescriptionInput from "../../DescriptionInput";
 import VarSelectorSelect from "../WF_VariableAggregator/VarSelectorSelect";
 import AddKnowledgeButton from "./AddKnowledgeButton";
 import VarOutList from "../../misc/VarOutList";
+import CollapseArea from "@/Components/CommonStyles/CollapseArea";
+import { KnowledgeFilter } from "@/Pages/ChatbotConfigure/components/Configure/Knowledge/KnowledgeListDialog";
+import useGetListFolderKnowledge from "@/Hooks/Knowledges/useGetListFolderKnowledge";
 
 interface KnowledgeNodeDrawerProps {
   node: NodeProps;
@@ -33,6 +36,23 @@ const KnowledgeNodeDrawer = ({ node }: KnowledgeNodeDrawerProps) => {
 
   const nodeData = node?.data as unknown as KnowledgeNodeData;
   const { data: varSelectors } = useGetVariableSelectors(node?.id);
+
+  const filters = useMemo(() => {
+    return {
+      visual_option: KnowledgeFilter.Owned,
+      search_input: "",
+    };
+  }, []);
+
+  const { data: listKnowledgeFolders } = useGetListFolderKnowledge(filters);
+
+  const addedFolders = useMemo(() => {
+    if (!listKnowledgeFolders || !nodeData?.knowledge_storage_ids) return [];
+
+    return listKnowledgeFolders.filter((folder) =>
+      nodeData?.knowledge_storage_ids?.includes(folder.id)
+    );
+  }, [listKnowledgeFolders, nodeData?.knowledge_storage_ids]);
 
   const varSelectorOptions = useMemo(() => {
     if (!varSelectors) return [];
@@ -101,6 +121,19 @@ const KnowledgeNodeDrawer = ({ node }: KnowledgeNodeDrawerProps) => {
     handleUpdateNodeDataKnowledge(node?.id, payload);
   };
 
+  const handleRemoveFolder = useCallback(
+    (folderId: string) => {
+      const newFolders = nodeData?.knowledge_storage_ids.filter(
+        (item) => item !== folderId
+      );
+
+      handleUpdateNodeDataKnowledge(node?.id, {
+        knowledge_storage_ids: newFolders,
+      });
+    },
+    [nodeData?.knowledge_storage_ids, handleUpdateNodeDataKnowledge, node?.id]
+  );
+
   return (
     <div
       className="py-4"
@@ -139,47 +172,98 @@ const KnowledgeNodeDrawer = ({ node }: KnowledgeNodeDrawerProps) => {
         <DescriptionInput value={nodeData.desc} handleUpdate={handleUpdate} />
       </div>
 
-      <div className="px-6">
-        <div className="flex items-center space-x-2 mt-4">
-          <CommonStyles.Typography type="semiBold16">
-            {t("common.query_variable")}
-          </CommonStyles.Typography>
-        </div>
+      <div className="px-3">
+        <CollapseArea
+          label={
+            <CommonStyles.Typography type="semiBold16">
+              {t("common.query_variable")}
+            </CommonStyles.Typography>
+          }
+        >
+          <div className="mt-4 flex flex-col gap-2 mb-2">
+            {nodeData?.query_variable_selector?.map((vars) => {
+              return (
+                <VarSelectorSelect
+                  key={`${vars?.[0]}-${vars?.[1]}`}
+                  handleSelectVar={handleSelectVar}
+                  varSelectorOptions={varSelectorOptions}
+                  variables={nodeData?.query_variable_selector}
+                  value={`${vars?.[0]}-${vars?.[1]}`}
+                  handleRemoveVar={handleRemoveVar}
+                />
+              );
+            })}
 
-        <div className="mt-4 flex flex-col gap-2 mb-2">
-          {nodeData?.query_variable_selector?.map((vars) => {
-            return (
-              <VarSelectorSelect
-                key={`${vars?.[0]}-${vars?.[1]}`}
-                handleSelectVar={handleSelectVar}
-                varSelectorOptions={varSelectorOptions}
-                variables={nodeData?.query_variable_selector}
-                value={`${vars?.[0]}-${vars?.[1]}`}
-                handleRemoveVar={handleRemoveVar}
-              />
-            );
-          })}
+            <VarSelectorSelect
+              handleSelectVar={handleSelectVar}
+              varSelectorOptions={varSelectorOptions}
+              variables={nodeData?.query_variable_selector}
+            />
+          </div>
+        </CollapseArea>
 
-          <VarSelectorSelect
-            handleSelectVar={handleSelectVar}
-            varSelectorOptions={varSelectorOptions}
-            variables={nodeData?.query_variable_selector}
-          />
-        </div>
-        <div className="flex items-center space-x-2 mt-4">
-          <CommonStyles.Typography type="semiBold16">
-            {t("WF_Knowledge.knowledge").toUpperCase()}
-          </CommonStyles.Typography>
-        </div>
-        <div className="mt-4">
+        <hr className="my-2 mx-4 opacity-20" />
+
+        <CollapseArea
+          label={
+            <CommonStyles.Typography type="semiBold16">
+              {capitalize(t("WF_Knowledge.knowledge"))}
+            </CommonStyles.Typography>
+          }
+        >
+          <div className="mb-3 flex flex-col gap-2">
+            {addedFolders?.map((item) => {
+              return (
+                <div
+                  key={item.id}
+                  className="flex items-center justify-between p-2 rounded-lg"
+                  style={{
+                    background: theme.colors.custom.background,
+                    border: `1px solid ${theme.colors.custom.borderColor}`,
+                  }}
+                >
+                  <div className="flex gap-3 items-center">
+                    <img
+                      src={item.avatar}
+                      alt={item.title}
+                      className="w-6 h-6 rounded-lg"
+                    />
+                    <div>
+                      <CommonStyles.Typography
+                        type="semiBold16"
+                        className="truncate max-w-[300px]"
+                      >
+                        {item.title}
+                      </CommonStyles.Typography>
+                      <CommonStyles.Typography className="opacity-50">
+                        {item.description}
+                      </CommonStyles.Typography>
+                    </div>
+                  </div>
+                  <CommonStyles.Button
+                    isIcon
+                    color="error"
+                    hasBorder={false}
+                    onClick={() => !!item.id && handleRemoveFolder(item.id)}
+                  >
+                    <Trash size={16} />
+                  </CommonStyles.Button>
+                </div>
+              );
+            })}
+          </div>
+
           <AddKnowledgeButton
             knowledges={nodeData?.knowledge_storage_ids}
             nodeId={node?.id}
           />
+        </CollapseArea>
+
+        <hr className="my-2 mx-4 opacity-20" />
+
+        <div className="px-3">
+          <VarOutList nodeData={nodeData} />
         </div>
-      </div>
-      <div className="px-3">
-        <VarOutList nodeData={nodeData} />
       </div>
     </div>
   );

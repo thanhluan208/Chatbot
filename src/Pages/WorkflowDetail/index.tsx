@@ -10,6 +10,12 @@ import FlowChart from "../Workflow/Components/FlowChart";
 
 const listNode = [
   {
+    name: `customNode_WF_${NodeTypeWorkflow.START}`,
+    label: "Start Node",
+    description: "Create an agent",
+    hidden: true,
+  },
+  {
     name: `customNode_WF_${NodeTypeWorkflow.LLM}`,
     label: "LLM",
     description: "Llm Node",

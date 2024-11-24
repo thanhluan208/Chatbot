@@ -153,7 +153,7 @@ const PromptArea = ({ node, handleUpdate }: PromptAreaProps) => {
         };
       });
 
-      if (data.memory) {
+      if (data.memory && data.memory.position_index_in_chat_messages) {
         listPrompt.splice(data.memory.position_index_in_chat_messages, 0, {
           id: uuid(),
           role: PromptRoleEnum.Memory,

@@ -252,6 +252,14 @@ export default function useWorkflowMutate() {
         ...payload,
       };
 
+      updateNode &&
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+            ...updatePayload,
+          },
+        });
+
       handleUpdateNodeData.mutate(
         {
           workflow_id: workflowId,
@@ -265,13 +273,7 @@ export default function useWorkflowMutate() {
               toast.error(response?.message);
               onFailed && onFailed();
             }
-            updateNode &&
-              updateNode(nodeId, {
-                data: {
-                  ...nodeData,
-                  ...updatePayload,
-                },
-              });
+
             onSuccess && onSuccess();
           },
           onError: () => {
@@ -494,6 +496,6 @@ export default function useWorkflowMutate() {
     handleUpdateNodeDataKnowledge,
     handleUpdateNodeDataCondition,
     handleUpdateNodeDataParamExtractor,
-    handleUpdateNodeDataQuestClassifier
+    handleUpdateNodeDataQuestClassifier,
   };
 }

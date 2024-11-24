@@ -153,11 +153,15 @@ const ParamExtractorDrawer = ({ node }: ParamExtractorDrawerProps) => {
           nodeId={node?.id}
         />
 
-        <div className="my-3 px-4">
-          <CommonStyles.Typography type="semiBold16">
-            {t("WF_ParamExtractor.prompt_template")}
-          </CommonStyles.Typography>
+        <hr className="my-2 mx-4 opacity-20" />
 
+        <CollapseArea
+          label={
+            <CommonStyles.Typography type="semiBold16">
+              {t("WF_ParamExtractor.prompt_template")}
+            </CommonStyles.Typography>
+          }
+        >
           <div className="px-3">
             <EditorPrompt
               handleChangeEditor={handleChangePrompt}
@@ -166,13 +170,17 @@ const ParamExtractorDrawer = ({ node }: ParamExtractorDrawerProps) => {
               nodeId={node?.id}
             />
           </div>
-        </div>
+        </CollapseArea>
 
-        <div className="my-3 px-4">
-          <CommonStyles.Typography type="semiBold16">
-            {t("WF_ParamExtractor.outputs_instruction")}
-          </CommonStyles.Typography>
+        <hr className="my-2 mx-4 opacity-20" />
 
+        <CollapseArea
+          label={
+            <CommonStyles.Typography type="semiBold16">
+              {t("WF_ParamExtractor.outputs_instruction")}
+            </CommonStyles.Typography>
+          }
+        >
           <div className="px-3">
             <EditorPrompt
               handleChangeEditor={handleChangeInstruction}
@@ -181,7 +189,9 @@ const ParamExtractorDrawer = ({ node }: ParamExtractorDrawerProps) => {
               nodeId={node?.id}
             />
           </div>
-        </div>
+        </CollapseArea>
+
+        <hr className="my-2 mx-4 opacity-20" />
 
         <CollapseArea
           label={

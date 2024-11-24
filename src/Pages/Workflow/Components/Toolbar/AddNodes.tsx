@@ -269,6 +269,9 @@ const AddNodes = ({ listNode = [], initOpen, helperPosition }: IAddNodes) => {
       >
         <DropdownMenuGroup>
           {listNode.map((node) => {
+            if (node.name === `customNode_WF_${NodeTypeWorkflow.START}`)
+              return null;
+
             return (
               <DropdownMenuSub key={node.name}>
                 <DropdownMenuSubTrigger

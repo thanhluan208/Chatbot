@@ -109,6 +109,7 @@ const VarAggNodeDrawer = ({ node }: VarAggNodeDrawerProps) => {
           )}
         </div>
       </div>
+      <hr className="my-2 mx-4 opacity-20" /> 
       <div className="px-3">
         <VarOutList nodeData={nodeData} />
       </div>

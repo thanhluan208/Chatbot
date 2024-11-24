@@ -1,5 +1,3 @@
-import { useMemo } from "react";
-import { v4 as uuid } from "uuid";
 import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { Box, Tooltip, useTheme } from "@mui/material";
 import CommonStyles from "@/Components/CommonStyles";
@@ -16,10 +14,6 @@ interface NodeFormProps {
 const NodeForm = ({ cases, nodeId }: NodeFormProps) => {
   const theme = useTheme();
   const { getEdges } = useReactFlow();
-
-  const handleid = useMemo(() => {
-    return uuid();
-  }, []);
 
   return (
     <div className="p-2">
@@ -52,7 +46,7 @@ const NodeForm = ({ cases, nodeId }: NodeFormProps) => {
                           );
 
                           return edgeToTarget.every(
-                            (elm) => elm.sourceHandle !== handleid
+                            (elm) => elm.sourceHandle !== `${nodeId}-source`
                           );
                         }}
                       />

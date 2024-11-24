@@ -1,7 +1,7 @@
 import cachedKeys from "@/Constants/cachedKeys";
 import { useGet, useSave } from "@/Stores/useStore";
 import { NodeTypeWorkflow } from "@/Types/workflow";
-import { Box, Drawer } from "@mui/material";
+import { Box, Drawer, useTheme } from "@mui/material";
 import LLMNodeDrawer from "../WF_LlmNode/LLMNodeDrawer";
 import { NodeProps } from "@xyflow/react";
 import VarAggNodeDrawer from "../WF_VariableAggregator/VarAggNodeDrawer";
@@ -19,6 +19,7 @@ export default function WF_EditDrawer({ node }: WF_EditDrawerProps) {
   //! State
   const nodeEditing = useGet("NODE_EDITING");
   const save = useSave();
+  const theme = useTheme();
 
   //! Function
   const handleClose = (_: {}, reason: "backdropClick" | "escapeKeyDown") => {
@@ -64,12 +65,22 @@ export default function WF_EditDrawer({ node }: WF_EditDrawerProps) {
       onClick={(e) => {
         e.stopPropagation();
       }}
+      PaperProps={{
+        sx: {
+          top: "unset",
+          right: "20px",
+          bottom: "80px",
+          height: "calc(100% - 140px)",
+          borderRadius: "20px",
+          border: `solid 1px ${theme.colors.custom.borderColor}`,
+          boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+        },
+      }}
     >
       <Box
         id="wrapper"
         sx={{
           width: "min(50vw, 600px)",
-          height: "100vh",
           transition: "all 0.5s ease",
           position: "relative",
         }}
