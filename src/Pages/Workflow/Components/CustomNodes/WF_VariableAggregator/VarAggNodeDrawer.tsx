@@ -12,6 +12,7 @@ import { NodeDataVarAgg } from "./type";
 import DescriptionInput from "../../DescriptionInput";
 import ListAssignVars from "./ListAssignVars";
 import ListGroup from "./ListGroup";
+import VarOutList from "../../misc/VarOutList";
 
 interface VarAggNodeDrawerProps {
   node?: NodeProps;
@@ -77,7 +78,9 @@ const VarAggNodeDrawer = ({ node }: VarAggNodeDrawerProps) => {
           </CommonStyles.Button>
         </div>
         <DescriptionInput value={nodeData.desc} handleUpdate={handleUpdate} />
+      </div>
 
+      <div className="px-6 my-3">
         <div className="flex items-center space-x-2 mt-4">
           <label htmlFor="group_enable">
             <CommonStyles.Typography type="semiBold16">
@@ -105,6 +108,9 @@ const VarAggNodeDrawer = ({ node }: VarAggNodeDrawerProps) => {
             />
           )}
         </div>
+      </div>
+      <div className="px-3">
+        <VarOutList nodeData={nodeData} />
       </div>
     </div>
   );

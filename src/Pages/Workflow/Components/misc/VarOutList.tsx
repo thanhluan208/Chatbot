@@ -11,7 +11,7 @@ const VarOutList = ({ nodeData }: { nodeData: any }) => {
       <CommonStyles.Typography type="semiBold16">
         {t("common.variable_out")}
       </CommonStyles.Typography>
-      <div className="flex flex-col gap-2 pl-3 mt-2">
+      <div className="flex flex-wrap gap-2 pl-3 mt-2">
         {nodeData?.variable_out?.map((elm: VariablesOut) => {
           return (
             <div

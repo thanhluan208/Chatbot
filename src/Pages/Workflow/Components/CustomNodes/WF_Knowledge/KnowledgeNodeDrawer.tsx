@@ -19,6 +19,7 @@ import cachedKeys from "@/Constants/cachedKeys";
 import DescriptionInput from "../../DescriptionInput";
 import VarSelectorSelect from "../WF_VariableAggregator/VarSelectorSelect";
 import AddKnowledgeButton from "./AddKnowledgeButton";
+import VarOutList from "../../misc/VarOutList";
 
 interface KnowledgeNodeDrawerProps {
   node: NodeProps;
@@ -141,7 +142,7 @@ const KnowledgeNodeDrawer = ({ node }: KnowledgeNodeDrawerProps) => {
       <div className="px-6">
         <div className="flex items-center space-x-2 mt-4">
           <CommonStyles.Typography type="semiBold16">
-            {t("common.query_variable").toUpperCase()}
+            {t("common.query_variable")}
           </CommonStyles.Typography>
         </div>
 
@@ -176,6 +177,9 @@ const KnowledgeNodeDrawer = ({ node }: KnowledgeNodeDrawerProps) => {
             nodeId={node?.id}
           />
         </div>
+      </div>
+      <div className="px-3">
+        <VarOutList nodeData={nodeData} />
       </div>
     </div>
   );

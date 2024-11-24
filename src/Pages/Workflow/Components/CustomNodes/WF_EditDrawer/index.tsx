@@ -9,6 +9,7 @@ import { useCallback } from "react";
 import KnowledgeNodeDrawer from "../WF_Knowledge/KnowledgeNodeDrawer";
 import ConditionNodeDrawer from "../WF_ConditionNode/ConditionNodeDrawer";
 import ParamExtractorDrawer from "../WF_ParamExtractor/ParamExtractorDrawer";
+import QuestClassifierNodeDrawer from "../WF_QuestClassifier/QuestClassifierNodeDrawer";
 
 interface WF_EditDrawerProps {
   node: NodeProps;
@@ -38,12 +39,15 @@ export default function WF_EditDrawer({ node }: WF_EditDrawerProps) {
         return <ConditionNodeDrawer node={node} />;
       case NodeTypeWorkflow.PARAMETER_EXTRACTOR:
         return <ParamExtractorDrawer node={node} />;
+      case NodeTypeWorkflow.QUESTION_CLASSIFIER:
+        return <QuestClassifierNodeDrawer node={node} />;
       default:
         return null;
     }
   }, [node, nodeEditing?.type]);
 
   //! Render
+
   return (
     <Drawer
       variant="persistent"

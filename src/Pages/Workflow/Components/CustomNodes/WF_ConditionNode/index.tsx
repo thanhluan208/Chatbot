@@ -64,7 +64,7 @@ const WF_ConditionNode = (props: NodeProps) => {
                 </div>
               }
             >
-              <NodeForm cases={nodeData?.cases} />
+              <NodeForm cases={nodeData?.cases} nodeId={id}/>
             </CollapseArea>
           </Fragment>
         </GradientBorder>

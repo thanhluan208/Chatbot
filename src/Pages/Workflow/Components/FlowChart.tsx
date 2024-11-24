@@ -387,7 +387,7 @@ export default function FlowChart(props: IFlowChart) {
             onSuccess: (res) => {
               onSuccess(res.data.node_id, {
                 ...res.data?.node_data?.data,
-                variables_out: res?.data?.variables_out,
+                variable_out: res?.data?.node_data?.variables_out,
                 label: res.data.node_id,
               });
             },

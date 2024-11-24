@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Handle, NodeProps, Position } from "@xyflow/react";
+import { Handle, NodeProps, Position, useReactFlow } from "@xyflow/react";
 import { Box, Tooltip, useTheme } from "@mui/material";
 import { Pickaxe } from "lucide-react";
 import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
@@ -20,11 +20,12 @@ import { NodeDataParamExtractor } from "./type";
 
 const WF_ParamExtractor = (props: NodeProps) => {
   //! State
-  const { id } = props;
+  const { id, selected } = props;
   const theme = useTheme();
   const { t } = useTranslation("node");
   const { workflowId } = useParams();
   const save = useSave();
+  const { updateNode } = useReactFlow();
   const { handleUpdateNodeDataParamExtractor } = useWorkflowMutate();
 
   const nodeData = props.data as unknown as NodeDataParamExtractor;
@@ -32,10 +33,15 @@ const WF_ParamExtractor = (props: NodeProps) => {
   //! Function
 
   const handleClickNode = () => {
-    save(cachedKeys.NODE_EDITING, {
-      type: NodeTypeWorkflow.PARAMETER_EXTRACTOR,
-      id: id,
+    updateNode(id, {
+      selected: true,
     });
+    setTimeout(() => {
+      save(cachedKeys.NODE_EDITING, {
+        type: NodeTypeWorkflow.LLM,
+        id: id,
+      });
+    }, 0);
   };
 
   //! Render
@@ -144,7 +150,7 @@ const WF_ParamExtractor = (props: NodeProps) => {
           }}
         />
       </div>
-      {createPortal(<WF_EditDrawer node={props} />, document.body)}
+      {selected && createPortal(<WF_EditDrawer node={props} />, document.body)}
     </Fragment>
   );
 };

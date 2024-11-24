@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Handle, NodeProps, Position } from "@xyflow/react";
+import { Handle, NodeProps, Position, useReactFlow } from "@xyflow/react";
 import { Box, useTheme } from "@mui/material";
 import { Component } from "lucide-react";
 import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
@@ -19,10 +19,11 @@ import VarOutList from "../../misc/VarOutList";
 
 const WF_StartNode = (props: NodeProps) => {
   //! State
-  const { data, id } = props;
+  const { data, id, selected } = props;
   const theme = useTheme();
   const { workflowId } = useParams();
   const save = useSave();
+  const { updateNode } = useReactFlow();
 
   const { handleUpdateNodeDataLLM } = useWorkflowMutate();
 
@@ -31,10 +32,15 @@ const WF_StartNode = (props: NodeProps) => {
   //! Function
 
   const handleClickNode = () => {
-    save(cachedKeys.NODE_EDITING, {
-      type: NodeTypeWorkflow.LLM,
-      id: id,
+    updateNode(id, {
+      selected: true,
     });
+    setTimeout(() => {
+      save(cachedKeys.NODE_EDITING, {
+        type: NodeTypeWorkflow.LLM,
+        id: id,
+      });
+    }, 0);
   };
 
   //! Render
@@ -108,7 +114,7 @@ const WF_StartNode = (props: NodeProps) => {
           }}
         />
       </div>
-      {createPortal(<WF_EditDrawer node={props} />, document.body)}
+      {selected && createPortal(<WF_EditDrawer node={props} />, document.body)}
     </Fragment>
   );
 };

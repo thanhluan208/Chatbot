@@ -12,8 +12,6 @@ const NodeGroupItem = ({ data }: NodeGroupItemProps) => {
   const { t } = useTranslation("node");
   const theme = useTheme();
 
-  console.log(data);
-
   return (
     <div className="flex px-3 w-full">
       {data?.map((item) => {
@@ -23,15 +21,17 @@ const NodeGroupItem = ({ data }: NodeGroupItemProps) => {
               <CommonStyles.Typography type="semiBold16">
                 {item.group_name || t("WF_VarAgg.assign_variables")}
               </CommonStyles.Typography>
-              {item.output_type !== "none" && <div
-                className="flex px-3 py-1 rounded-md"
-                style={{
-                  backgroundColor: theme.colors.custom.backgroundCard,
-                  border: `1px solid ${theme.colors.custom.borderColor}`,
-                }}
-              >
-                {item.output_type}
-              </div>}
+              {item.output_type !== "none" && (
+                <div
+                  className="flex px-3 py-1 rounded-md"
+                  style={{
+                    backgroundColor: theme.colors.custom.backgroundCard,
+                    border: `1px solid ${theme.colors.custom.borderColor}`,
+                  }}
+                >
+                  {item.output_type}
+                </div>
+              )}
             </div>
             <div className="mt-3">
               {item?.variables?.map((vars) => {
@@ -40,7 +40,12 @@ const NodeGroupItem = ({ data }: NodeGroupItemProps) => {
                   type: item.output_type as string,
                 };
 
-                return <NodeVarItem key={`${vars?.[0]}-${vars?.[1]}`} data={nodeVarItemData}/>;
+                return (
+                  <NodeVarItem
+                    key={`${vars?.[0]}-${vars?.[1]}`}
+                    data={nodeVarItemData}
+                  />
+                );
               })}
             </div>
           </div>

@@ -1,5 +1,5 @@
 import { NodeTypeWorkflow } from "@/Types/workflow";
-import { Book, Code, Component, House, MemoryStick, Pickaxe, TrendingUpDown, Variable } from "lucide-react";
+import { Book, Code, Component, House, MemoryStick, Pickaxe, Shapes, TrendingUpDown, Variable } from "lucide-react";
 
 export const LANGUAGES = {
   EN: "en",
@@ -30,5 +30,8 @@ export const WORKFLOW_ICON = {
   ),
   [`customNode_WF_${NodeTypeWorkflow.PARAMETER_EXTRACTOR}`]: (
     <Pickaxe className="w-3.5 h-3.5" color="#fff" />
+  ),
+  [`customNode_WF_${NodeTypeWorkflow.QUESTION_CLASSIFIER}`]: (
+    <Shapes className="w-3.5 h-3.5" color="#fff" />
   ),
 };

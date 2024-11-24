@@ -34,6 +34,7 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import WF_ParamExtractor from "../CustomNodes/WF_ParamExtractor";
 import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
+import WF_QuestClassifier from "../CustomNodes/WF_QuestClassifier";
 
 export enum NodeTypes {
   startNode = "customNode_startNode",
@@ -60,6 +61,7 @@ export const nodeTypes = {
     WF_VariableAggregator,
   [`customNode_WF_${NodeTypeWorkflow.KNOWLEDGE_RETRIEVAL}`]: WF_Knowledge,
   [`customNode_WF_${NodeTypeWorkflow.PARAMETER_EXTRACTOR}`]: WF_ParamExtractor,
+  [`customNode_WF_${NodeTypeWorkflow.QUESTION_CLASSIFIER}`]: WF_QuestClassifier,
 };
 
 export enum CustomNodeTypes {

@@ -106,7 +106,7 @@ const ParamExtractorDrawer = ({ node }: ParamExtractorDrawerProps) => {
     handleUpdateNodeDataParamExtractor(node?.id, {
       outputs: newOutputs,
     });
-  }
+  };
 
   return (
     <div
@@ -146,66 +146,72 @@ const ParamExtractorDrawer = ({ node }: ParamExtractorDrawerProps) => {
         <DescriptionInput value={nodeData.desc} handleUpdate={handleUpdate} />
       </div>
 
-      <FormModel
-        handleUpdateNodeData={handleUpdateNodeDataParamExtractor}
-        model={nodeData?.model}
-        nodeId={node?.id}
-      />
-
-      <div className="my-3 px-4">
-        <CommonStyles.Typography type="semiBold16">
-          {t("WF_ParamExtractor.prompt_template")}
-        </CommonStyles.Typography>
-
-        <EditorPrompt
-          handleChangeEditor={handleChangePrompt}
-          id={`${node.id}-prompt`}
-          value={nodeData?.prompt_template}
+      <div className="px-3">
+        <FormModel
+          handleUpdateNodeData={handleUpdateNodeDataParamExtractor}
+          model={nodeData?.model}
           nodeId={node?.id}
         />
-      </div>
 
-      <div className="my-3 px-4">
-        <CommonStyles.Typography type="semiBold16">
-          {t("WF_ParamExtractor.outputs_instruction")}
-        </CommonStyles.Typography>
-
-        <EditorPrompt
-          handleChangeEditor={handleChangeInstruction}
-          id={`${node.id}-outputs_instruction`}
-          value={nodeData?.prompt_template}
-          nodeId={node?.id}
-        />
-      </div>
-
-      <CollapseArea
-        label={
+        <div className="my-3 px-4">
           <CommonStyles.Typography type="semiBold16">
-            {t("common.variable_out")}
+            {t("WF_ParamExtractor.prompt_template")}
           </CommonStyles.Typography>
-        }
-      >
-        <div className="px-4">
-          {outputList.map((item) => {
-            return (
-              <OutputItem
-                data={item}
-                key={item.name}
-                handleUpdate={handleUpdateOutput}
-                handleRemoveOutput={handleRemoveOutput}
-              />
-            );
-          })}
 
-          <CommonStyles.Button
-            variant="contained"
-            sx={{ mt: "20px" }}
-            onClick={handleAddOutVar}
-          >
-            Add Output Variable
-          </CommonStyles.Button>
+          <div className="px-3">
+            <EditorPrompt
+              handleChangeEditor={handleChangePrompt}
+              id={`${node.id}-prompt`}
+              value={nodeData?.prompt_template}
+              nodeId={node?.id}
+            />
+          </div>
         </div>
-      </CollapseArea>
+
+        <div className="my-3 px-4">
+          <CommonStyles.Typography type="semiBold16">
+            {t("WF_ParamExtractor.outputs_instruction")}
+          </CommonStyles.Typography>
+
+          <div className="px-3">
+            <EditorPrompt
+              handleChangeEditor={handleChangeInstruction}
+              id={`${node.id}-outputs_instruction`}
+              value={nodeData?.prompt_template}
+              nodeId={node?.id}
+            />
+          </div>
+        </div>
+
+        <CollapseArea
+          label={
+            <CommonStyles.Typography type="semiBold16">
+              {t("common.variable_out")}
+            </CommonStyles.Typography>
+          }
+        >
+          <div className="px-6">
+            {outputList.map((item) => {
+              return (
+                <OutputItem
+                  data={item}
+                  key={item.name}
+                  handleUpdate={handleUpdateOutput}
+                  handleRemoveOutput={handleRemoveOutput}
+                />
+              );
+            })}
+
+            <CommonStyles.Button
+              variant="contained"
+              sx={{ mt: "20px" }}
+              onClick={handleAddOutVar}
+            >
+              Add Output Variable
+            </CommonStyles.Button>
+          </div>
+        </CollapseArea>
+      </div>
     </div>
   );
 };

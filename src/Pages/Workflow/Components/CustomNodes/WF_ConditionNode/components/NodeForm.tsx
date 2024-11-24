@@ -10,9 +10,10 @@ import { WORKFLOW_ICON } from "@/Constants/common";
 
 interface NodeFormProps {
   cases: Case[];
+  nodeId: string;
 }
 
-const NodeForm = ({ cases }: NodeFormProps) => {
+const NodeForm = ({ cases, nodeId }: NodeFormProps) => {
   const theme = useTheme();
   const { getEdges } = useReactFlow();
 
@@ -134,7 +135,7 @@ const NodeForm = ({ cases }: NodeFormProps) => {
           <Handle
             type="source"
             position={Position.Right}
-            id={handleid}
+            id={`${nodeId}-source`}
             isConnectable={true}
             className="handle"
             isValidConnection={(connection) => {

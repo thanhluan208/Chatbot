@@ -49,7 +49,7 @@ const VarSelectorSelect = ({
             setOpen(true);
           }}
           style={{
-            background: theme.colors.custom.background
+            background: theme.colors.custom.background,
           }}
         >
           <Box
@@ -164,7 +164,10 @@ const VarSelectorSelect = ({
                               />
                               {
                                 WORKFLOW_ICON[
-                                  `customNode_WF_${nodes.node}` as keyof typeof WORKFLOW_ICON
+                                  `customNode_WF_${nodes.node.replace(
+                                    /_/g,
+                                    "-"
+                                  )}` as keyof typeof WORKFLOW_ICON
                                 ]
                               }
                               <CommonStyles.Typography type="semiBold14">

@@ -10,12 +10,6 @@ import FlowChart from "../Workflow/Components/FlowChart";
 
 const listNode = [
   {
-    name: `customNode_WF_${NodeTypeWorkflow.START}`,
-    label: "Start Node",
-    description: "Create an agent",
-    hidden: true,
-  },
-  {
     name: `customNode_WF_${NodeTypeWorkflow.LLM}`,
     label: "LLM",
     description: "Llm Node",
@@ -49,6 +43,11 @@ const listNode = [
     name: `customNode_WF_${NodeTypeWorkflow.PARAMETER_EXTRACTOR}`,
     label: "Parameter Extractor",
     description: "Parameter extractor node",
+  },
+  {
+    name: `customNode_WF_${NodeTypeWorkflow.QUESTION_CLASSIFIER}`,
+    label: "Question Classifier",
+    description: "Question classifier node",
   },
 ];
 
@@ -92,7 +91,6 @@ const WorkflowDetail = () => {
   const initEdges: Edge[] = useMemo(() => {
     return Object.values(data?.workflow_data?.graph?.edges || {}).map(
       (edge) => {
-        console.log("edge", edge);  
         return {
           ...edge,
           source: edge.source,

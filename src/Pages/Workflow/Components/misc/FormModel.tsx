@@ -79,11 +79,15 @@ const FormModel = ({
             >
               <div className="px-2 flex gap-2">
                 <ModelConfiguration afterOnChange={handleChangeModel} />
-                <ModelStatsConfig nodeId={nodeId} handleUpdateNodeData={handleUpdateNodeData}/>
+                <ModelStatsConfig
+                  nodeId={nodeId}
+                  handleUpdateNodeData={handleUpdateNodeData}
+                />
               </div>
             </CollapseArea>
             {memory && (
               <CollapseArea
+                initOpen={false}
                 nodeId={nodeId}
                 label={t("WF_Startnode.memory_configuration")}
               >

@@ -3,6 +3,7 @@ import { ConditionNodeData } from "@/Pages/Workflow/Components/CustomNodes/WF_Co
 import { KnowledgeNodeData } from "@/Pages/Workflow/Components/CustomNodes/WF_Knowledge/type";
 import { LlmNodeData } from "@/Pages/Workflow/Components/CustomNodes/WF_LlmNode/type";
 import { NodeDataParamExtractor } from "@/Pages/Workflow/Components/CustomNodes/WF_ParamExtractor/type";
+import { NodeDataQuestClassifier } from "@/Pages/Workflow/Components/CustomNodes/WF_QuestClassifier/type";
 import { NodeDataVarAgg } from "@/Pages/Workflow/Components/CustomNodes/WF_VariableAggregator/type";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import workflowService from "@/Services/workflow.service";
@@ -411,6 +412,75 @@ export default function useWorkflowMutate() {
     [workflowId, userId, updateNode, getNode]
   );
 
+  //! WF_QuestionClassifier
+  const handleUpdateNodeDataQuestClassifier = useCallback(
+    (
+      nodeId: string,
+      payload: Partial<NodeDataQuestClassifier>,
+      onSuccess?: () => void,
+      onFailed?: () => void
+    ) => {
+      if (!workflowId || !userId || !nodeId) return;
+
+      const nodeData = getNode(nodeId)
+        ?.data as unknown as NodeDataQuestClassifier;
+
+      const updatePayload: Partial<NodeDataQuestClassifier> = {
+        name: nodeId,
+        desc: nodeData.desc,
+        position: nodeData.position,
+        query_variable_selector: nodeData.query_variable_selector,
+        memory: nodeData.memory,
+        classes: nodeData.classes,
+        instruction: nodeData.instruction,
+        ...payload,
+        model: {
+          ...nodeData.model,
+          ...payload?.model,
+        },
+      };
+
+      const handleFailed = () => {
+        onFailed && onFailed();
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+          },
+        });
+      };
+
+      updateNode &&
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+            ...updatePayload,
+          },
+        });
+
+      handleUpdateNodeData.mutate(
+        {
+          workflow_id: workflowId,
+          user_id: userId,
+          node_id: nodeId,
+          node_data: updatePayload,
+        },
+        {
+          onSuccess: (response) => {
+            if (response?.status_code !== 200) {
+              toast.error(response?.message);
+              handleFailed();
+            }
+            onSuccess && onSuccess();
+          },
+          onError: () => {
+            handleFailed();
+          },
+        }
+      );
+    },
+    [workflowId, userId, updateNode, getNode]
+  );
+
   return {
     handleCreateWorkflow,
     handleDeleteWorkflow,
@@ -424,5 +494,6 @@ export default function useWorkflowMutate() {
     handleUpdateNodeDataKnowledge,
     handleUpdateNodeDataCondition,
     handleUpdateNodeDataParamExtractor,
+    handleUpdateNodeDataQuestClassifier
   };
 }

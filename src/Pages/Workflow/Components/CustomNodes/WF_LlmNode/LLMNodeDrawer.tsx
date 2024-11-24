@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import DescriptionInput from "../../DescriptionInput";
 import FormModel from "../../misc/FormModel";
+import VarOutList from "../../misc/VarOutList";
 
 interface LLMNodeDrawerProps {
   node?: NodeProps;
@@ -155,6 +156,9 @@ const LLMNodeDrawer = ({ node }: LLMNodeDrawerProps) => {
             })}
           </div>
         </div>
+      </div>
+      <div className="px-3">
+        <VarOutList nodeData={nodeData} />
       </div>
     </div>
   );

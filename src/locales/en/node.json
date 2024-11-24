@@ -91,5 +91,11 @@
   "WF_ParamExtractor": {
     "prompt_template": "Prompt template",
     "outputs_instruction": "Outputs instruction"
+  },
+
+  "WF_QuestionClassifier": {
+    "classes": "Classes",
+    "add_class": "Add class",
+    "instruction": "Instruction"
   }
 }
