@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { Handle, NodeProps, Position } from "@xyflow/react";
-import { Box, useTheme } from "@mui/material";
-import { Component } from "lucide-react";
+import { Box, Tooltip, useTheme } from "@mui/material";
+import { Pickaxe } from "lucide-react";
 import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
 import CollapseArea from "@/Components/CommonStyles/CollapseArea";
 import GradientBorder from "../../GradientBorder";
@@ -12,27 +12,28 @@ import { NodeTypeWorkflow } from "@/Types/workflow";
 import WF_EditDrawer from "../WF_EditDrawer";
 import { createPortal } from "react-dom";
 import CommonStyles from "@/Components/CommonStyles";
-import { LlmNodeData } from "./type";
-import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
 import FormModel from "../../misc/FormModel";
-import VarOutList from "../../misc/VarOutList";
+import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
+import { useTranslation } from "react-i18next";
+import { isEmpty } from "lodash";
+import { NodeDataParamExtractor } from "./type";
 
-const WF_StartNode = (props: NodeProps) => {
+const WF_ParamExtractor = (props: NodeProps) => {
   //! State
-  const { data, id } = props;
+  const { id } = props;
   const theme = useTheme();
+  const { t } = useTranslation("node");
   const { workflowId } = useParams();
   const save = useSave();
+  const { handleUpdateNodeDataParamExtractor } = useWorkflowMutate();
 
-  const { handleUpdateNodeDataLLM } = useWorkflowMutate();
-
-  const nodeData = data as unknown as LlmNodeData;
+  const nodeData = props.data as unknown as NodeDataParamExtractor;
 
   //! Function
 
   const handleClickNode = () => {
     save(cachedKeys.NODE_EDITING, {
-      type: NodeTypeWorkflow.LLM,
+      type: NodeTypeWorkflow.PARAMETER_EXTRACTOR,
       id: id,
     });
   };
@@ -64,7 +65,7 @@ const WF_StartNode = (props: NodeProps) => {
                       background: theme.palette.primary.main,
                     }}
                   >
-                    <Component className="w-3.5 h-3.5" color="#fff" />
+                    <Pickaxe className="w-3.5 h-3.5" color="#fff" />
                   </Box>
                   <EditLabelNode nodeId={id} workflowId={workflowId} />
                 </Box>
@@ -77,13 +78,48 @@ const WF_StartNode = (props: NodeProps) => {
             }
           >
             <FormModel
-              handleUpdateNodeData={handleUpdateNodeDataLLM}
+              handleUpdateNodeData={handleUpdateNodeDataParamExtractor}
               model={nodeData?.model}
               nodeId={id}
-              memory={nodeData?.memory}
             />
 
-            <VarOutList nodeData={nodeData} />
+            {!isEmpty(nodeData?.outputs) && (
+              <div className="px-4 my-3 flex flex-col gap-3">
+                <CommonStyles.Typography type="semiBold16">
+                  {t("common.variable_out")}
+                </CommonStyles.Typography>
+
+                <div className="flex gap-2 max-w-[500px] flex-wrap px-3">
+                  {Object.entries(nodeData?.outputs).map(([key, value]) => {
+                    return (
+                      <Tooltip title={value.desc} placement="top-start">
+                        <div
+                          key={key}
+                          className="rounded-lg flex items-center overflow-hidden w-fit pr-3 gap-2"
+                          style={{
+                            border: `1px solid ${theme.colors.custom.borderColor}`,
+                          }}
+                        >
+                          <div
+                            className="px-3 py-3"
+                            style={{
+                              background: theme.colors.custom.background,
+                            }}
+                          >
+                            <CommonStyles.Typography type="semiBold16">
+                              {value.type}
+                            </CommonStyles.Typography>
+                          </div>
+                          <CommonStyles.Typography type="semiBold16">
+                            {key}
+                          </CommonStyles.Typography>
+                        </div>
+                      </Tooltip>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </CollapseArea>
         </GradientBorder>
 
@@ -113,4 +149,4 @@ const WF_StartNode = (props: NodeProps) => {
   );
 };
 
-export default React.memo(WF_StartNode);
+export default React.memo(WF_ParamExtractor);

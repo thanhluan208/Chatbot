@@ -81,8 +81,6 @@ const PromptItem = ({
     }, 1500);
   };
 
-  
-
   return (
     <li className="flex pr-10 relative" ref={setNodeRef} style={style}>
       {promptData.role === PromptRoleEnum.Memory ? (
@@ -144,7 +142,7 @@ const PromptItem = ({
             </div>
             <div className="nodrag cursor-pointer">
               <Editor
-                controlPromptEditorRerenderKey={node.id}
+                controlPromptEditorRerenderKey={id as string}
                 nodeId={node.id}
                 initValue={promptData.text}
                 varList={varList}

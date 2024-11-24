@@ -15,35 +15,43 @@ import { cn } from "@/lib/utils";
 
 interface CustomizeSelectFieldProps {
   options: CommonOption[];
-  value: string;
+  initValue?: {
+    [key: string]: any;
+  };
   classNameMenuContent?: string;
   afterOnChange?: (value: string) => void;
   onChangeCustomize?: (value: string) => void;
   customizeOptions?: (
-    option: CommonOption[],
+    option: any[],
     handleSelect: (value: string) => void,
     value?: string
   ) => React.ReactNode;
-  customizeValue?: (selectedOption: CommonOption) => React.ReactNode;
+  fullWidth?: boolean;
+  customizeValue?: (selectedOption: any) => React.ReactNode;
 }
 
 const CustomizeSelectField = ({
   options,
   classNameMenuContent,
+  fullWidth,
   afterOnChange,
   onChangeCustomize,
   customizeOptions,
   field,
   form,
   customizeValue,
-}: CustomizeSelectFieldProps & FieldProps) => {
+  initValue,
+}: CustomizeSelectFieldProps & Partial<FieldProps>) => {
   const theme = useTheme();
 
-  const { name, value } = field;
-  const { setFieldValue } = form;
+  const { name, value } = field || {};
+  const { setFieldValue } = form || {};
 
   const currentValue = options.find(
-    (option) => option.value === value || option.value === value?.value
+    (option) =>
+      option.value === value ||
+      option.value === value?.value ||
+      option.value === initValue?.value
   );
 
   const handleSelect = (value: string) => {
@@ -52,7 +60,7 @@ const CustomizeSelectField = ({
       return;
     }
 
-    setFieldValue(name, value);
+    setFieldValue && setFieldValue(name || "", value);
 
     afterOnChange && afterOnChange(value);
   };
@@ -69,7 +77,10 @@ const CustomizeSelectField = ({
           customizeValue(currentValue as CommonOption)
         ) : (
           <Box
-            className="bg-transparent w-fit px-2 rounded-md py-1 cursor-pointer flex items-center gap-2"
+            className={cn(
+              "bg-transparent px-2 rounded-md py-1 cursor-pointer flex items-center gap-2",
+              fullWidth ? "w-full justify-between h-full"  : " w-fit "
+            )}
             sx={{
               "&:hover": {
                 background: theme.colors.custom.background,

@@ -2,6 +2,7 @@ import queryKey from "@/Constants/queryKey";
 import { ConditionNodeData } from "@/Pages/Workflow/Components/CustomNodes/WF_ConditionNode/type";
 import { KnowledgeNodeData } from "@/Pages/Workflow/Components/CustomNodes/WF_Knowledge/type";
 import { LlmNodeData } from "@/Pages/Workflow/Components/CustomNodes/WF_LlmNode/type";
+import { NodeDataParamExtractor } from "@/Pages/Workflow/Components/CustomNodes/WF_ParamExtractor/type";
 import { NodeDataVarAgg } from "@/Pages/Workflow/Components/CustomNodes/WF_VariableAggregator/type";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import workflowService from "@/Services/workflow.service";
@@ -95,10 +96,9 @@ export default function useWorkflowMutate() {
       delete nodeData?.iteration_id;
       delete nodeData?.variable_out;
       delete nodeData?.startNode;
-      delete nodeData?.user_id
+      delete nodeData?.user_id;
 
-
-      nodeData.name = nodeId
+      nodeData.name = nodeId;
 
       const payload: any = {
         workflow_id: workflowId,
@@ -119,12 +119,13 @@ export default function useWorkflowMutate() {
   const handleUpdateNodeDataLLM = useCallback(
     (
       nodeId: string,
-      nodeData: LlmNodeData,
       payload: Partial<LlmNodeData>,
       onSuccess?: () => void,
       onFailed?: () => void
     ) => {
-      if (!workflowId || !userId) return;
+      if (!workflowId || !userId || !nodeId) return;
+
+      const nodeData = getNode(nodeId)?.data as unknown as LlmNodeData;
 
       const updatePayload: Partial<LlmNodeData> = {
         name: nodeId,
@@ -132,8 +133,11 @@ export default function useWorkflowMutate() {
         memory: nodeData.memory,
         position: nodeData.position,
         prompt_template: nodeData.prompt_template,
-        model: nodeData.model,
         ...payload,
+        model: {
+          ...nodeData.model,
+          ...payload?.model,
+        },
       };
 
       handleUpdateNodeData.mutate(
@@ -339,6 +343,74 @@ export default function useWorkflowMutate() {
     [workflowId, userId, updateNode, getNode]
   );
 
+  //! WF_ParamExtractor
+  const handleUpdateNodeDataParamExtractor = useCallback(
+    (
+      nodeId: string,
+      payload: Partial<NodeDataParamExtractor>,
+      onSuccess?: () => void,
+      onFailed?: () => void
+    ) => {
+      if (!workflowId || !userId || !nodeId) return;
+
+      const nodeData = getNode(nodeId)
+        ?.data as unknown as NodeDataParamExtractor;
+
+      const updatePayload: Partial<NodeDataParamExtractor> = {
+        name: nodeId,
+        desc: nodeData.desc,
+        position: nodeData.position,
+        outputs_instruction: nodeData.outputs_instruction,
+        prompt_template: nodeData.prompt_template,
+        outputs: nodeData.outputs,
+        ...payload,
+        model: {
+          ...nodeData.model,
+          ...payload?.model,
+        },
+      };
+
+      const handleFailed = () => {
+        onFailed && onFailed();
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+          },
+        });
+      };
+
+      updateNode &&
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+            ...updatePayload,
+          },
+        });
+
+      handleUpdateNodeData.mutate(
+        {
+          workflow_id: workflowId,
+          user_id: userId,
+          node_id: nodeId,
+          node_data: updatePayload,
+        },
+        {
+          onSuccess: (response) => {
+            if (response?.status_code !== 200) {
+              toast.error(response?.message);
+              handleFailed();
+            }
+            onSuccess && onSuccess();
+          },
+          onError: () => {
+            handleFailed();
+          },
+        }
+      );
+    },
+    [workflowId, userId, updateNode, getNode]
+  );
+
   return {
     handleCreateWorkflow,
     handleDeleteWorkflow,
@@ -351,5 +423,6 @@ export default function useWorkflowMutate() {
     handleUpdateNodePosition,
     handleUpdateNodeDataKnowledge,
     handleUpdateNodeDataCondition,
+    handleUpdateNodeDataParamExtractor,
   };
 }

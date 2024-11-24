@@ -8,6 +8,7 @@ import VarAggNodeDrawer from "../WF_VariableAggregator/VarAggNodeDrawer";
 import { useCallback } from "react";
 import KnowledgeNodeDrawer from "../WF_Knowledge/KnowledgeNodeDrawer";
 import ConditionNodeDrawer from "../WF_ConditionNode/ConditionNodeDrawer";
+import ParamExtractorDrawer from "../WF_ParamExtractor/ParamExtractorDrawer";
 
 interface WF_EditDrawerProps {
   node: NodeProps;
@@ -35,6 +36,8 @@ export default function WF_EditDrawer({ node }: WF_EditDrawerProps) {
         return <KnowledgeNodeDrawer node={node} />;
       case NodeTypeWorkflow.IF_ELSE:
         return <ConditionNodeDrawer node={node} />;
+      case NodeTypeWorkflow.PARAMETER_EXTRACTOR:
+        return <ParamExtractorDrawer node={node} />;
       default:
         return null;
     }

@@ -34,6 +34,7 @@ import { toast } from "react-toastify";
 import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
 import { useQueryClient } from "react-query";
 import queryKey from "@/Constants/queryKey";
+import { AddEdgePayload, NodeTypeWorkflow } from "@/Types/workflow";
 
 const edgeTypes = {
   animatedSvg: AnimatedSVGEdge,
@@ -60,11 +61,12 @@ export default function FlowChart(props: IFlowChart) {
     (initNodes as Node[]) ?? []
   );
   const [edges, setEdges, onEdgesChange] = useEdgesState([] as Edge[]);
-  const { screenToFlowPosition, updateNode, getNodes, getEdges } =
+  const { screenToFlowPosition, updateNode, getNodes, getEdges, getNode } =
     useReactFlow();
   const save = useSave();
   const theme = useTheme();
   const queryClient = useQueryClient();
+
 
   const { handleAddNodeWorkflow, handleAddEdge, handleRemoveEdge } =
     useWorkflowMutate();
@@ -266,27 +268,34 @@ export default function FlowChart(props: IFlowChart) {
       }
 
       if (workflowId && userId) {
-        handleAddEdge.mutate(
-          {
-            user_id: userId,
-            workflow_id: workflowId,
-            src_node_id: connection.source,
-            dest_node_id: connection.target,
-          },
-          {
-            onSuccess: (response) => {
-              if (response.status_code !== 200) {
-                onFailed();
-              }
-              queryClient.invalidateQueries({
-                queryKey: [queryKey.WORKFLOW_VAR_SELECTOR],
-              });
-            },
-            onError: () => {
+        const sourceNode = getNode(connection.source);
+        const isConditionNode =
+          sourceNode?.type === `customNode_WF_${NodeTypeWorkflow.IF_ELSE}`;
+
+        const payload: AddEdgePayload = {
+          user_id: userId,
+          workflow_id: workflowId,
+          src_node_id: connection.source,
+          dest_node_id: connection.target,
+        };
+
+        if (isConditionNode && connection.sourceHandle) {
+          payload.source_handle = connection.sourceHandle;
+        }
+
+        handleAddEdge.mutate(payload, {
+          onSuccess: (response) => {
+            if (response.status_code !== 200) {
               onFailed();
-            },
-          }
-        );
+            }
+            queryClient.invalidateQueries({
+              queryKey: [queryKey.WORKFLOW_VAR_SELECTOR],
+            });
+          },
+          onError: () => {
+            onFailed();
+          },
+        });
       }
 
       return setEdges((eds: any) => {
@@ -307,7 +316,7 @@ export default function FlowChart(props: IFlowChart) {
       });
     },
 
-    [setEdges]
+    [setEdges, getNode, props.botId, workflowId, userId]
   );
 
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
@@ -379,7 +388,7 @@ export default function FlowChart(props: IFlowChart) {
               onSuccess(res.data.node_id, {
                 ...res.data?.node_data?.data,
                 variables_out: res?.data?.variables_out,
-                label: res.data.node_id
+                label: res.data.node_id,
               });
             },
             onError: onFailed,

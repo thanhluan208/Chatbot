@@ -14,6 +14,7 @@ import { createPortal } from "react-dom";
 import CommonStyles from "@/Components/CommonStyles";
 import { NodeDataVarAgg } from "./type";
 import NodeGroupItem from "./NodeGroupItem";
+import VarOutList from "../../misc/VarOutList";
 
 const WF_VariableAggregator = (props: NodeProps) => {
   //! State
@@ -87,6 +88,8 @@ const WF_VariableAggregator = (props: NodeProps) => {
             }
           >
             <NodeGroupItem data={groupData} />
+
+            <VarOutList nodeData={nodeData} />
           </CollapseArea>
         </GradientBorder>
 

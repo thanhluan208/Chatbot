@@ -45,6 +45,11 @@ const listNode = [
     label: "Knowledge Retrieval",
     description: "Knowledge retrieval node ",
   },
+  {
+    name: `customNode_WF_${NodeTypeWorkflow.PARAMETER_EXTRACTOR}`,
+    label: "Parameter Extractor",
+    description: "Parameter extractor node",
+  },
 ];
 
 const WorkflowDetail = () => {
@@ -87,11 +92,12 @@ const WorkflowDetail = () => {
   const initEdges: Edge[] = useMemo(() => {
     return Object.values(data?.workflow_data?.graph?.edges || {}).map(
       (edge) => {
+        console.log("edge", edge);  
         return {
           ...edge,
           source: edge.source,
           target: edge.target,
-          sourceHandle: `${edge.source}-source`,
+          sourceHandle: edge?.sourceHandle || `${edge.source}-source`,
           targetHandle: `${edge.target}-target`,
           markerEnd: {
             type: "arrowclosed",

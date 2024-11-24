@@ -1,7 +1,8 @@
 {
   "common": {
     "query_variable": "Query variable",
-    "add": "Add {{content}}"
+    "add": "Add {{content}}",
+    "variable_out": "Variable out"
   },
 
   "WF_ConditionNode": {
@@ -85,5 +86,10 @@
 
   "WF_Knowledge": {
     "knowledge": "knowledge"
+  },
+
+  "WF_ParamExtractor": {
+    "prompt_template": "Prompt template",
+    "outputs_instruction": "Outputs instruction"
   }
 }

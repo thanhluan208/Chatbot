@@ -2,7 +2,7 @@ import CustomizeSelectField from "@/Components/CommonFields/CustomizeSelectField
 import { modelOptions } from "@/Constants/options";
 import { Field } from "formik";
 import { Fragment, memo } from "react";
-import { ModelOption } from "./type";
+import { ModelOption } from "../CustomNodes/WF_LlmNode/type";
 import { DropdownMenuItem } from "@/Components/ui/dropdown-menu";
 import { Box, useTheme } from "@mui/material";
 import { Check } from "lucide-react";

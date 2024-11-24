@@ -13,8 +13,9 @@ import WF_EditDrawer from "../WF_EditDrawer";
 import { createPortal } from "react-dom";
 import CommonStyles from "@/Components/CommonStyles";
 import { KnowledgeNodeData } from "./type";
+import VarOutList from "../../misc/VarOutList";
 
-const WF_VariableAggregator = (props: NodeProps) => {
+const WF_Knowledge = (props: NodeProps) => {
   //! State
   const { id } = props;
   const theme = useTheme();
@@ -67,10 +68,12 @@ const WF_VariableAggregator = (props: NodeProps) => {
                   <CommonStyles.Typography className="px-4 opacity-60 my-2">
                     {nodeData?.desc}
                   </CommonStyles.Typography>
-                )}  
+                )}
               </div>
             }
-          ></CollapseArea>
+          >
+            <VarOutList nodeData={nodeData} />
+          </CollapseArea>
         </GradientBorder>
 
         <Handle
@@ -99,4 +102,4 @@ const WF_VariableAggregator = (props: NodeProps) => {
   );
 };
 
-export default React.memo(WF_VariableAggregator);
+export default React.memo(WF_Knowledge);

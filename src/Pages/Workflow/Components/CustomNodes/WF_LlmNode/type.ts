@@ -32,7 +32,7 @@ export interface Memory {
 export interface Model {
   completion_params: CompletionParams;
   name: string;
-  provider: string;
+  provider?: string;
 }
 
 export interface CompletionParams {

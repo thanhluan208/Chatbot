@@ -136,7 +136,9 @@ const KnowledgeNodeDrawer = ({ node }: KnowledgeNodeDrawerProps) => {
           </CommonStyles.Button>
         </div>
         <DescriptionInput value={nodeData.desc} handleUpdate={handleUpdate} />
+      </div>
 
+      <div className="px-6">
         <div className="flex items-center space-x-2 mt-4">
           <CommonStyles.Typography type="semiBold16">
             {t("common.query_variable").toUpperCase()}

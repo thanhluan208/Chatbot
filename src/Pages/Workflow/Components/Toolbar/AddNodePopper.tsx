@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import React, { useCallback, useEffect } from "react";
 import { NodeTypes, nodeTypes } from "./AddNodes";
-import logo from "@/assets/agent.png";
 import CommonIcons from "@/Components/CommonIcons";
 import { Node, useReactFlow } from "@xyflow/react";
 import { v4 as uuid } from "uuid";
@@ -18,6 +17,7 @@ import reactFlowService from "@/Services/reactFlowService";
 import { useParams } from "react-router-dom";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import cachedKeys from "@/Constants/cachedKeys";
+import { WORKFLOW_ICON } from "@/Constants/common";
 
 interface IAddNodePopper {
   open?: boolean;
@@ -61,7 +61,10 @@ const AddNodePopper = (props: IAddNodePopper) => {
     nodeType: keyof typeof nodeTypes,
     label: string
   ) => {
-    event.dataTransfer.setData("application/reactflow", JSON.stringify({nodeType, label}));
+    event.dataTransfer.setData(
+      "application/reactflow",
+      JSON.stringify({ nodeType, label })
+    );
     event.dataTransfer.effectAllowed = "move";
   };
 
@@ -183,7 +186,11 @@ const AddNodePopper = (props: IAddNodePopper) => {
                   <Box
                     key={node.name}
                     onDragStart={(event) =>
-                      onDragStart(event, node.name as keyof typeof nodeTypes, node.label)
+                      onDragStart(
+                        event,
+                        node.name as keyof typeof nodeTypes,
+                        node.label
+                      )
                     }
                     draggable
                     sx={{
@@ -207,19 +214,18 @@ const AddNodePopper = (props: IAddNodePopper) => {
                           alignItems: "center",
                         }}
                       >
-                        <Box
-                          sx={{
-                            padding: "4px",
-                            borderRadius: "8px",
-                            background: "#4e40e5",
+                        <div
+                          className="w-6 h-6 flex items-center justify-center rounded-md"
+                          style={{
+                            background: theme.palette.primary.main,
                           }}
                         >
-                          <img
-                            src={logo}
-                            alt="logo"
-                            style={{ width: "16px", height: "16px" }}
-                          />
-                        </Box>
+                          {
+                            WORKFLOW_ICON[
+                              node.name as keyof typeof WORKFLOW_ICON
+                            ]
+                          }
+                        </div>
                         <CommonStyles.Typography
                           type={isHelperNode ? "semiBold12" : "semiBold16"}
                         >
