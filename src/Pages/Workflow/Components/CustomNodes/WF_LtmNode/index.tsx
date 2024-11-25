@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment } from "react";
 import { Handle, NodeProps, Position, useReactFlow } from "@xyflow/react";
 import GradientBorder from "../../GradientBorder";
 import CollapseArea from "@/Components/CommonStyles/CollapseArea";
@@ -9,7 +9,6 @@ import { MessageSquareQuote } from "lucide-react";
 import CommonStyles from "@/Components/CommonStyles";
 import Hint from "@/Pages/ChatbotConfigure/components/GenerateDiversity/components/Hint";
 import WindowSizeControl from "./components/WindowSizeControl";
-import { v4 as uuid } from "uuid";
 import { useParams } from "react-router-dom";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
@@ -28,14 +27,6 @@ const WF_LtmNode = (props: NodeProps) => {
   const { handleUpdateNodeData } = useWorkflowMutate();
 
   const nodeData = props?.data as unknown as NodeDataLongTermMemory;
-
-  const leftHandleId = useMemo(() => {
-    return uuid();
-  }, []);
-
-  const rightHandleId = useMemo(() => {
-    return uuid();
-  }, []);
 
   const handleUpdateHistoryTurn = async (history_turn: number) => {
     const payload = {
@@ -141,7 +132,7 @@ const WF_LtmNode = (props: NodeProps) => {
       <Handle
         type="target"
         position={Position.Left}
-        id={leftHandleId}
+        id={`${id}-target`}
         isConnectable={true}
         className="handle"
         style={{
@@ -150,9 +141,9 @@ const WF_LtmNode = (props: NodeProps) => {
       />
 
       <Handle
-        type="target"
+        type="source"
         position={Position.Right}
-        id={rightHandleId}
+        id={`${id}-source`}
         isConnectable={true}
         className="handle"
         style={{

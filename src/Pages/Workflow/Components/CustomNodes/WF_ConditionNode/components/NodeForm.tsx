@@ -26,7 +26,7 @@ const NodeForm = ({ cases, nodeId }: NodeFormProps) => {
                 label={
                   <div className="w-full flex justify-between">
                     <CommonStyles.Typography type="semiBold16">
-                      {`Case ${index + 1}`}
+                      {`Case ${index + 1}`} {caseElm?.case_id}
                     </CommonStyles.Typography>
                     <div className="relative pr-6">
                       <CommonStyles.Typography type="semiBold16">
@@ -46,7 +46,7 @@ const NodeForm = ({ cases, nodeId }: NodeFormProps) => {
                           );
 
                           return edgeToTarget.every(
-                            (elm) => elm.sourceHandle !== `${nodeId}-source`
+                            (elm) => cases.every((caseElm) => caseElm?.case_id !== elm?.sourceHandle)
                           );
                         }}
                       />
@@ -83,7 +83,7 @@ const NodeForm = ({ cases, nodeId }: NodeFormProps) => {
                               color={theme.palette.primary.main}
                               type="semiBold16"
                             >
-                              {condition?.variable_selector?.[1]}
+                              {condition?.variable_selector?.[1]} {}
                             </CommonStyles.Typography>
 
                             <CommonStyles.Typography type="semiBold12">

@@ -9,7 +9,6 @@ import { useTheme } from "@mui/material";
 import InputAndOutputSettings from "@/Pages/ChatbotConfigure/components/InputAndOutputSettings";
 import { useFormikContext } from "formik";
 import { memo, useEffect, useRef } from "react";
-import { LlmNodeData } from "../CustomNodes/WF_LlmNode/type";
 
 interface ModelStatsConfigProps {
   nodeId: string;
@@ -32,7 +31,7 @@ const ModelStatsConfig = ({
     debounceRef.current = setTimeout(() => {
       if (!dirty) return;
 
-      const payload: Partial<LlmNodeData> = {
+      const payload: any = {
         model: {
           name: values.model.value,
           completion_params: {
@@ -43,6 +42,9 @@ const ModelStatsConfig = ({
             frequency_penalty: Number(values.frequency_penalty),
             presence_penalty: Number(values.presence_penalty),
           },
+        },
+        memory: {
+          history_turn: values.memory_history_turn,
         },
       };
 

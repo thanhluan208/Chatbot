@@ -185,7 +185,7 @@ const ParamExtractorDrawer = ({ node }: ParamExtractorDrawerProps) => {
             <EditorPrompt
               handleChangeEditor={handleChangeInstruction}
               id={`${node.id}-outputs_instruction`}
-              value={nodeData?.prompt_template}
+              value={nodeData?.outputs_instruction}
               nodeId={node?.id}
             />
           </div>

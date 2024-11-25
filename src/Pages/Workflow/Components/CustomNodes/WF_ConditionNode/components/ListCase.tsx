@@ -99,6 +99,8 @@ const ListCase = ({ cases, nodeId }: ListCaseProps) => {
     });
   };
 
+  console.log('cases', cases)
+
   return (
     <div className="mt-2">
       <DndContext

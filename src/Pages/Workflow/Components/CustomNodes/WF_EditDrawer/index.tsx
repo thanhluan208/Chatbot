@@ -10,6 +10,7 @@ import KnowledgeNodeDrawer from "../WF_Knowledge/KnowledgeNodeDrawer";
 import ConditionNodeDrawer from "../WF_ConditionNode/ConditionNodeDrawer";
 import ParamExtractorDrawer from "../WF_ParamExtractor/ParamExtractorDrawer";
 import QuestClassifierNodeDrawer from "../WF_QuestClassifier/QuestClassifierNodeDrawer";
+import AnswerNodeDrawer from "../WF_AnswerNode/AnswerNodeDrawer";
 
 interface WF_EditDrawerProps {
   node: NodeProps;
@@ -42,6 +43,8 @@ export default function WF_EditDrawer({ node }: WF_EditDrawerProps) {
         return <ParamExtractorDrawer node={node} />;
       case NodeTypeWorkflow.QUESTION_CLASSIFIER:
         return <QuestClassifierNodeDrawer node={node} />;
+      case NodeTypeWorkflow.ANSWER:
+        return <AnswerNodeDrawer node={node} />;
       default:
         return null;
     }
@@ -66,6 +69,7 @@ export default function WF_EditDrawer({ node }: WF_EditDrawerProps) {
         e.stopPropagation();
       }}
       PaperProps={{
+        className: "no-scrollbar",
         sx: {
           top: "unset",
           right: "20px",

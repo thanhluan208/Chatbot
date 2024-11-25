@@ -35,6 +35,8 @@ import { useAuth } from "@/Providers/AuthenticationProvider";
 import WF_ParamExtractor from "../CustomNodes/WF_ParamExtractor";
 import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
 import WF_QuestClassifier from "../CustomNodes/WF_QuestClassifier";
+import WF_VarAssigner from "../CustomNodes/WF_VarAssigner";
+import WF_AnswerNode from "../CustomNodes/WF_AnswerNode";
 
 export enum NodeTypes {
   startNode = "customNode_startNode",
@@ -62,6 +64,8 @@ export const nodeTypes = {
   [`customNode_WF_${NodeTypeWorkflow.KNOWLEDGE_RETRIEVAL}`]: WF_Knowledge,
   [`customNode_WF_${NodeTypeWorkflow.PARAMETER_EXTRACTOR}`]: WF_ParamExtractor,
   [`customNode_WF_${NodeTypeWorkflow.QUESTION_CLASSIFIER}`]: WF_QuestClassifier,
+  [`customNode_WF_${NodeTypeWorkflow.VARIABLE}`]: WF_VarAssigner,
+  [`customNode_WF_${NodeTypeWorkflow.ANSWER}`]: WF_AnswerNode,
 };
 
 export enum CustomNodeTypes {

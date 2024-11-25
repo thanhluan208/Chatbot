@@ -1,5 +1,5 @@
 import { NodeTypeWorkflow } from "@/Types/workflow";
-import { Book, Code, Component, House, MemoryStick, Pickaxe, Shapes, TrendingUpDown, Variable } from "lucide-react";
+import { Book, BookmarkCheck, Code, Component, Equal, House, MemoryStick, Pickaxe, Shapes, TrendingUpDown, Variable } from "lucide-react";
 
 export const LANGUAGES = {
   EN: "en",
@@ -33,5 +33,11 @@ export const WORKFLOW_ICON = {
   ),
   [`customNode_WF_${NodeTypeWorkflow.QUESTION_CLASSIFIER}`]: (
     <Shapes className="w-3.5 h-3.5" color="#fff" />
+  ),
+  [`customNode_WF_${NodeTypeWorkflow.VARIABLE}`]: (
+    <Equal className="w-3.5 h-3.5" color="#fff" />
+  ),
+  [`customNode_WF_${NodeTypeWorkflow.ANSWER}`]: (
+    <BookmarkCheck className="w-3.5 h-3.5" color="#fff" />
   ),
 };

@@ -55,6 +55,16 @@ const listNode = [
     label: "Question Classifier",
     description: "Question classifier node",
   },
+  {
+    name: `customNode_WF_${NodeTypeWorkflow.VARIABLE}`,
+    label: "Variable",
+    description: "Variable node",
+  },
+  {
+    name: `customNode_WF_${NodeTypeWorkflow.ANSWER}`,
+    label: "Answer",
+    description: "Answer node",
+  },
 ];
 
 const WorkflowDetail = () => {

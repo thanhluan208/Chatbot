@@ -183,7 +183,7 @@ export enum NodeTypeWorkflow {
   HTTP_REQUEST = "http-request",
   TOOL = "tool",
   VARIABLE_AGGREGATOR = "variable-aggregator",
-  VARIABLE_ASSIGNER = "variable-assigner",
+  VARIABLE = "variable",
   LOOP = "loop",
   ITERATION = "iteration",
   ITERATION_START = "iteration-start",
