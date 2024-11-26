@@ -183,7 +183,7 @@ export enum NodeTypeWorkflow {
   HTTP_REQUEST = "http-request",
   TOOL = "tool",
   VARIABLE_AGGREGATOR = "variable-aggregator",
-  VARIABLE_ASSIGNER = "variable-assigner",
+  VARIABLE = "variable",
   LOOP = "loop",
   ITERATION = "iteration",
   ITERATION_START = "iteration-start",
@@ -197,6 +197,7 @@ export enum StartNodeInputType {
   NUMBER = "number",
   ARRAY_NUMBER = "array[number]",
   OBJECT = "object",
+  ARRAY_OBJECT = "array[object]",
 }
 
 export interface AddEdgePayload {
@@ -204,6 +205,7 @@ export interface AddEdgePayload {
   workflow_id: string;
   src_node_id: string;
   dest_node_id: string;
+  source_handle?: string;
 }
 
 export interface RemoveEdgePayload {

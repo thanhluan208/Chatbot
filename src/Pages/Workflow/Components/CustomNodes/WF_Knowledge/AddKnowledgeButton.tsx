@@ -8,11 +8,13 @@ import { useTranslation } from "react-i18next";
 interface AddKnowledgeButtonProps {
   knowledges: string[];
   nodeId: string;
+  customButton?: (setOpen: (value: boolean) => void) => React.ReactNode;
 }
 
 const AddKnowledgeButton = ({
   knowledges,
   nodeId,
+  customButton,
 }: AddKnowledgeButtonProps) => {
   const { t } = useTranslation("node");
   const [open, setOpen] = useState(false);
@@ -48,18 +50,17 @@ const AddKnowledgeButton = ({
             enableButton
             handleMutate={handleMutateKnowledgeFolder}
             ownedOnly
+            listAddedFolder={knowledges}
           />
         </CommonStyles.Dialog>
       )}
-      <CommonStyles.Button
-        variant="contained"
-        onClick={(e) => {
-          e.stopPropagation();
-          setOpen(true);
-        }}
-      >
-        {t("common.add", { content: t("WF_Knowledge.knowledge") })}
-      </CommonStyles.Button>
+      {customButton ? (
+        customButton(setOpen)
+      ) : (
+        <CommonStyles.Button variant="contained">
+          {t("common.add", { content: t("WF_Knowledge.knowledge") })}
+        </CommonStyles.Button>
+      )}
     </Fragment>
   );
 };

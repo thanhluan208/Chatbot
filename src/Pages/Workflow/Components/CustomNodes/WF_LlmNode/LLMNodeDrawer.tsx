@@ -1,25 +1,21 @@
 import CommonStyles from "@/Components/CommonStyles";
 import CollapseArea from "@/Components/CommonStyles/CollapseArea";
 import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
-import { modelOptions } from "@/Constants/options";
 import { useTheme } from "@mui/material";
 import { NodeProps, useReactFlow } from "@xyflow/react";
-import { Form, Formik } from "formik";
 import { Component, X } from "lucide-react";
-import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import cachedKeys from "@/Constants/cachedKeys";
 import { useSave } from "@/Stores/useStore";
 import PromptArea from "./PromptArea";
-import SlideAndNumField from "@/Pages/ChatbotConfigure/components/GenerateDiversity/components/SlideAndNumField";
 import { LlmNodeData } from "./type";
 import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
 import { toast } from "react-toastify";
 import { useAuth } from "@/Providers/AuthenticationProvider";
-import ModelConfiguration from "./ModelConfiguration";
 import DescriptionInput from "../../DescriptionInput";
-import ModelStatsConfig from "./ModelStatsConfig";
+import FormModel from "../../misc/FormModel";
+import VarOutList from "../../misc/VarOutList";
 
 interface LLMNodeDrawerProps {
   node?: NodeProps;
@@ -38,24 +34,6 @@ const LLMNodeDrawer = ({ node }: LLMNodeDrawerProps) => {
   const { data, id } = node;
 
   const nodeData = node?.data as unknown as LlmNodeData;
-
-  const initialValues = useMemo(() => {
-    const foundModel = modelOptions.find((elm) => {
-      return elm.value === nodeData?.model?.name;
-    });
-    return {
-      model: foundModel ?? modelOptions[0],
-      temperature: nodeData?.model?.completion_params?.temperature ?? 1.21,
-      top_p: nodeData?.model?.completion_params?.top_p ?? 0.9,
-      history_turn: nodeData?.model?.completion_params?.history_turn ?? 3,
-      max_tokens: nodeData?.model?.completion_params?.max_tokens ?? 2048,
-      frequency_penalty:
-        nodeData?.model?.completion_params?.frequency_penalty ?? 0,
-      presence_penalty:
-        nodeData?.model?.completion_params?.presence_penalty ?? 0,
-      memory_history_turn: nodeData?.memory?.history_turn ?? 3,
-    };
-  }, [nodeData]);
 
   const handleUpdate = (
     payload: Partial<LlmNodeData>,
@@ -102,30 +80,6 @@ const LLMNodeDrawer = ({ node }: LLMNodeDrawerProps) => {
     );
   };
 
-  const handleChangeModel = useCallback(
-    (value: string) => {
-      const modelFound = modelOptions.find((elm) => elm.value === value);
-      if (!modelFound) return;
-      const payload: Partial<LlmNodeData> = {
-        model: {
-          ...nodeData?.model,
-          name: modelFound.value,
-          completion_params: {
-            temperature: Number(modelFound.temperature.default),
-            top_p: Number(modelFound.top_p?.default),
-            history_turn: Number(modelFound.history_turn?.default),
-            max_tokens: Number(modelFound.max_tokens?.default),
-            frequency_penalty: Number(modelFound.frequency_penalty?.default),
-            presence_penalty: Number(modelFound.presence_penalty?.default),
-          },
-        },
-      };
-
-      handleUpdateNodeDataLLM(id, nodeData, payload);
-    },
-    [nodeData?.model]
-  );
-
   return (
     <div
       className="py-4"
@@ -164,47 +118,25 @@ const LLMNodeDrawer = ({ node }: LLMNodeDrawerProps) => {
         <DescriptionInput value={nodeData.desc} handleUpdate={handleUpdate} />
       </div>
 
-      <div className="px-6">
-        <Formik
-          initialValues={initialValues}
-          enableReinitialize
-          onSubmit={() => {}}
-        >
-          {() => {
-            return (
-              <Form>
-                <CollapseArea
-                  nodeId={id}
-                  initOpen={false}
-                  label={t("WF_Startnode.model_configuration")}
-                >
-                  <div className="px-2 flex gap-2">
-                    <ModelConfiguration afterOnChange={handleChangeModel} />
-                    <ModelStatsConfig />
-                  </div>
-                </CollapseArea>
-                <CollapseArea
-                  nodeId={id}
-                  label={t("WF_Startnode.memory_configuration")}
-                >
-                  <div className="px-2">
-                    <SlideAndNumField
-                      title="Window Size"
-                      min={0}
-                      max={20}
-                      step={1}
-                      name="memory_history_turn"
-                    />
-                  </div>
-                </CollapseArea>
-              </Form>
-            );
-          }}
-        </Formik>
+      <div className="px-3">
+        <FormModel
+          handleUpdateNodeData={handleUpdateNodeDataLLM}
+          model={nodeData?.model}
+          nodeId={node?.id}
+          memory={nodeData?.memory}
+        />
+
+        <hr className="my-2 mx-4 opacity-20" />
 
         <CollapseArea label={t("WF_Startnode.prompt_configuration")}>
           <PromptArea node={node} handleUpdate={handleUpdate} />
         </CollapseArea>
+
+        <hr className="my-2 mx-4 opacity-20" />
+
+        <div className="px-3">
+          <VarOutList nodeData={nodeData} />
+        </div>
       </div>
     </div>
   );

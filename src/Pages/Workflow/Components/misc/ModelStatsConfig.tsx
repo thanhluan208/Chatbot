@@ -8,17 +8,20 @@ import Advance from "@/Pages/ChatbotConfigure/components/GenerateDiversity/compo
 import { useTheme } from "@mui/material";
 import InputAndOutputSettings from "@/Pages/ChatbotConfigure/components/InputAndOutputSettings";
 import { useFormikContext } from "formik";
-import { useEffect, useRef } from "react";
-import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
-import { LlmNodeData } from "./type";
+import { memo, useEffect, useRef } from "react";
 
-const ModelStatsConfig = () => {
+interface ModelStatsConfigProps {
+  nodeId: string;
+  handleUpdateNodeData: (nodeId: string, payload: any) => void;
+}
+
+const ModelStatsConfig = ({
+  nodeId,
+  handleUpdateNodeData,
+}: ModelStatsConfigProps) => {
   const theme = useTheme();
-  const { values } = useFormikContext<any>();
+  const { values, dirty } = useFormikContext<any>();
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
-  const isFirst = useRef(true);
-
-  const { handleUpdateNodeDataLLM } = useWorkflowMutate();
 
   useEffect(() => {
     if (debounceRef.current) {
@@ -26,14 +29,10 @@ const ModelStatsConfig = () => {
     }
 
     debounceRef.current = setTimeout(() => {
-      if (isFirst.current) {
-        isFirst.current = false;
-        return;
-      }
+      if (!dirty) return;
 
-      const payload: Partial<LlmNodeData> = {
+      const payload: any = {
         model: {
-          ...values.nodeData.model,
           name: values.model.value,
           completion_params: {
             temperature: Number(values.temperature),
@@ -44,13 +43,14 @@ const ModelStatsConfig = () => {
             presence_penalty: Number(values.presence_penalty),
           },
         },
+        memory: {
+          history_turn: values.memory_history_turn,
+        },
       };
 
-      handleUpdateNodeDataLLM(values.nodeId, values.nodeData, payload);
-
-      isFirst.current = true
+      handleUpdateNodeData(nodeId, payload);
     }, 500);
-  }, [values, handleUpdateNodeDataLLM]);
+  }, [values, handleUpdateNodeData, nodeId, dirty]);
 
   return (
     <Popover>
@@ -59,6 +59,9 @@ const ModelStatsConfig = () => {
           className="h-10 w-10 p-0 flex items-center justify-center"
           onClick={(e) => {
             e.stopPropagation();
+          }}
+          style={{
+            background: theme.colors.custom.background,
           }}
         >
           <SlidersHorizontal />
@@ -69,7 +72,7 @@ const ModelStatsConfig = () => {
         style={{
           background: theme.colors.custom.backgroundCard,
           borderColor: theme.colors.custom.borderColor,
-          zIndex: 100000000
+          zIndex: 100000000,
         }}
       >
         <Advance />
@@ -79,4 +82,4 @@ const ModelStatsConfig = () => {
   );
 };
 
-export default ModelStatsConfig;
+export default memo(ModelStatsConfig);

@@ -1,3 +1,5 @@
+import { VariablesOut } from "@/Types/workflow";
+
 export interface KnowledgeNodeData {
   name?: string;
   title: string;
@@ -10,4 +12,5 @@ export interface KnowledgeNodeData {
   top_k_text_retrieval: number;
   query_variable_selector: any[];
   top_k_text_rerank: number;
+  variable_out: VariablesOut[];
 }

@@ -1,5 +1,5 @@
 import React, { Fragment, useMemo } from "react";
-import { Handle, NodeProps, Position } from "@xyflow/react";
+import { Handle, NodeProps, Position, useReactFlow } from "@xyflow/react";
 import { Box, useTheme } from "@mui/material";
 import { Variable } from "lucide-react";
 import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
@@ -14,14 +14,15 @@ import { createPortal } from "react-dom";
 import CommonStyles from "@/Components/CommonStyles";
 import { NodeDataVarAgg } from "./type";
 import NodeGroupItem from "./NodeGroupItem";
+import VarOutList from "../../misc/VarOutList";
 
 const WF_VariableAggregator = (props: NodeProps) => {
   //! State
-  const { id } = props;
+  const { id, selected } = props;
   const theme = useTheme();
   const { workflowId } = useParams();
   const save = useSave();
-
+  const { updateNode } = useReactFlow();
   const nodeData = props?.data as unknown as NodeDataVarAgg;
 
   const groupData = useMemo(() => {
@@ -41,12 +42,16 @@ const WF_VariableAggregator = (props: NodeProps) => {
   //! Function
 
   const handleClickNode = () => {
-    save(cachedKeys.NODE_EDITING, {
-      type: NodeTypeWorkflow.VARIABLE_AGGREGATOR,
-      id: id,
+    updateNode(id, {
+      selected: true,
     });
+    setTimeout(() => {
+      save(cachedKeys.NODE_EDITING, {
+        type: NodeTypeWorkflow.VARIABLE_AGGREGATOR,
+        id: id,
+      });
+    }, 0);
   };
-
   //! Render
   return (
     <Fragment>
@@ -55,38 +60,41 @@ const WF_VariableAggregator = (props: NodeProps) => {
           <CollapseArea
             sxContainer={{ marginTop: 0 }}
             label={
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                }}
-              >
+              <div className="flex flex-col gap-2">
                 <Box
                   sx={{
-                    width: "24px",
-                    height: "24px",
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: "8px",
-                    background: theme.palette.primary.main,
+                    gap: "8px",
                   }}
                 >
-                  <Variable className="w-3.5 h-3.5" color="#fff" />
+                  <Box
+                    sx={{
+                      width: "24px",
+                      height: "24px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: "8px",
+                      background: theme.palette.primary.main,
+                    }}
+                  >
+                    <Variable className="w-3.5 h-3.5" color="#fff" />
+                  </Box>
+                  <EditLabelNode nodeId={id} workflowId={workflowId} />
                 </Box>
-                <EditLabelNode nodeId={id} workflowId={workflowId} />
-              </Box>
+                {nodeData?.desc && (
+                  <CommonStyles.Typography className="px-4 opacity-60 my-2">
+                    {nodeData?.desc}
+                  </CommonStyles.Typography>
+                )}
+              </div>
             }
           >
             <NodeGroupItem data={groupData} />
-          </CollapseArea>
 
-          <div className="my-2 px-3 py-1 max-w-[500px]">
-            <CommonStyles.Typography>
-              {nodeData?.desc as string}
-            </CommonStyles.Typography>
-          </div>
+            <VarOutList nodeData={nodeData} />
+          </CollapseArea>
         </GradientBorder>
 
         <Handle
@@ -110,7 +118,7 @@ const WF_VariableAggregator = (props: NodeProps) => {
           }}
         />
       </div>
-      {createPortal(<WF_EditDrawer node={props} />, document.body)}
+      {selected && createPortal(<WF_EditDrawer node={props} />, document.body)}
     </Fragment>
   );
 };

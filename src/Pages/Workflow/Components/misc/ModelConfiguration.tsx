@@ -1,8 +1,8 @@
 import CustomizeSelectField from "@/Components/CommonFields/CustomizeSelectField";
 import { modelOptions } from "@/Constants/options";
-import { FastField } from "formik";
+import { Field } from "formik";
 import { Fragment, memo } from "react";
-import { ModelOption } from "./type";
+import { ModelOption } from "../CustomNodes/WF_LlmNode/type";
 import { DropdownMenuItem } from "@/Components/ui/dropdown-menu";
 import { Box, useTheme } from "@mui/material";
 import { Check } from "lucide-react";
@@ -111,7 +111,7 @@ const ModelConfiguration = ({ afterOnChange }: ModelConfigurationProps) => {
   };
 
   return (
-    <FastField
+    <Field
       name="model"
       component={CustomizeSelectField}
       options={modelOptions}

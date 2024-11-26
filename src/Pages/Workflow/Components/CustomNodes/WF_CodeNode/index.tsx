@@ -10,12 +10,22 @@ import { createPortal } from "react-dom";
 import { useSave } from "@/Stores/useStore";
 import cachedKeys from "@/Constants/cachedKeys";
 import { NodeTypeWorkflow } from "@/Types/workflow";
+import Editor from "./components/Editor";
+import VarOutList from "../../misc/VarOutList";
+import { NodeDataCode } from "./type";
 
 const WF_CodeNode = (props: NodeProps) => {
   //! State
   const theme = useTheme();
   const save = useSave();
   const { data, id,  } = props;
+
+  const handleid = useMemo(() => {
+    // return uuid();
+  }, []);
+
+  const nodeData = props.data as unknown as NodeDataCode;
+
   //! Function
   const handleClickNode = () => {
     save(cachedKeys.NODE_EDITING, {
@@ -53,12 +63,15 @@ const WF_CodeNode = (props: NodeProps) => {
               >
                 <Code className="w-3.5 h-3.5" color="#fff" />
               </Box>
-              <EditLabelNode
-                nodeId={props.id}
-              />
+              <EditLabelNode nodeId={props.id} />
             </Box>
           }
         >
+          <div className="px-2">
+            <Editor />
+          </div>
+
+          <VarOutList nodeData={nodeData} />
         </CollapseArea>
       </GradientBorder>
 

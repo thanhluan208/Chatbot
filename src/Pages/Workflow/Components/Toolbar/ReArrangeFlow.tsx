@@ -1,7 +1,9 @@
 import Layout from "@/Components/CommonIcons/Layout";
 import CommonStyles from "@/Components/CommonStyles";
 import { detectDiff } from "@/Helpers";
+import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
 import reactFlowService from "@/Services/reactFlowService";
+import { NodeTypeWorkflow } from "@/Types/workflow";
 import { CircularProgress } from "@mui/material";
 import { Node, useReactFlow } from "@xyflow/react";
 import dagre from "dagre";
@@ -16,11 +18,12 @@ const ReArrangeFlow = () => {
   //! State
   const [loading, setLoading] = useState(false);
   const { getNodes, getEdges, setNodes, setEdges, fitView } = useReactFlow();
-  const { botId } = useParams();
+  const { botId, workflowId } = useParams();
+  const { handleUpdateNodePosition } = useWorkflowMutate();
 
   //! Function
   const getLayoutedElements = (direction?: string) => {
-    if (loading || !botId) return;
+    if (loading || (!botId && !workflowId)) return;
     setLoading(true);
     try {
       const nodes = getNodes();
@@ -71,9 +74,15 @@ const ReArrangeFlow = () => {
           data: node.data,
           measured: node.measured,
         };
-        promise.push(
-          reactFlowService.updateFlow(botId, node.id, JSON.stringify(info))
-        );
+        if (botId) {
+          promise.push(
+            reactFlowService.updateFlow(botId, node.id, JSON.stringify(info))
+          );
+        }
+
+        if (workflowId) {
+          handleUpdateNodePosition(node.id, JSON.stringify(node.position), node?.type as NodeTypeWorkflow);
+        }
       }
 
       Promise.allSettled(promise).then((result) => {

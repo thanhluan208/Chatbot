@@ -1,7 +1,12 @@
 {
   "common": {
     "query_variable": "Query variable",
-    "add": "Add {{content}}"
+    "add": "Add {{content}}",
+    "variable_out": "Variable out"
+  },
+
+  "WF_ConditionNode": {
+    "else_description": "Used to define the logic that should be executed when the if condition is not met."
   },
 
   "WF_mutate_dialog": {
@@ -81,5 +86,20 @@
 
   "WF_Knowledge": {
     "knowledge": "knowledge"
+  },
+
+  "WF_ParamExtractor": {
+    "prompt_template": "Prompt template",
+    "outputs_instruction": "Outputs instruction"
+  },
+
+  "WF_QuestionClassifier": {
+    "classes": "Classes",
+    "add_class": "Add class",
+    "instruction": "Instruction"
+  },
+
+  "WF_AnswerNode": {
+    "answer": "Answer"
   }
 }

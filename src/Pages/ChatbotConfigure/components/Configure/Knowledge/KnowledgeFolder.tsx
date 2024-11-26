@@ -28,6 +28,7 @@ export interface IKnowledgeFolder {
   avatar: string;
   enableButton?: boolean;
   handleMutate?: (knowledgeFolderId: string) => void;
+  isAdded?: boolean;
 }
 
 const KnowledgeFolder = (props: IKnowledgeFolder) => {
@@ -45,6 +46,7 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
     avatar,
     enableButton,
     handleMutate,
+    isAdded
   } = props;
   const navigate = useNavigate();
   const theme = useTheme();
@@ -67,8 +69,10 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
       return true;
     }
 
+    if(isAdded) return true
+
     return false;
-  }, [botId, sharingWithBots]);
+  }, [botId, sharingWithBots, isAdded]);
 
   //! Function
   const handleAddKnowledgeToBot = async (

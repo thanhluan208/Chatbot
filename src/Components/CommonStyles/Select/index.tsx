@@ -67,7 +67,6 @@ const CommonSelect = (props: ISelect & SelectProps) => {
       <Select
         label=""
         value={value}
-        onChange={handleChange}
         sx={{
           padding: "8px 16px",
 
@@ -98,11 +97,10 @@ const CommonSelect = (props: ISelect & SelectProps) => {
             return renderOption(op);
           }
           return (
-            <div>
+            <div key={op?.value}>
               {op?.group && <ListSubheader>{op?.group}</ListSubheader>}
               <MenuItem
                 value={op?.value}
-                key={op?.value}
                 onClick={() => {
                   handleChange && handleChange(op.value);
                 }}

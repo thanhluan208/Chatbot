@@ -12,6 +12,7 @@ import { NodeDataVarAgg } from "./type";
 import DescriptionInput from "../../DescriptionInput";
 import ListAssignVars from "./ListAssignVars";
 import ListGroup from "./ListGroup";
+import VarOutList from "../../misc/VarOutList";
 
 interface VarAggNodeDrawerProps {
   node?: NodeProps;
@@ -29,8 +30,9 @@ const VarAggNodeDrawer = ({ node }: VarAggNodeDrawerProps) => {
 
   const nodeData = node?.data as unknown as NodeDataVarAgg;
 
-
-  const handleUpdate = () => {};
+  const handleUpdate = (payload: Partial<NodeDataVarAgg>) => {
+    handleUpdateNodeDataVarAgg(node?.id, payload);
+  };
 
   const handleChangeGroupEnable = (_: any, checked: boolean) => {
     handleUpdateNodeDataVarAgg(node.id, {
@@ -76,7 +78,9 @@ const VarAggNodeDrawer = ({ node }: VarAggNodeDrawerProps) => {
           </CommonStyles.Button>
         </div>
         <DescriptionInput value={nodeData.desc} handleUpdate={handleUpdate} />
+      </div>
 
+      <div className="px-6 my-3">
         <div className="flex items-center space-x-2 mt-4">
           <label htmlFor="group_enable">
             <CommonStyles.Typography type="semiBold16">
@@ -91,11 +95,24 @@ const VarAggNodeDrawer = ({ node }: VarAggNodeDrawerProps) => {
           />
         </div>
         <div>
-          {nodeData?.advanced_settings?.group_enabled ?  <ListGroup nodeId={node?.id} groups={nodeData?.advanced_settings?.groups}/>: <ListAssignVars output_type={nodeData?.output_type} variables={nodeData?.variables} nodeId={node?.id}/> }
+          {nodeData?.advanced_settings?.group_enabled ? (
+            <ListGroup
+              nodeId={node?.id}
+              groups={nodeData?.advanced_settings?.groups}
+            />
+          ) : (
+            <ListAssignVars
+              output_type={nodeData?.output_type}
+              variables={nodeData?.variables}
+              nodeId={node?.id}
+            />
+          )}
         </div>
       </div>
-
-      <div className="px-6"></div>
+      <hr className="my-2 mx-4 opacity-20" /> 
+      <div className="px-3">
+        <VarOutList nodeData={nodeData} />
+      </div>
     </div>
   );
 };

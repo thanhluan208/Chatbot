@@ -208,3 +208,8 @@ button:focus-visible {
     @apply bg-background text-foreground;
   }
 }
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

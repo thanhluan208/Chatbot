@@ -34,6 +34,7 @@ import { toast } from "react-toastify";
 import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
 import { useQueryClient } from "react-query";
 import queryKey from "@/Constants/queryKey";
+import { AddEdgePayload, NodeTypeWorkflow } from "@/Types/workflow";
 
 const edgeTypes = {
   animatedSvg: AnimatedSVGEdge,
@@ -60,7 +61,7 @@ export default function FlowChart(props: IFlowChart) {
     (initNodes as Node[]) ?? []
   );
   const [edges, setEdges, onEdgesChange] = useEdgesState([] as Edge[]);
-  const { screenToFlowPosition, updateNode, getNodes, getEdges } =
+  const { screenToFlowPosition, updateNode, getNodes, getEdges, getNode } =
     useReactFlow();
   const save = useSave();
   const theme = useTheme();
@@ -114,24 +115,33 @@ export default function FlowChart(props: IFlowChart) {
           }
 
           if (workflowId && userId) {
-            handleAddEdge.mutate(
-              {
-                user_id: userId,
-                workflow_id: workflowId,
-                src_node_id: newConnection.source,
-                dest_node_id: newConnection.target,
-              },
-              {
-                onSuccess: (response) => {
-                  if (response.status_code !== 200) {
-                    onFailed();
-                  }
-                },
-                onError: () => {
+            const sourceNode = getNode(newConnection.source);
+            const hasSourceHandle =
+              sourceNode?.type ===
+                `customNode_WF_${NodeTypeWorkflow.IF_ELSE}` ||
+              sourceNode?.type ===
+                `customNode_WF_${NodeTypeWorkflow.QUESTION_CLASSIFIER}`;
+
+            const payload: AddEdgePayload = {
+              user_id: userId,
+              workflow_id: workflowId,
+              src_node_id: newConnection.source,
+              dest_node_id: newConnection.target,
+            };
+
+            if (hasSourceHandle && newConnection.sourceHandle) {
+              payload.source_handle = newConnection.sourceHandle;
+            }
+            handleAddEdge.mutate(payload, {
+              onSuccess: (response) => {
+                if (response.status_code !== 200) {
                   onFailed();
-                },
-              }
-            );
+                }
+              },
+              onError: () => {
+                onFailed();
+              },
+            });
 
             handleRemoveEdge.mutate(
               {
@@ -266,27 +276,36 @@ export default function FlowChart(props: IFlowChart) {
       }
 
       if (workflowId && userId) {
-        handleAddEdge.mutate(
-          {
-            user_id: userId,
-            workflow_id: workflowId,
-            src_node_id: connection.source,
-            dest_node_id: connection.target,
-          },
-          {
-            onSuccess: (response) => {
-              if (response.status_code !== 200) {
-                onFailed();
-              }
-              queryClient.invalidateQueries({
-                queryKey: [queryKey.WORKFLOW_VAR_SELECTOR],
-              });
-            },
-            onError: () => {
+        const sourceNode = getNode(connection.source);
+        const hasSourceHandle =
+          sourceNode?.type === `customNode_WF_${NodeTypeWorkflow.IF_ELSE}` ||
+          sourceNode?.type ===
+            `customNode_WF_${NodeTypeWorkflow.QUESTION_CLASSIFIER}`;
+
+        const payload: AddEdgePayload = {
+          user_id: userId,
+          workflow_id: workflowId,
+          src_node_id: connection.source,
+          dest_node_id: connection.target,
+        };
+
+        if (hasSourceHandle && connection.sourceHandle) {
+          payload.source_handle = connection.sourceHandle;
+        }
+
+        handleAddEdge.mutate(payload, {
+          onSuccess: (response) => {
+            if (response.status_code !== 200) {
               onFailed();
-            },
-          }
-        );
+            }
+            queryClient.invalidateQueries({
+              queryKey: [queryKey.WORKFLOW_VAR_SELECTOR],
+            });
+          },
+          onError: () => {
+            onFailed();
+          },
+        });
       }
 
       return setEdges((eds: any) => {
@@ -307,8 +326,10 @@ export default function FlowChart(props: IFlowChart) {
       });
     },
 
-    [setEdges]
+    [setEdges, getNode, props.botId, workflowId, userId]
   );
+
+  console.log('asdasd', edges)
 
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -378,8 +399,8 @@ export default function FlowChart(props: IFlowChart) {
             onSuccess: (res) => {
               onSuccess(res.data.node_id, {
                 ...res.data?.node_data?.data,
-                variables_out: res?.data?.variables_out,
-                label: res.data.node_id
+                variable_out: res?.data?.node_data?.variables_out,
+                label: res.data.node_id,
               });
             },
             onError: onFailed,
