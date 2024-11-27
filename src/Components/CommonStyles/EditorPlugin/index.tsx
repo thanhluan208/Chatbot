@@ -58,7 +58,7 @@ const PromptEditor: FC<PromptEditorProps> = ({
   onBlur,
   onFocus,
   workflowVariableBlock,
-  nodeId
+  nodeId,
 }) => {
   const initialConfig = {
     namespace: "prompt-editor",
@@ -86,9 +86,6 @@ const PromptEditor: FC<PromptEditorProps> = ({
     });
     if (onChange) onChange(text);
   };
-
-
-  
 
   return (
     <LexicalComposer initialConfig={{ ...initialConfig, editable }}>
@@ -122,7 +119,6 @@ const PromptEditor: FC<PromptEditorProps> = ({
           nodeId={nodeId}
         />
 
-        
         {workflowVariableBlock?.show && (
           <>
             <WorkflowVariableBlock {...workflowVariableBlock} />

@@ -65,6 +65,11 @@ const listNode = [
     label: "Answer",
     description: "Answer node",
   },
+  {
+    name: `customNode_WF_${NodeTypeWorkflow.HTTP_REQUEST}`,
+    label: "HTTP request",
+    description: "HTTP request node",
+  },
 ];
 
 const WorkflowDetail = () => {

@@ -25,6 +25,7 @@ const VarOutList = ({ nodeData }: { nodeData: any }) => {
                 className="px-3 py-3"
                 style={{
                   background: theme.colors.custom.background,
+                  borderRight: `1px solid ${theme.colors.custom.borderColor}`
                 }}
               >
                 <CommonStyles.Typography type="semiBold16">

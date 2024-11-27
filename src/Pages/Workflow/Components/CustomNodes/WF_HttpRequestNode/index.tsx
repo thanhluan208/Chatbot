@@ -1,7 +1,7 @@
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment } from "react";
 import { Handle, NodeProps, Position, useReactFlow } from "@xyflow/react";
 import { Box, useTheme } from "@mui/material";
-import { Equal } from "lucide-react";
+import { RadioTower } from "lucide-react";
 import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
 import CollapseArea from "@/Components/CommonStyles/CollapseArea";
 import GradientBorder from "../../GradientBorder";
@@ -14,10 +14,9 @@ import { createPortal } from "react-dom";
 import CommonStyles from "@/Components/CommonStyles";
 import VarOutList from "../../misc/VarOutList";
 import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
-import { NodeDataVariable } from "./type";
-import { cloneDeep } from "lodash";
+import { NodeDataHTTPRequest } from "./type";
 
-const WF_QuestClassifier = (props: NodeProps) => {
+const WF_HttpRequestNode = (props: NodeProps) => {
   //! State
   const { id, selected } = props;
   const theme = useTheme();
@@ -26,21 +25,7 @@ const WF_QuestClassifier = (props: NodeProps) => {
   const { updateNode } = useReactFlow();
   const {} = useWorkflowMutate();
 
-  const nodeData = props.data as unknown as NodeDataVariable;
-
-  const nodeDataWithVariableOut = useMemo(() => {
-    if (!nodeData) return;
-    console.log("node", nodeData);
-    return {
-      ...nodeData,
-      variable_out: cloneDeep(nodeData?.variable_out).map((elm) => {
-        return {
-          ...elm,
-          variable: nodeData?.variable,
-        };
-      }),
-    };
-  }, [nodeData]);
+  const nodeData = props.data as unknown as NodeDataHTTPRequest;
 
   //! Function
 
@@ -50,7 +35,7 @@ const WF_QuestClassifier = (props: NodeProps) => {
     });
     setTimeout(() => {
       save(cachedKeys.NODE_EDITING, {
-        type: NodeTypeWorkflow.VARIABLE,
+        type: NodeTypeWorkflow.HTTP_REQUEST,
         id: id,
       });
     }, 0);
@@ -83,7 +68,7 @@ const WF_QuestClassifier = (props: NodeProps) => {
                       background: theme.palette.primary.main,
                     }}
                   >
-                    <Equal className="w-3.5 h-3.5" color="#fff" />
+                    <RadioTower className="w-3.5 h-3.5" color="#fff" />
                   </Box>
                   <EditLabelNode nodeId={id} workflowId={workflowId} />
                 </Box>
@@ -95,7 +80,7 @@ const WF_QuestClassifier = (props: NodeProps) => {
               </div>
             }
           >
-            <VarOutList nodeData={nodeDataWithVariableOut} />
+            <VarOutList nodeData={nodeData} />
           </CollapseArea>
         </GradientBorder>
 
@@ -115,4 +100,4 @@ const WF_QuestClassifier = (props: NodeProps) => {
   );
 };
 
-export default React.memo(WF_QuestClassifier);
+export default React.memo(WF_HttpRequestNode);
