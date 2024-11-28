@@ -1,7 +1,7 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useMemo } from "react";
 import { Handle, NodeProps, Position, useReactFlow } from "@xyflow/react";
 import { Box, useTheme } from "@mui/material";
-import { Shapes } from "lucide-react";
+import { Equal } from "lucide-react";
 import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
 import CollapseArea from "@/Components/CommonStyles/CollapseArea";
 import GradientBorder from "../../GradientBorder";
@@ -14,6 +14,8 @@ import { createPortal } from "react-dom";
 import CommonStyles from "@/Components/CommonStyles";
 import VarOutList from "../../misc/VarOutList";
 import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
+import { NodeDataVariable } from "./type";
+import { cloneDeep } from "lodash";
 
 const WF_QuestClassifier = (props: NodeProps) => {
   //! State
@@ -24,7 +26,21 @@ const WF_QuestClassifier = (props: NodeProps) => {
   const { updateNode } = useReactFlow();
   const {} = useWorkflowMutate();
 
-  const nodeData = props.data as unknown as any;
+  const nodeData = props.data as unknown as NodeDataVariable;
+
+  const nodeDataWithVariableOut = useMemo(() => {
+    if (!nodeData) return;
+    console.log("node", nodeData);
+    return {
+      ...nodeData,
+      variable_out: cloneDeep(nodeData?.variable_out).map((elm) => {
+        return {
+          ...elm,
+          variable: nodeData?.variable,
+        };
+      }),
+    };
+  }, [nodeData]);
 
   //! Function
 
@@ -67,7 +83,7 @@ const WF_QuestClassifier = (props: NodeProps) => {
                       background: theme.palette.primary.main,
                     }}
                   >
-                    <Shapes className="w-3.5 h-3.5" color="#fff" />
+                    <Equal className="w-3.5 h-3.5" color="#fff" />
                   </Box>
                   <EditLabelNode nodeId={id} workflowId={workflowId} />
                 </Box>
@@ -79,7 +95,7 @@ const WF_QuestClassifier = (props: NodeProps) => {
               </div>
             }
           >
-            <VarOutList nodeData={nodeData} />
+            <VarOutList nodeData={nodeDataWithVariableOut} />
           </CollapseArea>
         </GradientBorder>
 

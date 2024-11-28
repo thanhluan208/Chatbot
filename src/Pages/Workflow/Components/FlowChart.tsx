@@ -329,7 +329,6 @@ export default function FlowChart(props: IFlowChart) {
     [setEdges, getNode, props.botId, workflowId, userId]
   );
 
-  console.log('asdasd', edges)
 
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();

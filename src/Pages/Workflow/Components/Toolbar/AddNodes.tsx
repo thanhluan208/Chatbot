@@ -37,6 +37,7 @@ import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
 import WF_QuestClassifier from "../CustomNodes/WF_QuestClassifier";
 import WF_VarAssigner from "../CustomNodes/WF_VarAssigner";
 import WF_AnswerNode from "../CustomNodes/WF_AnswerNode";
+import WF_HttpRequestNode from "../CustomNodes/WF_HttpRequestNode";
 
 export enum NodeTypes {
   startNode = "customNode_startNode",
@@ -66,6 +67,7 @@ export const nodeTypes = {
   [`customNode_WF_${NodeTypeWorkflow.QUESTION_CLASSIFIER}`]: WF_QuestClassifier,
   [`customNode_WF_${NodeTypeWorkflow.VARIABLE}`]: WF_VarAssigner,
   [`customNode_WF_${NodeTypeWorkflow.ANSWER}`]: WF_AnswerNode,
+  [`customNode_WF_${NodeTypeWorkflow.HTTP_REQUEST}`]: WF_HttpRequestNode,
 };
 
 export enum CustomNodeTypes {

@@ -1,6 +1,11 @@
 import { NodeOutPutVar } from "@/Components/CommonStyles/EditorPlugin/type";
 import { Node } from "@xyflow/react";
-import { useMemo, useRef } from "react";
+import {
+  ComponentPropsWithoutRef,
+  memo,
+  useMemo,
+  useRef,
+} from "react";
 import Editor from "../CustomNodes/WF_LlmNode/Editor";
 import useGetVariableSelectors from "@/Hooks/workflow/useGetVariableSelectors";
 import { useTheme } from "@mui/material";
@@ -10,6 +15,8 @@ interface EditorPromtptProps {
   value: string;
   handleChangeEditor: (nodeId: string, payload: string) => void;
   id: string;
+  error?: boolean;
+  placeholder?: string;
 }
 
 const EditorPrompt = ({
@@ -17,7 +24,10 @@ const EditorPrompt = ({
   nodeId,
   value,
   handleChangeEditor,
-}: EditorPromtptProps) => {
+  error,
+  className,
+  placeholder,
+}: EditorPromtptProps & ComponentPropsWithoutRef<"div">) => {
   const theme = useTheme();
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -79,17 +89,24 @@ const EditorPrompt = ({
       clearTimeout(debounceRef.current);
     }
 
-    debounceRef.current = setTimeout(() => {
-      value = promptValue;
-      handleChangeEditor(nodeId, promptValue);
-    }, 1500);
+    const isSelecting = promptValue[promptValue.length - 1] === "/";
+
+    debounceRef.current = setTimeout(
+      () => {
+        value = promptValue;
+        handleChangeEditor(nodeId, promptValue);
+      },
+      isSelecting ? 1500 : 300
+    );
   };
 
   return (
     <div
-      className="px-2 py-1 mt-3 rounded-lg"
+      className="px-2 py-1 mt-2 rounded-lg"
       style={{
-        border: `1px solid ${theme.colors.custom.borderColor}`,
+        border: `1px solid ${
+          error ? theme.palette.error.main : theme.colors.custom.borderColor
+        }`,
         background: theme.colors.custom.backgroundCard,
       }}
     >
@@ -100,9 +117,11 @@ const EditorPrompt = ({
         varList={varList}
         workflowNodesMap={workflowNodesMap}
         handleChangeEditor={onChangeEditor}
+        className={className}
+        placeholder={placeholder}
       />
     </div>
   );
 };
 
-export default EditorPrompt;
+export default memo(EditorPrompt);
