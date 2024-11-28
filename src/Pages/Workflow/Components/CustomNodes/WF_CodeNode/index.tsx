@@ -28,17 +28,7 @@ const WF_CodeNode = (props: NodeProps) => {
 
   const nodeData = props.data as unknown as CodeNodeData;
 
-  const nodeData = props.data as unknown as NodeDataCode;
-
   //! Function
-  const handleClickNode = () => {
-    save(cachedKeys.NODE_EDITING, {
-      type: NodeTypeWorkflow.CODE,
-      id: id,
-    });
-  };
-
-
   const handleClickNode = () => {
     updateNode(id, {
       selected: true,
@@ -83,9 +73,9 @@ const WF_CodeNode = (props: NodeProps) => {
               </Box>
             }
           >
-            <div className="px-2">
+            {/* <div className="px-2">
               <Editor />
-            </div>
+            </div> */}
 
             <VarOutList nodeData={nodeData} />
           </CollapseArea>
