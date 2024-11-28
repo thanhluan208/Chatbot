@@ -1,4 +1,8 @@
 import queryKey from "@/Constants/queryKey";
+import { NodeDataAnswer } from "@/Pages/Workflow/Components/CustomNodes/WF_AnswerNode/type";
+import { CodeNodeData } from "@/Pages/Workflow/Components/CustomNodes/WF_CodeNode/type";
+import { ConditionNodeData } from "@/Pages/Workflow/Components/CustomNodes/WF_ConditionNode/type";
+import { NodeDataHTTPRequest } from "@/Pages/Workflow/Components/CustomNodes/WF_HttpRequestNode/type";
 import { KnowledgeNodeData } from "@/Pages/Workflow/Components/CustomNodes/WF_Knowledge/type";
 import { LlmNodeData } from "@/Pages/Workflow/Components/CustomNodes/WF_LlmNode/type";
 import { NodeDataVarAgg } from "@/Pages/Workflow/Components/CustomNodes/WF_VariableAggregator/type";
@@ -106,6 +110,38 @@ export default function useWorkflowMutate() {
       };
 
       handleUpdateNodeData.mutate(payload);
+      switch (nodeType) {
+        case NodeTypeWorkflow.IF_ELSE:
+          handleUpdateNodeDataCondition(nodeId, payload);
+          break;
+        case NodeTypeWorkflow.KNOWLEDGE_RETRIEVAL:
+          handleUpdateNodeDataKnowledge(nodeId, payload);
+          break;
+        case NodeTypeWorkflow.LLM:
+          handleUpdateNodeDataLLM(nodeId, payload);
+          break;
+        case NodeTypeWorkflow.VARIABLE_AGGREGATOR:
+          handleUpdateNodeDataVarAgg(nodeId, payload);
+          break;
+        case NodeTypeWorkflow.PARAMETER_EXTRACTOR:
+          handleUpdateNodeDataParamExtractor(nodeId, payload);
+          break;
+        case NodeTypeWorkflow.QUESTION_CLASSIFIER:
+          handleUpdateNodeDataQuestClassifier(nodeId, payload);
+          break;
+        case NodeTypeWorkflow.ANSWER:
+          handleUpdateNodeDataAnswer(nodeId, payload);
+          break;
+        case NodeTypeWorkflow.VARIABLE:
+          handleUpdateNodeDataVariable(nodeId, payload);
+          break;
+        case NodeTypeWorkflow.HTTP_REQUEST:
+          handleUpdateNodeDataHttpRequest(nodeId, payload);
+          break;
+        case NodeTypeWorkflow.CODE:
+          handleUpdateCodeNodeData(nodeId, payload);
+          break;
+      }
     },
     [workflowId, userId, updateNode, getNode]
   );
@@ -274,6 +310,471 @@ export default function useWorkflowMutate() {
     [workflowId, userId, updateNode, getNode]
   );
 
+  //! WF_ConditionNode
+  const handleUpdateNodeDataCondition = useCallback(
+    (
+      nodeId: string,
+      payload: Partial<ConditionNodeData>,
+      onSuccess?: () => void,
+      onFailed?: () => void
+    ) => {
+      if (!workflowId || !userId || !nodeId) return;
+
+      const nodeData = getNode(nodeId)?.data as unknown as ConditionNodeData;
+
+      const updatePayload: Partial<ConditionNodeData> = {
+        name: nodeId,
+        desc: nodeData.desc,
+        position: nodeData.position,
+        cases: nodeData?.cases,
+        ...payload,
+      };
+
+      const handleFailed = () => {
+        onFailed && onFailed();
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+          },
+        });
+      };
+
+      updateNode &&
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+            ...updatePayload,
+          },
+        });
+
+      handleUpdateNodeData.mutate(
+        {
+          workflow_id: workflowId,
+          user_id: userId,
+          node_id: nodeId,
+          node_data: updatePayload,
+        },
+        {
+          onSuccess: (response) => {
+            if (response?.status_code !== 200) {
+              toast.error(response?.message);
+              handleFailed();
+            }
+            onSuccess && onSuccess();
+          },
+          onError: () => {
+            handleFailed();
+          },
+        }
+      );
+    },
+    [workflowId, userId, updateNode, getNode]
+  );
+
+  //! WF_ParamExtractor
+  const handleUpdateNodeDataParamExtractor = useCallback(
+    (
+      nodeId: string,
+      payload: Partial<NodeDataParamExtractor>,
+      onSuccess?: () => void,
+      onFailed?: () => void
+    ) => {
+      if (!workflowId || !userId || !nodeId) return;
+
+      const nodeData = getNode(nodeId)
+        ?.data as unknown as NodeDataParamExtractor;
+
+      const updatePayload: Partial<NodeDataParamExtractor> = {
+        name: nodeId,
+        desc: nodeData.desc,
+        position: nodeData.position,
+        outputs_instruction: nodeData.outputs_instruction,
+        prompt_template: nodeData.prompt_template,
+        outputs: nodeData.outputs,
+        ...payload,
+        model: {
+          ...nodeData.model,
+          ...payload?.model,
+        },
+      };
+
+      const handleFailed = () => {
+        onFailed && onFailed();
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+          },
+        });
+      };
+
+      updateNode &&
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+            ...updatePayload,
+          },
+        });
+
+      handleUpdateNodeData.mutate(
+        {
+          workflow_id: workflowId,
+          user_id: userId,
+          node_id: nodeId,
+          node_data: updatePayload,
+        },
+        {
+          onSuccess: (response) => {
+            if (response?.status_code !== 200) {
+              toast.error(response?.message);
+              handleFailed();
+            }
+            onSuccess && onSuccess();
+          },
+          onError: () => {
+            handleFailed();
+          },
+        }
+      );
+    },
+    [workflowId, userId, updateNode, getNode]
+  );
+
+  //! WF_QuestionClassifier
+  const handleUpdateNodeDataQuestClassifier = useCallback(
+    (
+      nodeId: string,
+      payload: Partial<NodeDataQuestClassifier>,
+      onSuccess?: () => void,
+      onFailed?: () => void
+    ) => {
+      if (!workflowId || !userId || !nodeId) return;
+
+      const nodeData = getNode(nodeId)
+        ?.data as unknown as NodeDataQuestClassifier;
+
+      const updatePayload: Partial<NodeDataQuestClassifier> = {
+        name: nodeId,
+        desc: nodeData.desc,
+        position: nodeData.position,
+        query_variable_selector: nodeData.query_variable_selector,
+        memory: nodeData.memory,
+        classes: nodeData.classes,
+        instruction: nodeData.instruction,
+        ...payload,
+        model: {
+          ...nodeData.model,
+          ...payload?.model,
+        },
+      };
+
+      const handleFailed = () => {
+        onFailed && onFailed();
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+          },
+        });
+      };
+
+      updateNode &&
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+            ...updatePayload,
+          },
+        });
+
+      handleUpdateNodeData.mutate(
+        {
+          workflow_id: workflowId,
+          user_id: userId,
+          node_id: nodeId,
+          node_data: updatePayload,
+        },
+        {
+          onSuccess: (response) => {
+            if (response?.status_code !== 200) {
+              toast.error(response?.message);
+              handleFailed();
+            }
+            onSuccess && onSuccess();
+          },
+          onError: () => {
+            handleFailed();
+          },
+        }
+      );
+    },
+    [workflowId, userId, updateNode, getNode]
+  );
+
+  //! WF_AnswerNode
+  const handleUpdateNodeDataAnswer = useCallback(
+    (
+      nodeId: string,
+      payload: Partial<NodeDataAnswer>,
+      onSuccess?: () => void,
+      onFailed?: () => void
+    ) => {
+      if (!workflowId || !userId || !nodeId) return;
+
+      const nodeData = getNode(nodeId)?.data as unknown as NodeDataAnswer;
+
+      const updatePayload: Partial<NodeDataAnswer> = {
+        name: nodeId,
+        desc: nodeData.desc,
+        position: nodeData.position,
+        answer: nodeData?.answer,
+        ...payload,
+      };
+
+      const handleFailed = () => {
+        onFailed && onFailed();
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+          },
+        });
+      };
+
+      updateNode &&
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+            ...updatePayload,
+          },
+        });
+
+      handleUpdateNodeData.mutate(
+        {
+          workflow_id: workflowId,
+          user_id: userId,
+          node_id: nodeId,
+          node_data: updatePayload,
+        },
+        {
+          onSuccess: (response) => {
+            if (response?.status_code !== 200) {
+              toast.error(response?.message);
+              handleFailed();
+            }
+            onSuccess && onSuccess();
+          },
+          onError: () => {
+            handleFailed();
+          },
+        }
+      );
+    },
+    [workflowId, userId, updateNode, getNode]
+  );
+
+  //! WF_VariableNode
+  const handleUpdateNodeDataVariable = useCallback(
+    (
+      nodeId: string,
+      payload: Partial<NodeDataVariable>,
+      onSuccess?: () => void,
+      onFailed?: () => void
+    ) => {
+      if (!workflowId || !userId || !nodeId) return;
+
+      const nodeData = getNode(nodeId)?.data as unknown as NodeDataVariable;
+
+      const updatePayload: Partial<NodeDataVariable> = {
+        name: nodeId,
+        desc: nodeData.desc,
+        position: nodeData.position,
+        value: nodeData?.value,
+        variable: nodeData?.variable,
+        ...payload,
+      };
+
+      const handleFailed = () => {
+        onFailed && onFailed();
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+          },
+        });
+      };
+
+      updateNode &&
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+            ...updatePayload,
+          },
+        });
+
+      handleUpdateNodeData.mutate(
+        {
+          workflow_id: workflowId,
+          user_id: userId,
+          node_id: nodeId,
+          node_data: updatePayload,
+        },
+        {
+          onSuccess: (response) => {
+            if (response?.status_code !== 200) {
+              toast.error(response?.message);
+              handleFailed();
+            }
+            onSuccess && onSuccess();
+          },
+          onError: () => {
+            handleFailed();
+          },
+        }
+      );
+    },
+    [workflowId, userId, updateNode, getNode]
+  );
+
+  //! WF_HTTPNode
+  const handleUpdateNodeDataHttpRequest = useCallback(
+    (
+      nodeId: string,
+      payload: Partial<NodeDataHTTPRequest>,
+      onSuccess?: () => void,
+      onFailed?: () => void
+    ) => {
+      if (!workflowId || !userId || !nodeId) return;
+
+      const nodeData = getNode(nodeId)?.data as unknown as NodeDataHTTPRequest;
+      const { authorization, body, timeout, ...rest } = payload;
+      const { config } = authorization || {};
+
+      const updatePayload: Partial<NodeDataHTTPRequest> = {
+        name: nodeId,
+        desc: nodeData.desc,
+        position: nodeData.position,
+        authorization: {
+          ...nodeData?.authorization,
+          ...authorization,
+          config: {
+            ...nodeData?.authorization?.config,
+            ...config,
+          },
+        },
+        body: {
+          ...nodeData?.body,
+          ...body,
+        },
+        timeout: {
+          ...nodeData?.timeout,
+          ...timeout,
+        },
+        headers: nodeData?.headers,
+        method: nodeData?.method,
+        url: nodeData?.url,
+        params: nodeData?.params,
+        ...rest,
+      };
+
+      const handleFailed = () => {
+        onFailed && onFailed();
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+          },
+        });
+      };
+
+      updateNode &&
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+            ...updatePayload,
+          },
+        });
+
+      handleUpdateNodeData.mutate(
+        {
+          workflow_id: workflowId,
+          user_id: userId,
+          node_id: nodeId,
+          node_data: updatePayload,
+        },
+        {
+          onSuccess: (response) => {
+            if (response?.status_code !== 200) {
+              toast.error(response?.message);
+              handleFailed();
+            }
+            onSuccess && onSuccess();
+          },
+          onError: () => {
+            handleFailed();
+          },
+        }
+      );
+    },
+    [workflowId, userId, updateNode, getNode]
+  );
+
+  //! WF_CodeNode
+  const handleUpdateCodeNodeData = useCallback(
+    (
+      nodeId: string,
+      payload: Partial<CodeNodeData>,
+      onSuccess?: () => void,
+      onFailed?: () => void
+    ) => {
+      if (!workflowId || !userId || !nodeId) return;
+
+      const nodeData = getNode(nodeId)?.data as unknown as CodeNodeData;
+
+      const updatePayload: Partial<CodeNodeData> = {
+        name: nodeId,
+        desc: nodeData.desc,
+        position: nodeData.position,
+        ...payload,
+        variables: {
+          ...nodeData.variables,
+          ...payload?.variables
+        },
+        code_language: nodeData.code_language,
+        code: nodeData.code,
+        outputs: {
+          ...nodeData.outputs,
+          ...payload?.outputs
+        },
+      };
+
+      updateNode &&
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+            ...updatePayload,
+          },
+        });
+
+      handleUpdateNodeData.mutate(
+        {
+          workflow_id: workflowId,
+          user_id: userId,
+          node_id: nodeId,
+          node_data: updatePayload,
+        },
+        {
+          onSuccess: (response) => {
+            if (response?.status_code !== 200) {
+              toast.error(response?.message);
+              onFailed && onFailed();
+            }
+
+            onSuccess && onSuccess();
+          },
+          onError: () => {
+            onFailed && onFailed();
+          },
+        }
+      );
+    },
+    [workflowId, userId]
+  );
+
   return {
     handleCreateWorkflow,
     handleDeleteWorkflow,
@@ -284,6 +785,13 @@ export default function useWorkflowMutate() {
     handleUpdateNodeDataLLM,
     handleUpdateNodeDataVarAgg,
     handleUpdateNodePosition,
-    handleUpdateNodeDataKnowledge
+    handleUpdateNodeDataKnowledge,
+    handleUpdateNodeDataCondition,
+    handleUpdateNodeDataParamExtractor,
+    handleUpdateNodeDataQuestClassifier,
+    handleUpdateNodeDataAnswer,
+    handleUpdateNodeDataVariable,
+    handleUpdateNodeDataHttpRequest,
+    handleUpdateCodeNodeData,
   };
 }

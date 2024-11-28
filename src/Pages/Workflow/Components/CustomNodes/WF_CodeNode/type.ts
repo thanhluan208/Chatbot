@@ -1,12 +1,14 @@
 export interface CodeNodeData {
-    name?: string;
-    title?: string;
-    type: string;
-    desc: string;
-    position: string;
-    input: CodeNodeInput[];
-    code: CodeNodeCode;
-    output: CodeNodeOutput[]
+  name?: string;
+  type: string;
+  title: string;
+  desc: string;
+  iteration_id?: string;
+  position: string;
+  variables: Variable[];
+  code_language: string;
+  outputs: Outputs;
+  code: string;
 }
 
 export interface CodeNodeInput{

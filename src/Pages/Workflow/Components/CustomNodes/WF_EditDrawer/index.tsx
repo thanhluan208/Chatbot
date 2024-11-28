@@ -8,6 +8,13 @@ import VarAggNodeDrawer from "../WF_VariableAggregator/VarAggNodeDrawer";
 import { useCallback } from "react";
 import CodeNodeDrawer from "../WF_CodeNode/components/CodeNodeDrawer";
 import KnowledgeNodeDrawer from "../WF_Knowledge/KnowledgeNodeDrawer";
+import ConditionNodeDrawer from "../WF_ConditionNode/ConditionNodeDrawer";
+import ParamExtractorDrawer from "../WF_ParamExtractor/ParamExtractorDrawer";
+import QuestClassifierNodeDrawer from "../WF_QuestClassifier/QuestClassifierNodeDrawer";
+import AnswerNodeDrawer from "../WF_AnswerNode/AnswerNodeDrawer";
+import VariableAssignerNodeDrawer from "../WF_VarAssigner/VariableAssignerNodeDrawer";
+import HTTPNodeDrawer from "../WF_HttpRequestNode/HTTPNodeDrawer";
+import CodeNodeDrawer from "../WF_CodeNode/components/CodeNodeDrawer";
 
 interface WF_EditDrawerProps {
   node: NodeProps;
@@ -35,6 +42,20 @@ export default function WF_EditDrawer({ node }: WF_EditDrawerProps) {
         return <CodeNodeDrawer node={node} />;
       case NodeTypeWorkflow.KNOWLEDGE_RETRIEVAL:
         return <KnowledgeNodeDrawer node={node} />;
+      case NodeTypeWorkflow.IF_ELSE:
+        return <ConditionNodeDrawer node={node} />;
+      case NodeTypeWorkflow.PARAMETER_EXTRACTOR:
+        return <ParamExtractorDrawer node={node} />;
+      case NodeTypeWorkflow.QUESTION_CLASSIFIER:
+        return <QuestClassifierNodeDrawer node={node} />;
+      case NodeTypeWorkflow.ANSWER:
+        return <AnswerNodeDrawer node={node} />;
+      case NodeTypeWorkflow.VARIABLE:
+        return <VariableAssignerNodeDrawer node={node} />;
+      case NodeTypeWorkflow.HTTP_REQUEST:
+        return <HTTPNodeDrawer node={node} />;
+        case NodeTypeWorkflow.CODE:
+        return <CodeNodeDrawer node={node} />;
       default:
         return null;
     }

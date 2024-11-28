@@ -1,20 +1,18 @@
-import { Box, useTheme } from "@mui/material";
-import { Code, FilePenLine, X } from "lucide-react";
+import { NodeProps, useReactFlow } from "@xyflow/react";
+import { useTheme } from "@mui/material";
+import { Code, X } from "lucide-react";
 import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
 import CommonStyles from "@/Components/CommonStyles";
-import DescriptionInput from "../../../DescriptionInput";
-import { NodeProps } from "@xyflow/react";
 import { useParams } from "react-router-dom";
-import { useSave } from "@/Stores/useStore";
 import cachedKeys from "@/Constants/cachedKeys";
-import { Form, Formik } from "formik";
-import CollapseArea from "@/Components/CommonStyles/CollapseArea";
-import { CodeNodeCode, CodeNodeData, CodeNodeInput, CodeNodeLanguage, CodeNodeOutput, OutputDataType, ParamType } from "../type";
-import { useMemo, useState } from "react";
-import Hint from "@/Pages/ChatbotConfigure/components/GenerateDiversity/components/Hint";
-import Editor from "./Editor";
-import InputSection from "./InputSection";
-import OutputSection from "./OutputSection";
+import { useSave } from "@/Stores/useStore";
+import DescriptionInput from "../../../DescriptionInput";
+import VarOutList from "../../../misc/VarOutList";
+import { CodeNodeData } from "../type";
+import { toast } from "react-toastify";
+import { useAuth } from "@/Providers/AuthenticationProvider";
+import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
+
 
 interface CodeNodeDrawerProps {
     node?: NodeProps;
@@ -24,82 +22,59 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
     const theme = useTheme();
     const { workflowId } = useParams();
     const save = useSave();
+    const { userId } = useAuth();
+    const { updateNode } = useReactFlow();
+    const { handleUpdateNodeData, handleUpdateCodeNodeData } = useWorkflowMutate();
 
     if (!node) return null;
 
     const { data, id } = node;
     const nodeData = node?.data as unknown as CodeNodeData;
-    const initialValues = useMemo(() => {
-      const input: CodeNodeInput[] = [
-          {
-              paramName: "input",
-              paramType: ParamType.INPUT,
-          }
-      ];
-      const code : CodeNodeCode= {
-          language: CodeNodeLanguage.JS,
-          code: `async function main({ params }: Args): Promise<Output> {
-                      const ret = {
-                          "key0": params.input + params.input,
-                          "key1": ["hello", "world"]
-                      };`
-      };
 
-      const output: CodeNodeOutput[] = [
-          {
-              varName: "key0",
-              varDataType: OutputDataType.STRING
-          },
-          {
-              varName: "key1",
-              varDataType: OutputDataType.ARRAY_STRING
-          }
-      ];
+    const handleUpdate = (
+        payload: Partial<CodeNodeData>,
+        onSuccess?: () => void,
+        onFailed?: () => void
+      ) => {
+        if (!workflowId || !userId) return;
 
-      return {
-          input: nodeData?.input ?? input,
-          code: nodeData?.code ?? code,
-          output: nodeData?.output ?? output
-      };
-    }, [nodeData]);
+        const updatePayload = {
+            name: id,
+            desc: nodeData.desc,
+            position: nodeData.position,
+            ...payload,
+            variables: nodeData.variables,
+            code_language: nodeData.code_language,
+            code: nodeData.code,
+            outputs: nodeData.outputs 
+        };
 
-    const [nodeDataInput, setNodeDataInput] = useState(nodeData?.input || initialValues.input);
-    const [nodeDataCode, setNodeDataCode] = useState(nodeData?.code || initialValues.code);
-    const [nodeDataOutput, setNodeDataOutput] = useState(nodeData?.output || initialValues.output);
-
-    const handleAddInput = () => {
-      setNodeDataInput(prevInput => [...prevInput, {paramName: "", paramType: ParamType.INPUT,}]);
-   };
-
-    const handleInputChange = (index: number, value: CodeNodeInput) => {
-      setNodeDataInput(prevInput => 
-        prevInput.map((input, i) => 
-            i === index ? value : input
-        )
-      );
-    }
-
-    const handleDeleteInput = (index: number) => {
-      console.log(nodeDataInput)
-      // setNodeDataInput(prevInput => prevInput.filter((_, i) => i !== index));
-    }
-
-    const handleAddOutput = () => {
-      setNodeDataOutput(prevOutput => [...prevOutput, {varName: "", varDataType: OutputDataType.STRING}]);
-   };
-
-    const handleDeleteOutput = (index: number) => {
-
-    }
-
-    const handleDataTypeChange = (value: string, index: number) => {
-      const updatedDataOutput = [...nodeDataOutput];
-      updatedDataOutput[index].varDataType = value;
-      setNodeDataOutput(updatedDataOutput);
-    };
-
-    const handleUpdate = () => {
-        console.log("handle update")
+        handleUpdateNodeData.mutate(
+            {
+                workflow_id: workflowId,
+                user_id: userId,
+                node_id: id,
+                node_data: updatePayload,
+            },
+            {
+                onSuccess: (response) => {
+                if (response?.status_code !== 200) {
+                    toast.error(response?.message);
+                    onFailed && onFailed();
+                }
+                updateNode(id, {
+                    data: {
+                    ...data,
+                    ...updatePayload,
+                    },
+                });
+                onSuccess && onSuccess();
+                },
+                onError: () => {
+                onFailed && onFailed();
+                },
+            }
+        );  
     }
 
     return (
@@ -131,7 +106,7 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
                   right: 16,
                 }}
                 onClick={() => {
-                    save(cachedKeys.NODE_EDITING, null);
+                  save(cachedKeys.NODE_EDITING, null);
                 }}
               >
                 <X size={24} />
@@ -139,64 +114,12 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
             </div>
             <DescriptionInput value={nodeData.desc} handleUpdate={handleUpdate} />
           </div>
-
-          <div className="px-6">
-            <Formik
-            initialValues={initialValues}
-            enableReinitialize
-            onSubmit={() => {}}
-            >
-                {() => 
-                {return(
-                    <Form>  
-                        {/* input */}
-                        <InputSection
-                          inputs={nodeDataInput}
-                          handleAddInput={handleAddInput}
-                          handleDeleteInput={handleDeleteInput}
-                          handleInputChange={handleInputChange}
-                        />
-                        {/* code */}
-                        <div style={{background: "#2e2d380a", borderRadius: "8px", marginBottom: "12px"}}>
-                            <CollapseArea
-                            nodeId={id}
-                            initOpen={true}
-                            label={
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  gap: "8px",
-                                  alignItems: "center",
-                                }}
-                              >
-                                <div className="flex justify-between items-center w-full pr-4">
-                                  <div className="flex items-center">
-                                    <CommonStyles.Typography type="semiBold14">
-                                      Code
-                                    </CommonStyles.Typography>
-                                    <Hint content="Write the structure of a function referring to the code example, where you can directly use the variables in the input parameters, and output the processing result by returning an object. This feature does not support writing multiple functions. Even if there is only one output value, make sure to return it as an object" />
-                                  </div>
-
-                                  <div>
-                                    <CommonStyles.Button variant="contained">
-                                      <FilePenLine className="pr-2"/>
-                                      Edit in IDE
-                                    </CommonStyles.Button>
-                                  </div>
-                                </div>
-                              </Box>
-                            }
-                            >
-                                <Editor></Editor>
-                            </CollapseArea>
-                        </div>
-                        {/* output */}
-                        <OutputSection
-                          outputs={nodeDataOutput}
-                        />
-                    </Form>
-                );}}
-            </Formik>
+    
+          <div className="px-3">
+    
+            <div className="px-3">
+              <VarOutList nodeData={nodeData} />
+            </div>
           </div>
         </div>
       );
