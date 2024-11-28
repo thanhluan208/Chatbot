@@ -45,6 +45,31 @@ const listNode = [
     label: "Knowledge Retrieval",
     description: "Knowledge retrieval node ",
   },
+  {
+    name: `customNode_WF_${NodeTypeWorkflow.PARAMETER_EXTRACTOR}`,
+    label: "Parameter Extractor",
+    description: "Parameter extractor node",
+  },
+  {
+    name: `customNode_WF_${NodeTypeWorkflow.QUESTION_CLASSIFIER}`,
+    label: "Question Classifier",
+    description: "Question classifier node",
+  },
+  {
+    name: `customNode_WF_${NodeTypeWorkflow.VARIABLE}`,
+    label: "Variable",
+    description: "Variable node",
+  },
+  {
+    name: `customNode_WF_${NodeTypeWorkflow.ANSWER}`,
+    label: "Answer",
+    description: "Answer node",
+  },
+  {
+    name: `customNode_WF_${NodeTypeWorkflow.HTTP_REQUEST}`,
+    label: "HTTP request",
+    description: "HTTP request node",
+  },
 ];
 
 const WorkflowDetail = () => {
@@ -91,7 +116,7 @@ const WorkflowDetail = () => {
           ...edge,
           source: edge.source,
           target: edge.target,
-          sourceHandle: `${edge.source}-source`,
+          sourceHandle: edge?.sourceHandle || `${edge.source}-source`,
           targetHandle: `${edge.target}-target`,
           markerEnd: {
             type: "arrowclosed",

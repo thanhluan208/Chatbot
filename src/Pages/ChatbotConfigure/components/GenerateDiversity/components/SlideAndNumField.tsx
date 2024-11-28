@@ -51,11 +51,10 @@ const SlideAndNumField = (props: ISlideAndNumField) => {
     <Box sx={{
       display:"grid",
       gridTemplateColumns:'2fr 3fr',
-      marginTop:'18px',
       gap:'16px'
     }}>
       <Box display="flex" alignItems={"center"}>
-        <CommonStyles.Typography type="normal16">
+        <CommonStyles.Typography type="semiBold16">
           {title}
         </CommonStyles.Typography>
         {hintContent && <Hint content={hintContent} />}

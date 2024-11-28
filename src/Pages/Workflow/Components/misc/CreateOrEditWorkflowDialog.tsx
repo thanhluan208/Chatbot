@@ -117,7 +117,6 @@ export const CreateOrEditWorkflowDialog = (
       validateOnMount
     >
       {({ isSubmitting, errors, values, setFieldValue }) => {
-        console.log("values: ", errors);
         return (
           <Form
             style={{

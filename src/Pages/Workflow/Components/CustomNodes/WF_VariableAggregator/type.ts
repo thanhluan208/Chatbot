@@ -1,3 +1,5 @@
+import { VariablesOut } from "@/Types/workflow";
+
 export interface NodeDataVarAgg {
   name?: string;
   type: string;
@@ -8,6 +10,7 @@ export interface NodeDataVarAgg {
   output_type: string;
   variables: string[][];
   advanced_settings: AdvancedSettings;
+  variable_out: VariablesOut[];
 }
 
 export interface AdvancedSettings {

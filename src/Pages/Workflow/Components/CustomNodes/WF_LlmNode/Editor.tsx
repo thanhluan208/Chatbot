@@ -1,19 +1,20 @@
 import PromptEditor from "@/Components/CommonStyles/EditorPlugin";
 import { NodeOutPutVar } from "@/Components/CommonStyles/EditorPlugin/type";
+import { cn } from "@/lib/utils";
 import { Box } from "@mui/material";
 import { Node } from "@xyflow/react";
 import { useBoolean } from "ahooks";
-import { memo } from "react";
+import { ComponentPropsWithoutRef, memo } from "react";
 
 interface EditorProps {
   controlPromptEditorRerenderKey: string;
   nodeId: string;
   readOnly?: boolean;
-  parentNodes?: string[];
   initValue?: string;
   varList: NodeOutPutVar[];
   workflowNodesMap: Record<string, Pick<Node["data"], "title" | "type">>;
   handleChangeEditor?: (value: string) => void;
+  placeholder?: string;
 }
 
 const Editor = ({
@@ -23,51 +24,13 @@ const Editor = ({
   initValue,
   varList,
   workflowNodesMap,
-  handleChangeEditor
-}: EditorProps) => {
+  handleChangeEditor,
+  className,
+  placeholder
+}: EditorProps & ComponentPropsWithoutRef<"div">) => {
   const onChange = (value: string) => {
-    console.log(value);
-    handleChangeEditor && handleChangeEditor(value)
+    handleChangeEditor && handleChangeEditor(value);
   };
-
-  // const parentNodeInputInfos = useMemo(() => {
-  //   const varList: NodeOutPutVar[] = [];
-  //   const workflowNodesMap: Record<
-  //     string,
-  //     Pick<Node["data"], "title" | "type">
-  //   > = {};
-
-  //   if (!parentNodes) return;
-
-  //   parentNodes.forEach((nodeId) => {
-  //     const node = getNode(nodeId);
-
-  //     if (!node) return;
-
-  //     varList.push({
-  //       nodeId: nodeId,
-  //       title: node.data.label as string,
-  //       vars: (node.data.variables as Variable[])?.map((elm) => {
-  //         return {
-  //           type: elm.type,
-  //           variable: elm.variable || "",
-  //         };
-  //       }),
-  //     });
-
-  //     workflowNodesMap[nodeId] = {
-  //       title: node.data.label as string,
-  //       type: BlockEnum.Start,
-  //     };
-  //   });
-
-  //   console.log(varList, workflowNodesMap);
-
-  //   return {
-  //     variables: varList,
-  //     workflowNodesMap,
-  //   };
-  // }, [parentNodes]);
 
   const [_, { setTrue: setFocus, setFalse: setBlur }] = useBoolean(false);
 
@@ -81,7 +44,7 @@ const Editor = ({
         key={controlPromptEditorRerenderKey}
         instanceId={nodeId}
         compact
-        className="min-h-[64px] px-3 py-2 rounded-md"
+        className={cn("min-h-[64px] px-3 py-2 rounded-md", className)}
         value={initValue || ""}
         workflowVariableBlock={{
           show: true,
@@ -93,6 +56,7 @@ const Editor = ({
         onFocus={setFocus}
         editable={!readOnly}
         nodeId={nodeId}
+        placeholder={placeholder}
       />
     </Box>
   );

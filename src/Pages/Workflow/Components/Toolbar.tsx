@@ -138,7 +138,7 @@ const Toolbar = ({
     <Box
       sx={{
         position: "absolute",
-        bottom: "20px",
+        bottom: "10px",
         right: "250px",
         border: `solid 1px ${theme.colors.custom.borderColor}`,
         width: !collapse ? "850px" : "68px",

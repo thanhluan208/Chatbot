@@ -1,6 +1,7 @@
 import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
+import { NodeTypeWorkflow } from "@/Types/workflow";
 import { useReactFlow } from "@xyflow/react";
-import React from "react";
+import React, { useRef } from "react";
 
 const UpdateNodePos = ({ id }: { id: string }) => {
   const { getNode } = useReactFlow();
@@ -8,6 +9,9 @@ const UpdateNodePos = ({ id }: { id: string }) => {
   const node = getNode(id);
 
   if (!node) return;
+
+  const nodePos = useRef(JSON.stringify(node?.position));
+  const nodeType = node?.type;
 
   const deboundRef = React.useRef<NodeJS.Timeout | null>(null);
   const isFirstRender = React.useRef(true);
@@ -21,10 +25,17 @@ const UpdateNodePos = ({ id }: { id: string }) => {
       return;
     }
     deboundRef.current = setTimeout(() => {
-        handleUpdateNodePosition && handleUpdateNodePosition(id, node?.position);
+      if (nodePos.current === JSON.stringify(node?.position)) return;
+      handleUpdateNodePosition &&
+        handleUpdateNodePosition(
+          node?.id,
+          JSON.stringify(node?.position),
+          nodeType as NodeTypeWorkflow
+        );
+      nodePos.current = JSON.stringify(node?.position);
       isFirstRender.current = true;
     }, 500);
-  }, [id, handleUpdateNodePosition, node?.position]);
+  }, [id, handleUpdateNodePosition, node?.position, node?.id, nodeType]);
 
   return null;
 };

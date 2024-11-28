@@ -28,6 +28,8 @@ const WF_CodeNode = (props: NodeProps) => {
 
   const nodeData = props.data as unknown as CodeNodeData;
 
+  const nodeData = props.data as unknown as NodeDataCode;
+
   //! Function
   const handleClickNode = () => {
     save(cachedKeys.NODE_EDITING, {

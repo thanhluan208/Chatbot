@@ -26,13 +26,13 @@ export interface VariableOut {
 export interface Memory {
   history_turn: number;
   conversation_id: string;
-  position_index_in_chat_messages: number;
+  position_index_in_chat_messages?: number;
 }
 
 export interface Model {
   completion_params: CompletionParams;
   name: string;
-  provider: string;
+  provider?: string;
 }
 
 export interface CompletionParams {

@@ -1,5 +1,5 @@
 import { NodeTypeWorkflow } from "@/Types/workflow";
-import { Book, Component, House, TrendingUpDown, Variable } from "lucide-react";
+import { Book, BookmarkCheck, Code, Component, Equal, House, MemoryStick, Pickaxe, RadioTower, Shapes, TrendingUpDown, Variable } from "lucide-react";
 
 export const LANGUAGES = {
   EN: "en",
@@ -21,5 +21,26 @@ export const WORKFLOW_ICON = {
   ),
   [`customNode_WF_${NodeTypeWorkflow.VARIABLE_AGGREGATOR}`]: (
     <Variable className="w-3.5 h-3.5" color="#fff" />
+  ),
+  [`customNode_WF_${NodeTypeWorkflow.CODE}`]: (
+    <Code className="w-3.5 h-3.5" color="#fff" />
+  ),
+  [`customNode_WF_${NodeTypeWorkflow.LONG_TERM_MEMORY}`]: (
+    <MemoryStick className="w-3.5 h-3.5" color="#fff" />
+  ),
+  [`customNode_WF_${NodeTypeWorkflow.PARAMETER_EXTRACTOR}`]: (
+    <Pickaxe className="w-3.5 h-3.5" color="#fff" />
+  ),
+  [`customNode_WF_${NodeTypeWorkflow.QUESTION_CLASSIFIER}`]: (
+    <Shapes className="w-3.5 h-3.5" color="#fff" />
+  ),
+  [`customNode_WF_${NodeTypeWorkflow.VARIABLE}`]: (
+    <Equal className="w-3.5 h-3.5" color="#fff" />
+  ),
+  [`customNode_WF_${NodeTypeWorkflow.ANSWER}`]: (
+    <BookmarkCheck className="w-3.5 h-3.5" color="#fff" />
+  ),
+  [`customNode_WF_${NodeTypeWorkflow.HTTP_REQUEST}`]: (
+    <RadioTower className="w-3.5 h-3.5" color="#fff" />
   ),
 };

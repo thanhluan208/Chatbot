@@ -32,6 +32,12 @@ import { useSave } from "@/Stores/useStore";
 import reactFlowService from "@/Services/reactFlowService";
 import { useParams } from "react-router-dom";
 import { useAuth } from "@/Providers/AuthenticationProvider";
+import WF_ParamExtractor from "../CustomNodes/WF_ParamExtractor";
+import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
+import WF_QuestClassifier from "../CustomNodes/WF_QuestClassifier";
+import WF_VarAssigner from "../CustomNodes/WF_VarAssigner";
+import WF_AnswerNode from "../CustomNodes/WF_AnswerNode";
+import WF_HttpRequestNode from "../CustomNodes/WF_HttpRequestNode";
 
 export enum NodeTypes {
   startNode = "customNode_startNode",
@@ -57,6 +63,11 @@ export const nodeTypes = {
   [`customNode_WF_${NodeTypeWorkflow.VARIABLE_AGGREGATOR}`]:
     WF_VariableAggregator,
   [`customNode_WF_${NodeTypeWorkflow.KNOWLEDGE_RETRIEVAL}`]: WF_Knowledge,
+  [`customNode_WF_${NodeTypeWorkflow.PARAMETER_EXTRACTOR}`]: WF_ParamExtractor,
+  [`customNode_WF_${NodeTypeWorkflow.QUESTION_CLASSIFIER}`]: WF_QuestClassifier,
+  [`customNode_WF_${NodeTypeWorkflow.VARIABLE}`]: WF_VarAssigner,
+  [`customNode_WF_${NodeTypeWorkflow.ANSWER}`]: WF_AnswerNode,
+  [`customNode_WF_${NodeTypeWorkflow.HTTP_REQUEST}`]: WF_HttpRequestNode,
 };
 
 export enum CustomNodeTypes {
@@ -79,10 +90,12 @@ const AddNodes = ({ listNode = [], initOpen, helperPosition }: IAddNodes) => {
   const [open, setOpen] = React.useState(initOpen);
   const theme = useTheme();
   const { setNodes, updateNode } = useReactFlow();
+  const { handleAddNodeWorkflow } = useWorkflowMutate();
   const save = useSave();
 
   const params = useParams();
   const botId = params?.botId;
+  const workflowId = params?.workflowId;
   const { userId } = useAuth();
 
   //! Function
@@ -91,22 +104,13 @@ const AddNodes = ({ listNode = [], initOpen, helperPosition }: IAddNodes) => {
       if (!setNodes) return;
       const nodeId = uuid();
 
-      const onSuccess = (id: string) => {
-        updateNode(nodeId, {
-          id: id,
-          data: {
-            label: `Agent ${id}`,
-          },
-        });
-      };
-
       const onFailed = () => {
         save(`${nodeId}_remove`, true);
       };
 
-      console.log("adding node");
-
       setNodes((nodes) => {
+        if (!userId) return nodes;
+
         const newNodes = nodes.filter(
           (node) => node.type !== NodeTypes.helperNode
         );
@@ -122,15 +126,51 @@ const AddNodes = ({ listNode = [], initOpen, helperPosition }: IAddNodes) => {
             position,
             data: { label: `${node.label} node` },
           };
+
+          const onSuccess = (id: string, nodeData?: any) => {
+            console.log("onSuccess", id, nodeData);
+            updateNode(newNode.id, {
+              id: id,
+              data: nodeData,
+              selected: true,
+            });
+          };
+
           newNodes.push(newNode);
 
-          reactFlowService.createFlow(
-            botId as string,
-            userId as string,
-            onSuccess,
-            onFailed,
-            JSON.stringify(newNode)
-          );
+          if (botId) {
+            reactFlowService.createFlow(
+              botId,
+              userId,
+              onSuccess,
+              onFailed,
+              JSON.stringify(newNode)
+            );
+          }
+
+          if (workflowId) {
+            handleAddNodeWorkflow.mutate(
+              {
+                user_id: userId,
+                workflow_id: workflowId,
+                position: JSON.stringify(position),
+                node_type: node.name?.replace(
+                  "customNode_WF_",
+                  ""
+                ) as NodeTypeWorkflow,
+              },
+              {
+                onSuccess: (res) => {
+                  onSuccess(res.data.node_id, {
+                    ...res.data?.node_data?.data,
+                    variable_out: res?.data?.node_data?.variables_out,
+                    label: res.data.node_id,
+                  });
+                },
+                onError: onFailed,
+              }
+            );
+          }
         } else {
           const newNode = {
             id: nodeId,
@@ -141,19 +181,67 @@ const AddNodes = ({ listNode = [], initOpen, helperPosition }: IAddNodes) => {
             },
             data: { label: `${node.label} node` },
           };
+
+          const onSuccess = (id: string, nodeData?: any) => {
+            updateNode(newNode.id, {
+              id: id,
+              data: nodeData,
+              selected: true,
+            });
+          };
+
           newNodes.push(newNode);
-          reactFlowService.createFlow(
-            botId as string,
-            userId as string,
-            onSuccess,
-            onFailed,
-            JSON.stringify(newNode)
-          );
+          if (botId) {
+            reactFlowService.createFlow(
+              botId,
+              userId,
+              onSuccess,
+              onFailed,
+              JSON.stringify(newNode)
+            );
+          }
+
+          if (workflowId) {
+            handleAddNodeWorkflow.mutate(
+              {
+                user_id: userId,
+                workflow_id: workflowId,
+                position: JSON.stringify(
+                  helperPosition ?? {
+                    x: 0,
+                    y: 0,
+                  }
+                ),
+                node_type: node.name?.replace(
+                  "customNode_WF_",
+                  ""
+                ) as NodeTypeWorkflow,
+              },
+              {
+                onSuccess: (res) => {
+                  onSuccess(res.data.node_id, {
+                    ...res.data?.node_data?.data,
+                    variable_out: res?.data?.node_data?.variables_out,
+                    label: res.data.node_id,
+                  });
+                },
+                onError: onFailed,
+              }
+            );
+          }
         }
         return newNodes;
       });
     },
-    [setNodes]
+    [
+      setNodes,
+      updateNode,
+      userId,
+      botId,
+      workflowId,
+      helperPosition,
+      handleAddNodeWorkflow,
+    ]
   );
 
   //! Render
@@ -187,6 +275,9 @@ const AddNodes = ({ listNode = [], initOpen, helperPosition }: IAddNodes) => {
       >
         <DropdownMenuGroup>
           {listNode.map((node) => {
+            if (node.name === `customNode_WF_${NodeTypeWorkflow.START}`)
+              return null;
+
             return (
               <DropdownMenuSub key={node.name}>
                 <DropdownMenuSubTrigger

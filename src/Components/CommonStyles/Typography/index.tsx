@@ -20,6 +20,11 @@ const Typography = (props: ITypography & TypographyProps) => {
       fontWeight: 400,
     });
 
+    styles.set("semiBold10", {
+      fontSize: "10px",
+      fontWeight: 500,
+    });
+
     styles.set("bold12", {
       fontSize: "12px",
       fontWeight: 600,
