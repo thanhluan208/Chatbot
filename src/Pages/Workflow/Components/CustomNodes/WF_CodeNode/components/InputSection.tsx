@@ -1,21 +1,35 @@
 import CollapseArea from "@/Components/CommonStyles/CollapseArea";
-import { CodeNodeInput } from "../type";
 import { CircleMinus, Plus } from "lucide-react";
 import CommonStyles from "@/Components/CommonStyles";
 import Hint from "@/Pages/ChatbotConfigure/components/GenerateDiversity/components/Hint";
 import InputRow from "./InputRow";
 import { Box } from "@mui/material";
+import { Variable } from "../type";
 
 interface InputSectionProps{
-    inputs: CodeNodeInput[],
-    handleAddInput: () => void,
-    handleDeleteInput: (index: number) => void,
-    handleInputChange: (index: number, value: CodeNodeInput) => void
+    nodeId: string;
+    variables: Variable[];
+    handleUpdateNodeData: (nodeId: string, payload: any) => void;
 }
 
-const InputSection = ({inputs, handleAddInput, handleDeleteInput, handleInputChange}: InputSectionProps) => {
+const InputSection = ({
+    nodeId,
+    variables,
+    handleUpdateNodeData
 
+} : InputSectionProps) => {
+    //! Function
+    function handleInputChange(index: number, value: Variable){
+        handleUpdateNodeData(nodeId, variables);
+    }
 
+    function handleAddInput(){
+
+    }
+
+    function handleDeleteInput(index: number){
+        
+    }
 
     return (
         <div style={{background: "#2e2d380a", borderRadius: "8px", marginBottom: "12px"}}>
@@ -43,18 +57,18 @@ const InputSection = ({inputs, handleAddInput, handleDeleteInput, handleInputCha
                     <div className="w-40 pl-2">Parameter value</div>
                 </div>
 
-                {inputs.map((input, index)=>(
-                    <div className="flex items-center justify-between justify-items-center ml-4 mt-2">
-                    <InputRow
-                        input={input}
-                        handleOnChange={handleInputChange}
-                        index = {index}
-                    />
+                {Object.values(variables).map((variable, index)=>(
+                    <div className="flex items-center justify-between justify-items-center ml-4 mt-2" key={"var-"+index}>
+                        <InputRow
+                            input={variable}
+                            handleOnDataChange={handleInputChange}
+                            index = {index}
+                        />
 
-                    <CircleMinus className="mr-1"
-                        style={{color : "#1c1d2359", cursor: "pointer"}}
-                        onClick={() => handleDeleteInput(index)}
-                    />
+                        <CircleMinus className="mr-1"
+                            style={{color : "#1c1d2359", cursor: "pointer"}}
+                            onClick={() => handleDeleteInput(index)}
+                        />
                     </div>
                 ))}
 

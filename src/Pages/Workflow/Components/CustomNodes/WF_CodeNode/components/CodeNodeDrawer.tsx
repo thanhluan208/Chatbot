@@ -8,11 +8,12 @@ import cachedKeys from "@/Constants/cachedKeys";
 import { useSave } from "@/Stores/useStore";
 import DescriptionInput from "../../../DescriptionInput";
 import VarOutList from "../../../misc/VarOutList";
-import { CodeNodeData } from "../type";
+import { CodeNodeData, Variable } from "../type";
 import { toast } from "react-toastify";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
 import Editor from "./Editor";
+import InputSection from "./InputSection";
 
 
 interface CodeNodeDrawerProps {
@@ -28,9 +29,9 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
     const { handleUpdateNodeData, handleUpdateCodeNodeData } = useWorkflowMutate();
 
     if (!node) return null;
-
     const { data, id } = node;
     const nodeData = node?.data as unknown as CodeNodeData;
+    const nodeDataVars = nodeData.variables as Variable[];
 
     const handleUpdate = (
         payload: Partial<CodeNodeData>,
@@ -118,7 +119,11 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
     
             <div className="px-3">
                 <div>
-                    Input
+                    <InputSection 
+                    nodeId={id}
+                    variables={nodeDataVars}
+                    handleUpdateNodeData={handleUpdateCodeNodeData}
+                    />
                 </div>
 
                 <div>

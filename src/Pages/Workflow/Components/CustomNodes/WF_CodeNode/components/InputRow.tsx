@@ -1,56 +1,52 @@
 import CommonStyles from "@/Components/CommonStyles";
-import { CodeNodeInput, ParamType } from "../type";
-import { useMemo, useState } from "react";
+import { Variable } from "../type";
+import { useMemo, useRef, useState } from "react";
 import { validate } from "uuid";
 
-export const ParameterTypeOptions = [
-    {value : ParamType.INPUT, label : ParamType.INPUT},
-    {value : ParamType.REFERENCE, label : ParamType.REFERENCE},
-]
+// export const ParameterTypeOptions = [
+//     {value : ParamType.INPUT, label : ParamType.INPUT},
+//     {value : ParamType.REFERENCE, label : ParamType.REFERENCE},
+// ]
 
 interface InputRowProps{
-  input: CodeNodeInput,
-  handleOnChange: (index: number, value: CodeNodeInput) => void,
+  input: Variable,
+  handleOnDataChange: (index: number, value: Variable) => void,
   index: number
 }
 
-const InputRow = ({input, handleOnChange, index}: InputRowProps) => {
-  const [paramName, setParamName] = useState<string | any>(input?.paramName || "");
-  const [paramType, setParamType] = useState<string>(input?.paramType);
-  const [paramValue, setParamValue] = useState<String | any>(input?.value);
+const InputRow = ({input, handleOnDataChange, index}: InputRowProps) => {
+  const timeoutRef = useRef<number | null>(null);
 
-  const handleSelectChange = (value: string) => {
-      setParamType(value);
-  };
+  // const handleSelectChange = (value: string) => {
+  // };
 
-  const handleDataChange = () => {
-    console.log("handleDataChange")
-    const value : CodeNodeInput ={
-      paramName : paramName,
-      paramType : paramType, 
-      value : paramValue
-    };
-    handleOnChange(index, value);
+  const onInputNameChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    input.variable = event.target.value;
+
+    timeoutRef.current = window.setTimeout(() => {
+      handleOnDataChange(index, input);
+    }, 1000);
+  }
+
+  const onValueSelectorChange = () => {
+    handleOnDataChange(index, input);
   }
 
   return (
     <div className="flex items-center">
       <CommonStyles.Input
         className="w-40"
-        initValue={paramName}
+        initValue={input.variable}
         placeholder="Enter parameter name "
-        onValueChange={(e) => 
-          {setParamName(e);
-          handleDataChange();
-        }}
-        onBlur={(e) => 
-          {setParamName(e.target.value);
-          handleDataChange()
-        }}
         required
+        afterOnchange={onInputNameChange}
       />
 
-        <select className="ml-2 mr-1"
+        {/* <select className="ml-2 mr-1"
         value={paramType}
         onChange={(e) => {
           handleSelectChange(e.target.value);
@@ -61,9 +57,9 @@ const InputRow = ({input, handleOnChange, index}: InputRowProps) => {
                     {option.label}
                     </option>
             ))}
-        </select>
+        </select> */}
 
-      {paramType === ParamType.INPUT.toString() ? (
+      {/* {paramType === ParamType.INPUT.toString() ? (
         <CommonStyles.Input
           className="ml-2"
           placeholder="Enter the parameter value"
@@ -76,20 +72,12 @@ const InputRow = ({input, handleOnChange, index}: InputRowProps) => {
             handleDataChange()
             }}
         />
-      ) : (
+      ) : ( */}
         <select className="ml-2 block w-full"
-        onChange={(e) =>{
-          setParamValue(e.target.value);
-          handleDataChange();
-        }}>
-            <option value="v1">
-                var1
-            </option>
-            <option value="v2">
-                var2
-            </option>
+        onChange={onValueSelectorChange}>
+
         </select>
-      )}
+      {/* )} */}
     </div>
   );
 };

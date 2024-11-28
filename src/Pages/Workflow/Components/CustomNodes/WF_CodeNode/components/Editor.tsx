@@ -24,7 +24,10 @@ const Editor = ({
       clearTimeout(timeoutRef.current);
     }
 
-    const payload: any = {value, language};
+    const payload: any = {
+      code: value, 
+      code_language: language
+    };
 
     timeoutRef.current = window.setTimeout(() => {
       handleUpdateNodeData(nodeId, payload);
