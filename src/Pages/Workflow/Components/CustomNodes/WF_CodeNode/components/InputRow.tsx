@@ -10,7 +10,7 @@ import { validate } from "uuid";
 
 interface InputRowProps{
   input: Variable,
-  handleOnDataChange: (index: number, value: Variable) => void,
+  handleOnDataChange: () => void,
   index: number
 }
 
@@ -28,12 +28,12 @@ const InputRow = ({input, handleOnDataChange, index}: InputRowProps) => {
     input.variable = event.target.value;
 
     timeoutRef.current = window.setTimeout(() => {
-      handleOnDataChange(index, input);
+      handleOnDataChange();
     }, 1000);
   }
 
   const onValueSelectorChange = () => {
-    handleOnDataChange(index, input);
+    handleOnDataChange();
   }
 
   return (

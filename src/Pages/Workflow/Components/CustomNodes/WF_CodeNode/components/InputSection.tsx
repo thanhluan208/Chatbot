@@ -19,7 +19,7 @@ const InputSection = ({
 
 } : InputSectionProps) => {
     //! Function
-    function handleInputChange(index: number, value: Variable){
+    function handleInputChange(){
         handleUpdateNodeData(nodeId, variables);
     }
 
