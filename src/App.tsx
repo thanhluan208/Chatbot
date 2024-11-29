@@ -9,10 +9,10 @@ import useRoutes from "./Constants/routes";
 import { useAuth } from "./Providers/AuthenticationProvider";
 import { lazy, Suspense } from "react";
 import CommonStyles from "./Components/CommonStyles";
-import { QueryClient, QueryClientProvider } from "react-query";
 
-import "./App.css"
+import "./App.css";
 import PublishPage from "./Pages/Publish";
+import AppThemeProvider from "./Providers/AppTheme.provider";
 
 const KnowledgeDetail = lazy(() => import("./Pages/KnowledgeDetail"));
 const Login = lazy(() => import("./Pages/Login"));
@@ -27,15 +27,6 @@ const Users = lazy(() => import("./Pages/Users"));
 const ChatbotConfigure = lazy(() => import("./Pages/ChatbotConfigure"));
 const Workflow = lazy(() => import("./Pages/Workflow"));
 const WorkflowDetail = lazy(() => import("./Pages/WorkflowDetail"));
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: 0,
-    },
-  },
-});
 
 function App() {
   //! State
@@ -95,11 +86,10 @@ function App() {
           element: <Workflow />,
           loader: () => {
             if (!userId) return redirect("/login");
-    
+
             return null;
           },
         },
-        
       ],
     },
     {
@@ -183,18 +173,17 @@ function App() {
         return null;
       },
     },
-   
   ]);
 
   //! Function
 
   //! Render
   return (
-    <QueryClientProvider client={queryClient}>
+    <AppThemeProvider>
       <Suspense fallback={<CommonStyles.LoadingOverlay isLoading />}>
         <RouterProvider router={router} />
       </Suspense>
-    </QueryClientProvider>
+    </AppThemeProvider>
   );
 }
 

@@ -8,7 +8,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['SegoeUI', 'sans-serif'],
+        sans: ["SegoeUI", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -64,6 +64,15 @@ export default {
         emerald: colors.emerald,
         indigo: colors.indigo,
         yellow: colors.yellow,
+      },
+      keyframes: {
+        "caret-blink": {
+          "0%,70%,100%": { opacity: "1" },
+          "20%,50%": { opacity: "0" },
+        },
+      },
+      animation: {
+        "caret-blink": "caret-blink 1.25s ease-out infinite",
       },
     },
   },

@@ -25,8 +25,10 @@ export const retryUploadFile = baseAPI + "/knowledge/retry_upload";
 export const getKnowledgeDetail =
   baseAPI + "/knowledge/get_knowledge_storage_data";
 
-export const signInApi = baseAPI + "/user/validate_user";
-export const signUpApi = baseAPI + "/user/create_user";
+export const signInApi = baseAPI + "/user/log_in";
+export const signUpApi = baseAPI + "/user/sign_up";
+export const verifyEmail = baseAPI + "/user/send_verification_code";
+export const submitOTP = baseAPI + "/user/verify_verification_code";
 export const changePasswordApi = baseAPI + "/user/change_password_user";
 export const getUserData = baseAPI + "/user/show_user_data";
 export const searchUser = baseAPI + "/user/search_user";
