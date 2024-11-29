@@ -1,5 +1,7 @@
 import {
   getUserData,
+  logout,
+  refreshToken,
   searchUser,
   signInApi,
   signUpApi,
@@ -40,6 +42,20 @@ class UserService {
 
   signIn(data: { email_or_username: string; password: string }) {
     return httpServices.post(signInApi, data);
+  }
+
+  refreshToken(email: string) {
+    return httpServices.post(refreshToken, {
+      email_or_username: email,
+    });
+  }
+
+  logout(email_or_username: string, token: string, refreshToken: string) {
+    return httpServices.post(logout, {
+      email_or_username: email_or_username,
+      access_token: token,
+      refresh_token: refreshToken,
+    });
   }
 }
 

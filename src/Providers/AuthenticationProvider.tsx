@@ -6,6 +6,7 @@ import useGetUserData, { UserData } from "../Hooks/User/useGetUserData";
 import { useSave } from "../Stores/useStore";
 import cachedKeys from "../Constants/cachedKeys";
 import useMutateAuthen from "@/Hooks/User/useMutateAuthen";
+import { LOCAL_STORAGE_KEY } from "@/Constants/common";
 
 interface AuthContextType {
   userId: string | null;
@@ -57,14 +58,18 @@ const AuthenticationProvider = ({
     storageUserID || null
   );
   const save = useSave();
-  const userData = localStorage.getItem("userData");
+  const userData = localStorage.getItem(LOCAL_STORAGE_KEY.USER_DATA);
   const { data, refetch } = useGetUserData(userId, !!userId);
 
-  const { handleCreateWorkflow, handleVerifyEmail, handleSignIn } =
-    useMutateAuthen();
+  const {
+    handleCreateWorkflow,
+    handleVerifyEmail,
+    handleSignIn,
+    handleLogout,
+  } = useMutateAuthen();
 
   if (data) {
-    localStorage.setItem("userData", JSON.stringify(data));
+    localStorage.setItem(LOCAL_STORAGE_KEY.USER_DATA, JSON.stringify(data));
   }
 
   const signIn = async (payload: SignInPayload) => {
@@ -83,8 +88,33 @@ const AuthenticationProvider = ({
         isLoading: false,
       });
       localStorage.setItem("userId", response.data.user_data.id);
+
+      if (response?.data?.user_data) {
+        localStorage.setItem(
+          LOCAL_STORAGE_KEY.USER_DATA,
+          JSON.stringify(response?.data?.user_data)
+        );
+      }
+      if (response.data?.access_token) {
+        httpServices.attachTokenToHeader(response.data?.access_token);
+        localStorage.setItem(
+          LOCAL_STORAGE_KEY.ACCESS_TOKEN,
+          response?.data?.access_token
+        );
+      }
+      if (response?.data?.refresh_token) {
+        localStorage.setItem(
+          LOCAL_STORAGE_KEY.REFRESH_TOKEN,
+          response?.data?.refresh_token
+        );
+      }
     } else {
-      throw new Error(response.data.message);
+      toast.update(toastId, {
+        render: response.data?.message || "Login failed",
+        type: "error",
+        autoClose: 2000,
+        isLoading: false,
+      });
     }
   };
 
@@ -159,16 +189,35 @@ const AuthenticationProvider = ({
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    const userData = JSON.parse(
+      localStorage.getItem(LOCAL_STORAGE_KEY.USER_DATA) || "{}"
+    );
+    const token = localStorage.getItem(LOCAL_STORAGE_KEY.ACCESS_TOKEN) || "";
+    const refreshToken =
+      localStorage.getItem(LOCAL_STORAGE_KEY.REFRESH_TOKEN) || "";
+     handleLogout.mutate({
+      email_or_username: userData?.email,
+      token,
+      refreshToken,
+    });
     setUserId(null);
+
     localStorage.removeItem("userId");
-    localStorage.removeItem("userData");
+    localStorage.removeItem(LOCAL_STORAGE_KEY.USER_DATA);
+    localStorage.removeItem(LOCAL_STORAGE_KEY.ACCESS_TOKEN);
+    localStorage.removeItem(LOCAL_STORAGE_KEY.REFRESH_TOKEN);
     location.reload();
   };
 
   useEffect(() => {
     save(cachedKeys.REFETCH_USER_DATA, refetch);
   }, [refetch]);
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem(LOCAL_STORAGE_KEY.ACCESS_TOKEN);
+    if (accessToken) httpServices.attachTokenToHeader(accessToken);
+  }, []);
 
   const value = useMemo(() => {
     return {

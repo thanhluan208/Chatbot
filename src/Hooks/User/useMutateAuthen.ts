@@ -33,11 +33,20 @@ const useMutateAuthen = () => {
     },
   });
 
+  const handleLogout = useMutation({
+    mutationFn: (payload: { email_or_username: string; token: string, refreshToken: string }) =>
+      userService.logout(payload.email_or_username, payload.token, payload.refreshToken),
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    },
+  });
+
   return {
     handleCreateWorkflow,
     handleVerifyEmail,
     handleSubmitOTP,
     handleSignIn,
+    handleLogout
   };
 };
 
