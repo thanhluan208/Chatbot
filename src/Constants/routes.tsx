@@ -41,7 +41,8 @@ export const ListRoutes = {
   chatBot: "/bot-store/:botId",
   workflow: "/workflow",
   workflowDetail: (workflowId = ":workflowId") => `/workflow/${workflowId}`,
-  publish: "/publish"
+  publish: "/publish",
+  verification: "/verification",
 };
 
 export default useRoutes;

@@ -1,4 +1,11 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import { LOCAL_STORAGE_KEY } from "@/Constants/common";
+import axios, {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from "axios";
+import userService from "./user.service";
 
 export const TOKEN_KEY = "token";
 export const REFRESH_TOKEN_KEY = "refreshToken";
@@ -6,6 +13,8 @@ export const USER_KEY = "user";
 
 class Services {
   axios: AxiosInstance;
+  isRefreshing = false;
+  requestQueue: ((token: string) => void)[] = [];
 
   constructor() {
     this.axios = axios;
@@ -17,10 +26,7 @@ class Services {
         config.headers["x-timezone"] =
           Intl.DateTimeFormat().resolvedOptions().timeZone;
         config.headers["ngrok-skip-browser-warning"] = "69420"; // This is a temporary solution to bypass the ngrok warning. For more information, please visit https://ngrok.com/docs#http-headers. The value of
-        const token = localStorage.getItem(TOKEN_KEY) || "";
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
+
         return config;
       },
       function (error) {
@@ -30,68 +36,80 @@ class Services {
 
     //! Interceptor response
     this.axios.interceptors.response.use(
-      function (config) {
-        const token = localStorage.getItem(TOKEN_KEY) || "";
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
+      function (response: AxiosResponse) {
+        // Pass through successful responses
+        return response;
       },
-      async (error) => {
-        //! Handling retry when token expired
-        // if (
-        //   error.response.data?.statusCode === 401 &&
-        //   !originalRequest?._retry
-        // ) {
-        //   if (!originalRequest?._retry) {
-        //     originalRequest._retry = true;
-        //     const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY) || "";
-        //     if (refreshToken) {
-        //       try {
-        //         const response = await authenticationServices.postRefreshToken({
-        //           token: refreshToken,
-        //         });
-        //         const access_token = response?.data?.data?.accessToken;
-        //         const refresh_token = response?.data?.data?.refreshToken;
+      async (error: AxiosError) => {
+        const originalRequest = error.config; // Access the original request
+        const refreshToken = localStorage.getItem(
+          LOCAL_STORAGE_KEY.REFRESH_TOKEN
+        );
 
-        //         if (access_token) {
-        //           localStorage.setItem(TOKEN_KEY, access_token);
-        //         }
-        //         if (refresh_token) {
-        //           localStorage.setItem(REFRESH_TOKEN_KEY, refresh_token);
-        //         }
-        //         this.attachTokenToHeader(access_token);
-        //         originalRequest.headers.Authorization = "Bearer" + access_token;
-        //         return this.axios.request(originalRequest);
-        //       } catch {
-        //         window.location.reload();
-        //         return Promise.reject(error);
-        //       }
-        //     }
-        //   } else {
-        //     window.location.reload();
-        //     return Promise.reject(error);
-        //   }
-        // }
+        if (error.response?.status === 401 && refreshToken) {
+          if (!this.isRefreshing) {
+            this.isRefreshing = true;
 
-        return Promise.reject(error);
+            try {
+              // Refresh the token
+              const userData = JSON.parse(
+                localStorage.getItem(LOCAL_STORAGE_KEY.USER_DATA) || "{}"
+              );
+              this.attachTokenToHeader(refreshToken);
+              const response = await userService.refreshToken(userData?.email);
+              const newAccessToken = response?.data?.access_token;
+
+              // Update the local storage with the new token
+              console.log("newAccessToken,", newAccessToken);
+              if (newAccessToken) {
+                localStorage.setItem(LOCAL_STORAGE_KEY.ACCESS_TOKEN, newAccessToken);
+              }
+
+              this.attachTokenToHeader(newAccessToken);
+
+              // Resolve all queued requests with the new token
+              this.requestQueue.forEach((cb) => {
+                console.log("retrying...");
+                cb(newAccessToken);
+              });
+              this.requestQueue = []; // Clear the queue
+
+              this.isRefreshing = false;
+              if (originalRequest?.headers) {
+                originalRequest.headers[
+                  "Authorization"
+                ] = `Bearer ${newAccessToken}`;
+                return this.axios.request(originalRequest);
+              }
+            } catch (refreshError) {
+              console.error("Token refresh failed:", refreshError);
+              this.isRefreshing = false;
+
+              // Redirect to login or handle appropriately
+              window.location.reload();
+              return Promise.reject(refreshError);
+            }
+          }
+
+          // Queue the current request until the token refresh is complete
+          return new Promise((resolve) => {
+            this.requestQueue.push((newToken: string) => {
+              console.log(newToken);
+              if (originalRequest?.headers) {
+                originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
+              }
+              originalRequest && resolve(this.axios(originalRequest));
+            });
+          });
+        }
+
+        return Promise.reject(error); // Reject all other errors
       }
     );
   }
 
   attachTokenToHeader(token: string) {
-    this.axios.interceptors.request.use(
-      function (config) {
-        if (config.headers) {
-          // Do something before request is sent
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-      },
-      function (error) {
-        return Promise.reject(error);
-      }
-    );
+    this.axios.defaults.headers.Authorization = `Bearer ${token}`;
   }
 
   setupInterceptors() {

@@ -1,4 +1,13 @@
-import {  getUserData, searchUser } from "../Constants/api";
+import {
+  getUserData,
+  logout,
+  refreshToken,
+  searchUser,
+  signInApi,
+  signUpApi,
+  submitOTP,
+  verifyEmail,
+} from "../Constants/api";
 import httpServices from "./httpServices";
 
 class UserService {
@@ -10,7 +19,42 @@ class UserService {
 
   getListUser(search?: string) {
     return httpServices.post(searchUser, {
-      search_filter: search || '',
+      search_filter: search || "",
+    });
+  }
+
+  signUp(data: FormData) {
+    return httpServices.post(signUpApi, data);
+  }
+
+  verifyEmail(email: string) {
+    return httpServices.post(verifyEmail, {
+      email: email,
+    });
+  }
+
+  submitOTP(email: string, otp: string) {
+    return httpServices.post(submitOTP, {
+      email: email,
+      verification_code: otp,
+    });
+  }
+
+  signIn(data: { email_or_username: string; password: string }) {
+    return httpServices.post(signInApi, data);
+  }
+
+  refreshToken(email: string) {
+    return httpServices.post(refreshToken, {
+      email_or_username: email,
+    });
+  }
+
+  logout(email_or_username: string, token: string, refreshToken: string) {
+    return httpServices.post(logout, {
+      email_or_username: email_or_username,
+      access_token: token,
+      refresh_token: refreshToken,
     });
   }
 }

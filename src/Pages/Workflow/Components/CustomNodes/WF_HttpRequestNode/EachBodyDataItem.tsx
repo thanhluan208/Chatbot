@@ -174,39 +174,44 @@ const EachBodyDataItem = ({
     <div
       className={cn(
         "grid  px-3 gap-x-3 gap-y-1 pr-14 relative",
-        hasType ? "grid-cols-3" : "grid-cols-2"
+        hasType ? "grid-cols-10" : "grid-cols-2"
       )}
     >
-      <EditorPrompt
-        id={`${objectId}-key`}
-        nodeId={nodeId}
-        value={objectKey}
-        handleChangeEditor={handleChangeKey}
-        className="min-h-10"
-        placeholder="Enter body data key..."
-      />
+      <div className={cn(hasType && "col-span-4")}>
+        <EditorPrompt
+          id={`${objectId}-key`}
+          nodeId={nodeId}
+          value={objectKey}
+          handleChangeEditor={handleChangeKey}
+          className="min-h-[29px]"
+          placeholder="Enter body data key..."
+        />
+      </div>
 
       {hasType && (
-        <CommonStyles.Select
-          value={objectType}
-          handleChange={handleSelectType}
-          options={optionFromEnum(BodyDataType)}
-          fullWidth
-          sx={{
-            marginTop: "8px",
-            height: "49px",
-          }}
-        />
+        <div className="col-span-2">
+          <CommonStyles.Select
+            value={objectType}
+            handleChange={handleSelectType}
+            options={optionFromEnum(BodyDataType)}
+            fullWidth
+            sx={{
+              marginTop: "8px",
+              height: "39px",
+            }}
+          />
+        </div>
       )}
-
-      <EditorPrompt
-        id={`${objectId}-value`}
-        nodeId={nodeId}
-        value={objectValue}
-        handleChangeEditor={handleChangeValue}
-        className="min-h-10"
-        placeholder={`Enter body data value for ${objectKey}`}
-      />
+      <div className={cn(hasType && "col-span-4")}>
+        <EditorPrompt
+          id={`${objectId}-value`}
+          nodeId={nodeId}
+          value={objectValue}
+          handleChangeEditor={handleChangeValue}
+          className="min-h-[29px]"
+          placeholder={`Enter body data value for ${objectKey}`}
+        />
+      </div>
 
       <CommonStyles.Button
         isIcon

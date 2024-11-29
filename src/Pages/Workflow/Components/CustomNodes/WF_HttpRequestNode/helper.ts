@@ -17,7 +17,7 @@ export const convertHeader = (
   return newHeaders;
 };
 
-export const parsedKeyAndValueString = (input: string, hasType?: boolean) => {
+export const parsedKeyAndValueString = (input: string, hasType?: boolean) : KeyAndValueType[] => {
   if (!input) return [];
   const list: KeyAndValueType[] = input.split("\n").map((elm, index) => {
     const keyAndValurSplitted = elm.split(":");

@@ -1,5 +1,18 @@
 import { NodeTypeWorkflow } from "@/Types/workflow";
-import { Book, BookmarkCheck, Code, Component, Equal, House, MemoryStick, Pickaxe, RadioTower, Shapes, TrendingUpDown, Variable } from "lucide-react";
+import {
+  Book,
+  BookmarkCheck,
+  Code,
+  Component,
+  Equal,
+  House,
+  MemoryStick,
+  Pickaxe,
+  RadioTower,
+  Shapes,
+  TrendingUpDown,
+  Variable,
+} from "lucide-react";
 
 export const LANGUAGES = {
   EN: "en",
@@ -43,4 +56,10 @@ export const WORKFLOW_ICON = {
   [`customNode_WF_${NodeTypeWorkflow.HTTP_REQUEST}`]: (
     <RadioTower className="w-3.5 h-3.5" color="#fff" />
   ),
+};
+
+export const LOCAL_STORAGE_KEY = {
+  ACCESS_TOKEN: "ACCESS_TOKEN",
+  REFRESH_TOKEN: "REFRESH_TOKEN",
+  USER_DATA: "USER_DATA",
 };
