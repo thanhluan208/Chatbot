@@ -40,6 +40,7 @@ const Editor = ({
 
   return (
     <EditorMonaco
+      className="rounded-xl overflow-hidden"
       height="250px"
       defaultLanguage="javascript"
       defaultValue="function main({arg1, arg2}) {
