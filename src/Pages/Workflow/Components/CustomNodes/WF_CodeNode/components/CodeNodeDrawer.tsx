@@ -8,7 +8,7 @@ import cachedKeys from "@/Constants/cachedKeys";
 import { useSave } from "@/Stores/useStore";
 import DescriptionInput from "../../../DescriptionInput";
 import VarOutList from "../../../misc/VarOutList";
-import { CodeNodeData, Variable } from "../type";
+import { CodeLanguage, CodeNodeData, Variable } from "../type";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
 import Editor from "./Editor";
@@ -33,6 +33,12 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
 
     const handleUpdate = (payload: Partial<CodeNodeData>) => {
         handleUpdateCodeNodeData(node?.id, payload);
+    };
+
+    function handleCodeLanguageChange(event: React.ChangeEvent<HTMLSelectElement>){
+        handleUpdate({
+            code_language: event.target.value
+        });
     }
 
     return (
@@ -83,6 +89,16 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
                 </div>
 
                 <div>
+                    <select 
+                    value={nodeData.code_language}
+                    onChange={handleCodeLanguageChange}>
+                        {Object.values(CodeLanguage).map((language) => (
+                            <option key={language} value={language}>
+                                {language}
+                            </option>
+                        ))}
+                    </select>
+
                     <Editor
                         nodeId={id}
                         language={nodeData.code_language}
@@ -93,9 +109,9 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
 
                 <div>
                     <OutputSection
-                    nodeId = {id}
-                    outputs={nodeData.outputs}
-                    handleUpdateNodeData={handleUpdateCodeNodeData}
+                        nodeId={id}
+                        outputs={nodeData.outputs}
+                        handleUpdateNodeData={handleUpdateCodeNodeData}
                     />
                 </div>
 

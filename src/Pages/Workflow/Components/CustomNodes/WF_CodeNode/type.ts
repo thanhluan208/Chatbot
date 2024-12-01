@@ -25,3 +25,8 @@ export interface Variable {
   variable: string;
   value_selector: any[];
 }
+
+export enum CodeLanguage{
+  PYTHON= "python3",
+  JS= "javascript"
+}
