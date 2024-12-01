@@ -14,10 +14,10 @@ export interface CodeNodeData {
 }
 
 export interface Outputs {
-  result: Result;
+  [key: string]: Output;
 }
 
-export interface Result {
+export interface Output {
   type: string;
 }
 

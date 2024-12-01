@@ -24,6 +24,7 @@ const DescriptionInput = ({
     }
 
     timeoutRef.current = window.setTimeout(() => {
+      console.log(event.target.value);
       handleUpdate({
         desc: event.target.value,
       });

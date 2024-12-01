@@ -4,16 +4,20 @@ import CommonStyles from "@/Components/CommonStyles";
 import Hint from "@/Pages/ChatbotConfigure/components/GenerateDiversity/components/Hint";
 import InputRow from "./InputRow";
 import { Box } from "@mui/material";
-import { Variable } from "../type";
+import { CodeNodeData, Variable } from "../type";
 import useGetVariableSelectors from "@/Hooks/workflow/useGetVariableSelectors";
-import { v4 as uuid } from "uuid";
-import React, { useReducer } from "react";
+import React from "react";
+import { useReactFlow } from "@xyflow/react";
+import {v4 as uuid} from 'uuid'
+
 
 interface InputSectionProps {
   nodeId: string;
   variables: Variable[];
   handleUpdateNodeData: (nodeId: string, payload: any) => void;
 }
+
+const varsUuid: string[] = [];
 
 const InputSection = ({
   nodeId,
@@ -22,10 +26,16 @@ const InputSection = ({
 }: InputSectionProps) => {
   const { data: varSelectors } = useGetVariableSelectors(nodeId);
   const [rerenderFlag, setRerenderFlag] = React.useState(false);
-  console.log(variables);
+
+  variables.forEach(() => {
+    varsUuid.push(uuid());
+  });
+
   //! Function
   function handleInputChange() {
-    handleUpdateNodeData(nodeId, variables);
+    handleUpdateNodeData(nodeId, {
+      variables: variables,
+    });
   }
 
   function handleAddInput() {
@@ -34,14 +44,21 @@ const InputSection = ({
       value_selector: [],
     };
     variables.push(newVar);
+    varsUuid.push(uuid());
     setRerenderFlag((prev) => !prev);
-    console.log("variable", variables);
     handleUpdateNodeData(nodeId, {
-      variables,
+      variables: variables
     });
   }
 
-  function handleDeleteInput(index: number) {}
+  function handleDeleteInput(index: number) {
+    variables.splice(index,1);
+    varsUuid.splice(index,1);
+    setRerenderFlag((prev) => !prev);
+    handleUpdateNodeData(nodeId, {
+      variables: variables
+    });
+  }
 
   return (
     <div
@@ -80,7 +97,7 @@ const InputSection = ({
         {Object.values(variables).map((variable, index) => (
           <div
             className="flex items-center justify-between justify-items-center ml-4 mt-2"
-            key={variable.id}
+            key={varsUuid[index]}
           >
             <InputRow
               input={variable}

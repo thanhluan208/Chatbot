@@ -1,39 +1,62 @@
 import CommonStyles from "@/Components/CommonStyles";
-import { CodeNodeOutput } from "../type";
+import { Output } from "../type";
+import { useRef } from "react";
 
 export const options = [
-    {value : "String", label : "String"},
-    {value : "Boolean", label : "Boolean"},
-    {value : "Number", label : "Number"},
-    {value : "Object", label : "Object"},
-    {value : "Array<String>", label : "Array<String>"},
-    {value : "Array<Boolean>", label : "Array<Boolean>"},
-    {value : "Array<Number>", label : "Array<Number>"},
-    {value : "Array<Object>", label : "Array<Object>"},
+    { value: "String", label: "String" },
+    { value: "Number", label: "Number" },
+    { value: "Object", label: "Object" },
+    { value: "Array[String]", label: "Array[String]" },
+    { value: "Array[Number]", label: "Array[Number]" },
+    { value: "Array[Object]", label: "Array[Object]" },
 ];
 
 interface OutputRowProps {
-    output: CodeNodeOutput;
-    index: number;
-    onDataTypeChange: (value: string, index: number) => void;
-  }
+    outputKey: string;
+    output: Output;
+    handleOnDataChange: () => void,
+    handleOnOutputKeyChange: (key: string, newKey: string) => void,
+}
 
-const OutputRow : React.FC<OutputRowProps> = ({ output,index, onDataTypeChange }) => {
+const OutputRow = ({
+    outputKey,
+    output,
+    handleOnDataChange,
+    handleOnOutputKeyChange
+}: OutputRowProps) => {
+
+    const timeoutRef = useRef<number | null>(null);
+    const onOutputNameChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+
+        timeoutRef.current = window.setTimeout(() => {
+            handleOnOutputKeyChange(outputKey, event.target.value);
+        }, 1000);
+    }
+
+    const onOutputTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        output.type = event.target.value;
+        handleOnDataChange();
+    }
+
     return (
         <div className="flex items-center ml-4">
             <CommonStyles.Input className="w-72"
-                initValue={output?.varName ?? ""}
+                initValue={outputKey ?? ""}
                 placeholder="Enter variable name "
                 required
+                afterOnchange={onOutputNameChange}
             />
 
             <select className="ml-2"
-                value={output?.varDataType}
-                onChange={(e) => onDataTypeChange && onDataTypeChange(e.target.value, index)}
+                value={output?.type}
+                onChange={onOutputTypeChange}
             >
                 {options.map((option) => (
                     <option key={option.value} value={option.value}>
-                    {option.label}
+                        {option.label}
                     </option>
                 ))}
             </select>

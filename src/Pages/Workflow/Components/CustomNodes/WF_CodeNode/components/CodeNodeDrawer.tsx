@@ -1,4 +1,4 @@
-import { NodeProps, useReactFlow } from "@xyflow/react";
+import { NodeProps } from "@xyflow/react";
 import { useTheme } from "@mui/material";
 import { Code, X } from "lucide-react";
 import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
@@ -9,11 +9,11 @@ import { useSave } from "@/Stores/useStore";
 import DescriptionInput from "../../../DescriptionInput";
 import VarOutList from "../../../misc/VarOutList";
 import { CodeNodeData, Variable } from "../type";
-import { toast } from "react-toastify";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
 import Editor from "./Editor";
 import InputSection from "./InputSection";
+import OutputSection from "./OutputSection";
 
 
 interface CodeNodeDrawerProps {
@@ -25,13 +25,11 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
     const { workflowId } = useParams();
     const save = useSave();
     const { userId } = useAuth();
-    const { updateNode } = useReactFlow();
-    const { handleUpdateNodeData, handleUpdateCodeNodeData } = useWorkflowMutate();
+    const { handleUpdateCodeNodeData } = useWorkflowMutate();
 
     if (!node) return null;
-    const { data, id } = node;
+    const { id } = node;
     const nodeData = node?.data as unknown as CodeNodeData;
-    const nodeDataVars = nodeData.variables as Variable[];
 
     const handleUpdate = (payload: Partial<CodeNodeData>) => {
         handleUpdateCodeNodeData(node?.id, payload);
@@ -79,7 +77,7 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
                 <div>
                     <InputSection
                         nodeId={id}
-                        variables={nodeDataVars}
+                        variables={nodeData.variables}
                         handleUpdateNodeData={handleUpdateCodeNodeData}
                     />
                 </div>
@@ -94,7 +92,11 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
                 </div>
 
                 <div>
-                    Output
+                    <OutputSection
+                    nodeId = {id}
+                    outputs={nodeData.outputs}
+                    handleUpdateNodeData={handleUpdateCodeNodeData}
+                    />
                 </div>
 
                 <div className="px-3">
