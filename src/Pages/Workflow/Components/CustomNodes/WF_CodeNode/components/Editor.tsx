@@ -1,5 +1,6 @@
 import EditorMonaco from "@monaco-editor/react";
 import { useRef } from "react";
+import { CodeNodeData } from "../type";
 
 interface EditorProps {
   nodeId: string;
@@ -16,17 +17,15 @@ const Editor = ({
 }: EditorProps) => {
   const editorRef = useRef<unknown | null>(null);
   const timeoutRef = useRef<number | null>(null);
+
   //!Function
-  const handleChange = (
-    value: string | undefined, ev: unknown
-  ) => {
+  const handleChange = (value: string | undefined, ev: unknown) => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
 
-    const payload: any = {
-      code: value, 
-      code_language: language
+    const payload: Partial<CodeNodeData> = {
+      code: value,
     };
 
     timeoutRef.current = window.setTimeout(() => {
@@ -48,7 +47,6 @@ const Editor = ({
                           result: arg1 + arg2
                       }
                     }"
-
       value={value}
       language={language}
       onMount={handleEditorDidMount}
