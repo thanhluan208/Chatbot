@@ -39,34 +39,34 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
 
     return (
         <div
-          className="py-4"
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
+            className="py-4"
+            onClick={(e) => {
+                e.stopPropagation();
+            }}
         >
             <div className="flex flex-col  sticky top-0 px-6 py-4 z-50 backdrop-blur-3xl">
                 <div className="flex justify-between">
                     <div className="flex items-center gap-2 ">
                         <div
-                        className="w-6 h-6 flex items-center justify-center rounded-md"
-                        style={{
-                            background: theme.palette.primary.main,
-                        }}
+                            className="w-6 h-6 flex items-center justify-center rounded-md"
+                            style={{
+                                background: theme.palette.primary.main,
+                            }}
                         >
-                        <Code className="w-3.5 h-3.5" color="#fff" />
+                            <Code className="w-3.5 h-3.5" color="#fff" />
                         </div>
                         <EditLabelNode nodeId={node.id} workflowId={workflowId} />
                     </div>
-        
+
                     <CommonStyles.Button
                         isIcon
                         sx={{
-                        position: "absolute",
-                        top: 16,
-                        right: 16,
+                            position: "absolute",
+                            top: 16,
+                            right: 16,
                         }}
                         onClick={() => {
-                        save(cachedKeys.NODE_EDITING, null);
+                            save(cachedKeys.NODE_EDITING, null);
                         }}
                     >
                         <X size={24} />
@@ -74,22 +74,22 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
                 </div>
                 <DescriptionInput value={nodeData.desc} handleUpdate={handleUpdate} />
             </div>
-    
+
             <div className="px-3">
                 <div>
-                    <InputSection 
-                    nodeId={id}
-                    variables={nodeDataVars}
-                    handleUpdateNodeData={handleUpdateCodeNodeData}
+                    <InputSection
+                        nodeId={id}
+                        variables={nodeDataVars}
+                        handleUpdateNodeData={handleUpdateCodeNodeData}
                     />
                 </div>
 
                 <div>
-                    <Editor 
-                    nodeId={id}
-                    language={nodeData.code_language}
-                    value={nodeData.code}
-                    handleUpdateNodeData={handleUpdateCodeNodeData}
+                    <Editor
+                        nodeId={id}
+                        language={nodeData.code_language}
+                        value={nodeData.code}
+                        handleUpdateNodeData={handleUpdateCodeNodeData}
                     />
                 </div>
 
@@ -102,7 +102,7 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
                 </div>
             </div>
         </div>
-      );
+    );
 }
 
 export default CodeNodeDrawer;

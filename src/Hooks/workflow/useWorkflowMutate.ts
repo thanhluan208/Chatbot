@@ -722,12 +722,13 @@ export default function useWorkflowMutate() {
         name: nodeId,
         desc: nodeData.desc,
         position: nodeData.position,
+        code_language: payload?.code_language ?? nodeData.code_language,
+        code:  payload?.code ?? nodeData.code,
+        ...payload,
         variables: {
           ...nodeData.variables,
           ...payload?.variables
         },
-        code_language: payload?.code_language ?? nodeData.code_language,
-        code:  payload?.code ?? nodeData.code,
         outputs: {
           ...nodeData.outputs,
           ...payload?.outputs
