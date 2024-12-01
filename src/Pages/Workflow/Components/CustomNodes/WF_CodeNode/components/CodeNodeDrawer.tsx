@@ -33,50 +33,8 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
     const nodeData = node?.data as unknown as CodeNodeData;
     const nodeDataVars = nodeData.variables as Variable[];
 
-    const handleUpdate = (
-        payload: Partial<CodeNodeData>,
-        onSuccess?: () => void,
-        onFailed?: () => void
-      ) => {
-        if (!workflowId || !userId) return;
-
-        const updatePayload = {
-            name: id,
-            desc: nodeData.desc,
-            position: nodeData.position,
-            ...payload,
-            variables: nodeData.variables,
-            code_language: nodeData.code_language,
-            code: nodeData.code,
-            outputs: nodeData.outputs 
-        };
-
-        handleUpdateNodeData.mutate(
-            {
-                workflow_id: workflowId,
-                user_id: userId,
-                node_id: id,
-                node_data: updatePayload,
-            },
-            {
-                onSuccess: (response) => {
-                if (response?.status_code !== 200) {
-                    toast.error(response?.message);
-                    onFailed && onFailed();
-                }
-                updateNode(id, {
-                    data: {
-                    ...data,
-                    ...updatePayload,
-                    },
-                });
-                onSuccess && onSuccess();
-                },
-                onError: () => {
-                onFailed && onFailed();
-                },
-            }
-        );  
+    const handleUpdate = (payload: Partial<CodeNodeData>) => {
+        handleUpdateCodeNodeData(node?.id, payload);
     }
 
     return (

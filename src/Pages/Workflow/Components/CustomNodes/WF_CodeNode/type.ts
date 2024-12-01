@@ -1,3 +1,5 @@
+import { UUID } from "crypto";
+
 export interface CodeNodeData {
   name?: string;
   type: string;

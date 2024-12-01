@@ -5,6 +5,9 @@ import Hint from "@/Pages/ChatbotConfigure/components/GenerateDiversity/componen
 import InputRow from "./InputRow";
 import { Box } from "@mui/material";
 import { Variable } from "../type";
+import useGetVariableSelectors from "@/Hooks/workflow/useGetVariableSelectors";
+import { v4 as uuid } from "uuid";
+import React, { useReducer } from "react";
 
 interface InputSectionProps{
     nodeId: string;
@@ -16,15 +19,25 @@ const InputSection = ({
     nodeId,
     variables,
     handleUpdateNodeData
-
 } : InputSectionProps) => {
+
+    const { data: varSelectors } = useGetVariableSelectors(nodeId);
+    const [rerenderFlag, setRerenderFlag] = React.useState(false);
+    console.log(variables);
     //! Function
     function handleInputChange(){
         handleUpdateNodeData(nodeId, variables);
     }
 
     function handleAddInput(){
-
+        const newVar : Variable ={
+            variable: "",
+            value_selector: []
+        };
+        variables.push(newVar);
+        setRerenderFlag(prev => !prev);
+        console.log(variables +"a");
+        handleUpdateNodeData(nodeId, variables);
     }
 
     function handleDeleteInput(index: number){
@@ -58,7 +71,7 @@ const InputSection = ({
                 </div>
 
                 {Object.values(variables).map((variable, index)=>(
-                    <div className="flex items-center justify-between justify-items-center ml-4 mt-2" key={"var-"+index}>
+                    <div className="flex items-center justify-between justify-items-center ml-4 mt-2" key={variable.id}>
                         <InputRow
                             input={variable}
                             handleOnDataChange={handleInputChange}
@@ -83,7 +96,6 @@ const InputSection = ({
                     onClick={(e) => {
                         e.stopPropagation();
                         e.preventDefault();
-
                         handleAddInput();
                     }}
                 >
@@ -95,4 +107,4 @@ const InputSection = ({
     );
 }
 
-export default InputSection;
+export default React.memo(InputSection);
