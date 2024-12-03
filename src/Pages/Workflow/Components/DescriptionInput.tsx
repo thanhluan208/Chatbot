@@ -10,10 +10,7 @@ interface DescriptionInputProps {
   ) => void;
 }
 
-const DescriptionInput = ({
-  value,
-  handleUpdate,
-}: DescriptionInputProps) => {
+const DescriptionInput = ({ value, handleUpdate }: DescriptionInputProps) => {
   const timeoutRef = useRef<number | null>(null);
 
   const handleChange = (
@@ -22,7 +19,6 @@ const DescriptionInput = ({
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
-
     timeoutRef.current = window.setTimeout(() => {
       console.log(event.target.value);
       handleUpdate({
