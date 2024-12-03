@@ -47,12 +47,17 @@ const Input = forwardRef(
     ) => {
       event.preventDefault();
       event.stopPropagation();
-      let value = Number(event.target.value);
+      let value;
 
-      if (min) value = Math.max(min, value);
-      if (max) value = Math.min(value, max);
+      if (min || max) {
+        value = Number(event.target.value);
+        if (min) value = Math.max(min, value);
+        if (max) value = Math.min(value, max);
+      } else {
+        value = event.target.value;
+      }
 
-      setValue(value);
+      setValue(String(value));
       afterOnchange && afterOnchange(event);
     };
 
