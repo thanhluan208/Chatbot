@@ -6,9 +6,10 @@ import InputRow from "./InputRow";
 import { Box } from "@mui/material";
 import { CodeNodeData, Variable } from "../type";
 import useGetVariableSelectors from "@/Hooks/workflow/useGetVariableSelectors";
-import React from "react";
+import React, { useMemo } from "react";
 import { useReactFlow } from "@xyflow/react";
-import {v4 as uuid} from 'uuid'
+import { v4 as uuid } from 'uuid'
+import { NodeOutPutVar } from "@/Components/CommonStyles/EditorPlugin/type";
 
 
 interface InputSectionProps {
@@ -26,6 +27,35 @@ const InputSection = ({
 }: InputSectionProps) => {
   const { data: varSelectors } = useGetVariableSelectors(nodeId);
   const [rerenderFlag, setRerenderFlag] = React.useState(false);
+
+  const varList = useMemo(() => {
+    if (!varSelectors?.variable_selectors) return [];
+
+    const list: NodeOutPutVar[] = [];
+
+    varSelectors?.variable_selectors?.forEach((item) => {
+      const index = list.findIndex((elm) => elm.nodeId === item.value[0]);
+      if (index !== -1) {
+        list[index].vars.push({
+          type: item.type,
+          variable: item.value[1],
+        });
+      } else {
+        list.push({
+          nodeId: item.value[0],
+          title: item.value[0],
+          vars: [
+            {
+              type: item.type,
+              variable: item.value[1],
+            },
+          ],
+        });
+      }
+    });
+
+    return list;
+  }, [varSelectors?.variable_selectors]);
 
   variables.forEach(() => {
     varsUuid.push(uuid());
@@ -52,8 +82,8 @@ const InputSection = ({
   }
 
   function handleDeleteInput(index: number) {
-    variables.splice(index,1);
-    varsUuid.splice(index,1);
+    variables.splice(index, 1);
+    varsUuid.splice(index, 1);
     setRerenderFlag((prev) => !prev);
     handleUpdateNodeData(nodeId, {
       variables: variables
@@ -103,6 +133,7 @@ const InputSection = ({
               input={variable}
               handleOnDataChange={handleInputChange}
               index={index}
+              varListSelector={varList}
             />
 
             <CircleMinus

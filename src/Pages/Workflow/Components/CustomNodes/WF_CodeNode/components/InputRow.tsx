@@ -2,6 +2,7 @@ import CommonStyles from "@/Components/CommonStyles";
 import { Variable } from "../type";
 import { useMemo, useRef, useState } from "react";
 import { validate } from "uuid";
+import { NodeOutPutVar } from "@/Components/CommonStyles/EditorPlugin/type";
 
 // export const ParameterTypeOptions = [
 //     {value : ParamType.INPUT, label : ParamType.INPUT},
@@ -11,10 +12,11 @@ import { validate } from "uuid";
 interface InputRowProps{
   input: Variable,
   handleOnDataChange: () => void,
-  index: number
+  index: number,
+  varListSelector: NodeOutPutVar[]
 }
 
-const InputRow = ({input, handleOnDataChange, index}: InputRowProps) => {
+const InputRow = ({input, handleOnDataChange, varListSelector, index}: InputRowProps) => {
   const timeoutRef = useRef<number | null>(null);
 
   // const handleSelectChange = (value: string) => {
