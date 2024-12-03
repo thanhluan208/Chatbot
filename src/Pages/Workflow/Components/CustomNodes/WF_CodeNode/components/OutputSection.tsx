@@ -97,7 +97,7 @@ const OutputSection = ({ nodeId, outputs, handleUpdateNodeData }: OutputSectionP
             >
                 <div className="flex items-center ml-4"
                     style={{ fontSize: "12px", color: "#1c1d2359" }}>
-                    <div style={{ flex: "1 1" }}>Variable name</div>
+                    <div style={{ flex: "0.8 1" }}>Variable name</div>
                     <div className="w-40">Variable type</div>
                 </div>
 

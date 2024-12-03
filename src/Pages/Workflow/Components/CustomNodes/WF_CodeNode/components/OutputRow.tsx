@@ -1,15 +1,6 @@
 import CommonStyles from "@/Components/CommonStyles";
-import { Output } from "../type";
-import { useRef } from "react";
-
-export const options = [
-    { value: "String", label: "String" },
-    { value: "Number", label: "Number" },
-    { value: "Object", label: "Object" },
-    { value: "Array[String]", label: "Array[String]" },
-    { value: "Array[Number]", label: "Array[Number]" },
-    { value: "Array[Object]", label: "Array[Object]" },
-];
+import { Output, VariablesType } from "../type";
+import { useCallback, useMemo, useRef } from "react";
 
 interface OutputRowProps {
     outputKey: string;
@@ -26,6 +17,16 @@ const OutputRow = ({
 }: OutputRowProps) => {
 
     const timeoutRef = useRef<number | null>(null);
+
+    const varTypeOptions = useMemo(() => {
+        return Object.entries(VariablesType).map(([key, value]) => {
+          return {
+            value: value,
+            label: key,
+          };
+        });
+      }, []);
+
     const onOutputNameChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
@@ -36,10 +37,11 @@ const OutputRow = ({
         }, 1000);
     }
 
-    const onOutputTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        output.type = event.target.value;
+    const onOutputTypeChange = useCallback((value: string) => {
+        if (value === output?.type) return;
+        output.type = value;
         handleOnDataChange();
-    }
+    },[output]);
 
     return (
         <div className="flex items-center ml-4">
@@ -50,7 +52,17 @@ const OutputRow = ({
                 afterOnchange={onOutputNameChange}
             />
 
-            <select className="ml-2"
+            <CommonStyles.Select
+                handleChange={onOutputTypeChange}
+                value={output?.type}
+                options={varTypeOptions}
+                sx={{
+                    marginLeft: "0.25rem",
+                    width: "10rem"
+                }}
+            />
+
+            {/* <select className="ml-2"
                 value={output?.type}
                 onChange={onOutputTypeChange}
             >
@@ -59,7 +71,7 @@ const OutputRow = ({
                         {option.label}
                     </option>
                 ))}
-            </select>
+            </select> */}
         </div>
     );
 }

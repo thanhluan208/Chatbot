@@ -1,5 +1,5 @@
 import { NodeProps } from "@xyflow/react";
-import { useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { Code, X } from "lucide-react";
 import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
 import CommonStyles from "@/Components/CommonStyles";
@@ -14,11 +14,23 @@ import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
 import Editor from "./Editor";
 import InputSection from "./InputSection";
 import OutputSection from "./OutputSection";
+import CollapseArea from "@/Components/CommonStyles/CollapseArea";
+import Hint from "@/Pages/ChatbotConfigure/components/GenerateDiversity/components/Hint";
+import { useMemo } from "react";
 
 
 interface CodeNodeDrawerProps {
     node?: NodeProps;
 }
+
+const demo = [
+    {value: "d1", label: "d1", group: "D"},
+    {value: "d2", label: "d2"},
+    {value: "d3", label: "d3"},
+    {value: "c1", label: "c1", group: "C"},
+    {value: "c2", label: "c2"},
+    {value: "c3", label: "c3"},
+];
 
 const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
     const theme = useTheme();
@@ -26,6 +38,15 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
     const save = useSave();
     const { userId } = useAuth();
     const { handleUpdateCodeNodeData } = useWorkflowMutate();
+
+    const codeLanguageOptions = useMemo(() => {
+        return Object.entries(CodeLanguage).map(([key, value]) => {
+            return {
+                value: value,
+                label: key,
+            };
+        });
+    }, []);
 
     if (!node) return null;
     const { id } = node;
@@ -35,9 +56,11 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
         handleUpdateCodeNodeData(node?.id, payload);
     };
 
-    function handleCodeLanguageChange(event: React.ChangeEvent<HTMLSelectElement>){
+    function handleCodeLanguageChange(value: string) {
+        if (value === nodeData.code_language) return;
+
         handleUpdate({
-            code_language: event.target.value
+            code_language: value
         });
     }
 
@@ -88,23 +111,44 @@ const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
                     />
                 </div>
 
-                <div>
-                    <select 
-                    value={nodeData.code_language}
-                    onChange={handleCodeLanguageChange}>
-                        {Object.values(CodeLanguage).map((language) => (
-                            <option key={language} value={language}>
-                                {language}
-                            </option>
-                        ))}
-                    </select>
+                <div style={{ background: "#2e2d380a", borderRadius: "8px", marginBottom: "12px" }}>
+                    <CollapseArea
+                        initOpen={true}
+                        label={
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    gap: "8px",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <CommonStyles.Typography type="semiBold14">
+                                    Code
+                                </CommonStyles.Typography>
+                                <Hint content="Write the structure of a function referring to the code example, where you can directly use the variables in the input parameters, and output the processing result by returning an object. This feature does not support writing multiple functions. Even if there is only one output value, make sure to return it as an object" />
+                            </Box>
+                        }
+                    >
 
-                    <Editor
-                        nodeId={id}
-                        language={nodeData.code_language}
-                        value={nodeData.code}
-                        handleUpdateNodeData={handleUpdateCodeNodeData}
-                    />
+                        <CommonStyles.Select
+                            handleChange={handleCodeLanguageChange}
+                            value={nodeData.code_language}
+                            options={codeLanguageOptions}
+                            sx={{
+                                marginLeft: "0.5rem",
+                                marginBottom: "0.3rem",
+                                width: "8rem",
+                                fontSize: "15px"
+                            }}
+                        />
+
+                        <Editor
+                            nodeId={id}
+                            language={nodeData.code_language}
+                            value={nodeData.code}
+                            handleUpdateNodeData={handleUpdateCodeNodeData}
+                        />
+                    </CollapseArea>
                 </div>
 
                 <div>

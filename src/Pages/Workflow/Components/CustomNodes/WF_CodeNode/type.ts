@@ -27,6 +27,15 @@ export interface Variable {
 }
 
 export enum CodeLanguage{
-  PYTHON= "python3",
-  JS= "javascript"
+  Python = "python3",
+  Javascript = "javascript"
+}
+
+export enum VariablesType{
+  String = "String",
+  Number = "Number",
+  Object = "Object",
+  "Array[String]" = "Array[String]",
+  "Array[Number]" = "Array[Number]",
+  "Array[Object]" = "Array[Object]"
 }
