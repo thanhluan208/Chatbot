@@ -38,7 +38,7 @@ const InputSection = ({
       if (index !== -1) {
         list[index].vars.push({
           type: item.type,
-          variable: item.value[1],
+          variable: item.value.slice(1).join(".")
         });
       } else {
         list.push({
@@ -47,7 +47,7 @@ const InputSection = ({
           vars: [
             {
               type: item.type,
-              variable: item.value[1],
+              variable: item.value.slice(1).join(".")
             },
           ],
         });

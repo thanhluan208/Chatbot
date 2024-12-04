@@ -23,15 +23,6 @@ interface CodeNodeDrawerProps {
     node?: NodeProps;
 }
 
-const demo = [
-    {value: "d1", label: "d1", group: "D"},
-    {value: "d2", label: "d2"},
-    {value: "d3", label: "d3"},
-    {value: "c1", label: "c1", group: "C"},
-    {value: "c2", label: "c2"},
-    {value: "c3", label: "c3"},
-];
-
 const CodeNodeDrawer = ({ node }: CodeNodeDrawerProps) => {
     const theme = useTheme();
     const { workflowId } = useParams();
