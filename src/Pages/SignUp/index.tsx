@@ -23,7 +23,7 @@ const SignUp = () => {
   const { t } = useTranslation("store");
 
   //! State
-  const [openVerify, setOpenVerify] = useState(true);
+  const [openVerify, setOpenVerify] = useState(false);
 
   const email = useRef("");
   const otpInput = useRef("");
