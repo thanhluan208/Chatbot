@@ -13,7 +13,7 @@ const UpdateNodePos = ({ id }: { id: string }) => {
   const nodePos = useRef(JSON.stringify(node?.position));
   const nodeType = node?.type;
 
-  const deboundRef = React.useRef<NodeJS.Timeout | null>(null);
+  const deboundRef = React.useRef<number | null>(null);
   const isFirstRender = React.useRef(true);
 
   const { handleUpdateNodePosition } = useWorkflowMutate();

@@ -11,7 +11,7 @@ const useDebounce = <T extends (...args: any[]) => void>(
   callback: T,
   timeout: number = 300
 ) => {
-  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceRef = useRef<number | null>(null);
 
   const debounceFunction = (...args: Parameters<T>) => {
     // Clear the previous timer if it exists

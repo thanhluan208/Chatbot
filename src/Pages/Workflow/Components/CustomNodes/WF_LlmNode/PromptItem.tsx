@@ -43,7 +43,7 @@ const PromptItem = ({
     transition,
   } = useSortable({ id });
 
-  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceRef = useRef<number | null>(null);
 
   const style: CSSProperties = {
     opacity: isDragging ? 0.4 : undefined,

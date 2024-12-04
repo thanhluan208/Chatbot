@@ -13,7 +13,7 @@ const UserSelectField = (props: IUserSelectField) => {
   const { name } = props;
   const [search, setSearch] = useState("");
   const { data } = useGetListUser(search);
-  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceRef = useRef<number | null>(null);
 
   const options = useMemo(() => {
     return processOption(data, "user_id", "user_name");

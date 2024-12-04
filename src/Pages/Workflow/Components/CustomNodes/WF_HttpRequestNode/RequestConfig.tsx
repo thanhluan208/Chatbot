@@ -17,7 +17,7 @@ const RequestConfig = ({ nodeId }: RequestConfigProps) => {
 
   const { handleUpdateNodeDataHttpRequest } = useWorkflowMutate();
 
-  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceRef = useRef<number | null>(null);
 
   const nodeData = node?.data as unknown as NodeDataHTTPRequest;
 

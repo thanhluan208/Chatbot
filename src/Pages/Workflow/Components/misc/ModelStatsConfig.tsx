@@ -21,7 +21,7 @@ const ModelStatsConfig = ({
 }: ModelStatsConfigProps) => {
   const theme = useTheme();
   const { values, dirty } = useFormikContext<any>();
-  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (debounceRef.current) {

@@ -67,7 +67,7 @@ const SignUp = () => {
         isLoading: true,
       });
       const response = await handleSubmitOTP.mutateAsync({
-        email: "thanhluan20880@gmail.com",
+        email: email.current,
         otp: newValue,
       });
       if (response.data.status_code === 200) {

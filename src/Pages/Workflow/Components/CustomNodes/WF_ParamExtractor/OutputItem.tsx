@@ -20,7 +20,7 @@ const OutputItem = ({
   handleRemoveOutput,
 }: OutputListProps) => {
   const theme = useTheme();
-  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceRef = useRef<number | null>(null);
 
   const typeOptions = useMemo(() => {
     return Object.values(StartNodeInputType).map((type) => ({

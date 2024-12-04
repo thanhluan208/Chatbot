@@ -15,7 +15,7 @@ const SegmentStatus = ({ row }: { row: FileData }) => {
   const theme = useTheme();
   const { userId } = useAuth();
   const { knowledgeId } = useParams();
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<number | null>(null);
   
   const refetchKnowledgeFiles =
     row?.process_status === FileStatus.FAILED ||

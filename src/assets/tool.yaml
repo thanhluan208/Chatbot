@@ -1,0 +1,69 @@
+alphavantage:  
+  identity:
+    author: Mạnh Đỗ
+    name: alphavantage
+    label:
+      vi_VN: AlphaVantage
+      en_US: AlphaVantage
+      zh_Hans: AlphaVantage
+      pt_BR: AlphaVantage
+    description:
+      en_US: AlphaVantage là một nền tảng trực tuyến cung cấp dữ liệu thị trường tài chính và API, giúp các nhà đầu tư cá nhân và nhà phát triển dễ dàng truy cập vào báo giá cổ phiếu, chỉ báo kỹ thuật và phân tích cổ phiếu.
+      zh_Hans: AlphaVantage是一个在线平台，它提供金融市场数据和API，便于个人投资者和开发者获取股票报价、技术指标和股票分析。
+      pt_BR: AlphaVantage is an online platform that provides financial market data and APIs, making it convenient for individual investors and developers to access stock quotes, technical indicators, and stock analysis.
+    icon: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5QZuQaZ8qCYe7R4wez297mVRqQxDNbXFItQ&s
+    tags:
+      - finance
+  credentials_for_provider:
+    api_key:
+      type: secret-input
+      required: true
+      label:
+        vi_VN: AlphaVantage API key
+        en_US: AlphaVantage API key
+        zh_Hans: AlphaVantage API key
+        pt_BR: AlphaVantage API key
+      placeholder:
+        vi_VN: Vui lòng nhập AlphaVantage API key của bạn.
+        en_US: Please input your AlphaVantage API key
+        zh_Hans: 请输入你的 AlphaVantage API key
+        pt_BR: Please input your AlphaVantage API key
+      help:
+        vi_VN: Lấy AlphaVantage API key của bạn từ trang web AlphaVantage.
+        en_US: Get your AlphaVantage API key from AlphaVantage
+        zh_Hans: 从 AlphaVantage 获取您的 AlphaVantage API key
+        pt_BR: Get your AlphaVantage API key from AlphaVantage
+      url: https://www.alphavantage.co/support/#api-key
+  query_stock:
+    identity:
+      name: query_stock
+      author: Mạnh Đỗ
+      label:
+        vi_VN: query_stock
+        en_US: query_stock
+        zh_Hans: query_stock
+        pt_BR: query_stock
+    description:
+      human:
+        vi_VN: Truy xuất thông tin như giá mở cửa hàng ngày, giá cao nhất trong ngày, giá thấp nhất trong ngày, giá đóng cửa hàng ngày và khối lượng giao dịch hàng ngày cho một mã cổ phiếu được chỉ định.
+        en_US: Retrieve information such as daily opening price, daily highest price, daily lowest price, daily closing price, and daily trading volume for a specified stock symbol.
+        zh_Hans: 获取指定股票代码的每日开盘价、每日最高价、每日最低价、每日收盘价和每日交易量等信息。
+        pt_BR: Retrieve information such as daily opening price, daily highest price, daily lowest price, daily closing price, and daily trading volume for a specified stock symbol
+      llm: Retrieve information such as daily opening price, daily highest price, daily lowest price, daily closing price, and daily trading volume for a specified stock symbol
+    parameters:
+      - name: code
+        type: string
+        required: true
+        label:
+          vi_VN: stock code
+          en_US: stock code
+          zh_Hans: 股票代码
+          pt_BR: stock code
+        human_description:
+          vi_VN: stock code
+          en_US: stock code
+          zh_Hans: 股票代码
+          pt_BR: stock code
+        llm_description: stock code for query from alphavantage
+        form: llm
+

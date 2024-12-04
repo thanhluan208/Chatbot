@@ -13,7 +13,7 @@ interface PromptProps {
 }
 
 const Prompt = ({ nodeId, value, handleUpdateCondition }: PromptProps) => {
-  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceRef = useRef<number | null>(null);
 
   const { data: varSelectors } = useGetVariableSelectors(nodeId);
   const theme = useTheme();

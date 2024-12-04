@@ -16,6 +16,12 @@ const listNode = [
     hidden: true,
   },
   {
+    name: `customNode_WF_${NodeTypeWorkflow.TOOL}`,
+    label: "Start Node",
+    description: "Create an agent",
+    hidden: true,
+  },
+  {
     name: `customNode_WF_${NodeTypeWorkflow.LLM}`,
     label: "LLM",
     description: "Llm Node",
@@ -95,7 +101,7 @@ const WorkflowDetail = () => {
         position: JSON.parse(node.data.position),
         data: {
           ...node?.data,
-          label: node?.id,
+          label: !node?.id.includes("tool") ? node?.id : node.data.tool_name, 
           variable_out: node?.variables_out,
           startNode: key === NodeTypeWorkflow.START,
         },

@@ -1,7 +1,7 @@
-import React, { useMemo, useRef } from "react";
 import { Box } from "@mui/material";
-import AddNodePopper from "../../Toolbar/AddNodePopper";
 import { NodeProps } from "@xyflow/react";
+import React, { useMemo, useRef } from "react";
+import AddNodePopper from "../../Toolbar/AddNodePopper";
 
 const HelperNode = (props: NodeProps) => {
   //! State
@@ -16,8 +16,8 @@ const HelperNode = (props: NodeProps) => {
     return {
       x: props?.positionAbsoluteX,
       y: props?.positionAbsoluteY,
-    }
-  },[props?.positionAbsoluteX, props?.positionAbsoluteY])
+    };
+  }, [props?.positionAbsoluteX, props?.positionAbsoluteY]);
 
   //! Function
 
@@ -37,10 +37,12 @@ const HelperNode = (props: NodeProps) => {
         anchorEl={helperNode?.current}
         placement="right"
         sxContainer={{
-          width: "300px",
+          width: "400px",
         }}
         isHelperNode
         helperPosition={position}
+        enableSearch
+        enableTool
       />
     </Box>
   );

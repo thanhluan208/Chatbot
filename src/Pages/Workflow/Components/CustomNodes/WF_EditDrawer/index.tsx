@@ -13,6 +13,7 @@ import QuestClassifierNodeDrawer from "../WF_QuestClassifier/QuestClassifierNode
 import AnswerNodeDrawer from "../WF_AnswerNode/AnswerNodeDrawer";
 import VariableAssignerNodeDrawer from "../WF_VarAssigner/VariableAssignerNodeDrawer";
 import HTTPNodeDrawer from "../WF_HttpRequestNode/HTTPNodeDrawer";
+import ToolNodeDrawer from "../WF_Tool/ToolNodeDrawer";
 
 interface WF_EditDrawerProps {
   node: NodeProps;
@@ -50,7 +51,9 @@ export default function WF_EditDrawer({ node }: WF_EditDrawerProps) {
       case NodeTypeWorkflow.VARIABLE:
         return <VariableAssignerNodeDrawer node={node} />;
       case NodeTypeWorkflow.HTTP_REQUEST:
-        return <HTTPNodeDrawer node={node} />;
+        return <HTTPNodeDrawer node={node} />
+      case NodeTypeWorkflow.TOOL:
+        return <ToolNodeDrawer node={node} />
       default:
         return null;
     }
