@@ -555,5 +555,715 @@ google_translate:
               vi_VI: Tiếng Việt
               en_US: Vietnamese
               zh_Hans: 越南语
-
+stability:
+  identity:
+    author: Dify
+    name: stability
+    label:
+      en_US: Stability
+      zh_Hans: Stability
+      pt_BR: Stability
+    description:
+      en_US: Activating humanity's potential through generative AI
+      zh_Hans: 通过生成式 AI 激活人类的潜力
+      pt_BR: Activating humanity's potential through generative AI
+    icon: https://www.appypie.com/endpoint/wp-content/uploads/stability-ai.png
+    tags:
+      - image
+  credentials_for_provider:
+    api_key:
+      type: secret-input
+      required: true
+      label:
+        en_US: API key
+        zh_Hans: API key
+        pt_BR: API key
+      placeholder:
+        en_US: Please input your API key
+        zh_Hans: 请输入你的 API key
+        pt_BR: Please input your API key
+      help:
+        en_US: Get your API key from Stability
+        zh_Hans: 从 Stability 获取你的 API key
+        pt_BR: Get your API key from Stability
+      url: https://platform.stability.ai/account/keys
+  edit_remove_background:
+    identity:
+      name: edit_remove_background
+      author: Mạnh Đỗ
+      label:
+        vi_VI: BackgroundRemoval
+        en_US: BackgroundRemoval
+    description:
+      human:
+        vi_VI: Xóa nền phân đoạn chính xác phần tiền cảnh từ hình ảnh và thực hiện việc xóa nền.
+        en_US: The Remove Background service accurately segments the foreground from an image and implements and removes the background.
+      llm: The Remove Background service accurately segments the foreground from an image and implements and removes the background.
+    parameters:
+      - name: image
+        type: string
+        required: true
+        label:
+          vi_VI: Ảnh
+          en_US: Image
+        human_description:
+          vi_VI: Hình ảnh mà bạn muốn xóa nền.
+          en_US: The image whose background you wish to remove.
+        llm_description: The image whose background you wish to remove.
+        form: llm
+      - name: output_format
+        type: select
+        options:
+          - value: png
+            label:
+              vi_VI: png
+              en_US: png
+          - value: jpeg
+            label:
+              vi_VI: jpeg
+              en_US: jpeg
+          # - value: webp  # ##TODO: Not ready yet
+          #   label:
+          #     vi_VI: webp
+          #     en_US: webp
+        required: true
+        default: png
+        label:
+          vi_VI: Định dạng đầu ra
+          en_US: Output Format
+        human_description:
+          vi_VI: Quy định `content-type` của hình ảnh được tạo ra.
+          en_US: Dictates the `content-type` of the generated image.
+        llm_description: Guides the image model towards a particular style.
+        form: form
+  text2image_stable_image_core:
+    identity:
+      name: text2image_stable_image_core
+      author: Mạnh Đỗ
+      label:
+        vi_VI: StableImageCore
+        en_US: StableImageCore
+        zh_Hans: 稳定扩散
+        pt_BR: StableImageCore
+    description:
+      human:
+        vi_VI: Một công cụ để tạo hình ảnh dựa trên đầu vào văn bản. Sử dụng phiên bản lõi hình ảnh ổn định.
+        en_US: A tool for generate images based on the text input. Using stable image core version
+        zh_Hans: 一个基于文本输入生成图像的工具
+        pt_BR: A tool for generate images based on the text input. Using stable image core version
+      llm: A tool for generate images based on the text input. Using stable image core version
+    parameters:
+      - name: prompt
+        type: string
+        required: true
+        label:
+          vi_VI: Prompt
+          en_US: Prompt
+          zh_Hans: 提示词
+          pt_BR: Prompt
+        human_description:
+          vi_VI: Được sử dụng để tạo hình ảnh
+          en_US: used for generating images
+          zh_Hans: 用于生成图像
+          pt_BR: used for generating images
+        llm_description: key words for generating images
+        form: llm
+      - name: negative_prompt
+        type: string
+        default: bad art, ugly, deformed, watermark, duplicated, discontinuous lines
+        required: true
+        label:
+          vi_VI: Negative Prompt
+          en_US: Negative Prompt
+          zh_Hans: 负面提示
+          pt_BR: Negative Prompt
+        human_description:
+          vi_VI: Negative Prompt
+          en_US: Negative Prompt
+          zh_Hans: 负面提示
+          pt_BR: Negative Prompt
+        llm_description: Negative Prompt
+        form: llm
+      - name: seed
+        type: number
+        default: 0
+        required: true
+        label:
+          vi_VI: Seed
+          en_US: Seed
+          zh_Hans: 种子
+          pt_BR: Seed
+        human_description:
+          vi_VI: Seed
+          en_US: Seed
+          zh_Hans: 种子
+          pt_BR: Seed
+        llm_description: Seed
+        min: 0
+        max: 4294967294
+        form: form
+      - name: aspect_ratio
+        type: select
+        default: '16:9'
+        options:
+          - value: '16:9'
+            label:
+              vi_VI: '16:9'
+              en_US: '16:9'
+              zh_Hans: '16:9'
+              pt_BR: '16:9'
+          - value: '1:1'
+            label:
+              vi_VI: '1:1'
+              en_US: '1:1'
+              zh_Hans: '1:1'
+              pt_BR: '1:1'
+          - value: '21:9'
+            label:
+              vi_VI: '21:9'
+              en_US: '21:9'
+              zh_Hans: '21:9'
+              pt_BR: '21:9'
+          - value: '2:3'
+            label:
+              vi_VI: '2:3'
+              en_US: '2:3'
+              zh_Hans: '2:3'
+              pt_BR: '2:3'
+          - value: '4:5'
+            label:
+              vi_VI: '4:5'
+              en_US: '4:5'
+              zh_Hans: '4:5'
+              pt_BR: '4:5'
+          - value: '5:4'
+            label:
+              vi_VI: '5:4'
+              en_US: '5:4'
+              zh_Hans: '5:4'
+              pt_BR: '5:4'
+          - value: '9:16'
+            label:
+              vi_VI: '9:16'
+              en_US: '9:16'
+              zh_Hans: '9:16'
+              pt_BR: '9:16'
+          - value: '9:21'
+            label:
+              vi_VI: '9:21'
+              en_US: '9:21'
+              zh_Hans: '9:21'
+              pt_BR: '9:21'
+        required: true
+        label:
+          vi_VI: Tỷ lệ khung hình
+          en_US: Aspect Ratio
+          zh_Hans: 长宽比
+          pt_BR: Aspect Ratio
+        human_description:
+          vi_VI: Tỷ lệ khung hình
+          en_US: Aspect Ratio
+          zh_Hans: 长宽比
+          pt_BR: Aspect Ratio
+        llm_description: Aspect Ratio
+        form: form
+      - name: style_preset
+        type: select
+        options:
+          - value: 3d-model
+            label:
+              vi_VI: 3d-model
+              en_US: 3d-model
+          - value: analog-film
+            label:
+              vi_VI: analog-film
+              en_US: analog-film
+          - value: anime
+            label:
+              vi_VI: anime
+              en_US: anime
+          - value: cinematic
+            label:
+              vi_VI: cinematic
+              en_US: cinematic
+          - value: comic-book
+            label:
+              vi_VI: comic-book
+              en_US: comic-book
+          - value: digital-art
+            label:
+              vi_VI: digital-art
+              en_US: digital-art
+          - value: enhance
+            label:
+              vi_VI: enhance
+              en_US: enhance
+          - value: fantasy-art
+            label:
+              vi_VI: fantasy-art
+              en_US: fantasy-art
+          - value: isometric
+            label:
+              vi_VI: isometric
+              en_US: isometric
+          - value: line-art
+            label:
+              vi_VI: line-art
+              en_US: line-art
+          - value: low-poly
+            label:
+              vi_VI: low-poly
+              en_US: low-poly
+          - value: modeling-compound
+            label:
+              vi_VI: modeling-compound
+              en_US: modeling-compound
+          - value: neon-punk
+            label:
+              vi_VI: neon-punk
+              en_US: neon-punk
+          - value: origami
+            label:
+              vi_VI: origami
+              en_US: origami
+          - value: photographic
+            label:
+              vi_VI: photographic
+              en_US: photographic
+          - value: pixel-art
+            label:
+              vi_VI: pixel-art
+              en_US: pixel-art
+          - value: tile-texture
+            label:
+              vi_VI: tile-texture
+              en_US: tile-texture
+        required: false
+        label:
+          vi_VI: Style Preset
+          en_US: Style Preset
+        human_description:
+          vi_VI: Hướng dẫn mô hình hình ảnh theo một phong cách cụ thể.
+          en_US: Guides the image model towards a particular style.
+        llm_description: Guides the image model towards a particular style.
+        form: form
+      - name: output_format
+        type: select
+        options:
+          - value: png
+            label:
+              vi_VI: png
+              en_US: png
+          - value: jpeg
+            label:
+              vi_VI: jpeg
+              en_US: jpeg
+          # - value: webp  # ##TODO: Not ready yet
+          #   label:
+          #     vi_VI: webp
+          #     en_US: webp
+        required: true
+        default: png
+        label:
+          vi_VI: Định dạng đầu ra
+          en_US: Output Format
+        human_description:
+          vi_VI: Quy định `content-type` của hình ảnh được tạo ra.
+          en_US: Dictates the `content-type` of the generated image.
+        llm_description: Guides the image model towards a particular style.
+        form: form
+  text2image_stable_diffusion:
+    identity:
+      name: text2image_stable_diffusion
+      author: Mạnh Đỗ
+      label:
+        vi_VI: StableDiffusion
+        en_US: StableDiffusion
+    description:
+      human:
+        vi_VI: Một công cụ để tạo hình ảnh dựa trên đầu vào văn bản. Sử dụng phiên bản stable diffusion.
+        en_US: A tool for generate images based on the text input. Using stable diffusion version
+      llm: A tool for generate images based on the text input. Using stable diffusion version
+    parameters:
+      - name: prompt
+        type: string
+        required: true
+        label:
+          vi_VI: Prompt
+          en_US: Prompt
+        human_description:
+          vi_VI: Được sử dụng để tạo hình ảnh
+          en_US: used for generating images
+        llm_description: key words for generating images
+        form: llm
+      - name: mode
+        type: select
+        default: text-to-image
+        options:
+          - value: text-to-image
+            label:
+              vi_VI: Sinh ảnh từ văn bản
+              en_US: From text to image
+          - value: image-to-image
+            label:
+              vi_VI: Sinh ảnh từ ảnh
+              en_US: From image to image
+        required: true
+        label:
+          vi_VI: Phương thức sinh ảnh
+          en_US: Mode for image generation
+        human_description:
+          vi_VI: Phương thức sinh ảnh
+          en_US: Mode for generation
+        llm_description: Mode for generation
+        form: form
+      - name: image
+        type: string
+        required: false
+        label:
+          vi_VI: Hình ảnh để làm điểm khởi đầu
+          en_US: image for starting point
+        human_description:
+          vi_VI: Hình ảnh được sử dụng làm điểm khởi đầu cho quá trình tạo hình.
+          en_US: The image to use as the starting point for the generation.
+        llm_description: The image to use as the starting point for the generation.
+        form: llm
+      - name: strength
+        type: number
+        required: false
+        label:
+          vi_VI: strength
+          en_US: strength
+        human_description:
+          vi_VI: Điều khiển mức độ ảnh hưởng của tham số `image` đến hình ảnh được tạo ra.
+          en_US: Controls how much influence the `image` parameter has on the generated image.
+        llm_description: Controls how much influence the `image` parameter has on the generated image.
+        form: llm
+      - name: aspect_ratio
+        type: select
+        default: '16:9'
+        options:
+          - value: '16:9'
+            label:
+              vi_VI: '16:9'
+              en_US: '16:9'
+              zh_Hans: '16:9'
+              pt_BR: '16:9'
+          - value: '1:1'
+            label:
+              vi_VI: '1:1'
+              en_US: '1:1'
+              zh_Hans: '1:1'
+              pt_BR: '1:1'
+          - value: '21:9'
+            label:
+              vi_VI: '21:9'
+              en_US: '21:9'
+              zh_Hans: '21:9'
+              pt_BR: '21:9'
+          - value: '2:3'
+            label:
+              vi_VI: '2:3'
+              en_US: '2:3'
+              zh_Hans: '2:3'
+              pt_BR: '2:3'
+          - value: '4:5'
+            label:
+              vi_VI: '4:5'
+              en_US: '4:5'
+              zh_Hans: '4:5'
+              pt_BR: '4:5'
+          - value: '5:4'
+            label:
+              vi_VI: '5:4'
+              en_US: '5:4'
+              zh_Hans: '5:4'
+              pt_BR: '5:4'
+          - value: '9:16'
+            label:
+              vi_VI: '9:16'
+              en_US: '9:16'
+              zh_Hans: '9:16'
+              pt_BR: '9:16'
+          - value: '9:21'
+            label:
+              vi_VI: '9:21'
+              en_US: '9:21'
+              zh_Hans: '9:21'
+              pt_BR: '9:21'
+        required: true
+        label:
+          vi_VI: Tỷ lệ khung hình
+          en_US: Aspect Ratio
+          zh_Hans: 长宽比
+          pt_BR: Aspect Ratio
+        human_description:
+          vi_VI: Tỷ lệ khung hình
+          en_US: Aspect Ratio
+          zh_Hans: 长宽比
+          pt_BR: Aspect Ratio
+        llm_description: Aspect Ratio
+        form: form
+      - name: model
+        type: select
+        default: sd3.5-large
+        options:
+          - value: sd3-large
+            label:
+              vi_VI: sd3-large
+              en_US: sd3-large
+          - value: sd3-large-turbo
+            label:
+              vi_VI: sd3-large-turbo
+              en_US: sd3-large-turbo
+          - value: sd3-medium
+            label:
+              vi_VI: sd3-medium
+              en_US: sd3-medium
+          - value: sd3.5-large
+            label:
+              vi_VI: sd3.5-large
+              en_US: sd3.5-large
+          - value: sd3.5-large-turbo
+            label:
+              vi_VI: sd3.5-large-turbo
+              en_US: sd3.5-large-turbo
+          - value: sd3.5-medium
+            label:
+              vi_VI: sd3.5-medium
+              en_US: sd3.5-medium
+        required: true
+        label:
+          vi_VI: Model
+          en_US: Model
+        human_description:
+          vi_VI: Model
+          en_US: Model
+        llm_description: Model
+        form: form
+      - name: seed
+        type: number
+        default: 0
+        required: true
+        label:
+          vi_VI: Seed
+          en_US: Seed
+        human_description:
+          vi_VI: Seed
+          en_US: Seed
+        llm_description: Seed
+        min: 0
+        max: 4294967294
+        form: form
+      - name: output_format
+        type: select
+        options:
+          - value: png
+            label:
+              vi_VI: png
+              en_US: png
+          - value: jpeg
+            label:
+              vi_VI: jpeg
+              en_US: jpeg
+          # - value: webp  # ##TODO: Not ready yet
+          #   label:
+          #     vi_VI: webp
+          #     en_US: webp
+        required: true
+        default: png
+        label:
+          vi_VI: Định dạng đầu ra
+          en_US: Output Format
+        human_description:
+          vi_VI: Quy định `content-type` của hình ảnh được tạo ra.
+          en_US: Dictates the `content-type` of the generated image.
+        llm_description: Guides the image model towards a particular style.
+        form: form
+      - name: negative_prompt
+        type: string
+        default: bad art, ugly, deformed, watermark, duplicated, discontinuous lines
+        required: true
+        label:
+          vi_VI: Negative Prompt
+          en_US: Negative Prompt
+        human_description:
+          vi_VI: Negative Prompt
+          en_US: Negative Prompt
+        llm_description: Negative Prompt
+        form: llm
+      - name: cfg_scale
+        type: number
+        default: 9
+        required: true
+        label:
+          vi_VI: Scale Config
+          en_US: Scale config
+        human_description:
+          vi_VI: How strictly the diffusion process adheres to the prompt text (higher values keep your image closer to your prompt).
+          en_US: How strictly the diffusion process adheres to the prompt text (higher values keep your image closer to your prompt).
+        llm_description: How strictly the diffusion process adheres to the prompt text (higher values keep your image closer to your prompt).
+        form: llm
+  text2image_stable_image_ultra:
+    identity:
+      name: text2image_stable_image_ultra
+      author: Mạnh Đỗ
+      label:
+        vi_VI: StableImageUltra
+        en_US: StableImageUltra
+    description:
+      human:
+        vi_VI: Một công cụ để tạo hình ảnh dựa trên đầu vào văn bản. Sử dụng phiên bản ổn định siêu hình ảnh.
+        en_US: A tool for generate images based on the text input. Using stable image ultra version
+      llm: A tool for generate images based on the text input. Using stable image ultra version
+    parameters:
+      - name: prompt
+        type: string
+        required: true
+        label:
+          vi_VI: Prompt
+          en_US: Prompt
+        human_description:
+          vi_VI: Được sử dụng để tạo hình ảnh
+          en_US: used for generating images
+        llm_description: key words for generating images
+        form: llm
+      - name: negative_prompt
+        type: string
+        default: bad art, ugly, deformed, watermark, duplicated, discontinuous lines
+        required: true
+        label:
+          vi_VI: Negative Prompt
+          en_US: Negative Prompt
+        human_description:
+          vi_VI: Negative Prompt
+          en_US: Negative Prompt
+        llm_description: Negative Prompt
+        form: llm
+      - name: seed
+        type: number
+        default: 0
+        required: true
+        label:
+          vi_VI: Seed
+          en_US: Seed
+        human_description:
+          vi_VI: Seed
+          en_US: Seed
+        llm_description: Seed
+        min: 0
+        max: 4294967294
+        form: form
+      - name: aspect_ratio
+        type: select
+        default: '16:9'
+        options:
+          - value: '16:9'
+            label:
+              vi_VI: '16:9'
+              en_US: '16:9'
+              zh_Hans: '16:9'
+              pt_BR: '16:9'
+          - value: '1:1'
+            label:
+              vi_VI: '1:1'
+              en_US: '1:1'
+              zh_Hans: '1:1'
+              pt_BR: '1:1'
+          - value: '21:9'
+            label:
+              vi_VI: '21:9'
+              en_US: '21:9'
+              zh_Hans: '21:9'
+              pt_BR: '21:9'
+          - value: '2:3'
+            label:
+              vi_VI: '2:3'
+              en_US: '2:3'
+              zh_Hans: '2:3'
+              pt_BR: '2:3'
+          - value: '4:5'
+            label:
+              vi_VI: '4:5'
+              en_US: '4:5'
+              zh_Hans: '4:5'
+              pt_BR: '4:5'
+          - value: '5:4'
+            label:
+              vi_VI: '5:4'
+              en_US: '5:4'
+              zh_Hans: '5:4'
+              pt_BR: '5:4'
+          - value: '9:16'
+            label:
+              vi_VI: '9:16'
+              en_US: '9:16'
+              zh_Hans: '9:16'
+              pt_BR: '9:16'
+          - value: '9:21'
+            label:
+              vi_VI: '9:21'
+              en_US: '9:21'
+              zh_Hans: '9:21'
+              pt_BR: '9:21'
+        required: true
+        label:
+          vi_VI: Tỷ lệ khung hình
+          en_US: Aspect Ratio
+          zh_Hans: 长宽比
+          pt_BR: Aspect Ratio
+        human_description:
+          vi_VI: Tỷ lệ khung hình
+          en_US: Aspect Ratio
+          zh_Hans: 长宽比
+          pt_BR: Aspect Ratio
+        llm_description: Aspect Ratio
+        form: form
+      - name: output_format
+        type: select
+        options:
+          - value: png
+            label:
+              vi_VI: png
+              en_US: png
+          - value: jpeg
+            label:
+              vi_VI: jpeg
+              en_US: jpeg
+          # - value: webp  # ##TODO: Not ready yet
+          #   label:
+          #     vi_VI: webp
+          #     en_US: webp
+        required: true
+        default: png
+        label:
+          vi_VI: Định dạng đầu ra
+          en_US: Output Format
+        human_description:
+          vi_VI: Quy định `content-type` của hình ảnh được tạo ra.
+          en_US: Dictates the `content-type` of the generated image.
+        llm_description: Guides the image model towards a particular style.
+        form: form
+      - name: image
+        type: string
+        required: false
+        label:
+          vi_VI: Hình ảnh để làm điểm khởi đầu
+          en_US: image for starting point
+        human_description:
+          vi_VI: Hình ảnh được sử dụng làm điểm khởi đầu cho quá trình tạo hình.
+          en_US: The image to use as the starting point for the generation.
+        llm_description: The image to use as the starting point for the generation.
+        form: llm
+      - name: strength
+        type: number
+        required: false
+        label:
+          vi_VI: strength
+          en_US: strength
+        human_description:
+          vi_VI: Điều khiển mức độ ảnh hưởng của tham số `image` đến hình ảnh được tạo ra.
+          en_US: Controls how much influence the `image` parameter has on the generated image.
+        llm_description: Controls how much influence the `image` parameter has on the generated image.
+        form: llm
 
