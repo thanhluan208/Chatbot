@@ -64,7 +64,7 @@ const ToolList = ({ toolProviders }: ToolListProps) => {
                         <img
                           src={provider.identity.icon}
                           alt="icon"
-                          className="rounded-lg w-6 h-6"
+                          className="rounded-lg w-6 h-6 object-cover object-center"
                         />
                         <CommonStyles.Typography type="semiBold16">
                           {tool.name}

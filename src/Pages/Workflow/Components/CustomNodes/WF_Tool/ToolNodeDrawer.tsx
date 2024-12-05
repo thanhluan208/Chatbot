@@ -2,20 +2,19 @@ import toolConfig from "@/assets/tool.yaml";
 import CommonStyles from "@/Components/CommonStyles";
 import CollapseArea from "@/Components/CommonStyles/CollapseArea";
 import cachedKeys from "@/Constants/cachedKeys";
-import useDebounce from "@/Hooks/useDebounce";
 import useCheckToolAuthor from "@/Hooks/workflow/useCheckToolAuthor";
 import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
 import { useAuth } from "@/Providers/AuthenticationProvider";
 import { useSave } from "@/Stores/useStore";
 import { NodeProps, useReactFlow } from "@xyflow/react";
-import { capitalize, cloneDeep } from "lodash";
+import { cloneDeep } from "lodash";
 import { X } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import DescriptionInput from "../../DescriptionInput";
-import EditorPromtpt from "../../misc/EditorPromtpt";
 import VarOutList from "../../misc/VarOutList";
-import { Tool } from "../../Toolbar/type";
+import { ParameterForm, ParameterType, Tool } from "../../Toolbar/type";
 import AuthorizeButton from "./AuthorizeButton";
+import ToolParameter from "./ToolParameter";
 import { NodeDataTool } from "./type";
 
 interface ToolNodeDrawerProps {
@@ -51,29 +50,12 @@ const ToolNodeDrawer = ({ node }: ToolNodeDrawerProps) => {
 
   const { data: toolStatus, isLoading } = useCheckToolAuthor(
     checkToolPayload,
-    !nodeData.provider_credentials_valid
+    !nodeData.provider_credentials_valid && !!provider.credentials_for_provider
   );
 
   const handleUpdate = (payload: Partial<NodeDataTool>) => {
     handleUpdateNodeDataTool(node?.id, payload);
   };
-
-  const handleUpdateParam = (
-    paramName: string,
-    value: string,
-    type: string
-  ) => {
-    handleUpdateNodeDataTool(node?.id, {
-      tool_parameters: {
-        [paramName]: {
-          value,
-          type,
-        },
-      },
-    });
-  };
-
-  const handleInputChange = useDebounce(handleUpdateParam);
 
   useEffect(() => {
     if (
@@ -143,49 +125,38 @@ const ToolNodeDrawer = ({ node }: ToolNodeDrawerProps) => {
             toolName={nodeData?.tool_name}
           />
         )}
-      <div className="px-3">
-        <CollapseArea
-          initOpen
-          label={
-            <CommonStyles.Typography type="semiBold16">
-              Input variables
-            </CommonStyles.Typography>
-          }
-        >
-          {Object.values(
-            cloneDeep(tool.parameters).map((param) => {
-              const foundParam = Object.keys(nodeData?.tool_parameters).find(
-                (elm) => elm === param.name
-              );
-
-              if (!foundParam) return null;
-              return (
-                <div>
-                  <CommonStyles.Typography type="bold14" my={1}>
-                    {capitalize(param?.label.en_US)}
-                    {param?.required && (
-                      <span className="text-red-500 ml-1">*</span>
-                    )}
-                  </CommonStyles.Typography>
-                  <EditorPromtpt
-                    id={`${node?.id}-${param.name}`}
-                    nodeId={node?.id}
-                    value={nodeData?.tool_parameters[param.name].value || ""}
-                    handleChangeEditor={(_, value) => {
-                      handleInputChange(
-                        param.name,
-                        value,
-                        nodeData?.tool_parameters[param.name].type
-                      );
-                    }}
-                    className="min-h-10"
-                  />
-                </div>
-              );
-            })
-          )}
-        </CollapseArea>
-      </div>
+      {(!provider?.credentials_for_provider ||
+        nodeData?.provider_credentials_valid) && (
+        <div className="px-3">
+          <CollapseArea
+            initOpen
+            label={
+              <CommonStyles.Typography type="semiBold16">
+                Input variables
+              </CommonStyles.Typography>
+            }
+          >
+            <div className="flex flex-col gap-2">
+              {Object.values(
+                cloneDeep(tool.parameters).map((param) => {
+                  return (
+                    <ToolParameter
+                      key={param.name}
+                      param={param}
+                      toolParameter={nodeData?.tool_parameters}
+                      nodeId={node.id}
+                      toolOptions={param.options || []}
+                      isSelect={param.type === ParameterType.SELECT}
+                      isConfig={param.form === ParameterForm.FORM}
+                      toolConfigurations={nodeData?.tool_configurations}
+                    />
+                  );
+                })
+              )}
+            </div>
+          </CollapseArea>
+        </div>
+      )}
 
       <hr className="my-2 mx-4 opacity-20" />
 

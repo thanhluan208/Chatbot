@@ -59,27 +59,32 @@ const AuthorizeDialog = (props: IAddTeamDialog) => {
 
   //! Function
 
-  const handleSubmit = useCallback(async (values: InitValues) => {
-    if (!userId) return;
-    const toastId = toast.info("Authorizing...", {
-      autoClose: false,
-      isLoading: true,
-    });
+  const handleSubmit = useCallback(
+    async (values: InitValues) => {
+      if (!userId) return;
+      const toastId = toast.info("Authorizing...", {
+        autoClose: false,
+        isLoading: true,
+      });
 
-    await handleAuthorizeTool.mutateAsync({
-      user_id: userId,
-      credentials: values,
-      tool_name: toolName,
-      tool_provider: provider,
-    });
+      await handleAuthorizeTool.mutateAsync({
+        user_id: userId,
+        credentials: values,
+        tool_name: toolName,
+        tool_provider: provider,
+      });
 
-    toast.update(toastId, {
-      type: "success",
-      render: "Team created successfully",
-      isLoading: false,
-      autoClose: 2000,
-    });
-  }, []);
+      toast.update(toastId, {
+        type: "success",
+        render: "Team created successfully",
+        isLoading: false,
+        autoClose: 2000,
+      });
+
+      toggle();
+    },
+    [toggle, userId, provider, toolName, handleAuthorizeTool]
+  );
 
   //! Render
   return (

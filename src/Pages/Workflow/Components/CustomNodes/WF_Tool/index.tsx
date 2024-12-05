@@ -13,6 +13,7 @@ import GradientBorder from "../../GradientBorder";
 import VarOutList from "../../misc/VarOutList";
 import WF_EditDrawer from "../WF_EditDrawer";
 import { NodeDataTool } from "./type";
+import { Skeleton } from "@/Components/ui/skeleton";
 
 const WF_Tool = (props: NodeProps) => {
   //! State
@@ -38,6 +39,23 @@ const WF_Tool = (props: NodeProps) => {
   };
 
   //! Render
+  if (nodeData?.isProcessing) {
+    return (
+      <GradientBorder {...props}>
+        <div className="px-4 py-2">
+          <div className="flex items-center space-x-4">
+            <Skeleton className="h-12 w-12 min-w-12 min-h-12 rounded-full" />
+            <div className="space-y-2 w-full">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-[80%]" />
+            </div>
+          </div>
+          <Skeleton className="h-[125px] w-full rounded-xl mt-2" />
+        </div>
+      </GradientBorder>
+    );
+  }
+
   return (
     <Fragment>
       <div onClick={handleClickNode}>
@@ -54,7 +72,7 @@ const WF_Tool = (props: NodeProps) => {
                   }}
                 >
                   <img
-                    src={toolConfig[nodeData.provider_id].identity.icon}
+                    src={toolConfig[nodeData?.provider_id]?.identity?.icon}
                     alt="icon"
                     className="rounded-lg w-6 h-6"
                   />

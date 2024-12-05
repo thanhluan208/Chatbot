@@ -352,8 +352,13 @@ export default function FlowChart(props: IFlowChart) {
       });
       const newNode = {
         id: uuid(),
-        type,
+        type: type.includes("tool")
+          ? `customNode_WF_${NodeTypeWorkflow.TOOL}`
+          : type,
         position,
+        data: {
+          isProcessing: true,
+        },
       };
 
       setNodes((nds) => {

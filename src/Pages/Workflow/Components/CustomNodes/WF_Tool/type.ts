@@ -11,12 +11,15 @@ export interface NodeDataTool {
   tool_configurations: ToolConfigurations;
   tool_parameters: ToolParameters;
   provider_credentials_valid: boolean;
+  isProcessing?: boolean;
 }
 
-export interface ToolConfigurations {}
+export interface ToolConfigurations {
+  [key: string]: string;
+}
 
 export interface ToolParameters {
-  [key: string]: Parameter
+  [key: string]: Parameter;
 }
 
 export interface Parameter {

@@ -54,10 +54,29 @@ export interface ToolIdentity {
 
 export interface Parameter {
   name: string;
-  type: string;
+  type: ParameterType;
   required: boolean;
   label: LabelClass;
   human_description: LabelClass;
   llm_description: string;
-  form: string;
+  form: ParameterForm;
+  options?: ParameterOption[];
+}
+
+export enum ParameterForm {
+  LLM = "llm",
+  FORM = "form",
+}
+
+export enum ParameterType {
+  SELECT = "select",
+  STRING = "string",
+  NUMBER = "number",
+}
+
+export interface ParameterOption {
+  value: string;
+  label: {
+    [key: string]: string;
+  };
 }

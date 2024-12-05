@@ -15,9 +15,7 @@ import { cn } from "@/lib/utils";
 
 interface CustomizeSelectFieldProps {
   options: CommonOption[];
-  initValue?: {
-    [key: string]: any;
-  };
+  initValue?: any;
   classNameMenuContent?: string;
   afterOnChange?: (value: string) => void;
   onChangeCustomize?: (value: string) => void;
@@ -51,7 +49,8 @@ const CustomizeSelectField = ({
     (option) =>
       option.value === value ||
       option.value === value?.value ||
-      option.value === initValue?.value
+      option.value === initValue?.value ||
+      option.value === initValue
   );
 
   const handleSelect = (value: string) => {
@@ -79,7 +78,7 @@ const CustomizeSelectField = ({
           <Box
             className={cn(
               "bg-transparent px-2 rounded-md py-1 cursor-pointer flex items-center gap-2",
-              fullWidth ? "w-full justify-between h-full"  : " w-fit "
+              fullWidth ? "w-full justify-between h-full" : " w-fit "
             )}
             sx={{
               "&:hover": {

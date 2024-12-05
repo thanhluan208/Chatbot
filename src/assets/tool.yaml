@@ -66,4 +66,494 @@ alphavantage:
           pt_BR: stock code
         llm_description: stock code for query from alphavantage
         form: llm
+arxiv: 
+  identity:
+    author: Mạnh Đỗ
+    name: arxiv
+    label:
+      en_US: ArXiv
+      vi_VI: ArXiv
+      zh_Hans: ArXiv
+      ja_JP: ArXiv
+    description:
+      en_US: Access to a vast repository of scientific papers and articles in various fields of research.
+      vi_VI: Truy cập vào một kho lưu trữ khổng lồ các bài báo khoa học và bài viết trong nhiều lĩnh vực nghiên cứu.
+      zh_Hans: 访问各个研究领域大量科学论文和文章的存储库。
+      ja_JP: 多様な研究分野の科学論文や記事の膨大なリポジトリへのアクセス。
+    icon: https://avatars.githubusercontent.com/u/45442578?s=280&v=4
+    tags:
+      - search
+  arxiv_search:
+    identity:
+      name: arxiv_search
+      author: Mạnh Đỗ
+      label:
+        en_US: Arxiv Search
+        vi_VI: Tìm kiếm Arxiv
+        zh_Hans: Arxiv 搜索
+        ja_JP: Arxiv 検索
+    description:
+      human:
+        en_US: A tool for searching scientific papers and articles from the Arxiv repository. Input can be an Arxiv ID or an author's name.
+        vi_VI: Công cụ tìm kiếm các bài báo khoa học và bài viết từ kho Arxiv. Đầu vào có thể là ID Arxiv hoặc tên tác giả.
+        zh_Hans: 一个用于从Arxiv存储库搜索科学论文和文章的工具。 输入可以是Arxiv ID或作者姓名。
+        ja_JP: Arxivリポジトリから科学論文や記事を検索するためのツールです。入力はArxiv IDまたは著者名にすることができます。
+      llm: A tool for searching scientific papers and articles from the Arxiv repository. Input can be an Arxiv ID or an author's name.
+    parameters:
+      - name: query
+        type: string
+        required: true
+        label:
+          en_US: Query string
+          vi_VI: Chuỗi truy vấn
+          zh_Hans: 查询字符串
+          ja_JP: クエリ文字列
+        human_description:
+          en_US: The Arxiv ID or author's name used for searching.
+          vi_VI: ID Arxiv hoặc tên tác giả được sử dụng để tìm kiếm.
+          zh_Hans: 用于搜索的Arxiv ID或作者姓名。
+          ja_JP: 検索に使用されるArxiv IDまたは著者名。
+        llm_description: The Arxiv ID or author's name used for searching.
+        form: llm
+chart:
+  identity:
+    author: Mạnh Đỗ
+    name: chart
+    label:
+      vi_VI: ChartGenerator
+      en_US: ChartGenerator
+      zh_Hans: 图表生成
+      pt_BR: Gerador de gráficos
+    description:
+      vi_VI: Trình tạo biểu đồ là một công cụ để tạo các biểu đồ thống kê như biểu đồ cột, biểu đồ đường, biểu đồ tròn, v.v.
+      en_US: Chart Generator is a tool for generating statistical charts like bar chart, line chart, pie chart, etc.
+      zh_Hans: 图表生成是一个用于生成可视化图表的工具，你可以通过它来生成柱状图、折线图、饼图等各类图表
+      pt_BR: O Gerador de gráficos é uma ferramenta para gerar gráficos estatísticos como gráfico de barras, gráfico de linhas, gráfico de pizza, etc.
+    icon: https://i.pinimg.com/originals/e1/0a/1c/e10a1c7f6a17b9806b5cadf9e42b0596.gif
+    tags:
+      - design
+      - productivity
+      - utilities
+  line: 
+    identity:
+      name: line
+      author: Mạnh Đỗ
+      label:
+        vi_VI: Biểu đồ đường thẳng
+        en_US: Linear Chart
+        zh_Hans: 线性图表
+        pt_BR: Gráfico linear
+      icon: icon.svg
+    description:
+      human:
+        vi_VI: Biểu đồ đường thẳng
+        en_US: linear chart
+        zh_Hans: 线性图表
+        pt_BR: Gráfico linear
+      llm: generate a linear chart with input data
+    parameters:
+      - name: data
+        type: string
+        required: true
+        label:
+          vi_VI: dữ liệu
+          en_US: data
+          zh_Hans: 数据
+          pt_BR: dados
+        human_description:
+          vi_VI: Dữ liệu để tạo biểu đồ, mỗi số nên được ngăn cách bằng dấu ';'.
+          en_US: data for generating chart, each number should be separated by ";"
+          zh_Hans: 用于生成线性图表的数据，每个数字之间用 ";" 分隔
+          pt_BR: dados para gerar gráfico linear, cada número deve ser separado por ";"
+        llm_description: data for generating linear chart, data should be a string contains a list of numbers like "1;2;3;4;5"
+        form: llm
+      - name: x_axis
+        type: string
+        required: false
+        label:
+          vi_VI: Trục X
+          en_US: X Axis
+          zh_Hans: x 轴
+          pt_BR: Eixo X
+        human_description:
+          vi_VI: Trục X cho biểu đồ, mỗi văn bản nên được ngăn cách bằng dấu ';'.
+          en_US: X axis for chart, each text should be separated by ";"
+          zh_Hans: 线性图表的 x 轴，每个文本之间用 ";" 分隔
+          pt_BR: Eixo X para gráfico linear, cada texto deve ser separado por ";"
+        llm_description: x axis for linear chart, x axis should be a string contains a list of texts like "a;b;c;1;2" in order to match the data
+        form: llm
+  bar:
+    identity:
+      name: bar
+      author: Mạnh Đỗ
+      label:
+        vi_VI: Biểu đồ cột
+        en_US: Bar Chart
+        zh_Hans: 柱状图
+        pt_BR: Gráfico de barras
+      icon: icon.svg
+    description:
+      human:
+        vi_VI: Biểu đồ cột
+        en_US: Bar chart
+        zh_Hans: 柱状图
+        pt_BR: Gráfico de barras
+      llm: generate a bar chart with input data
+    parameters:
+      - name: data
+        type: string
+        required: true
+        label:
+          vi_VI: dữ liệu
+          en_US: data
+          zh_Hans: 数据
+          pt_BR: dados
+        human_description:
+          vi_VI: Dữ liệu để tạo biểu đồ, mỗi số nên được phân cách bằng dấu ';'.
+          en_US: data for generating chart, each number should be separated by ";"
+          zh_Hans: 用于生成柱状图的数据，每个数字之间用 ";" 分隔
+          pt_BR: dados para gerar gráfico de barras, cada número deve ser separado por ";"
+        llm_description: data for generating bar chart, data should be a string contains a list of numbers like "1;2;3;4;5"
+        form: llm
+      - name: x_axis
+        type: string
+        required: false
+        label:
+          vi_VI: Trục X
+          en_US: X Axis
+          zh_Hans: x 轴
+          pt_BR: Eixo X
+        human_description:
+          vi_VI: Trục X cho biểu đồ, mỗi văn bản nên được ngăn cách bằng dấu ';'.
+          en_US: X axis for chart, each text should be separated by ";"
+          zh_Hans: 柱状图的 x 轴，每个文本之间用 ";" 分隔
+          pt_BR: Eixo X para gráfico de barras, cada texto deve ser separado por ";"
+        llm_description: x axis for bar chart, x axis should be a string contains a list of texts like "a;b;c;1;2" in order to match the data
+        form: llm
+  pie:
+    identity:
+      name: pie
+      author: Mạnh Đỗ
+      label:
+        en_US: Pie Chart
+        zh_Hans: 饼图
+        pt_BR: Gráfico de pizza
+      icon: icon.svg
+    description:
+      human:
+        vi_VI: Biểu đồ tròn
+        en_US: Pie chart
+        zh_Hans: 饼图
+        pt_BR: Gráfico de pizza
+      llm: generate a pie chart with input data
+    parameters:
+      - name: data
+        type: string
+        required: true
+        label:
+          en_US: data
+          zh_Hans: 数据
+          pt_BR: dados
+        human_description:
+          en_US: data for generating chart, each number should be separated by ";"
+          zh_Hans: 用于生成饼图的数据，每个数字之间用 ";" 分隔
+          pt_BR: dados para gerar gráfico de pizza, cada número deve ser separado por ";"
+        llm_description: data for generating pie chart, data should be a string contains a list of numbers like "1;2;3;4;5"
+        form: llm
+      - name: categories
+        type: string
+        required: true
+        label:
+          en_US: Categories
+          zh_Hans: 分类
+          pt_BR: Categorias
+        human_description:
+          en_US: Categories for chart, each category should be separated by ";"
+          zh_Hans: 饼图的分类，每个分类之间用 ";" 分隔
+          pt_BR: Categorias para gráfico de pizza, cada categoria deve ser separada por ";"
+        llm_description: categories for pie chart, categories should be a string contains a list of texts like "a;b;c;1;2" in order to match the data, each category should be split by ";"
+        form: llm
+google_translate:
+  identity:
+    author: Mạnh Đỗ
+    name: google_translate
+    label:
+      vi_VN: Google Translate
+      en_US: Google Translate
+      zh_Hans: 谷歌翻译
+    description:
+      vi_VN: Dịch văn bản bằng Google.
+      en_US: Translate text using Google
+      zh_Hans: 使用 Google 进行翻译
+    icon: https://www.gstatic.com/marketing-cms/5e/ec/5b5baeb34571b791b2020d4cacad/meta-image.png
+    tags:
+      - utilities
+  translate:
+    identity:
+      name: translate
+      author: Mạnh Đỗ
+      label:
+        vi_VN: Dịch
+        en_US: Translate
+        zh_Hans: 翻译
+    description:
+      human:
+        vi_VI: Một công cụ dành cho Google Translate.
+        en_US: A tool for Google Translate
+        zh_Hans: Google 翻译
+      llm: A tool for Google Translate
+    parameters:
+      - name: content
+        type: string
+        required: true
+        label:
+          vi_VI: Nội dung văn bản
+          en_US: Text content
+          zh_Hans: 文本内容
+        human_description:
+          vi_VI: Nội dung văn bản
+          en_US: Text content
+          zh_Hans: 需要翻译的文本内容
+        llm_description: Text content
+        form: llm
+      - name: dest
+        type: select
+        required: true
+        label:
+          vi_VI: Ngôn ngữ đích
+          en_US: destination language
+          zh_Hans: 目标语言
+        human_description:
+          vi_VI: Ngôn ngữ đích mà bạn muốn dịch.
+          en_US: The destination language you want to translate.
+          zh_Hans: 你想翻译的目标语言
+        default: en
+        form: form
+        options:
+          - value: ar
+            label:
+              vi_VI: Tiếng Ả Rập
+              en_US: Arabic
+              zh_Hans: 阿拉伯语
+          - value: bg
+            label:
+              vi_VI: Tiếng Bulgaria
+              en_US: Bulgarian
+              zh_Hans: 保加利亚语
+          - value: ca
+            label:
+              vi_VI: Tiếng Catalan
+              en_US: Catalan
+              zh_Hans: 加泰罗尼亚语
+          - value: zh-cn
+            label:
+              vi_VI: Tiếng Trung (Giản thể)
+              en_US: Chinese (Simplified)
+              zh_Hans: 中文（简体）
+          - value: zh-tw
+            label:
+              vi_VI: Tiếng Trung (Phồn thể)
+              en_US: Chinese (Traditional)
+              zh_Hans: 中文（繁体）
+          - value: cs
+            label:
+              vi_VI: Tiếng Séc
+              en_US: Czech
+              zh_Hans: 捷克语
+          - value: da
+            label:
+              vi_VI: Tiếng Đan Mạch
+              en_US: Danish
+              zh_Hans: 丹麦语
+          - value: nl
+            label:
+              vi_VI: Tiếng Hà Lan
+              en_US: Dutch
+              zh_Hans: 荷兰语
+          - value: en
+            label:
+              vi_VI: Tiếng Anh
+              en_US: English
+              zh_Hans: 英语
+          - value: et
+            label:
+              vi_VI: Tiếng Estonian
+              en_US: Estonian
+              zh_Hans: 爱沙尼亚语
+          - value: fi
+            label:
+              vi_VI: Tiếng Phần Lan
+              en_US: Finnish
+              zh_Hans: 芬兰语
+          - value: fr
+            label:
+              vi_VI: Tiếng Pháp
+              en_US: French
+              zh_Hans: 法语
+          - value: de
+            label:
+              vi_VI: Tiếng Đức
+              en_US: German
+              zh_Hans: 德语
+          - value: el
+            label:
+              vi_VI: Tiếng Hy Lạp
+              en_US: Greek
+              zh_Hans: 希腊语
+          - value: iw
+            label:
+              vi_VI: Tiếng Hebrew
+              en_US: Hebrew
+              zh_Hans: 希伯来语
+          - value: hi
+            label:
+              vi_VI: Tiếng Hindi
+              en_US: Hindi
+              zh_Hans: 印地语
+          - value: hu
+            label:
+              vi_VI: Tiếng Hungary
+              en_US: Hungarian
+              zh_Hans: 匈牙利语
+          - value: id
+            label:
+              vi_VI: Tiếng Indonesia
+              en_US: Indonesian
+              zh_Hans: 印尼语
+          - value: it
+            label:
+              vi_VI: Tiếng Ý
+              en_US: Italian
+              zh_Hans: 意大利语
+          - value: ja
+            label:
+              vi_VI: Tiếng Nhật
+              en_US: Japanese
+              zh_Hans: 日语
+          - value: kn
+            label:
+              vi_VI: Tiếng Kannada
+              en_US: Kannada
+              zh_Hans: 卡纳达语
+          - value: ko
+            label:
+              vi_VI: Tiếng Hàn
+              en_US: Korean
+              zh_Hans: 韩语
+          - value: lv
+            label:
+              vi_VI: Tiếng Latvia
+              en_US: Latvian
+              zh_Hans: 拉脱维亚语
+          - value: lt
+            label:
+              vi_VI: Tiếng Lithuania
+              en_US: Lithuanian
+              zh_Hans: 立陶宛语
+          - value: my
+            label:
+              vi_VI: Tiếng Mã Lai
+              en_US: Malay
+              zh_Hans: 马来语
+          - value: ml
+            label:
+              vi_VI: Tiếng Malayalam
+              en_US: Malayalam
+              zh_Hans: 马拉雅拉姆语
+          - value: mr
+            label:
+              vi_VI: Tiếng Marathi
+              en_US: Marathi
+              zh_Hans: 马拉地语
+          - value: "no"
+            label:
+              vi_VI: Tiếng Na Uy
+              en_US: Norwegian
+              zh_Hans: 挪威语
+          - value: pl
+            label:
+              vi_VI: Tiếng Ba Lan
+              en_US: Polish
+              zh_Hans: 波兰语
+          - value: pt-br
+            label:
+              vi_VI: Tiếng Bồ Đào Nha (Brazil)
+              en_US: Portuguese (Brazil)
+              zh_Hans: 葡萄牙语（巴西）
+          - value: pt-pt
+            label:
+              vi_VI: Tiếng Bồ Đào Nha (Bồ Đào Nha)
+              en_US: Portuguese (Portugal)
+              zh_Hans: 葡萄牙语（葡萄牙）
+          - value: pa
+            label:
+              vi_VI: Tiếng Punjabi
+              en_US: Punjabi
+              zh_Hans: 旁遮普语
+          - value: ro
+            label:
+              vi_VI: Tiếng Romania
+              en_US: Romanian
+              zh_Hans: 罗马尼亚语
+          - value: ru
+            label:
+              vi_VI: Tiếng Nga
+              en_US: Russian
+              zh_Hans: 俄语
+          - value: sr
+            label:
+              vi_VI: Tiếng Serbia
+              en_US: Serbian
+              zh_Hans: 塞尔维亚语
+          - value: sk
+            label:
+              vi_VI: Tiếng Slovakia
+              en_US: Slovak
+              zh_Hans: 斯洛伐克语
+          - value: sl
+            label:
+              vi_VI: Tiếng Slovenia
+              en_US: Slovenian
+              zh_Hans: 斯洛文尼亚语
+          - value: es
+            label:
+              vi_VI: Tiếng Tây Ban Nha
+              en_US: Spanish
+              zh_Hans: 西班牙语
+          - value: sv
+            label:
+              vi_VI: Tiếng Thụy Điển
+              en_US: Swedish
+              zh_Hans: 瑞典语
+          - value: ta
+            label:
+              vi_VI: Tiếng Tamil
+              en_US: Tamil
+              zh_Hans: 泰米尔语
+          - value: te
+            label:
+              vi_VI: Tiếng Telugu
+              en_US: Telugu
+              zh_Hans: 泰卢固语
+          - value: th
+            label:
+              vi_VI: Tiếng Thái
+              en_US: Thai
+              zh_Hans: 泰语
+          - value: tr
+            label:
+              vi_VI: Tiếng Thổ Nhĩ Kỳ
+              en_US: Turkish
+              zh_Hans: 土耳其语
+          - value: uk
+            label:
+              vi_VI: Tiếng Ukraina
+              en_US: Ukrainian
+              zh_Hans: 乌克兰语
+          - value: vi
+            label:
+              vi_VI: Tiếng Việt
+              en_US: Vietnamese
+              zh_Hans: 越南语
+
 
