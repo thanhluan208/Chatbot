@@ -8,7 +8,6 @@ import {
 } from "@/Components/ui/command";
 import { formatName } from "@/Helpers";
 import { Tooltip, useTheme } from "@mui/material";
-import { useCallback } from "react";
 import { Tool, ToolProvider } from "./type";
 
 interface ToolListProps {
@@ -29,10 +28,6 @@ const ToolList = ({ toolProviders }: ToolListProps) => {
     );
     event.dataTransfer.effectAllowed = "move";
   };
-
-  const handleAddNode = useCallback((tool: Tool) => {
-    console.log("tool", tool);
-  }, []);
 
   return (
     <Command

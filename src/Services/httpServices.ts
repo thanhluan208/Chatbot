@@ -19,6 +19,9 @@ class Services {
   constructor() {
     this.axios = axios;
     this.axios.defaults.withCredentials = false;
+    
+    const access_token = localStorage.getItem(LOCAL_STORAGE_KEY.ACCESS_TOKEN);
+    this.axios.defaults.headers["Authorization"] = `Bearer ${access_token}`;
 
     //! Interceptor request
     this.axios.interceptors.request.use(

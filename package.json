@@ -82,6 +82,7 @@
     "@types/react-virtualized": "^9.21.30",
     "@types/react-window": "^1.8.8",
     "@types/uuid": "^9.0.8",
+    "@typescript-eslint/eslint-plugin": "^8.17.0",
     "@vitejs/plugin-react": "^4.0.3",
     "autoprefixer": "^10.4.20",
     "eslint": "^8.45.0",
