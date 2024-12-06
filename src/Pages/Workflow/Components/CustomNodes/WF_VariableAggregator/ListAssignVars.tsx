@@ -45,7 +45,7 @@ const ListAssignVars = ({
 
   const [type, setType] = useState("");
 
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<number | null>(null);
 
   const { data: varSelectors } = useGetVariableSelectors(nodeId);
   const { handleUpdateNodeDataVarAgg } = useWorkflowMutate();

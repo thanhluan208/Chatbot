@@ -29,7 +29,7 @@ const EditorPrompt = ({
   placeholder,
 }: EditorPromtptProps & ComponentPropsWithoutRef<"div">) => {
   const theme = useTheme();
-  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceRef = useRef<number | null>(null);
 
   const { data: varSelectors } = useGetVariableSelectors(nodeId);
 

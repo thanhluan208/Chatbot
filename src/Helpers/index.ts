@@ -139,3 +139,7 @@ export function detectDiff<T>(before: T[], after: T[]): T[] | boolean {
 
   return diff;
 }
+
+export const formatName = (name: string, splitBy: string) => {
+  return name.split(splitBy).map((w) => capitalize(w.toLocaleLowerCase())).join(" ");
+}

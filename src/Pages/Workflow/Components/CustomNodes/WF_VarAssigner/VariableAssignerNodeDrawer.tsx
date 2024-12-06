@@ -32,7 +32,7 @@ const VariableAssignerNodeDrawer = ({ node }: VarAggNodeDrawerProps) => {
 
   const valueRef = useRef(nodeData?.value);
   const variableRef = useRef(nodeData?.variable);
-  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceRef = useRef<number | null>(null);
 
   const nodeDataWithVariableOut = useMemo(() => {
     if (!nodeData) return;

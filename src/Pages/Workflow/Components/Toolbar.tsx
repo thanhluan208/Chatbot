@@ -30,7 +30,6 @@ const Toolbar = ({
   const theme = useTheme();
   const save = useSave();
   const { setNodes, fitView, getZoom, zoomTo } = useReactFlow();
-  const handleAddNode = useGet("ADD_NODE");
   const isEditing = useGet("IS_EDITING");
   const mousePos = useRef<{
     clientX: number;
@@ -42,7 +41,6 @@ const Toolbar = ({
 
   const COLLAPSE_TOOLBAR = useGet("COLLAPSE_TOOLBAR") || !open;
   const collapse = COLLAPSE_TOOLBAR || !open;
-
 
   //! Function
 
@@ -113,7 +111,7 @@ const Toolbar = ({
         });
       }
     },
-    [handleAddNode, isEditing]
+    [isEditing]
   );
 
   const handleTrackMouse = useCallback((e: MouseEvent) => {

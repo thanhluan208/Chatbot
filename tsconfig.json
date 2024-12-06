@@ -22,7 +22,11 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+
+    "types": [
+      "@modyfi/vite-plugin-yaml/modules"
+    ]
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }],

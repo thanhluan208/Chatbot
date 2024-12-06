@@ -12,7 +12,7 @@ interface AuthorDetailProps {
 }
 
 const AuthorDetail = ({ type, header, apiKey, nodeId }: AuthorDetailProps) => {
-  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceRef = useRef<number | null>(null);
 
   const { handleUpdateNodeDataHttpRequest } = useWorkflowMutate();
 

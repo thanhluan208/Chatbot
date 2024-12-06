@@ -23,7 +23,7 @@ const SignUp = () => {
   const { t } = useTranslation("store");
 
   //! State
-  const [openVerify, setOpenVerify] = useState(true);
+  const [openVerify, setOpenVerify] = useState(false);
 
   const email = useRef("");
   const otpInput = useRef("");
@@ -67,7 +67,7 @@ const SignUp = () => {
         isLoading: true,
       });
       const response = await handleSubmitOTP.mutateAsync({
-        email: "thanhluan20880@gmail.com",
+        email: email.current,
         otp: newValue,
       });
       if (response.data.status_code === 200) {

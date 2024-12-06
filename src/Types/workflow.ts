@@ -117,6 +117,7 @@ export interface NodeData {
   type: string;
   outputs?: Output[];
   variables?: unknown[];
+  tool_name?: string;
 }
 
 export interface Output {
@@ -219,4 +220,26 @@ export interface UpdateNodeDataPayload {
   workflow_id: string;
   node_id: string;
   node_data: any;
+}
+
+export interface AuthorizePayload {
+  user_id: string;
+  credentials: {
+    [key: string]: string;
+  };
+  tool_provider: string;
+  tool_name: string;
+}
+
+export type CheckToolAuthorPayload = Omit<AuthorizePayload, "credentials">;
+
+export interface CheckToolResponse extends CommonResponse {
+  status_code: number;
+  message: string;
+  is_valid: boolean;
+  credentials: Credentials;
+}
+
+export interface Credentials {
+  api_key: string;
 }

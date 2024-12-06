@@ -4,7 +4,7 @@ import {
   CommandGroup,
   CommandList,
 } from "@/Components/ui/command";
-import { PopperPlacementType, SxProps, useTheme } from "@mui/material";
+import { useTheme } from "@mui/material";
 import { NodeTypes, nodeTypes } from "./AddNodes";
 import { useCallback } from "react";
 import { Node, useReactFlow } from "@xyflow/react";
@@ -19,16 +19,12 @@ import { WORKFLOW_ICON } from "@/Constants/common";
 import { CommandItem } from "cmdk";
 
 interface ListNodeProps {
-  open?: boolean;
-  anchorEl?: HTMLElement | null;
   listNode: {
     name: string;
     label: string;
     description?: string;
     hidden?: boolean;
   }[];
-  placement?: PopperPlacementType;
-  sxContainer?: SxProps;
   isHelperNode?: boolean;
   helperPosition?: { x: number; y: number };
 }
@@ -128,13 +124,13 @@ const ListNode = ({
 
   return (
     <Command
-      className="rounded-sm"
+      className="rounded-sm "
       style={{
         backgroundColor: theme.colors.custom.backgroundCard,
         color: theme.colors.custom.normalColorTypo,
       }}
     >
-      <CommandList>
+      <CommandList className="max-h-[50vh]">
         <CommandEmpty>No variables found!.</CommandEmpty>
         <CommandGroup>
           <div className="flex flex-col gap-2">
@@ -143,7 +139,7 @@ const ListNode = ({
               return (
                 <CommandItem key={node.name} value={node.label}>
                   <div
-                    className="px-3 py-1 backdrop-blur cursor-grab flex justify-between items-center rounded-md border "
+                    className="px-3 py-1 backdrop-blur cursor-grab border-none flex justify-between items-center rounded-md border "
                     onDragStart={(event) =>
                       onDragStart(
                         event,
@@ -153,7 +149,6 @@ const ListNode = ({
                     }
                     draggable
                     style={{
-                      border: `1px solid ${theme.palette.primary.main}`,
                       boxShadow:
                         "0 6px 8px 0 rgba(29,28,35,.06),0 0 2px 0 rgba(29,28,35,.18)",
                     }}

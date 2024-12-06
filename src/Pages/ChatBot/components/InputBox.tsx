@@ -118,7 +118,7 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
     let botResponse = "";
     let count = 0;
     let isFinished = false;
-    let interval: NodeJS.Timeout;
+    let interval: number;
     let shouldScrollToBottom = true;
     const scrollChatbot = document.getElementById("scrollbar-chatbot");
 

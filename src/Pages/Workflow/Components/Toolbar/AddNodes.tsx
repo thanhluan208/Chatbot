@@ -38,6 +38,7 @@ import WF_QuestClassifier from "../CustomNodes/WF_QuestClassifier";
 import WF_VarAssigner from "../CustomNodes/WF_VarAssigner";
 import WF_AnswerNode from "../CustomNodes/WF_AnswerNode";
 import WF_HttpRequestNode from "../CustomNodes/WF_HttpRequestNode";
+import WF_Tool from "../CustomNodes/WF_Tool";
 
 export enum NodeTypes {
   startNode = "customNode_startNode",
@@ -68,6 +69,7 @@ export const nodeTypes = {
   [`customNode_WF_${NodeTypeWorkflow.VARIABLE}`]: WF_VarAssigner,
   [`customNode_WF_${NodeTypeWorkflow.ANSWER}`]: WF_AnswerNode,
   [`customNode_WF_${NodeTypeWorkflow.HTTP_REQUEST}`]: WF_HttpRequestNode,
+  [`customNode_WF_${NodeTypeWorkflow.TOOL}`]: WF_Tool,
 };
 
 export enum CustomNodeTypes {
@@ -285,7 +287,6 @@ const AddNodes = ({ listNode = [], initOpen, helperPosition }: IAddNodes) => {
                     e.preventDefault();
                     e.stopPropagation();
 
-                    console.log("adding node", node);
                     handleAddNode(node);
                   }}
                   className="flex cursor-grab gap-2 w-full items-center data-[state=open]:bg-transparent focus:bg-transparent"

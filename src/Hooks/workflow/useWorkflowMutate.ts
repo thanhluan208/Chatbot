@@ -7,6 +7,7 @@ import { KnowledgeNodeData } from "@/Pages/Workflow/Components/CustomNodes/WF_Kn
 import { LlmNodeData } from "@/Pages/Workflow/Components/CustomNodes/WF_LlmNode/type";
 import { NodeDataParamExtractor } from "@/Pages/Workflow/Components/CustomNodes/WF_ParamExtractor/type";
 import { NodeDataQuestClassifier } from "@/Pages/Workflow/Components/CustomNodes/WF_QuestClassifier/type";
+import { NodeDataTool } from "@/Pages/Workflow/Components/CustomNodes/WF_Tool/type";
 import { NodeDataVariable } from "@/Pages/Workflow/Components/CustomNodes/WF_VarAssigner/type";
 import { NodeDataVarAgg } from "@/Pages/Workflow/Components/CustomNodes/WF_VariableAggregator/type";
 import { useAuth } from "@/Providers/AuthenticationProvider";
@@ -706,6 +707,74 @@ export default function useWorkflowMutate() {
     [workflowId, userId, updateNode, getNode]
   );
 
+  //! WF_Tool
+  const handleUpdateNodeDataTool = useCallback(
+    (
+      nodeId: string,
+      payload: Partial<NodeDataTool>,
+      onSuccess?: () => void,
+      onFailed?: () => void
+    ) => {
+      if (!workflowId || !userId || !nodeId) return;
+
+      const nodeData = getNode(nodeId)?.data as unknown as NodeDataTool;
+
+      const updatePayload: Partial<NodeDataTool> = {
+        name: nodeId,
+        desc: nodeData.desc,
+        position: nodeData.position,
+        ...payload,
+        tool_parameters: {
+          ...nodeData.tool_parameters,
+          ...payload?.tool_parameters,
+        },
+        tool_configurations: {
+          ...nodeData.tool_configurations,
+          ...payload?.tool_configurations,
+        },
+      };
+
+      const handleFailed = () => {
+        onFailed && onFailed();
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+          },
+        });
+      };
+
+      updateNode &&
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+            ...updatePayload,
+          },
+        });
+
+      handleUpdateNodeData.mutate(
+        {
+          workflow_id: workflowId,
+          user_id: userId,
+          node_id: nodeId,
+          node_data: updatePayload,
+        },
+        {
+          onSuccess: (response) => {
+            if (response?.status_code !== 200) {
+              toast.error(response?.message);
+              handleFailed();
+            }
+            onSuccess && onSuccess();
+          },
+          onError: () => {
+            handleFailed();
+          },
+        }
+      );
+    },
+    [workflowId, userId, updateNode, getNode]
+  );
+
   //! WF_CodeNode
   const handleUpdateCodeNodeData = useCallback(
     (
@@ -783,5 +852,6 @@ export default function useWorkflowMutate() {
     handleUpdateNodeDataVariable,
     handleUpdateNodeDataHttpRequest,
     handleUpdateCodeNodeData,
+    handleUpdateNodeDataTool,
   };
 }

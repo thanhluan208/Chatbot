@@ -329,7 +329,6 @@ export default function FlowChart(props: IFlowChart) {
     [setEdges, getNode, props.botId, workflowId, userId]
   );
 
-
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
@@ -339,11 +338,11 @@ export default function FlowChart(props: IFlowChart) {
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
 
-      const { nodeType: type, label } = JSON.parse(
+      const { nodeType: type } = JSON.parse(
         event.dataTransfer.getData("application/reactflow")
       );
 
-      if (typeof type === "undefined" || !type) {
+      if (!type) {
         return;
       }
 
@@ -353,9 +352,13 @@ export default function FlowChart(props: IFlowChart) {
       });
       const newNode = {
         id: uuid(),
-        type,
+        type: type.includes("tool")
+          ? `customNode_WF_${NodeTypeWorkflow.TOOL}`
+          : type,
         position,
-        data: { label: `${label}` },
+        data: {
+          isProcessing: true,
+        },
       };
 
       setNodes((nds) => {

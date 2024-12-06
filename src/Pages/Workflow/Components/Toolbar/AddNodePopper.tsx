@@ -7,17 +7,12 @@ import {
   SxProps,
   useTheme,
 } from "@mui/material";
-import React, { useCallback, useEffect } from "react";
-import { NodeTypes, nodeTypes } from "./AddNodes";
-import CommonIcons from "@/Components/CommonIcons";
-import { Node, useReactFlow } from "@xyflow/react";
-import { v4 as uuid } from "uuid";
-import { useGet, useSave } from "@/Stores/useStore";
-import reactFlowService from "@/Services/reactFlowService";
-import { useParams } from "react-router-dom";
-import { useAuth } from "@/Providers/AuthenticationProvider";
-import cachedKeys from "@/Constants/cachedKeys";
-import { WORKFLOW_ICON } from "@/Constants/common";
+import { cloneDeep } from "lodash";
+import React, { Fragment, useMemo, useState } from "react";
+import ListNode from "./ListNode";
+import ToolList from "./ToolList";
+import { Tool } from "./type";
+import toolConfig from '@/assets/tool.yaml'
 
 interface IAddNodePopper {
   open?: boolean;
@@ -32,6 +27,13 @@ interface IAddNodePopper {
   sxContainer?: SxProps;
   isHelperNode?: boolean;
   helperPosition?: { x: number; y: number };
+  enableSearch?: boolean;
+  enableTool?: boolean;
+}
+
+enum TypeEnum {
+  NODE = "NODE",
+  TOOL = "TOOL",
 }
 
 const AddNodePopper = (props: IAddNodePopper) => {
@@ -42,105 +44,60 @@ const AddNodePopper = (props: IAddNodePopper) => {
     listNode,
     placement,
     sxContainer,
-    isHelperNode,
     helperPosition,
+    enableSearch,
+    enableTool,
   } = props;
-  const { setNodes, updateNode } = useReactFlow();
+  const [type, setType] = useState(TypeEnum.NODE);
+  const [filter, setFilter] = useState("");
+
   const theme = useTheme();
-  const save = useSave();
 
-  const params = useParams();
-  const botId = params?.botId;
-  const { userId } = useAuth();
+  const listNodeFiltered = useMemo(() => {
+    if (type !== TypeEnum.NODE) return [];
 
-  const handleSaveHistory = useGet("SAVE_HISTORY");
+    const newListNode = cloneDeep(listNode);
+
+    return newListNode.filter((node) => {
+      return node.label.toLowerCase().includes(filter.toLowerCase());
+    });
+  }, [listNode, filter, type]);
+
+  const ListToolFiltered = useMemo(() => {
+    if (type !== TypeEnum.TOOL) return [];
+
+    return Object.entries(cloneDeep(toolConfig))
+      .map(([key, value]) => {
+        const { identity, credentials_for_provider, ...rest } = value;
+
+        return {
+          provider: key,
+          identity,
+          credentials_for_provider,
+          tools: Object.entries(rest).map(([key, value]) => {
+            return {
+              name: key,
+              ...(value as Omit<Tool, "name">),
+            };
+          }),
+        };
+      })
+      .filter((tool) => {
+        return tool.tools.some((elm) => {
+          return elm.name.toLowerCase().includes(filter.toLowerCase());
+        });
+      });
+  }, [filter, type]);
+
+  console.log("ListToolFiltered", ListToolFiltered);
 
   //! Function
-  const onDragStart = (
-    event: React.DragEvent<HTMLDivElement>,
-    nodeType: keyof typeof nodeTypes,
-    label: string
+
+  const handleSearch = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    event.dataTransfer.setData(
-      "application/reactflow",
-      JSON.stringify({ nodeType, label })
-    );
-    event.dataTransfer.effectAllowed = "move";
+    setFilter(event.target.value);
   };
-
-  const handleAddNode = useCallback(
-    (node: { name: string; label: string; description?: string }) => {
-      if (!setNodes) return;
-      const nodeId = uuid();
-
-      const onSuccess = (id: string) => {
-        updateNode(nodeId, {
-          id: id,
-          data: {
-            label: `Agent ${id}`,
-          },
-        });
-      };
-
-      const onFailed = () => {
-        save(`${nodeId}_remove`, true);
-      };
-
-      setNodes((nodes) => {
-        const newNodes = nodes.filter(
-          (node) => node.type !== NodeTypes.helperNode
-        );
-        const lastnode: Node = newNodes[newNodes.length - 1];
-        if (lastnode) {
-          const position = helperPosition ?? {
-            x: lastnode.position.x + (lastnode.measured?.width ?? 200) + 100,
-            y: lastnode.position.y,
-          };
-          const newNode = {
-            id: nodeId,
-            type: node.name,
-            position,
-            data: { label: `${node.label} node` },
-          };
-          newNodes.push(newNode);
-
-          reactFlowService.createFlow(
-            botId as string,
-            userId as string,
-            onSuccess,
-            onFailed,
-            JSON.stringify(newNode)
-          );
-        } else {
-          const newNode = {
-            id: nodeId,
-            type: node.name,
-            position: helperPosition ?? {
-              x: 0,
-              y: 0,
-            },
-            data: { label: `${node.label} node` },
-          };
-          newNodes.push(newNode);
-          reactFlowService.createFlow(
-            botId as string,
-            userId as string,
-            onSuccess,
-            onFailed,
-            JSON.stringify(newNode)
-          );
-        }
-        //TODO: HISTORY FEATURE
-        // handleSaveHistory(newNodes, getEdges());
-        return newNodes;
-      });
-    },
-    [setNodes, handleSaveHistory]
-  );
-
-  useEffect(() => {
-    save(cachedKeys.ADD_NODE, handleAddNode);
-  }, [handleAddNode]);
 
   //! Render
 
@@ -162,7 +119,6 @@ const AddNodePopper = (props: IAddNodePopper) => {
         <Fade {...TransitionProps} timeout={350}>
           <Box
             sx={{
-              width: "500px",
               boxShadow: "0 5px 10px rgba(0,0,0,0.2)",
               borderRadius: "12px",
               padding: "10px 20px",
@@ -172,93 +128,53 @@ const AddNodePopper = (props: IAddNodePopper) => {
               ...sxContainer,
             }}
           >
-            <CommonStyles.Typography
-              type={isHelperNode ? "semiBold12" : "semiBold16"}
-              sx={{ marginBottom: "20px" }}
-            >
-              Drag the node to the canvas, or double click on the canvas to add
-              a node
-            </CommonStyles.Typography>
-            <div className="flex flex-col gap-2">
-              {listNode.map((node) => {
-                if (node.hidden) return null;
-                return (
-                  <Box
-                    key={node.name}
-                    onDragStart={(event) =>
-                      onDragStart(
-                        event,
-                        node.name as keyof typeof nodeTypes,
-                        node.label
-                      )
-                    }
-                    draggable
-                    sx={{
-                      borderRadius: "8px",
-                      border: `1px solid ${theme.palette.primary.main}`,
-                      boxShadow:
-                        "0 6px 8px 0 rgba(29,28,35,.06),0 0 2px 0 rgba(29,28,35,.18)",
-                      padding: "8px 12px",
-                      cursor: "grab",
-                      backdropFilter: "blur(10px)",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
+            {enableSearch && (
+              <Fragment>
+                <CommonStyles.Input
+                  label="Search"
+                  fullWidth
+                  afterOnchange={handleSearch}
+                />
+
+                <hr className="my-3 opacity-50" />
+              </Fragment>
+            )}
+
+            {enableTool && (
+              <Fragment>
+                <div className="grid grid-cols-2 gap-3">
+                  <CommonStyles.Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setType(TypeEnum.NODE);
                     }}
+                    variant={type === TypeEnum.NODE ? "contained" : "outlined"}
                   >
-                    <Box>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          gap: "8px",
-                          alignItems: "center",
-                        }}
-                      >
-                        <div
-                          className="w-6 h-6 flex items-center justify-center rounded-md"
-                          style={{
-                            background: theme.palette.primary.main,
-                          }}
-                        >
-                          {
-                            WORKFLOW_ICON[
-                              node.name as keyof typeof WORKFLOW_ICON
-                            ]
-                          }
-                        </div>
-                        <CommonStyles.Typography
-                          type={isHelperNode ? "semiBold12" : "semiBold16"}
-                        >
-                          {node.label}
-                        </CommonStyles.Typography>
-                      </Box>
-                      <CommonStyles.Typography
-                        type={isHelperNode ? "normal10" : "normal16"}
-                        sx={{ opacity: 0.5, marginTop: "8px" }}
-                      >
-                        {node.description}
-                      </CommonStyles.Typography>
-                    </Box>
-                    <CommonStyles.Button
-                      variant="outlined"
-                      startIcon={<CommonIcons.Add />}
-                      sx={{
-                        border: `1px solid ${theme.palette.primary.main}`,
-                      }}
-                      onClick={() => {
-                        handleAddNode(node);
-                      }}
-                    >
-                      <CommonStyles.Typography
-                        type={isHelperNode ? "semiBold12" : "semiBold16"}
-                      >
-                        Add
-                      </CommonStyles.Typography>
-                    </CommonStyles.Button>
-                  </Box>
-                );
-              })}
-            </div>
+                    Node
+                  </CommonStyles.Button>
+                  <CommonStyles.Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setType(TypeEnum.TOOL);
+                    }}
+                    variant={type === TypeEnum.TOOL ? "contained" : "outlined"}
+                  >
+                    Tool
+                  </CommonStyles.Button>
+                </div>
+                <hr className="my-3 opacity-50" />
+              </Fragment>
+            )}
+
+            {type === TypeEnum.NODE ? (
+              <ListNode
+                listNode={listNodeFiltered}
+                helperPosition={helperPosition}
+                isHelperNode
+              />
+            ) : (
+              <ToolList toolProviders={ListToolFiltered} />
+            )}
           </Box>
         </Fade>
       )}
