@@ -11,14 +11,14 @@ import FlowChart from "../Workflow/Components/FlowChart";
 const listNode = [
   {
     name: `customNode_WF_${NodeTypeWorkflow.START}`,
-    label: "Start Node",
-    description: "Create an agent",
     hidden: true,
   },
   {
     name: `customNode_WF_${NodeTypeWorkflow.TOOL}`,
-    label: "Start Node",
-    description: "Create an agent",
+    hidden: true,
+  },
+  {
+    name: `customNode_WF_${NodeTypeWorkflow.END}`,
     hidden: true,
   },
   {
@@ -101,9 +101,10 @@ const WorkflowDetail = () => {
         position: JSON.parse(node.data.position),
         data: {
           ...node?.data,
-          label: !node?.id.includes("tool") ? node?.id : node.data.tool_name, 
+          label: !node?.id.includes("tool") ? node?.id : node.data.tool_name,
           variable_out: node?.variables_out,
           startNode: key === NodeTypeWorkflow.START,
+          endNode: key === NodeTypeWorkflow.END
         },
         selectable: key !== NodeTypeWorkflow.START,
         selected: false,
@@ -141,7 +142,7 @@ const WorkflowDetail = () => {
 
   useEffect(() => {
     save(cachedKeys.LOADING_APP, isLoading);
-  }, [isLoading]);
+  }, [isLoading, save]);
 
   //! Render
   return (
@@ -159,6 +160,7 @@ const WorkflowDetail = () => {
             listNode={listNode}
             workflowId={params.workflowId}
             initEdges={initEdges || []}
+            conversationId={data?.workflow_data?.system_variables?.conversation_id}
           />
         </ReactFlowProvider>
       )}

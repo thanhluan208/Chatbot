@@ -25,6 +25,7 @@ const UpdateNodePos = ({ id }: { id: string }) => {
       return;
     }
     deboundRef.current = setTimeout(() => {
+
       if (nodePos.current === JSON.stringify(node?.position)) return;
       handleUpdateNodePosition &&
         handleUpdateNodePosition(

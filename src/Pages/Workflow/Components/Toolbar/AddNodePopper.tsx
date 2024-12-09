@@ -59,7 +59,7 @@ const AddNodePopper = (props: IAddNodePopper) => {
     const newListNode = cloneDeep(listNode);
 
     return newListNode.filter((node) => {
-      return node.label.toLowerCase().includes(filter.toLowerCase());
+      return node.label?.toLowerCase()?.includes(filter.toLowerCase());
     });
   }, [listNode, filter, type]);
 

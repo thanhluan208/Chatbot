@@ -131,7 +131,7 @@ const ListNode = ({
       }}
     >
       <CommandList className="max-h-[50vh]">
-        <CommandEmpty>No variables found!.</CommandEmpty>
+        <CommandEmpty>No node found!.</CommandEmpty>
         <CommandGroup>
           <div className="flex flex-col gap-2">
             {listNode.map((node) => {

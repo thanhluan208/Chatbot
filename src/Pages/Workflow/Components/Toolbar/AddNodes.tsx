@@ -39,7 +39,9 @@ import WF_VarAssigner from "../CustomNodes/WF_VarAssigner";
 import WF_AnswerNode from "../CustomNodes/WF_AnswerNode";
 import WF_HttpRequestNode from "../CustomNodes/WF_HttpRequestNode";
 import WF_Tool from "../CustomNodes/WF_Tool";
+import WF_Endnode from "../CustomNodes/WF_Endnode";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export enum NodeTypes {
   startNode = "customNode_startNode",
   llmNode = "customNode_llmNode",
@@ -49,6 +51,7 @@ export enum NodeTypes {
   helperNode = "customNode_helperNode",
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const nodeTypes = {
   customNode_startNode: StartNode,
   customNode_llmNode: LLMNode,
@@ -70,8 +73,10 @@ export const nodeTypes = {
   [`customNode_WF_${NodeTypeWorkflow.ANSWER}`]: WF_AnswerNode,
   [`customNode_WF_${NodeTypeWorkflow.HTTP_REQUEST}`]: WF_HttpRequestNode,
   [`customNode_WF_${NodeTypeWorkflow.TOOL}`]: WF_Tool,
+  [`customNode_WF_${NodeTypeWorkflow.END}`]: WF_Endnode,
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export enum CustomNodeTypes {
   initNode = "initNode",
 }
@@ -79,7 +84,7 @@ export enum CustomNodeTypes {
 interface IAddNodes {
   listNode: {
     name: string;
-    label: string;
+    label?: string;
     description?: string;
     hidden?: boolean;
   }[];
@@ -102,7 +107,7 @@ const AddNodes = ({ listNode = [], initOpen, helperPosition }: IAddNodes) => {
 
   //! Function
   const handleAddNode = useCallback(
-    (node: { name: string; label: string; description?: string }) => {
+    (node: { name: string; label?: string; description?: string }) => {
       if (!setNodes) return;
       const nodeId = uuid();
 
@@ -129,8 +134,7 @@ const AddNodes = ({ listNode = [], initOpen, helperPosition }: IAddNodes) => {
             data: { label: `${node.label} node` },
           };
 
-          const onSuccess = (id: string, nodeData?: any) => {
-            console.log("onSuccess", id, nodeData);
+          const onSuccess = (id: string, nodeData?: Record<string, unknown>) => {
             updateNode(newNode.id, {
               id: id,
               data: nodeData,
@@ -184,7 +188,7 @@ const AddNodes = ({ listNode = [], initOpen, helperPosition }: IAddNodes) => {
             data: { label: `${node.label} node` },
           };
 
-          const onSuccess = (id: string, nodeData?: any) => {
+          const onSuccess = (id: string, nodeData?: Record<string, unknown>) => {
             updateNode(newNode.id, {
               id: id,
               data: nodeData,
@@ -243,6 +247,7 @@ const AddNodes = ({ listNode = [], initOpen, helperPosition }: IAddNodes) => {
       workflowId,
       helperPosition,
       handleAddNodeWorkflow,
+      save,
     ]
   );
 

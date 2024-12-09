@@ -71,7 +71,7 @@ export interface WorkflowDetail {
 
 export interface Features {
   opening_statement: null;
-  suggested_questions: any[];
+  suggested_questions: unknown[];
   suggested_questions_after_answer: AnnotationReply;
   speech_to_text: AnnotationReply;
   text_to_speech: AnnotationReply;
@@ -79,7 +79,7 @@ export interface Features {
   annotation_reply: AnnotationReply;
   more_like_this: AnnotationReply;
   sensitive_word_avoidance: SensitiveWordAvoidance;
-  system_parameters: SystemParameters;
+  system_parameters: unknown;
 }
 
 export interface AnnotationReply {
@@ -89,14 +89,12 @@ export interface AnnotationReply {
 export interface SensitiveWordAvoidance {
   enabled: boolean;
   type: string;
-  configs: any[];
+  configs: unknown[];
 }
-
-export interface SystemParameters {}
 
 export interface Graph {
   nodes: Nodes;
-  edges: SystemParameters;
+  edges: unknown;
 }
 
 export interface Nodes {
@@ -122,7 +120,7 @@ export interface NodeData {
 
 export interface Output {
   variable: string;
-  value_selector: any[];
+  value_selector: string[];
   save_to_memory: boolean;
 }
 
@@ -133,9 +131,9 @@ export interface Variable {
   type: StartNodeInputType;
   required: boolean;
   max_length: number;
-  options?: string;
+  options?: string | null;
   detault?: string;
-  hint?: string;
+  hint?: string | null;
 }
 
 export interface VariablesOut {
@@ -190,6 +188,7 @@ export enum NodeTypeWorkflow {
   ITERATION_START = "iteration-start",
   PARAMETER_EXTRACTOR = "parameter-extractor",
   CONVERSATION_VARIABLE_ASSIGNER = "assigner",
+  RUNTIME_WORKFLOW = "runtime-workflow",
 }
 
 export enum StartNodeInputType {
@@ -219,7 +218,7 @@ export interface UpdateNodeDataPayload {
   user_id: string;
   workflow_id: string;
   node_id: string;
-  node_data: any;
+  node_data: unknown;
 }
 
 export interface AuthorizePayload {
@@ -242,4 +241,9 @@ export interface CheckToolResponse extends CommonResponse {
 
 export interface Credentials {
   api_key: string;
+}
+
+export interface CheckWorkflowValidPayload {
+  user_id: string;
+  workflow_id: string;
 }

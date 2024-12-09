@@ -1,40 +1,40 @@
-import React, { useCallback, useEffect, useRef } from "react";
 import {
-  ReactFlow,
-  MiniMap,
-  Controls,
-  Background,
-  useNodesState,
-  useEdgesState,
   addEdge,
-  Connection,
+  Background,
   BackgroundVariant,
-  useReactFlow,
-  MarkerType,
-  Node,
+  Connection,
+  Controls,
   Edge,
+  MarkerType,
+  MiniMap,
+  Node,
+  ReactFlow,
   reconnectEdge,
+  useEdgesState,
+  useNodesState,
+  useReactFlow,
 } from "@xyflow/react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { v4 as uuid } from "uuid";
 
+import { deleteBotNode, removeNodeWorkflowAPI } from "@/Constants/api";
+import queryKey from "@/Constants/queryKey";
+import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
+import { useAuth } from "@/Providers/AuthenticationProvider";
+import httpServices from "@/Services/httpServices";
+import reactFlowService from "@/Services/reactFlowService";
+import { AddEdgePayload, NodeTypeWorkflow } from "@/Types/workflow";
+import { Box, useTheme } from "@mui/material";
 import "@xyflow/react/dist/style.css";
+import { cloneDeep } from "lodash";
+import { useQueryClient } from "react-query";
+import { toast } from "react-toastify";
+import cachedKeys from "../../../Constants/cachedKeys";
+import { useSave } from "../../../Stores/useStore";
+import AnimatedSVGEdge from "./CustomEdges";
 import Toolbar from "./Toolbar";
 import { NodeTypes, nodeTypes } from "./Toolbar/AddNodes";
-import AnimatedSVGEdge from "./CustomEdges";
-import { Box, useTheme } from "@mui/material";
-import { useSave } from "../../../Stores/useStore";
-import cachedKeys from "../../../Constants/cachedKeys";
-import reactFlowService from "@/Services/reactFlowService";
-import { useAuth } from "@/Providers/AuthenticationProvider";
-import { cloneDeep } from "lodash";
-import { detectDiff } from "@/Helpers";
-import httpServices from "@/Services/httpServices";
-import { deleteBotNode, removeNodeWorkflowAPI } from "@/Constants/api";
-import { toast } from "react-toastify";
-import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
-import { useQueryClient } from "react-query";
-import queryKey from "@/Constants/queryKey";
-import { AddEdgePayload, NodeTypeWorkflow } from "@/Types/workflow";
+import WorkflowFeature from "./WorkflowFeatures";
 
 const edgeTypes = {
   animatedSvg: AnimatedSVGEdge,
@@ -42,11 +42,12 @@ const edgeTypes = {
 
 interface IFlowChart {
   initNodes: Node[];
-  listNode: { name: string; label: string }[];
+  listNode: { name: string; label?: string }[];
   botId?: string;
   isMultiAgent?: boolean;
   initEdges?: Edge[];
   workflowId?: string;
+  conversationId?: string;
 }
 
 export type HistoryFlow = {
@@ -55,14 +56,13 @@ export type HistoryFlow = {
 }[];
 
 export default function FlowChart(props: IFlowChart) {
-  const { isMultiAgent, initEdges = [], initNodes, workflowId } = props;
+  const { isMultiAgent, initEdges = [], initNodes, workflowId,conversationId } = props;
   const edgeReconnectSuccessful = useRef(true);
   const [nodes, setNodes, onNodesChange] = useNodesState(
     (initNodes as Node[]) ?? []
   );
   const [edges, setEdges, onEdgesChange] = useEdgesState([] as Edge[]);
-  const { screenToFlowPosition, updateNode, getNodes, getEdges, getNode } =
-    useReactFlow();
+  const { screenToFlowPosition, updateNode, getNode } = useReactFlow();
   const save = useSave();
   const theme = useTheme();
   const queryClient = useQueryClient();
@@ -78,7 +78,7 @@ export default function FlowChart(props: IFlowChart) {
 
   useEffect(() => {
     setEdges(initEdges as Edge[]);
-  }, [initEdges]);
+  }, [initEdges, setEdges]);
 
   const onReconnect = useCallback(
     (oldEdge: Edge, newConnection: Connection) => {
@@ -173,11 +173,20 @@ export default function FlowChart(props: IFlowChart) {
         console.log("err", error);
       }
     },
-    [props?.botId, userId]
+    [
+      props?.botId,
+      userId,
+      workflowId,
+      handleAddEdge,
+      handleRemoveEdge,
+      queryClient,
+      setEdges,
+      getNode,
+    ]
   );
 
   const onReconnectEnd = useCallback(
-    (_: any, edge: Edge) => {
+    (_: unknown, edge: Edge) => {
       if (!edgeReconnectSuccessful.current) {
         const onFailed = () => {
           setEdges((eds) => {
@@ -230,7 +239,7 @@ export default function FlowChart(props: IFlowChart) {
 
       edgeReconnectSuccessful.current = true;
     },
-    [props?.botId, userId]
+    [props?.botId, userId, workflowId, handleRemoveEdge, queryClient, setEdges]
   );
 
   const onDragStop = async (_: React.MouseEvent, node: Node) => {
@@ -308,7 +317,7 @@ export default function FlowChart(props: IFlowChart) {
         });
       }
 
-      return setEdges((eds: any) => {
+      return setEdges((eds: Edge[]) => {
         return addEdge(
           {
             ...connection,
@@ -326,7 +335,15 @@ export default function FlowChart(props: IFlowChart) {
       });
     },
 
-    [setEdges, getNode, props.botId, workflowId, userId]
+    [
+      setEdges,
+      getNode,
+      props.botId,
+      workflowId,
+      userId,
+      handleAddEdge,
+      queryClient,
+    ]
   );
 
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
@@ -364,12 +381,12 @@ export default function FlowChart(props: IFlowChart) {
       setNodes((nds) => {
         const newNodes = nds
           .filter((node) => node.type !== NodeTypes.helperNode)
-          .concat(newNode as any);
+          .concat(newNode as Node);
 
         return newNodes;
       });
 
-      const onSuccess = (id: string, nodeData?: any) => {
+      const onSuccess = (id: string, nodeData?: Record<string, unknown>) => {
         updateNode(newNode.id, {
           id: id,
           data: nodeData,
@@ -417,6 +434,9 @@ export default function FlowChart(props: IFlowChart) {
       updateNode,
       props.botId,
       workflowId,
+      userId,
+      handleAddNodeWorkflow,
+      save,
     ]
   );
 
@@ -442,9 +462,9 @@ export default function FlowChart(props: IFlowChart) {
         },
       };
 
-      setNodes((nds) => nds.concat(newNode as any));
+      setNodes((nds) => nds.concat(newNode as Node));
     },
-    [props?.listNode, nodes]
+    [props?.listNode, nodes, screenToFlowPosition, setNodes]
   );
 
   const onPaneClick = useCallback(() => {
@@ -452,54 +472,11 @@ export default function FlowChart(props: IFlowChart) {
       setNodes((nodes) =>
         nodes.filter((elm) => elm.type !== NodeTypes.helperNode)
       );
-  }, [nodes]);
-
-  const handleSaveHistory = useCallback(
-    (nodes: Node[], edges: Edge[]) => {
-      save(
-        cachedKeys.HISTORY,
-        (state: any) => {
-          const validNodes =
-            cloneDeep(nodes).filter((node) => !node?.data?.isPlaceholder) ?? [];
-          const validEdges =
-            cloneDeep(edges).filter((edge) => !edge?.data?.isPlaceholder) ?? [];
-
-          const history: HistoryFlow = [...(state[cachedKeys.HISTORY] ?? [])];
-
-          if (history.length === 0) {
-            return [
-              {
-                nodes: validNodes,
-                edges: validEdges,
-              },
-            ];
-          } else {
-            const { nodes: prevNodes, edges: prevEdges } =
-              history[history.length - 1];
-
-            const diffNode = detectDiff(prevNodes, validNodes);
-            const diffEdge = detectDiff(prevEdges, validEdges);
-            if (!diffNode && !diffEdge) {
-              return state[cachedKeys.HISTORY];
-            }
-
-            history.push({
-              nodes: validNodes,
-              edges: validEdges,
-            });
-          }
-
-          return history;
-        },
-        true
-      );
-    },
-    [getNodes, getEdges]
-  );
+  }, [nodes, setNodes]);
 
   const handleDeleteNode = useCallback(
     async (nodes: Node[]) => {
-      const promise: Promise<any>[] = [];
+      const promise: Promise<unknown>[] = [];
 
       const deleteEdges = cloneDeep(edges).filter((edge) => {
         return (
@@ -527,8 +504,8 @@ export default function FlowChart(props: IFlowChart) {
       const response = await Promise.allSettled(promise);
       save(
         cachedKeys.NODE_EDITING,
-        (state: any) => {
-          const nodeEditing = state[cachedKeys.NODE_EDITING];
+        (state: { [key: string]: unknown }) => {
+          const nodeEditing = state[cachedKeys.NODE_EDITING] as Node;
           if (nodeEditing) {
             const found = nodes.find((node) => node.id === nodeEditing.id);
             if (found) {
@@ -554,7 +531,7 @@ export default function FlowChart(props: IFlowChart) {
         setEdges((edges) => edges.concat(deleteEdges));
       }
     },
-    [props?.botId, edges, userId]
+    [props?.botId, edges, userId, workflowId, save, setNodes, setEdges]
   );
 
   const nodeColor = (node: Node) => {
@@ -570,14 +547,10 @@ export default function FlowChart(props: IFlowChart) {
   };
 
   useEffect(() => {
-    save(cachedKeys.SAVE_HISTORY, handleSaveHistory);
-  }, [handleSaveHistory, save]);
-
-  useEffect(() => {
     return () => {
       save(cachedKeys.HISTORY, []);
     };
-  }, []);
+  }, [save]);
 
   return (
     <Box
@@ -636,6 +609,7 @@ export default function FlowChart(props: IFlowChart) {
         />
       </ReactFlow>
       <Toolbar listNode={props.listNode} />
+      {workflowId && conversationId && <WorkflowFeature conversationId={conversationId}/>}
     </Box>
   );
 }

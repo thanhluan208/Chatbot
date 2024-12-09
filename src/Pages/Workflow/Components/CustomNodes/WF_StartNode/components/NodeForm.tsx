@@ -35,9 +35,9 @@ const NodeForm = ({ data, nodeId, toggle }: NodeFormProps) => {
       type: data?.type || StartNodeInputType.TEXT_INPUT,
       required: data?.required || false,
       max_length: data?.max_length || 256,
-      options: data?.options || "",
+      options: data?.options || null,
       detault: data?.detault || "",
-      hint: data?.hint || "",
+      hint: data?.hint || null,
     };
   }, [data]);
 
