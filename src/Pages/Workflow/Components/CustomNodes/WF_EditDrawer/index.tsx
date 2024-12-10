@@ -15,12 +15,18 @@ import AnswerNodeDrawer from "../WF_AnswerNode/AnswerNodeDrawer";
 import VariableAssignerNodeDrawer from "../WF_VarAssigner/VariableAssignerNodeDrawer";
 import HTTPNodeDrawer from "../WF_HttpRequestNode/HTTPNodeDrawer";
 import ToolNodeDrawer from "../WF_Tool/ToolNodeDrawer";
+import EndNodeDrawer from "../WF_Endnode/EndNodeDrawer";
+import RuntimeWorkflowDrawer from "../../WorkflowFeatures/RuntimeWorkflowDrawer";
 
 interface WF_EditDrawerProps {
-  node: NodeProps;
+  node?: NodeProps;
+  conversationId?: string;
 }
 
-export default function WF_EditDrawer({ node }: WF_EditDrawerProps) {
+export default function WF_EditDrawer({
+  node,
+  conversationId,
+}: WF_EditDrawerProps) {
   //! State
   const nodeEditing = useGet("NODE_EDITING");
   const save = useSave();
@@ -33,6 +39,13 @@ export default function WF_EditDrawer({ node }: WF_EditDrawerProps) {
   };
 
   const renderEditingNode = useCallback(() => {
+    if (
+      nodeEditing?.type === NodeTypeWorkflow.RUNTIME_WORKFLOW &&
+      conversationId
+    ) {
+      return <RuntimeWorkflowDrawer conversationId={conversationId} />;
+    }
+
     if (!node) return null;
     switch (nodeEditing?.type) {
       case NodeTypeWorkflow.LLM:
@@ -58,11 +71,13 @@ export default function WF_EditDrawer({ node }: WF_EditDrawerProps) {
       case NodeTypeWorkflow.CODE:
         return <CodeNodeDrawer node={node} />;
       case NodeTypeWorkflow.TOOL:
-        return <ToolNodeDrawer node={node} />
+        return <ToolNodeDrawer node={node} />;
+      case NodeTypeWorkflow.END:
+        return <EndNodeDrawer node={node} />;
       default:
         return null;
     }
-  }, [node, nodeEditing?.type]);
+  }, [node, nodeEditing?.type, conversationId]);
 
   //! Render
 
@@ -70,7 +85,9 @@ export default function WF_EditDrawer({ node }: WF_EditDrawerProps) {
     <Drawer
       variant="persistent"
       anchor="right"
-      open={!!nodeEditing && !!node && node?.id === nodeEditing?.id}
+      open={
+        !!nodeEditing && ((!!node && node?.id === nodeEditing?.id) || nodeEditing?.id === conversationId)
+      }
       onClose={handleClose}
       hideBackdrop
       onKeyDown={(e) => {
@@ -104,7 +121,7 @@ export default function WF_EditDrawer({ node }: WF_EditDrawerProps) {
         }}
         role="presentation"
       >
-        {node?.id === nodeEditing?.id && renderEditingNode()}
+        {(node?.id === nodeEditing?.id || nodeEditing?.id === conversationId) && renderEditingNode()}
       </Box>
     </Drawer>
   );

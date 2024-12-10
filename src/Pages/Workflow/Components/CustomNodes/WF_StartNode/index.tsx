@@ -68,4 +68,5 @@ const WF_StartNode = (props: NodeProps) => {
   );
 };
 
-export default React.memo(WF_StartNode);
+const MemoizedWF_StartNode = React.memo(WF_StartNode);
+export default MemoizedWF_StartNode;

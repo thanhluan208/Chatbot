@@ -15,11 +15,13 @@ const GradientBorder = ({
   const { updateNode } = useReactFlow();
 
   const classname = useMemo(() => {
-    if (data?.currentNode && data?.startNode) return "chatting-start";
-    else if (data?.currentNode && !data?.startNode) return "agent-chatting";
+    if ((data?.currentNode || data.runningNode) && data?.startNode)
+      return "chatting-start";
+    else if ((data?.currentNode || data.runningNode) && !data?.startNode)
+      return "agent-chatting";
     else if (data?.startNode) return "start-node";
     else return "agent-node";
-  }, [data?.currentNode, data?.startNode]);
+  }, [data?.currentNode, data?.startNode, data.runningNode]);
 
   return (
     <Box
@@ -33,7 +35,10 @@ const GradientBorder = ({
       }}
     >
       <UpdateNodePos id={id} />
-      {(!!data?.currentNode || !!data?.startNode) && (
+      {(!!data?.currentNode ||
+        !!data?.startNode ||
+        !!data?.endNode ||
+        !!data?.runningNode) && (
         <Box
           sx={{
             position: "absolute",
@@ -45,7 +50,7 @@ const GradientBorder = ({
             gap: "8px",
           }}
         >
-          {!!data?.currentNode && (
+          {(!!data?.currentNode || !!data?.runningNode) && (
             <Box
               sx={{
                 background: `${theme.palette.success.main}`,
@@ -54,7 +59,7 @@ const GradientBorder = ({
               }}
             >
               <CommonStyles.Typography type="semiBold16" color="#fff">
-                Chatting...
+                {data?.runningNode ? "Running..." : "Chatting..."}
               </CommonStyles.Typography>
             </Box>
           )}
@@ -68,6 +73,19 @@ const GradientBorder = ({
             >
               <CommonStyles.Typography type="semiBold16" color="#fff">
                 Start node
+              </CommonStyles.Typography>
+            </Box>
+          )}
+          {!!data?.endNode && (
+            <Box
+              sx={{
+                background: `${theme.palette.primary.main}`,
+                borderRadius: "12px",
+                padding: "4px 12px",
+              }}
+            >
+              <CommonStyles.Typography type="semiBold16" color="#fff">
+                End node
               </CommonStyles.Typography>
             </Box>
           )}
@@ -91,7 +109,7 @@ const GradientBorder = ({
         }}
         className={classname}
         onClick={() => {
-          const updates: any = {
+          const updates: Record<string, boolean> = {
             selected: true,
             readyToPaste: true,
           };

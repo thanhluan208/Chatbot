@@ -81,5 +81,8 @@ export const addEdgeWorkflowAPI = baseAPI + "/workflow/add_edge";
 export const removeEdgeWorkflowAPI = baseAPI + "/workflow/remove_edge";
 export const getVariableSelectors =
   baseAPI + "/workflow/get_avaiable_variable_selectors";
-export const authorizeTool = baseAPI + "/workflow/update_user_credential"
-export const checkToolAuthor = baseAPI + "/workflow/check_user_credential"
+export const authorizeTool = baseAPI + "/workflow/update_user_credential";
+export const checkToolAuthor = baseAPI + "/workflow/check_user_credential";
+export const checkWorkflowValid =
+  baseAPI + "/workflow/workflow_is_valid_to_run";
+export const runWorkflow = baseAPI + "/workflow/chat_stream_completion";

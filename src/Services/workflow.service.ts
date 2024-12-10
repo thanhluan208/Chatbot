@@ -4,6 +4,7 @@ import {
   AuthorizePayload,
   CheckToolAuthorPayload,
   CheckToolResponse,
+  CheckWorkflowValidPayload,
   CreateWorkflowResponse,
   deleteWorkflowPayload,
   QueryVarSelector,
@@ -21,6 +22,7 @@ import {
   addNodeWorkflowAPI,
   authorizeTool,
   checkToolAuthor,
+  checkWorkflowValid,
   createWorkflowAPI,
   deleteWorkflowAPI,
   getVariableSelectors,
@@ -89,6 +91,10 @@ class WorkflowService {
 
   checkToolAuthor(payload: CheckToolAuthorPayload): Promise<CheckToolResponse> {
     return httpServices.post(checkToolAuthor, payload).then((res) => res.data);
+  }
+
+  checkWorkflowValid(payload: CheckWorkflowValidPayload): Promise<CommonResponse> {
+    return httpServices.post(checkWorkflowValid, payload).then((res) => res.data);
   }
 }
 

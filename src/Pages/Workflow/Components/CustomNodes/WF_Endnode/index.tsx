@@ -1,46 +1,30 @@
-import React, { Fragment, useMemo } from "react";
-import { Handle, NodeProps, Position, useReactFlow } from "@xyflow/react";
-import { Box, useTheme } from "@mui/material";
-import { Equal } from "lucide-react";
-import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
-import CollapseArea from "@/Components/CommonStyles/CollapseArea";
-import GradientBorder from "../../GradientBorder";
-import { useParams } from "react-router-dom";
-import { useSave } from "@/Stores/useStore";
-import cachedKeys from "@/Constants/cachedKeys";
-import { NodeTypeWorkflow } from "@/Types/workflow";
-import WF_EditDrawer from "../WF_EditDrawer";
-import { createPortal } from "react-dom";
 import CommonStyles from "@/Components/CommonStyles";
-import VarOutList from "../../misc/VarOutList";
-import useWorkflowMutate from "@/Hooks/workflow/useWorkflowMutate";
-import { NodeDataVariable } from "./type";
-import { cloneDeep } from "lodash";
+import CollapseArea from "@/Components/CommonStyles/CollapseArea";
+import EditLabelNode from "@/Components/CommonStyles/EditLabelNode";
+import cachedKeys from "@/Constants/cachedKeys";
+import { useSave } from "@/Stores/useStore";
+import { NodeTypeWorkflow } from "@/Types/workflow";
+import { Box, useTheme } from "@mui/material";
+import { Handle, NodeProps, Position, useReactFlow } from "@xyflow/react";
+import { isEmpty } from "lodash";
+import { Goal } from "lucide-react";
+import React, { Fragment } from "react";
+import { createPortal } from "react-dom";
+import { useParams } from "react-router-dom";
+import GradientBorder from "../../GradientBorder";
+import WF_EditDrawer from "../WF_EditDrawer";
+import ListOutputVariable from "./ListOutputVariable";
+import { NodeDataEnd } from "./type";
 
-const WF_VarAssigner = (props: NodeProps) => {
+const WF_EndNode = (props: NodeProps) => {
   //! State
   const { id, selected } = props;
   const theme = useTheme();
   const { workflowId } = useParams();
   const save = useSave();
   const { updateNode } = useReactFlow();
-  const {} = useWorkflowMutate();
 
-  const nodeData = props.data as unknown as NodeDataVariable;
-
-  const nodeDataWithVariableOut = useMemo(() => {
-    if (!nodeData) return;
-    console.log("node", nodeData);
-    return {
-      ...nodeData,
-      variable_out: cloneDeep(nodeData?.variable_out).map((elm) => {
-        return {
-          ...elm,
-          variable: nodeData?.variable,
-        };
-      }),
-    };
-  }, [nodeData]);
+  const nodeData = props.data as unknown as NodeDataEnd;
 
   //! Function
 
@@ -50,7 +34,7 @@ const WF_VarAssigner = (props: NodeProps) => {
     });
     setTimeout(() => {
       save(cachedKeys.NODE_EDITING, {
-        type: NodeTypeWorkflow.VARIABLE,
+        type: NodeTypeWorkflow.END,
         id: id,
       });
     }, 0);
@@ -83,7 +67,7 @@ const WF_VarAssigner = (props: NodeProps) => {
                       background: theme.palette.primary.main,
                     }}
                   >
-                    <Equal className="w-3.5 h-3.5" color="#fff" />
+                    <Goal className="w-3.5 h-3.5" color="#fff" />
                   </Box>
                   <EditLabelNode nodeId={id} workflowId={workflowId} />
                 </Box>
@@ -95,7 +79,9 @@ const WF_VarAssigner = (props: NodeProps) => {
               </div>
             }
           >
-            <VarOutList nodeData={nodeDataWithVariableOut} />
+            {!isEmpty(nodeData?.outputs) && (
+              <ListOutputVariable data={nodeData?.outputs} />
+            )}
           </CollapseArea>
         </GradientBorder>
 
@@ -115,4 +101,5 @@ const WF_VarAssigner = (props: NodeProps) => {
   );
 };
 
-export default React.memo(WF_VarAssigner);
+// eslint-disable-next-line react-refresh/only-export-components
+export default React.memo(WF_EndNode);

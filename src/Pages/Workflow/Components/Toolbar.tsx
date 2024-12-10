@@ -1,19 +1,18 @@
-import { Box, useTheme } from "@mui/material";
-import AddNodes from "./Toolbar/AddNodes";
-import ZoomControl from "./Toolbar/ZoomControl";
-import { useReactFlow } from "@xyflow/react";
-import CommonStyles from "@/Components/CommonStyles";
-import { useGet, useSave } from "@/Stores/useStore";
-import FitView from "@/Components/CommonIcons/FitView";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
-import { cloneDeep, isEmpty } from "lodash";
-import { v4 as uuid } from "uuid";
-import Shortcuts from "./Toolbar/Shortcuts";
-import AnimationControl from "./Toolbar/AnimationControl";
-import History from "./Toolbar/History";
-import ReArrangeFlow from "./Toolbar/ReArrangeFlow";
-import cachedKeys from "@/Constants/cachedKeys";
 import CommonIcons from "@/Components/CommonIcons";
+import FitView from "@/Components/CommonIcons/FitView";
+import CommonStyles from "@/Components/CommonStyles";
+import cachedKeys from "@/Constants/cachedKeys";
+import { useGet, useSave } from "@/Stores/useStore";
+import { Box, useTheme } from "@mui/material";
+import { useReactFlow } from "@xyflow/react";
+import { cloneDeep, isEmpty } from "lodash";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { v4 as uuid } from "uuid";
+import AddNodes from "./Toolbar/AddNodes";
+import AnimationControl from "./Toolbar/AnimationControl";
+import ReArrangeFlow from "./Toolbar/ReArrangeFlow";
+import Shortcuts from "./Toolbar/Shortcuts";
+import ZoomControl from "./Toolbar/ZoomControl";
 
 // const direction = "TB"
 
@@ -24,7 +23,7 @@ export type HistoryRef = {
 const Toolbar = ({
   listNode,
 }: {
-  listNode: { name: string; label: string; hidden?: boolean }[];
+  listNode: { name: string; label?: string; hidden?: boolean }[];
 }) => {
   //! State
   const theme = useTheme();
@@ -37,7 +36,6 @@ const Toolbar = ({
   } | null>(null);
 
   const [open, setOpen] = useState(true);
-  const historyRef = useRef<HistoryRef | null>(null);
 
   const COLLAPSE_TOOLBAR = useGet("COLLAPSE_TOOLBAR") || !open;
   const collapse = COLLAPSE_TOOLBAR || !open;
@@ -111,7 +109,7 @@ const Toolbar = ({
         });
       }
     },
-    [isEditing]
+    [isEditing, setNodes, getZoom, zoomTo]
   );
 
   const handleTrackMouse = useCallback((e: MouseEvent) => {
@@ -129,7 +127,7 @@ const Toolbar = ({
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("mousemove", handleTrackMouse);
     };
-  }, [handleKeyDown]);
+  }, [handleKeyDown, handleTrackMouse]);
 
   //! Render
   return (
@@ -205,7 +203,7 @@ const Toolbar = ({
         }}
       />
 
-      <History innerRef={historyRef} />
+      {/* <History innerRef={historyRef} /> */}
 
       <Box
         sx={{
@@ -224,7 +222,7 @@ const Toolbar = ({
         isIcon
         isRound={false}
         onClick={() =>
-          setOpen((_) => {
+          setOpen(() => {
             if (collapse) {
               save(cachedKeys.COLLAPSE_TOOLBAR, false);
               return true;
@@ -248,4 +246,4 @@ const Toolbar = ({
   );
 };
 
-export default memo(Toolbar);
+export default Toolbar;

@@ -5,6 +5,7 @@ import {
   Code,
   Component,
   Equal,
+  Goal,
   House,
   MemoryStick,
   Pickaxe,
@@ -56,10 +57,17 @@ export const WORKFLOW_ICON = {
   [`customNode_WF_${NodeTypeWorkflow.HTTP_REQUEST}`]: (
     <RadioTower className="w-3.5 h-3.5" color="#fff" />
   ),
+  [`customNode_WF_${NodeTypeWorkflow.END}`]: (
+    <Goal className="w-3.5 h-3.5" color="#fff" />
+  ),
 };
 
 export const LOCAL_STORAGE_KEY = {
   ACCESS_TOKEN: "ACCESS_TOKEN",
   REFRESH_TOKEN: "REFRESH_TOKEN",
   USER_DATA: "USER_DATA",
+};
+
+export const SESSION_STORAGE_KEY = {
+  WORKFLOW_RESULT_ANIMATED: "WORKFLOW_RESULT_ANIMATED",
 };

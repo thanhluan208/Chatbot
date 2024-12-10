@@ -38,7 +38,7 @@ const ToolList = ({ toolProviders }: ToolListProps) => {
       }}
     >
       <CommandList className="max-h-[50vh]">
-        <CommandEmpty>No variables found!.</CommandEmpty>
+        <CommandEmpty>No tool found!.</CommandEmpty>
 
         {toolProviders.map((provider) => {
           return (
@@ -64,18 +64,33 @@ const ToolList = ({ toolProviders }: ToolListProps) => {
                       draggable
                     >
                       <Tooltip title={tool.name} placement="top-start">
-                        <div className="flex gap-3 items-center">
+                        <div className="flex gap-3 items-start">
                           <img
                             src={provider.identity.icon}
                             alt="icon"
-                            className="rounded-lg w-6 h-6 object-cover object-center"
+                            className="rounded-lg w-8 h-8 object-cover object-center translate-y-2"
                           />
-                          <CommonStyles.Typography
-                            type="semiBold16"
-                            className="max-w-[200px] truncate"
-                          >
-                            {formatName(tool.name, "_")}
-                          </CommonStyles.Typography>
+                          <div>
+                            <CommonStyles.Typography
+                              type="semiBold16"
+                              className="max-w-[200px] truncate"
+                            >
+                              {formatName(tool.name, "_")}
+                            </CommonStyles.Typography>
+                            <CommonStyles.Typography
+                              type="normal10"
+                              sx={{
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: "vertical",
+                                overflow: "hidden",
+                                display: "-webkit-box",
+                                textAlign: "justify",
+                                opacity: 0.5,
+                              }}
+                            >
+                              {tool.description.human.en_US}
+                            </CommonStyles.Typography>
+                          </div>
                         </div>
                       </Tooltip>
                       {/* <CommonStyles.Button

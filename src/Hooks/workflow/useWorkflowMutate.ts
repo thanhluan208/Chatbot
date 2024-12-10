@@ -2,6 +2,7 @@ import queryKey from "@/Constants/queryKey";
 import { NodeDataAnswer } from "@/Pages/Workflow/Components/CustomNodes/WF_AnswerNode/type";
 import { CodeNodeData } from "@/Pages/Workflow/Components/CustomNodes/WF_CodeNode/type";
 import { ConditionNodeData } from "@/Pages/Workflow/Components/CustomNodes/WF_ConditionNode/type";
+import { NodeDataEnd } from "@/Pages/Workflow/Components/CustomNodes/WF_Endnode/type";
 import { NodeDataHTTPRequest } from "@/Pages/Workflow/Components/CustomNodes/WF_HttpRequestNode/type";
 import { KnowledgeNodeData } from "@/Pages/Workflow/Components/CustomNodes/WF_Knowledge/type";
 import { LlmNodeData } from "@/Pages/Workflow/Components/CustomNodes/WF_LlmNode/type";
@@ -15,11 +16,14 @@ import workflowService from "@/Services/workflow.service";
 import {
   AddEdgePayload,
   addNodeWorkflowPayload,
+  CheckWorkflowValidPayload,
   deleteWorkflowPayload,
   NodeTypeWorkflow,
+  RemoveEdgePayload,
   UpdateNodeDataPayload,
 } from "@/Types/workflow";
 import { useReactFlow } from "@xyflow/react";
+import { AxiosError } from "axios";
 import { useCallback } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
@@ -31,6 +35,7 @@ export default function useWorkflowMutate() {
   const { userId } = useAuth();
   const { updateNode, getNode } = useReactFlow();
 
+  //! WF Nodes Mutations
   const handleCreateWorkflow = useMutation({
     mutationFn: (payload: FormData) => workflowService.createWorkflow(payload),
     onSuccess: () => {
@@ -38,7 +43,7 @@ export default function useWorkflowMutate() {
         queryKey: [queryKey.WORKFLOW],
       });
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message: string }>) => {
       toast.error(error.response?.data?.message || "Something went wrong");
     },
   });
@@ -51,7 +56,7 @@ export default function useWorkflowMutate() {
         queryKey: [queryKey.WORKFLOW],
       });
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message: string }>) => {
       toast.error(error.response?.data?.message || "Something went wrong");
     },
   });
@@ -59,7 +64,7 @@ export default function useWorkflowMutate() {
   const handleAddNodeWorkflow = useMutation({
     mutationFn: (payload: addNodeWorkflowPayload) =>
       workflowService.addNodeWorkflow(payload),
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message: string }>) => {
       toast.error(error.response?.data?.message || "Something went wrong");
     },
   });
@@ -67,68 +72,40 @@ export default function useWorkflowMutate() {
   const handleUpdateNodeData = useMutation({
     mutationFn: (payload: UpdateNodeDataPayload) =>
       workflowService.updateNodeData(payload),
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message: string }>) => {
       toast.error(error.response?.data?.message || "Something went wrong");
     },
   });
 
+  //! WF Edges Mutations
   const handleAddEdge = useMutation({
     mutationFn: (payload: AddEdgePayload) => workflowService.addEdge(payload),
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message: string }>) => {
       toast.error(error.response?.data?.message || "Something went wrong");
     },
   });
 
   const handleRemoveEdge = useMutation({
-    mutationFn: (payload: any) => workflowService.removeEdge(payload),
-    onError: (error: any) => {
+    mutationFn: (payload: unknown) =>
+      workflowService.removeEdge(payload as RemoveEdgePayload),
+    onError: (error: AxiosError<{ message: string }>) => {
       toast.error(error.response?.data?.message || "Something went wrong");
     },
   });
 
-  const handleUpdateNodePosition = useCallback(
-    (nodeId: string, position: any, nodeType: NodeTypeWorkflow) => {
-      if (!workflowId || !userId) return;
-
-      const payload = {
-        position: position,
-      };
-
-      switch (nodeType) {
-        case NodeTypeWorkflow.IF_ELSE:
-          handleUpdateNodeDataCondition(nodeId, payload);
-          break;
-        case NodeTypeWorkflow.KNOWLEDGE_RETRIEVAL:
-          handleUpdateNodeDataKnowledge(nodeId, payload);
-          break;
-        case NodeTypeWorkflow.LLM:
-          handleUpdateNodeDataLLM(nodeId, payload);
-          break;
-        case NodeTypeWorkflow.VARIABLE_AGGREGATOR:
-          handleUpdateNodeDataVarAgg(nodeId, payload);
-          break;
-        case NodeTypeWorkflow.PARAMETER_EXTRACTOR:
-          handleUpdateNodeDataParamExtractor(nodeId, payload);
-          break;
-        case NodeTypeWorkflow.QUESTION_CLASSIFIER:
-          handleUpdateNodeDataQuestClassifier(nodeId, payload);
-          break;
-        case NodeTypeWorkflow.ANSWER:
-          handleUpdateNodeDataAnswer(nodeId, payload);
-          break;
-        case NodeTypeWorkflow.VARIABLE:
-          handleUpdateNodeDataVariable(nodeId, payload);
-          break;
-        case NodeTypeWorkflow.HTTP_REQUEST:
-          handleUpdateNodeDataHttpRequest(nodeId, payload);
-          break;
-        case NodeTypeWorkflow.CODE:
-          handleUpdateCodeNodeData(nodeId, payload);
-          break;
+  //! WF side features
+  const handleCheckWorkflowValid = useMutation({
+    mutationFn: (payload: CheckWorkflowValidPayload) =>
+      workflowService.checkWorkflowValid(payload),
+    onSuccess: (response) => {
+      if (response?.status_code !== 200) {
+        console.log(response);
       }
     },
-    [workflowId, userId, updateNode, getNode]
-  );
+    onError: (error: AxiosError<{ message: string }>) => {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    },
+  });
 
   //! WF_LLM
   const handleUpdateNodeDataLLM = useCallback(
@@ -158,13 +135,12 @@ export default function useWorkflowMutate() {
         },
       };
 
-      updateNode &&
-        updateNode(nodeId, {
-          data: {
-            ...nodeData,
-            ...updatePayload,
-          },
-        });
+      updateNode(nodeId, {
+        data: {
+          ...nodeData,
+          ...updatePayload,
+        },
+      });
 
       handleUpdateNodeData.mutate(
         {
@@ -177,18 +153,18 @@ export default function useWorkflowMutate() {
           onSuccess: (response) => {
             if (response?.status_code !== 200) {
               toast.error(response?.message);
-              onFailed && onFailed();
+              onFailed?.();
             }
 
-            onSuccess && onSuccess();
+            onSuccess?.();
           },
           onError: () => {
-            onFailed && onFailed();
+            onFailed?.();
           },
         }
       );
     },
-    [workflowId, userId]
+    [workflowId, userId, updateNode, getNode, handleUpdateNodeData]
   );
 
   //! WF_VariableAggregator
@@ -228,24 +204,23 @@ export default function useWorkflowMutate() {
           onSuccess: (response) => {
             if (response?.status_code !== 200) {
               toast.error(response?.message);
-              onFailed && onFailed();
+              onFailed?.();
             }
-            updateNode &&
-              updateNode(nodeId, {
-                data: {
-                  ...nodeData,
-                  ...updatePayload,
-                },
-              });
-            onSuccess && onSuccess();
+            updateNode(nodeId, {
+              data: {
+                ...nodeData,
+                ...updatePayload,
+              },
+            });
+            onSuccess?.();
           },
           onError: () => {
-            onFailed && onFailed();
+            onFailed?.();
           },
         }
       );
     },
-    [workflowId, userId, updateNode, getNode]
+    [workflowId, userId, updateNode, getNode, handleUpdateNodeData]
   );
 
   //! WF_Knowledge
@@ -271,13 +246,12 @@ export default function useWorkflowMutate() {
         ...payload,
       };
 
-      updateNode &&
-        updateNode(nodeId, {
-          data: {
-            ...nodeData,
-            ...updatePayload,
-          },
-        });
+      updateNode(nodeId, {
+        data: {
+          ...nodeData,
+          ...updatePayload,
+        },
+      });
 
       handleUpdateNodeData.mutate(
         {
@@ -290,18 +264,18 @@ export default function useWorkflowMutate() {
           onSuccess: (response) => {
             if (response?.status_code !== 200) {
               toast.error(response?.message);
-              onFailed && onFailed();
+              onFailed?.();
             }
 
-            onSuccess && onSuccess();
+            onSuccess?.();
           },
           onError: () => {
-            onFailed && onFailed();
+            onFailed?.();
           },
         }
       );
     },
-    [workflowId, userId, updateNode, getNode]
+    [workflowId, userId, updateNode, getNode, handleUpdateNodeData]
   );
 
   //! WF_ConditionNode
@@ -325,7 +299,7 @@ export default function useWorkflowMutate() {
       };
 
       const handleFailed = () => {
-        onFailed && onFailed();
+        onFailed?.();
         updateNode(nodeId, {
           data: {
             ...nodeData,
@@ -333,13 +307,12 @@ export default function useWorkflowMutate() {
         });
       };
 
-      updateNode &&
-        updateNode(nodeId, {
-          data: {
-            ...nodeData,
-            ...updatePayload,
-          },
-        });
+      updateNode(nodeId, {
+        data: {
+          ...nodeData,
+          ...updatePayload,
+        },
+      });
 
       handleUpdateNodeData.mutate(
         {
@@ -354,7 +327,7 @@ export default function useWorkflowMutate() {
               toast.error(response?.message);
               handleFailed();
             }
-            onSuccess && onSuccess();
+            onSuccess?.();
           },
           onError: () => {
             handleFailed();
@@ -362,7 +335,7 @@ export default function useWorkflowMutate() {
         }
       );
     },
-    [workflowId, userId, updateNode, getNode]
+    [workflowId, userId, updateNode, getNode, handleUpdateNodeData]
   );
 
   //! WF_ParamExtractor
@@ -393,7 +366,7 @@ export default function useWorkflowMutate() {
       };
 
       const handleFailed = () => {
-        onFailed && onFailed();
+        onFailed?.();
         updateNode(nodeId, {
           data: {
             ...nodeData,
@@ -401,13 +374,12 @@ export default function useWorkflowMutate() {
         });
       };
 
-      updateNode &&
-        updateNode(nodeId, {
-          data: {
-            ...nodeData,
-            ...updatePayload,
-          },
-        });
+      updateNode(nodeId, {
+        data: {
+          ...nodeData,
+          ...updatePayload,
+        },
+      });
 
       handleUpdateNodeData.mutate(
         {
@@ -422,7 +394,7 @@ export default function useWorkflowMutate() {
               toast.error(response?.message);
               handleFailed();
             }
-            onSuccess && onSuccess();
+            onSuccess?.();
           },
           onError: () => {
             handleFailed();
@@ -430,7 +402,7 @@ export default function useWorkflowMutate() {
         }
       );
     },
-    [workflowId, userId, updateNode, getNode]
+    [workflowId, userId, updateNode, getNode, handleUpdateNodeData]
   );
 
   //! WF_QuestionClassifier
@@ -462,7 +434,7 @@ export default function useWorkflowMutate() {
       };
 
       const handleFailed = () => {
-        onFailed && onFailed();
+        onFailed?.();
         updateNode(nodeId, {
           data: {
             ...nodeData,
@@ -470,13 +442,12 @@ export default function useWorkflowMutate() {
         });
       };
 
-      updateNode &&
-        updateNode(nodeId, {
-          data: {
-            ...nodeData,
-            ...updatePayload,
-          },
-        });
+      updateNode(nodeId, {
+        data: {
+          ...nodeData,
+          ...updatePayload,
+        },
+      });
 
       handleUpdateNodeData.mutate(
         {
@@ -491,7 +462,7 @@ export default function useWorkflowMutate() {
               toast.error(response?.message);
               handleFailed();
             }
-            onSuccess && onSuccess();
+            onSuccess?.();
           },
           onError: () => {
             handleFailed();
@@ -499,7 +470,7 @@ export default function useWorkflowMutate() {
         }
       );
     },
-    [workflowId, userId, updateNode, getNode]
+    [workflowId, userId, updateNode, getNode, handleUpdateNodeData]
   );
 
   //! WF_AnswerNode
@@ -523,7 +494,7 @@ export default function useWorkflowMutate() {
       };
 
       const handleFailed = () => {
-        onFailed && onFailed();
+        onFailed?.();
         updateNode(nodeId, {
           data: {
             ...nodeData,
@@ -531,13 +502,12 @@ export default function useWorkflowMutate() {
         });
       };
 
-      updateNode &&
-        updateNode(nodeId, {
-          data: {
-            ...nodeData,
-            ...updatePayload,
-          },
-        });
+      updateNode(nodeId, {
+        data: {
+          ...nodeData,
+          ...updatePayload,
+        },
+      });
 
       handleUpdateNodeData.mutate(
         {
@@ -552,7 +522,7 @@ export default function useWorkflowMutate() {
               toast.error(response?.message);
               handleFailed();
             }
-            onSuccess && onSuccess();
+            onSuccess?.();
           },
           onError: () => {
             handleFailed();
@@ -560,7 +530,7 @@ export default function useWorkflowMutate() {
         }
       );
     },
-    [workflowId, userId, updateNode, getNode]
+    [workflowId, userId, updateNode, getNode, handleUpdateNodeData]
   );
 
   //! WF_VariableNode
@@ -585,7 +555,7 @@ export default function useWorkflowMutate() {
       };
 
       const handleFailed = () => {
-        onFailed && onFailed();
+        onFailed?.();
         updateNode(nodeId, {
           data: {
             ...nodeData,
@@ -593,13 +563,12 @@ export default function useWorkflowMutate() {
         });
       };
 
-      updateNode &&
-        updateNode(nodeId, {
-          data: {
-            ...nodeData,
-            ...updatePayload,
-          },
-        });
+      updateNode(nodeId, {
+        data: {
+          ...nodeData,
+          ...updatePayload,
+        },
+      });
 
       handleUpdateNodeData.mutate(
         {
@@ -614,7 +583,7 @@ export default function useWorkflowMutate() {
               toast.error(response?.message);
               handleFailed();
             }
-            onSuccess && onSuccess();
+            onSuccess?.();
           },
           onError: () => {
             handleFailed();
@@ -622,7 +591,7 @@ export default function useWorkflowMutate() {
         }
       );
     },
-    [workflowId, userId, updateNode, getNode]
+    [workflowId, userId, updateNode, getNode, handleUpdateNodeData]
   );
 
   //! WF_HTTPNode
@@ -667,7 +636,7 @@ export default function useWorkflowMutate() {
       };
 
       const handleFailed = () => {
-        onFailed && onFailed();
+        onFailed?.();
         updateNode(nodeId, {
           data: {
             ...nodeData,
@@ -675,13 +644,12 @@ export default function useWorkflowMutate() {
         });
       };
 
-      updateNode &&
-        updateNode(nodeId, {
-          data: {
-            ...nodeData,
-            ...updatePayload,
-          },
-        });
+      updateNode(nodeId, {
+        data: {
+          ...nodeData,
+          ...updatePayload,
+        },
+      });
 
       handleUpdateNodeData.mutate(
         {
@@ -696,7 +664,7 @@ export default function useWorkflowMutate() {
               toast.error(response?.message);
               handleFailed();
             }
-            onSuccess && onSuccess();
+            onSuccess?.();
           },
           onError: () => {
             handleFailed();
@@ -704,7 +672,7 @@ export default function useWorkflowMutate() {
         }
       );
     },
-    [workflowId, userId, updateNode, getNode]
+    [workflowId, userId, updateNode, getNode, handleUpdateNodeData]
   );
 
   //! WF_Tool
@@ -735,7 +703,7 @@ export default function useWorkflowMutate() {
       };
 
       const handleFailed = () => {
-        onFailed && onFailed();
+        onFailed?.();
         updateNode(nodeId, {
           data: {
             ...nodeData,
@@ -743,13 +711,12 @@ export default function useWorkflowMutate() {
         });
       };
 
-      updateNode &&
-        updateNode(nodeId, {
-          data: {
-            ...nodeData,
-            ...updatePayload,
-          },
-        });
+      updateNode(nodeId, {
+        data: {
+          ...nodeData,
+          ...updatePayload,
+        },
+      });
 
       handleUpdateNodeData.mutate(
         {
@@ -764,7 +731,7 @@ export default function useWorkflowMutate() {
               toast.error(response?.message);
               handleFailed();
             }
-            onSuccess && onSuccess();
+            onSuccess?.();
           },
           onError: () => {
             handleFailed();
@@ -772,7 +739,132 @@ export default function useWorkflowMutate() {
         }
       );
     },
-    [workflowId, userId, updateNode, getNode]
+    [workflowId, userId, updateNode, getNode, handleUpdateNodeData]
+  );
+
+  //! WF_EndNode
+  const handleUpdateNodeDataEnd = useCallback(
+    (
+      nodeId: string,
+      payload: Partial<NodeDataEnd>,
+      onSuccess?: () => void,
+      onFailed?: () => void
+    ) => {
+      if (!workflowId || !userId || !nodeId) return;
+
+      const nodeData = getNode(nodeId)?.data as unknown as NodeDataEnd;
+
+      const updatePayload: Partial<NodeDataEnd> = {
+        name: nodeId,
+        desc: nodeData.desc,
+        position: nodeData.position,
+        outputs: nodeData.outputs,
+        ...payload,
+      };
+
+      const handleFailed = () => {
+        onFailed?.();
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+          },
+        });
+      };
+
+      updateNode(nodeId, {
+        data: {
+          ...nodeData,
+          ...updatePayload,
+        },
+      });
+
+      handleUpdateNodeData.mutate(
+        {
+          workflow_id: workflowId,
+          user_id: userId,
+          node_id: nodeId,
+          node_data: updatePayload,
+        },
+        {
+          onSuccess: (response) => {
+            if (response?.status_code !== 200) {
+              toast.error(response?.message);
+              handleFailed();
+            }
+            onSuccess?.();
+          },
+          onError: () => {
+            handleFailed();
+          },
+        }
+      );
+    },
+    [workflowId, userId, updateNode, getNode, handleUpdateNodeData]
+  );
+
+  const handleUpdateNodePosition = useCallback(
+    (
+      nodeId: string,
+      position: string,
+      nodeType: NodeTypeWorkflow
+    ) => {
+      if (!workflowId || !userId) return;
+
+      const payload: Record<string, unknown> = {
+        position: position,
+      };
+
+      switch (nodeType.replace("customNode_WF_", "")) {
+        case NodeTypeWorkflow.IF_ELSE:
+          handleUpdateNodeDataCondition(nodeId, payload);
+          break;
+        case NodeTypeWorkflow.KNOWLEDGE_RETRIEVAL:
+          handleUpdateNodeDataKnowledge(nodeId, payload);
+          break;
+        case NodeTypeWorkflow.LLM:
+          handleUpdateNodeDataLLM(nodeId, payload);
+          break;
+        case NodeTypeWorkflow.VARIABLE_AGGREGATOR:
+          handleUpdateNodeDataVarAgg(nodeId, payload);
+          break;
+        case NodeTypeWorkflow.PARAMETER_EXTRACTOR:
+          handleUpdateNodeDataParamExtractor(nodeId, payload);
+          break;
+        case NodeTypeWorkflow.QUESTION_CLASSIFIER:
+          handleUpdateNodeDataQuestClassifier(nodeId, payload);
+          break;
+        case NodeTypeWorkflow.ANSWER:
+          handleUpdateNodeDataAnswer(nodeId, payload);
+          break;
+        case NodeTypeWorkflow.VARIABLE:
+          handleUpdateNodeDataVariable(nodeId, payload);
+          break;
+        case NodeTypeWorkflow.HTTP_REQUEST:
+          handleUpdateNodeDataHttpRequest(nodeId, payload);
+          break;
+        case NodeTypeWorkflow.TOOL:
+          handleUpdateNodeDataTool(nodeId, payload);
+          break;
+        case NodeTypeWorkflow.END:
+          handleUpdateNodeDataEnd(nodeId, payload);
+          break;
+      }
+    },
+    [
+      workflowId,
+      userId,
+      handleUpdateNodeDataCondition,
+      handleUpdateNodeDataKnowledge,
+      handleUpdateNodeDataLLM,
+      handleUpdateNodeDataVarAgg,
+      handleUpdateNodeDataParamExtractor,
+      handleUpdateNodeDataQuestClassifier,
+      handleUpdateNodeDataAnswer,
+      handleUpdateNodeDataVariable,
+      handleUpdateNodeDataHttpRequest,
+      handleUpdateNodeDataTool,
+      handleUpdateNodeDataEnd,
+    ]
   );
 
   //! WF_CodeNode
@@ -853,5 +945,7 @@ export default function useWorkflowMutate() {
     handleUpdateNodeDataHttpRequest,
     handleUpdateCodeNodeData,
     handleUpdateNodeDataTool,
+    handleUpdateNodeDataEnd,
+    handleCheckWorkflowValid,
   };
 }
