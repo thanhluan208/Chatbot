@@ -13,6 +13,7 @@ import CommonStyles from "./Components/CommonStyles";
 import "./App.css";
 import PublishPage from "./Pages/Publish";
 import AppThemeProvider from "./Providers/AppTheme.provider";
+import ToolStore from "./Pages/ToolStore";
 
 const KnowledgeDetail = lazy(() => import("./Pages/KnowledgeDetail"));
 const Login = lazy(() => import("./Pages/Login"));
@@ -27,6 +28,7 @@ const Users = lazy(() => import("./Pages/Users"));
 const ChatbotConfigure = lazy(() => import("./Pages/ChatbotConfigure"));
 const Workflow = lazy(() => import("./Pages/Workflow"));
 const WorkflowDetail = lazy(() => import("./Pages/WorkflowDetail"));
+const Verification = lazy(() => import("./Pages/Verification"));
 
 function App() {
   //! State
@@ -44,51 +46,35 @@ function App() {
     },
     {
       element: <DefaultLayout />,
+      loader: () => {
+        if (!userId) return redirect("/login");
+
+        return null;
+      },
       children: [
         {
           path: "*",
           element: <BotStore />,
-          loader: () => {
-            if (!userId) return redirect("/login");
-
-            return null;
-          },
         },
         {
           path: Routes.common.PERSONAL.path,
           element: <Users />,
-          loader: () => {
-            if (!userId) return redirect("/login");
-
-            return null;
-          },
         },
         {
           path: ListRoutes.userProfile,
           element: <UserProfile />,
-          loader: () => {
-            if (!userId) return redirect("/login");
-
-            return null;
-          },
         },
         {
           path: ListRoutes.knowledgeStore,
           element: <KnowledgeStore />,
-          loader: () => {
-            if (!userId) return redirect("/login");
-
-            return null;
-          },
         },
         {
           path: ListRoutes.workflow,
           element: <Workflow />,
-          loader: () => {
-            if (!userId) return redirect("/login");
-
-            return null;
-          },
+        },
+        {
+          path: ListRoutes.toolStore,
+          element: <ToolStore />,
         },
       ],
     },
@@ -167,6 +153,15 @@ function App() {
     {
       path: ListRoutes.signup,
       element: <SignUp />,
+      loader: () => {
+        if (userId) return redirect("/");
+
+        return null;
+      },
+    },
+    {
+      path: ListRoutes.verification,
+      element: <Verification />,
       loader: () => {
         if (userId) return redirect("/");
 

@@ -12,6 +12,7 @@ import { v4 as uuid } from "uuid";
 import cachedKeys from "@/Constants/cachedKeys";
 import { TextBoxType } from "./TextBox";
 import { BotData } from "@/Hooks/Bot/useGetBotData";
+import { LOCAL_STORAGE_KEY } from "@/Constants/common";
 
 interface InputBoxProps {
   setIsBrandNew: React.Dispatch<React.SetStateAction<boolean>>;
@@ -138,6 +139,9 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem(
+            LOCAL_STORAGE_KEY.ACCESS_TOKEN
+          )}`,
         },
         body: JSON.stringify({
           bot_id: botId,

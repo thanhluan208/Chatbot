@@ -23,7 +23,7 @@ const MultiAgent = () => {
     },
   ];
 
-  const botData: BotData = useGet("BOT_DATA")?.bot_data;
+  const botData: BotData = useGet("BOT_DATA");
 
   const initNodes = useMemo(() => {
     const nodes: Node[] = [];

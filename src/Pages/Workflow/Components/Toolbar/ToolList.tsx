@@ -66,7 +66,11 @@ const ToolList = ({ toolProviders }: ToolListProps) => {
                       <Tooltip title={tool.name} placement="top-start">
                         <div className="flex gap-3 items-start">
                           <img
-                            src={provider.identity.icon}
+                            src={
+                              provider.identity.icon.includes("icon.")
+                                ? "https://i.pinimg.com/736x/99/3e/b9/993eb9aa891797e59a40ab89b0648213.jpg"
+                                : provider.identity.icon
+                            }
                             alt="icon"
                             className="rounded-lg w-8 h-8 object-cover object-center translate-y-2"
                           />

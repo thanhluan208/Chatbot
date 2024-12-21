@@ -1,4 +1,4 @@
-import React, { Fragment, useId } from "react";
+import React, { Dispatch, Fragment, SetStateAction, useId } from "react";
 import CommonIcons from "../../../Components/CommonIcons";
 import CommonStyles from "../../../Components/CommonStyles";
 import { Box, Paper, Popover, useTheme } from "@mui/material";
@@ -16,8 +16,8 @@ const AgentButton = ({
   mode,
   hasMultiAgent,
 }: {
-  setMode: React.Dispatch<React.SetStateAction<Mode>>;
-  mode: Mode;
+  setMode: Dispatch<SetStateAction<string>>;
+  mode: string;
   hasMultiAgent?: boolean;
 }) => {
   //! State
@@ -116,6 +116,7 @@ const AgentButton = ({
           gap: "8px",
           color: theme.colors.custom.normalColorTypo,
           border: `1px solid ${theme.colors.custom.borderColor}`,
+          height: "40px",
         }}
       >
         <CommonIcons.LooksOne sx={{ width: 16, height: 16 }} />

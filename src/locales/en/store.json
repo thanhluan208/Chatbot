@@ -23,7 +23,8 @@
       "Home": "Home",
       "Personal": "Personal",
       "Knowledge Store": "Knowledge store",
-      "Workflow Store": "Workflow store"
+      "Workflow Store": "Workflow store",
+      "Tool Store": "Tool store"
     }
   },
   "login": {

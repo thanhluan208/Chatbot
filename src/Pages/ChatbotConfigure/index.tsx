@@ -43,7 +43,6 @@ function ChatbotConfigure() {
 
   const data = botData?.data;
 
-
   const isOwner = data?.permission_level === "owner";
   const isPublished = data?.bot_data.visibility === "public";
 
@@ -76,7 +75,7 @@ function ChatbotConfigure() {
   }, [refetch]);
 
   useEffect(() => {
-    save(cachedKeys.BOT_DATA, data);
+    save(cachedKeys.BOT_DATA, data?.bot_data);
   }, [save, data]);
 
   useEffect(() => {
@@ -126,7 +125,7 @@ function ChatbotConfigure() {
             }}
           >
             <img
-              src={Team}
+              src={data?.bot_data?.avatar_url || Team}
               alt="Team"
               style={{
                 height: "32px",
@@ -142,23 +141,11 @@ function ChatbotConfigure() {
                 <CommonStyles.Typography type="semiBold14">
                   {data?.bot_data?.bot_name}
                 </CommonStyles.Typography>
-                {/* <CommonStyles.Button
-                  isIcon
-                  hasBorder={false}
-                  sx={{
-                    padding: "4px",
-                    width: "fit-content",
-                    height: "fit-content",
-                    borderRadius: "4px",
-                  }}
-                >
-                  <CommonIcons.BorderColor sx={{ width: 14, height: 14 }} />
-                </CommonStyles.Button> */}
               </Box>
               <Box sx={{ display: "flex", gap: "8px", alignItems: "center" }}>
                 <CommonIcons.Person sx={{ width: 12, height: 12 }} />
                 <CommonStyles.Typography type="normal12">
-                  Personal
+                  {data?.bot_data?.user_name}
                 </CommonStyles.Typography>
               </Box>
             </Box>
@@ -196,21 +183,11 @@ function ChatbotConfigure() {
           >
             Develop
           </CommonStyles.Typography>
-          {/* <CommonStyles.Typography
-            type={tab !== "develop" ? "bold18" : "semiBold18"}
-            color={tab !== "develop" ? theme.palette.primary.main : ""}
-            sx={{
-              cursor: "pointer",
-            }}
-            onClick={() => setTab("analysis")}
-          >
-            Analysis
-          </CommonStyles.Typography> */}
         </Box>
       </Box>
-      {tab === "develop" && data && <Develop data={data?.bot_data} key={data?.bot_data?.mode} />}
-
-      {/* {tab === "analysis" && <Analysis />} */}
+      {tab === "develop" && data && (
+        <Develop data={data?.bot_data} key={data?.bot_data?.mode} />
+      )}
     </Box>
   );
 }

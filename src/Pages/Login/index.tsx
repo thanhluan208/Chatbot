@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 const Login = () => {
   //Translation
   const { t } = useTranslation("store");
-  
+
   //! State
   const { userId, signIn } = useAuth();
 
@@ -123,7 +123,14 @@ const Login = () => {
                   mt={"16px"}
                   textAlign={"center"}
                 >
-                  {t("login.naviText")} <Link to="/signup">{t("login.signUpLink")}</Link>
+                  {t("login.naviText")}{" "}
+                  <Link to="/signup">{t("login.signUpLink")}</Link>
+                </CommonStyles.Typography>
+                <CommonStyles.Typography
+                  type="normal14"
+                  textAlign={"center"}
+                >
+                  Account have not verified ? <Link to="/verification">Click here</Link>
                 </CommonStyles.Typography>
               </Box>
             </Form>

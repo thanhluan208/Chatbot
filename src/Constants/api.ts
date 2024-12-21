@@ -86,3 +86,5 @@ export const checkToolAuthor = baseAPI + "/workflow/check_user_credential";
 export const checkWorkflowValid =
   baseAPI + "/workflow/workflow_is_valid_to_run";
 export const runWorkflow = baseAPI + "/workflow/chat_stream_completion";
+
+export const getListToolWorkflow = baseAPI + "/tool/list_workflow_tools";

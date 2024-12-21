@@ -1,4 +1,5 @@
 import CommonStyles from "@/Components/CommonStyles";
+import useGetListTool from "@/Hooks/tool/useGetListTool";
 import {
   Box,
   Fade,
@@ -11,8 +12,6 @@ import { cloneDeep } from "lodash";
 import React, { Fragment, useMemo, useState } from "react";
 import ListNode from "./ListNode";
 import ToolList from "./ToolList";
-import { Tool } from "./type";
-import toolConfig from '@/assets/tool.yaml'
 
 interface IAddNodePopper {
   open?: boolean;
@@ -51,6 +50,8 @@ const AddNodePopper = (props: IAddNodePopper) => {
   const [type, setType] = useState(TypeEnum.NODE);
   const [filter, setFilter] = useState("");
 
+  const { data } = useGetListTool();
+
   const theme = useTheme();
 
   const listNodeFiltered = useMemo(() => {
@@ -63,10 +64,11 @@ const AddNodePopper = (props: IAddNodePopper) => {
     });
   }, [listNode, filter, type]);
 
-  const ListToolFiltered = useMemo(() => {
-    if (type !== TypeEnum.TOOL) return [];
 
-    return Object.entries(cloneDeep(toolConfig))
+  const ListToolFiltered = useMemo(() => {
+    if (type !== TypeEnum.TOOL || !data) return [];
+
+    return Object.entries(cloneDeep(data))
       .map(([key, value]) => {
         const { identity, credentials_for_provider, ...rest } = value;
 
@@ -77,7 +79,7 @@ const AddNodePopper = (props: IAddNodePopper) => {
           tools: Object.entries(rest).map(([key, value]) => {
             return {
               name: key,
-              ...(value as Omit<Tool, "name">),
+              ...(value as any),
             };
           }),
         };

@@ -11,13 +11,15 @@ import { useFormikContext } from "formik";
 import { memo, useEffect, useRef } from "react";
 
 interface ModelStatsConfigProps {
-  nodeId: string;
-  handleUpdateNodeData: (nodeId: string, payload: any) => void;
+  nodeId?: string;
+  handleUpdateNodeData?: (nodeId: string, payload: any) => void;
+  handleChange?: (payload: any) => void;
 }
 
 const ModelStatsConfig = ({
   nodeId,
   handleUpdateNodeData,
+  handleChange,
 }: ModelStatsConfigProps) => {
   const theme = useTheme();
   const { values, dirty } = useFormikContext<any>();
@@ -48,7 +50,8 @@ const ModelStatsConfig = ({
         },
       };
 
-      handleUpdateNodeData(nodeId, payload);
+      nodeId && handleUpdateNodeData && handleUpdateNodeData(nodeId, payload);
+      handleChange && handleChange(payload);
     }, 500);
   }, [values, handleUpdateNodeData, nodeId, dirty]);
 
@@ -56,7 +59,7 @@ const ModelStatsConfig = ({
     <Popover>
       <PopoverTrigger asChild>
         <button
-          className="h-10 w-10 p-0 flex items-center justify-center"
+          className="h-10 w-10 min-w-10 min-h-10 p-0 flex items-center justify-center"
           onClick={(e) => {
             e.stopPropagation();
           }}

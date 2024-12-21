@@ -7,14 +7,14 @@ import SectionButtonItem from "./SectionButtonItem";
 import { isArray, isEmpty } from "lodash";
 import useToggleDialog from "../../../../Hooks/useToggleDialog";
 import KnowledgeListDialog from "./Knowledge/KnowledgeListDialog";
-import { KnowledgeStorage } from "@/Hooks/Bot/useGetBotData";
+import { KnowledgeStorageID } from "@/Hooks/Bot/useGetBotData";
 
 interface ISectionItem {
   content: string;
   title: string;
   isAutoAwesome?: boolean;
   sectionTitle: string;
-  list: KnowledgeStorage[];
+  list: KnowledgeStorageID[];
 }
 
 function SectionItem(props: ISectionItem) {

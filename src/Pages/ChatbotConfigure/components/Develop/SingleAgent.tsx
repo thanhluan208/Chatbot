@@ -62,7 +62,7 @@ const SingleAgent = () => {
             width: "67vw",
             borderRadius: "8px",
             border: `solid 1px ${theme.colors.custom.borderColor}`,
-            background: theme.colors.custom.background,
+            background: data?.background_url ? `url("${data?.background_url}")` : theme.colors.custom.background,
           }}
         >
           <Box
@@ -158,7 +158,6 @@ const SingleAgent = () => {
           width: "33vw",
           padding: "20px 20px 20px 0",
           background: theme.colors.custom.backgroundCard,
-
         }}
       >
         <Configure system_prompt={data?.system_prompt} />

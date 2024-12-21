@@ -1,20 +1,15 @@
-import React, { Fragment, useId, useMemo } from "react";
-import CommonStyles from "../../../Components/CommonStyles";
-import { Box, Paper, Popover, useTheme } from "@mui/material";
-import EngineSelect from "./EngineSelect";
-import { Form, Formik, FormikHelpers } from "formik";
-import GenerationDiversity from "./GenerationDiversity";
-import Advance from "./GenerateDiversity/components/Advance";
-import InputAndOutputSettings from "./InputAndOutputSettings";
-import { ModelOption, modelOptions } from "@/Constants/options";
-import { useGet } from "@/Stores/useStore";
-import { BotData } from "@/Hooks/Bot/useGetBotData";
-import CommonIcons from "@/Components/CommonIcons";
-import { toast } from "react-toastify";
-import httpServices from "@/Services/httpServices";
 import { updateBotParams } from "@/Constants/api";
-import { useParams } from "react-router-dom";
+import { ModelOption, modelOptions } from "@/Constants/options";
+import { BotData } from "@/Hooks/Bot/useGetBotData";
+import ModelConfiguration from "@/Pages/Workflow/Components/misc/ModelConfiguration";
+import ModelStatsConfig from "@/Pages/Workflow/Components/misc/ModelStatsConfig";
 import { useAuth } from "@/Providers/AuthenticationProvider";
+import httpServices from "@/Services/httpServices";
+import { useGet } from "@/Stores/useStore";
+import { Form, Formik, FormikHelpers } from "formik";
+import { Fragment, useMemo } from "react";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export interface initialValueEngine {
   model: ModelOption;
@@ -30,13 +25,8 @@ export interface initialValueEngine {
 
 const EngineButton = () => {
   //! State
-  const theme = useTheme();
-  const engineId = useId();
   const params = useParams();
   const { userId } = useAuth();
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
-    null
-  );
   const botData: BotData = useGet("BOT_DATA");
   const refetchBotData = useGet("REFETCH_BOT_DATA");
 
@@ -49,21 +39,13 @@ const EngineButton = () => {
       generationDiversity: "precise",
       temperature: botData?.llm?.temperature ?? 1.21,
       top_p: botData?.llm?.top_p ?? 0.9,
-      history_turn: botData?.llm?.history_turn ?? 3,
+      history_turn: 3,
       max_tokens: botData?.llm?.max_tokens ?? 2048,
       frequency_penalty: botData?.llm?.frequency_penalty ?? 0,
       presence_penalty: botData?.llm?.presence_penalty ?? 0,
       outputFormat: "text",
     };
   }, [botData]);
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   const handleSubmit = async (
     values: initialValueEngine,
@@ -101,7 +83,6 @@ const EngineButton = () => {
 
       await httpServices.post(updateBotParams, payload);
 
-
       refetchBotData && (await refetchBotData());
 
       toast.update(toastId, {
@@ -123,97 +104,23 @@ const EngineButton = () => {
     }
   };
 
-  const open = Boolean(anchorEl);
-  const id = open ? engineId : undefined;
-
   //! Function
 
   //! Render
   return (
     <Fragment>
-      <CommonStyles.Button
-        onClick={handleClick}
-        sx={{
-          gap: "8px",
-          color: theme.colors.custom.normalColorTypo,
-          border: `1px solid ${theme.colors.custom.borderColor}`,
+      <Formik initialValues={initialValue} onSubmit={handleSubmit}>
+        {() => {
+          return (
+            <Form>
+              <div className="px-2 flex gap-2">
+                <ModelConfiguration />
+                <ModelStatsConfig />
+              </div>
+            </Form>
+          );
         }}
-      >
-        <img
-          src={
-            modelOptions.find((elm) => {
-              return elm.value === botData?.llm?.model;
-            })?.img ?? ""
-          }
-          alt="GPT-4"
-          height={16}
-          width={16}
-          style={{ borderRadius: "12px" }}
-        />
-        <CommonStyles.Typography type="normal12">
-          {modelOptions.find((elm) => {
-            return elm.value === botData?.llm?.model;
-          })?.label ?? ""}
-        </CommonStyles.Typography>
-      </CommonStyles.Button>
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        slotProps={{
-          paper: {
-            sx: {
-              borderRadius: "12px",
-            },
-          },
-        }}
-      >
-        <Paper
-          sx={{
-            padding: "24px",
-            width: "520px",
-            maxHeight: "80vh",
-            overflow: "auto",
-          }}
-        >
-          <Formik initialValues={initialValue} onSubmit={handleSubmit}>
-            {({ isSubmitting }) => {
-              return (
-                <Form>
-                  <CommonStyles.Typography type="semiBold16" mb={"12px"}>
-                    Model Configuration
-                  </CommonStyles.Typography>
-                  <EngineSelect />
-                  <GenerationDiversity />
-                  <Advance />
-                  <InputAndOutputSettings />
-                  <Box
-                    sx={{
-                      marginTop: "20px",
-                      justifyContent: "flex-end",
-                      display: "flex",
-                    }}
-                  >
-                    <CommonStyles.Button
-                      variant="contained"
-                      startIcon={<CommonIcons.Save />}
-                      disabled={isSubmitting}
-                      type="submit"
-                    >
-                      Save
-                    </CommonStyles.Button>
-                  </Box>
-                </Form>
-              );
-            }}
-          </Formik>
-        </Paper>
-      </Popover>
+      </Formik>
     </Fragment>
   );
 };

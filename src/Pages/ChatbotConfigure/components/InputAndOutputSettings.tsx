@@ -61,26 +61,24 @@ const InputAndOutputSettings = () => {
         Input and output settings
       </CommonStyles.Typography>
 
-      <Box sx={{
-        paddingBottom:"20px"
-      }}>
+      <div className="pb-5 px-2">
         <SlideAndNumField
           title="Dialog round"
           hintContent={<HintDialogRound />}
-          min={model ? model.history_turn.min : 1}
-          max={model ? model.history_turn.max : 100}
+          min={model ? model.history_turn?.min : 1}
+          max={model ? model.history_turn?.max : 100}
           step={1}  
           name="history_turn"
         />
         <SlideAndNumField
           title="Response max length"
           hintContent={<HintReponseMaxLength />}
-          min={model ? model.max_tokens.min : 1}
-          max={model ? model.max_tokens.max : 8192}
+          min={model ? model.max_tokens?.min : 1}
+          max={model ? model.max_tokens?.max : 8192}
           name="max_tokens"
           step={1}
         />
-      </Box>
+      </div>
     </Box>
   );
 };

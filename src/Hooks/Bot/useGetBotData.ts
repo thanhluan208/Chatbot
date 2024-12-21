@@ -1,7 +1,6 @@
 import botService from "../../Services/bot.service";
 import { AxiosResponse } from "axios";
 import { useAuth } from "@/Providers/AuthenticationProvider";
-import { Mode } from "@/Pages/ChatbotConfigure/components/Develop";
 import { useQuery } from "react-query";
 import queryKey from "@/Constants/queryKey";
 
@@ -13,50 +12,54 @@ export interface BotResponse {
 }
 
 export interface BotData {
-  all_conversation?: string[];
-  avatar_url: string;
   user_id: string;
   tools: any[];
   system_prompt: string;
   llm: Llm;
-  knowledge_storage_ids: KnowledgeStorage[];
-  mode: Mode;
+  knowledge_storage_ids: KnowledgeStorageID[];
+  mode: string;
+  history_turn: number;
   bot_name: string;
   description: string;
   user_name: string;
-  permission_level: string;
+  number_of_turn_chats: number;
+  stars: number;
   visibility: string;
   has_multi_agent: boolean;
-  nodes?: {
-    [key: string]: NodeData;
-  };
-  flow_nodes: Flow;
+  all_conversation: string[];
+  avatar_url: string;
+  background_url: string;
+  flow_nodes: FlowNodes;
+  nodes: Record<string, Node>;
 }
 
-export interface KnowledgeStorage {
+export interface FlowNodes {
+  current_node: string;
+  start_node: string;
+  nodes: Record<string, Node>;
+  edges: Edge[];
+}
+
+export interface KnowledgeStorageID {
   knowledge_storage_id: string;
   knowledge_storage_name: string;
   description: string;
   permission_level: string;
 }
 
-export interface Flow {
-  nodes: string[];
-  edges: any[];
-  start_node: string;
-  current_node: string;
+export interface Edge {
+  src_node: string;
+  dest_node: string;
+}
+export interface Node {
+  class_name: string;
+  metadata: Metadata;
+  node_id: string;
+  info: string;
+  bot_id: string;
   scenario: string;
 }
 
-export interface NodeData {
-  class_name: string;
-  metadata: Metadata;
-  node_id: string;
-  knowledge_storage_ids: any[];
-  bot_id: string;
-  info: string;
-}
-
 export interface Metadata {
   user_id: string;
   tools: any[];
@@ -74,23 +77,43 @@ export interface Llm {
   top_p: number;
   frequency_penalty: number;
   presence_penalty: number;
+  credits: number;
 }
 
-export interface AdditionalKwargs {}
-
-export interface The70C273785020429095A7B6C205Ad597A {
-  class_name: string;
-  metadata: Metadata;
-  node_id: string;
-  knowledge_storage_ids: any[];
-}
-
-export interface Metadata {
+export interface AdditionalKwargs {
+  history_turn: HistoryTurn;
+  rate_limit: RateLimit;
   user_id: string;
-  tools: any[];
-  system_prompt: string;
-  llm: Llm;
-  knowledge_storage_ids: any[];
+  force_update_user_credit: boolean;
+}
+
+export interface HistoryTurn {
+  default: number;
+  min: number;
+  max: number;
+}
+
+export interface RateLimit {
+  free: Free;
+  standard: Free;
+}
+
+export interface Free {
+  cost: Cost;
+  rpm: number;
+  rpd: number;
+  tpm: number;
+  accepted_exceed: AcceptedExceed;
+}
+
+export interface AcceptedExceed {
+  rpm: number;
+  rpd: number;
+  tpm: number;
+}
+
+export interface Cost {
+  credits: number;
 }
 
 export interface Llm {
@@ -102,25 +125,44 @@ export interface Llm {
   top_p: number;
   frequency_penalty: number;
   presence_penalty: number;
+  credits: number;
 }
 
-export interface AdditionalKwargs {}
-
-export interface Llm {
-  class_name: string;
-  model: string;
-  temperature: number;
-  max_tokens: number;
-  additional_kwargs: AdditionalKwargs;
-  history_turn: number;
-  top_p: number;
-  frequency_penalty: number;
-  presence_penalty: number;
+export interface AdditionalKwargs {
+  history_turn: HistoryTurn;
+  rate_limit: RateLimit;
+  user_id: string;
+  force_update_user_credit: boolean;
 }
 
-export interface AdditionalKwargs {}
+export interface HistoryTurn {
+  default: number;
+  min: number;
+  max: number;
+}
 
-export interface AdditionalKwargs {}
+export interface RateLimit {
+  free: Free;
+  standard: Free;
+}
+
+export interface Free {
+  cost: Cost;
+  rpm: number;
+  rpd: number;
+  tpm: number;
+  accepted_exceed: AcceptedExceed;
+}
+
+export interface AcceptedExceed {
+  rpm: number;
+  rpd: number;
+  tpm: number;
+}
+
+export interface Cost {
+  credits: number;
+}
 
 const useGetBotData = (
   payload: {

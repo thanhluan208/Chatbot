@@ -1,11 +1,8 @@
+import { useFormikContext } from "formik";
 import { Fragment } from "react/jsx-runtime";
 import CommonStyles from "../../../../../Components/CommonStyles";
-import { useState } from "react";
-import { Box, Collapse } from "@mui/material";
-import CommonIcons from "../../../../../Components/CommonIcons";
-import SlideAndNumField from "./SlideAndNumField";
-import { useFormikContext } from "formik";
 import { initialValueEngine } from "../../EngineButton";
+import SlideAndNumField from "./SlideAndNumField";
 
 const TemperatureHint = () => {
   return (
@@ -59,7 +56,6 @@ const TopPHInt = () => {
 
 const Advance = () => {
   //! State
-  const [open, setOpen] = useState(true);
   const { values } = useFormikContext<initialValueEngine>();
   const { model } = values || {};
 
@@ -72,32 +68,11 @@ const Advance = () => {
         e.stopPropagation();
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          mb: open ? "-18px" : "",
-          transition: "margin-bottom 0.3s",
-        }}
-      >
-        <CommonStyles.Button
-          onClick={(e) => {
-            e.stopPropagation();
-            setOpen(!open);
-          }}
-          endIcon={
-            <CommonIcons.KeyboardArrowDown
-              sx={{
-                transition: "transform 0.3s",
-                transform: !open ? "rotate(180deg)" : "rotate(0deg)",
-              }}
-            />
-          }
-        >
-          Advance
-        </CommonStyles.Button>
-      </Box>
-      <Collapse in={open}>
+      <CommonStyles.Typography type="semiBold16" mt={"16px"}>
+        Advance
+      </CommonStyles.Typography>
+
+      <div className="px-2">
         <SlideAndNumField
           hintContent={<TemperatureHint />}
           name="temperature"
@@ -138,7 +113,7 @@ const Advance = () => {
             />
           </Fragment>
         )}
-      </Collapse>
+      </div>
     </div>
   );
 };

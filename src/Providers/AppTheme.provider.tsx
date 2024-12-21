@@ -1,15 +1,11 @@
-import React, { useCallback, useEffect, useState } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import React, { useCallback, useEffect, useState } from "react";
 
-import { CssBaseline } from "@mui/material";
-import { GlobalStyles } from "@mui/material";
+import { CssBaseline, GlobalStyles } from "@mui/material";
 
 import cachedKeys from "../Constants/cachedKeys";
 import { useSave } from "../Stores/useStore";
 import { CustomColors } from "./type";
-import CommonStyles from "@/Components/CommonStyles";
-import CommonIcons from "@/Components/CommonIcons";
-import i18n from "i18next";
 
 declare module "@mui/material/styles" {
   interface Theme {
@@ -275,9 +271,9 @@ if (!!window.matchMedia && !initTheme) {
   }
 }
 
-const changeLanguage = (lang: string) => {
-  i18n.changeLanguage(lang);
-}
+// const changeLanguage = (lang: string) => {
+//   i18n.changeLanguage(lang);
+// }
 
 export default function AppThemeProvider(props: { children: React.ReactNode }) {
   const { children } = props;
@@ -318,7 +314,7 @@ export default function AppThemeProvider(props: { children: React.ReactNode }) {
       />
       {children}
 
-      <div style={{ position: "fixed", bottom: "20px", right: "80px", zIndex: 100 }}>
+      {/* <div style={{ position: "fixed", bottom: "20px", right: "80px", zIndex: 100 }}>
         <select
           onChange={(e) => changeLanguage(e.target.value)}
           defaultValue={i18n.language}
@@ -326,9 +322,9 @@ export default function AppThemeProvider(props: { children: React.ReactNode }) {
           <option value="en">English</option>
           <option value="vi">Vietnamese</option>
         </select>
-      </div>
+      </div> */}
 
-      <CommonStyles.Button isIcon variant="outlined" sx={{
+      {/* <CommonStyles.Button isIcon variant="outlined" sx={{
         position:"fixed",
         bottom:'20px',
         right:"20px", zIndex: 100
@@ -340,7 +336,7 @@ export default function AppThemeProvider(props: { children: React.ReactNode }) {
         ) : (
           <CommonIcons.DarkMode />
         )}
-      </CommonStyles.Button>
+      </CommonStyles.Button> */}
     </ThemeProvider>
   );
 }

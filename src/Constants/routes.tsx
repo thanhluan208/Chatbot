@@ -22,8 +22,11 @@ const useRoutes = () => {
         path: ListRoutes.workflow,
         icon: <CommonIcons.Extension />,
       },
+      TOOL_STORE: {
+        path: ListRoutes.toolStore,
+        icon: <CommonIcons.Extension />,
+      },
     },
-    
   };
 };
 
@@ -43,6 +46,7 @@ export const ListRoutes = {
   workflowDetail: (workflowId = ":workflowId") => `/workflow/${workflowId}`,
   publish: "/publish",
   verification: "/verification",
+  toolStore: "/tool-store",
 };
 
 export default useRoutes;
