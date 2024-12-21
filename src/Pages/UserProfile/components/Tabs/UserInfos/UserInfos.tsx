@@ -56,12 +56,12 @@ const InfoItem = ({
       >
         {icon}
       </Box>
-      <Box>
+      <div className="w-full">
         <CommonStyles.Typography type="semiBold16">
           {label}
         </CommonStyles.Typography>
         {!isEdit ? (
-          <CommonStyles.Typography>
+          <CommonStyles.Typography className="truncate max-w-[100%]">
             {values[name] || "--"}
           </CommonStyles.Typography>
         ) : (
@@ -77,7 +77,7 @@ const InfoItem = ({
             }}
           />
         )}
-      </Box>
+      </div>
     </Box>
   );
 };
@@ -86,7 +86,6 @@ interface InitValues {
   user_name: string;
   email: string;
   phone: string;
-  address: string;
 }
 
 const UserInfos = ({ userData }: { userData: UserData }) => {
@@ -99,10 +98,9 @@ const UserInfos = ({ userData }: { userData: UserData }) => {
 
   const initialValues: InitValues = useMemo(() => {
     return {
-      user_name: userData?.user_name || "",
+      user_name: userData?.display_name || "",
       email: userData?.email || "",
       phone: userData?.phone_num || "",
-      address: userData?.address || "",
     };
   }, [userData]);
 
@@ -176,12 +174,6 @@ const UserInfos = ({ userData }: { userData: UserData }) => {
                   name="phone"
                   label="Phone number"
                   icon={<CommonIcons.Phone />}
-                />
-                <InfoItem
-                  isEdit={isEdit}
-                  name="address"
-                  label="Address"
-                  icon={<CommonIcons.Home />}
                 />
               </Box>
               {isOwner && (

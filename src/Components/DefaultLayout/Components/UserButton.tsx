@@ -31,7 +31,7 @@ function UserButton() {
           icon={
             <Avatar src={userData?.avatar_url || DefaultAvatar} />
           }
-          title={userData?.user_name}
+          title={userData?.display_name}
           navActive
           buttonSx={{
             mt: "12px",

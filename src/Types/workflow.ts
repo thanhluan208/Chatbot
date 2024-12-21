@@ -160,6 +160,7 @@ export interface Workflow {
   permission_level: string;
   visibility: string;
   avatar_url: string;
+  background_url: string;
 }
 
 export enum VisualOption {

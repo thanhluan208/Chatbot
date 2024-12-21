@@ -12,6 +12,7 @@ import CreateBotButton from "./CreateBotButton";
 import { capitalize } from "lodash";
 import { processNavLabel } from "@/Helpers";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "@/Providers/AuthenticationProvider";
 
 export default function Sidebar({
   open,
@@ -20,8 +21,9 @@ export default function Sidebar({
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-    //translation
-    const { t } = useTranslation("store");
+  //translation
+  const { t } = useTranslation("store");
+  const {userData} = useAuth()
 
   //! State
   const Routes = useRoutes();
@@ -118,7 +120,11 @@ export default function Sidebar({
                   return (
                     <NavItem
                       icon={valChi.icon}
-                      title={t(`sidebar.naviItem.${processNavLabel(keyChi)}` as unknown as TemplateStringsArray)}
+                      title={t(
+                        `sidebar.naviItem.${processNavLabel(
+                          keyChi
+                        )}` as unknown as TemplateStringsArray
+                      )}
                       path={valChi.path}
                       key={keyChi}
                     />
@@ -133,25 +139,6 @@ export default function Sidebar({
               </Box>
             );
           })}
-          {/* <Box mt={1} display="flex" flexDirection={"column"}>
-              <Box display="flex" justifyContent={"space-between"}>
-                <CommonStyles.Typography
-                  type="normal14"
-                  pl={"15px"}
-                  color={theme.colors.custom.normalColorTypo}
-                >
-                  Teams
-                </CommonStyles.Typography>
-                <AddTeam />
-              </Box>
-
-              <ListTeam />
-            </Box>
-            <Divider
-              sx={{
-                mt: "8px",
-              }}
-            /> */}
         </Box>
 
         <Box
@@ -177,7 +164,7 @@ export default function Sidebar({
               title="Alphii Token"
               path="/token"
               navActive
-              endNum={10}
+              endNum={userData?.credits}
             />
           </Box>
 

@@ -148,7 +148,7 @@ export const BotCard = (props: Bot) => {
                 textWrap: "nowrap",
               }}
             >
-              {userData?.user_name}
+              {userData?.display_name}
             </CommonStyles.Typography>
             <CommonStyles.Typography
               color={theme.colors.custom.normalColorTypo}

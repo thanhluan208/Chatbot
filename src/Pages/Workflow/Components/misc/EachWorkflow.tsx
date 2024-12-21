@@ -129,18 +129,18 @@ const EachWorkflow = (props: Workflow) => {
           >
             <CommonStyles.Typography
               sx={{
-                maxWidth: "80px",
+                maxWidth: "150px",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 textWrap: "nowrap",
               }}
             >
-              {userData?.user_name}
+              {userData?.display_name}
             </CommonStyles.Typography>
             <CommonStyles.Typography
               color={theme.colors.custom.normalColorTypo}
               sx={{
-                maxWidth: "80px",
+                maxWidth: "200px",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 textWrap: "nowrap",

@@ -56,7 +56,7 @@ const ChatBox = ({
           {isByRole
             ? name === Role.Assistant
               ? botData?.bot_name
-              : userData?.user_name
+              : userData?.display_name
             : name}
         </CommonStyles.Typography>
         <TextBox

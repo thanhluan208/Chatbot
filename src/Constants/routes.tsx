@@ -24,7 +24,7 @@ const useRoutes = () => {
       },
       TOOL_STORE: {
         path: ListRoutes.toolStore,
-        icon: <CommonIcons.Extension />,
+        icon: <CommonIcons.BuildCircle />,
       },
     },
   };

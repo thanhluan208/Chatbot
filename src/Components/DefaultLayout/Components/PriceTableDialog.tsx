@@ -20,14 +20,14 @@ interface EachPlanProps {
 
 const EachPlan = (props: EachPlanProps) => {
   const { model, isCurrentPlan, shouldHighlight } = props;
-  const theme = useTheme()
+  const theme = useTheme();
 
   return (
     <Box
       className="each-plan"
       sx={{
         borderRadius: "16px",
-        border: "1px solid #06070920",
+        border: theme.colors.custom.borderColor,
         background: theme.colors.custom.backgroundCard,
         overflow: "hidden",
         maxHeight: "600px",
@@ -92,13 +92,12 @@ const EachPlan = (props: EachPlanProps) => {
                 fontSize: "16px",
                 fontWeight: "500",
                 lineHeight: 1.2,
-                color: "#06070980",
               }}
             >
               USD / month
             </CommonStyles.Typography>
           </span>
-          <CommonStyles.Typography type="semiBold16" color="#06070980">
+          <CommonStyles.Typography type="semiBold16">
             {props.limit} message credits/day
           </CommonStyles.Typography>
         </Box>
@@ -106,17 +105,21 @@ const EachPlan = (props: EachPlanProps) => {
           variant={shouldHighlight ? "contained" : "outlined"}
           sx={{
             marginTop: "12px",
-            border: shouldHighlight ? "" : "1px solid #000",
+            border: isCurrentPlan
+              ? theme.palette.primary.main
+              : shouldHighlight
+              ? ""
+              : theme.colors.custom.borderColor,
             color: isCurrentPlan
               ? "#000"
               : shouldHighlight
               ? "#fff"
-              : "#4e40e5",
+              : theme.palette.primary.main,
             background: isCurrentPlan
-              ? "#f9f9f9"
+              ? theme.colors.custom.background
               : shouldHighlight
-              ? "#4e40e5"
-              : "#f1f2ff",
+              ? theme.palette.primary.main
+              : theme.colors.custom.background,
           }}
           fullWidth
         >
@@ -127,7 +130,6 @@ const EachPlan = (props: EachPlanProps) => {
       </Box>
       <CommonStyles.Typography
         type="normal12"
-        color={"#06070980"}
         sx={{
           padding: "0 20px",
           marginBottom: "20px",
@@ -149,7 +151,7 @@ const EachPlan = (props: EachPlanProps) => {
               <CommonStyles.Typography type="semiBold14">
                 {item.name}
               </CommonStyles.Typography>
-              <CommonStyles.Typography color={"#06070980"}>
+              <CommonStyles.Typography>
                 {item.limitCredit} credits / {item.limitMsg} messages
               </CommonStyles.Typography>
             </Box>
@@ -233,7 +235,7 @@ const plans = [
 const PriceTableDialog = () => {
   //! State
   const { open, shouldRender, toggle } = useToggleDialog();
-  const theme = useTheme()
+  const theme = useTheme();
   //! Function
 
   //! Render
@@ -273,7 +275,7 @@ const PriceTableDialog = () => {
               display: "grid",
               gridTemplateColumns: "repeat(4,1fr)",
               gap: "16px",
-              background: "#f9f9f9",
+              background: theme.colors.custom.background,
               padding: "20px",
             }}
           >

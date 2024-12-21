@@ -86,7 +86,7 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
           {
             id: idUser,
             avatar: "https://www.w3schools.com/w3images/avatar2.png",
-            name: userData?.user_name || "User",
+            name: userData?.display_name || "User",
           },
           {
             id: id,
