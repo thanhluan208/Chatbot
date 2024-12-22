@@ -3,6 +3,7 @@ export interface ToolProvider {
   identity: ToolProviderIdentity;
   credentials_for_provider?: CredentialsForProvider;
   tools: Tool[];
+  [key: string]: any;
 }
 
 export interface CredentialsForProvider {
@@ -39,6 +40,8 @@ export interface Tool {
   identity: ToolIdentity;
   description: ToolDescription;
   parameters: Parameter[];
+  tags?: string[];
+  provider?: ToolProviderIdentity;
 }
 
 export interface ToolDescription {

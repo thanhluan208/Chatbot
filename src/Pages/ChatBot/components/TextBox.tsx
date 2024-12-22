@@ -83,6 +83,7 @@ const TextBox = ({
         <CommonStyles.Typography
           sx={{
             whiteSpace: "pre-line",
+            wordBreak: "break-word",
           }}
         >
           {text}
@@ -96,6 +97,7 @@ const TextBox = ({
           <CommonStyles.Typography
             sx={{
               whiteSpace: "pre-line",
+              wordBreak: "break-word",
             }}
           >
             <span id={data.id}></span>{" "}
@@ -107,6 +109,7 @@ const TextBox = ({
           <CommonStyles.Typography
             sx={{
               whiteSpace: "pre-line",
+              wordBreak: "break-word",
             }}
           >
             <span id={data.id}></span>
@@ -117,6 +120,7 @@ const TextBox = ({
           <CommonStyles.Typography
             sx={{
               whiteSpace: "pre-line",
+              wordBreak: "break-word",
             }}
           >
             {text}

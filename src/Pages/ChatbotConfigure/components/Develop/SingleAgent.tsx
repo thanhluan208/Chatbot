@@ -12,6 +12,7 @@ import httpServices from "@/Services/httpServices";
 import { clearConversation } from "@/Constants/api";
 import { toast } from "react-toastify";
 import { BotData } from "@/Hooks/Bot/useGetBotData";
+import { cn } from "@/lib/utils";
 
 const SingleAgent = () => {
   //! State
@@ -46,7 +47,6 @@ const SingleAgent = () => {
   //! Render
   return (
     <Fragment>
-      {/* <ConversationDrawer /> */}
       <Box
         sx={{
           padding: "20px",
@@ -62,9 +62,22 @@ const SingleAgent = () => {
             width: "67vw",
             borderRadius: "8px",
             border: `solid 1px ${theme.colors.custom.borderColor}`,
-            background: data?.background_url ? `url("${data?.background_url}")` : theme.colors.custom.background,
+            background: data?.background_url
+              ? `url("${data?.background_url}")`
+              : theme.colors.custom.background,
+
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
           }}
         >
+          <div
+            className={cn(
+              "absolute top-0 left-0 w-full h-full transition-all duration-300 rounded-lg",
+              isBrandNew ? "bg-[rgba(0,0,0,0)]" : "bg-[rgba(0,0,0,0.5)]"
+            )}
+          />
+
           <Box
             id="scrollbar-chatbot"
             sx={{

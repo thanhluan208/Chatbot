@@ -23,7 +23,7 @@ function Section(props: ISection) {
 
   //! Render
   return (
-    <Box mb="16px">
+    <Box>
       <CommonStyles.CollapseArea
         sxContainer={{
           marginTop: "12px",

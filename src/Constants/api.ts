@@ -1,5 +1,4 @@
 const baseAPI = import.meta.env.VITE_BACKEND_URL;
-// const baseAPI = "https://chatbot-api.alphiiai.com";
 export const getFolderKnowledge =
   baseAPI + "/knowledge/list_knowledge_storages";
 export const getListKnowledgeFile = baseAPI + "/knowledge/list_files";

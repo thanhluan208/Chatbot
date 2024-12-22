@@ -85,7 +85,7 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
           ...chats,
           {
             id: idUser,
-            avatar: "https://www.w3schools.com/w3images/avatar2.png",
+            avatar: userData?.avatar_url,
             name: userData?.display_name || "User",
           },
           {
@@ -236,13 +236,13 @@ const InputBox = ({ setIsBrandNew, botData }: InputBoxProps) => {
         sx={{
           padding: "8px 8px 8px 20px",
           borderRadius: "16px",
-          border: `1px solid ${theme.colors.custom.borderColor}`,
+          border: `1px solid rgba(255,255,255,0.5)`,
           width: "100%",
           display: "flex",
           alignItems: "center",
           flexWrap: "wrap",
           justifyContent: "end",
-          background: theme.colors.custom.backgroundCard,
+          background: theme.colors.custom.background,
           boxShadow: theme.colors.custom.boxShadow,
 
           textarea: {

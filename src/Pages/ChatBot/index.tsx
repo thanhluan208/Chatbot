@@ -17,6 +17,7 @@ import { AxiosResponse } from "axios";
 import httpServices from "@/Services/httpServices";
 import { clearConversation } from "@/Constants/api";
 import { toast } from "react-toastify";
+import { cn } from "@/lib/utils";
 
 const Chatbot = () => {
   //! State
@@ -92,6 +93,7 @@ const Chatbot = () => {
           justifyContent: "space-between",
           alignItems: "center",
           position: "relative",
+          borderBottom: `solid 0.5px ${theme.colors.custom.borderColor}`,
         }}
       >
         <Box
@@ -112,22 +114,24 @@ const Chatbot = () => {
             <CommonIcons.ArrowBackIosNew sx={{ widht: 16, height: 16 }} />
           </CommonStyles.Button>
 
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <img
-              src={data?.avatar_url}
-              alt="Team"
-              style={{
-                height: "32px",
-                width: "32px",
-                borderRadius: "8px",
+          {data?.avatar_url && (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
               }}
-            />
-          </Box>
+            >
+              <img
+                src={data?.avatar_url}
+                alt="Team"
+                style={{
+                  height: "32px",
+                  width: "32px",
+                  borderRadius: "8px",
+                }}
+              />
+            </Box>
+          )}
 
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Box>
@@ -146,26 +150,9 @@ const Chatbot = () => {
                 }}
               >
                 <Box sx={{ display: "flex", gap: "4px", alignItems: "center" }}>
-                  <img
-                    src="https://sf16-passport-sg.ibytedtos.com/img/user-avatar-alisg/4d26373f2eedfe14710becde336c2450~300x300.image"
-                    style={{
-                      width: "14px",
-                      height: "14px",
-                      borderRadius: "50%",
-                    }}
-                  />
+                  <CommonIcons.Person sx={{ width: 12, height: 12 }} />
                   <CommonStyles.Typography type="normal12">
-                    Prompcase
-                  </CommonStyles.Typography>
-                  <img
-                    src="https://sf16-bot-platform-tos-sign.coze.com/obj/bot-studio-bot-platform-sg/FileBizType.BIZ_LABEL_ICON/0_1721634266433275972_F2UPYqurVT.image/png?lk3s=50ccb0c5&x-expires=1725088720&x-signature=9B3UH8Ry%2BD1HFPjjfU39rzLDFiM%3D"
-                    style={{
-                      width: "12px",
-                      height: "12px",
-                    }}
-                  />
-                  <CommonStyles.Typography type="normal12">
-                    Luan Dang
+                    {data?.user_name}
                   </CommonStyles.Typography>
                 </Box>
                 <Box
@@ -203,7 +190,7 @@ const Chatbot = () => {
         >
           <CommonStyles.Button variant="outlined">
             <CommonIcons.StarOutline sx={{ width: 16, height: 16 }} />
-            <CommonStyles.Typography>14</CommonStyles.Typography>
+            <CommonStyles.Typography>{data?.stars}</CommonStyles.Typography>
           </CommonStyles.Button>
           <CommonStyles.Button sx={{ width: "96px" }} variant="outlined">
             <CommonStyles.Typography type="semiBold14">
@@ -240,21 +227,27 @@ const Chatbot = () => {
           </CommonStyles.Button>
         </Box>
       </Box>
-      <Box
-        sx={{
-          display: "flex",
-          width: "100vw",
-        }}
-      >
+      <div className="flex w-screen justify-center my-[10px]">
         <Box
           id="wrapper"
+          className="p-[20px_14px_105px_14px] h-[calc(100vh-94px)] relative max-w-[calc(100vw-20px)] rounded-lg"
           sx={{
-            padding: "20px 14px 105px 14px",
-            height: "calc(100vh - 74px)",
-            position: "relative",
-            width: "100vw",
+            background: data?.background_url
+              ? `url(${data?.background_url})`
+              : theme.colors.custom.background,
+            backgroundSize: "cover",
+            aspectRatio: "16/9",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
           }}
         >
+          <div
+            className={cn(
+              "absolute top-0 left-0 w-full h-full transition-all duration-300 rounded-lg",
+              isBrandNew ? "bg-[rgba(0,0,0,0)]" : "bg-[rgba(0,0,0,0.5)]"
+            )}
+          />
+
           <Box
             sx={{
               position: "absolute",
@@ -367,7 +360,7 @@ const Chatbot = () => {
             </Box>
           </Box>
         </Box>
-      </Box>
+      </div>
     </Box>
   );
 };

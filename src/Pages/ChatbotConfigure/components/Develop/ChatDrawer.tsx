@@ -69,7 +69,12 @@ export default function ChatDrawer() {
           width: "50vw",
           padding: "60px 14px 105px 14px",
           height: "100vh",
-          background: theme.colors.custom.background,
+          background: data?.background_url
+            ? `url(${data?.background_url})`
+            : theme.colors.custom.background,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
           transition: "all 0.5s ease",
           position: "relative",
         }}

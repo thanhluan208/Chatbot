@@ -75,6 +75,15 @@ export const outputFormatOptions = [
   },
 ];
 
+
+export enum ConfigureEnum {
+  Skills = "Skills",
+  Knowledge = "Knowledge",
+  ChatExperience = "Chat experience",
+  Memory = "Memory",
+  Dialog = "Dialog",
+}
+
 export const configures = [
   // {
   //   title: "Skills",
@@ -97,6 +106,7 @@ export const configures = [
   // },
   {
     title: "Knowledge",
+    type: ConfigureEnum.Knowledge,
     items: [
       {
         title: "Text",
@@ -115,6 +125,14 @@ export const configures = [
       // },
     ],
   },
+  {
+    title: "Chat experience",
+    type: ConfigureEnum.ChatExperience,
+    items: [
+      {title: 'Background',
+      content: 'Choose a background image for the chat interface',}
+    ]
+  }
   // {
   //   title: "Memory",
   //   items: [
@@ -159,6 +177,15 @@ export const configures = [
   //   ],
   // },
 ];
+
+export interface Configure {
+  title: string;
+  items: {
+    title: string;
+    content: string;
+  }[];
+  type?: ConfigureEnum;
+}
 
 export const chartData = {
   chart: {
