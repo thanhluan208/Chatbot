@@ -10,11 +10,12 @@ interface IFilesUpload {
   dropzoneProps?: DropzoneOptions;
   files?: File[] | string[];
   handleDeleteFile?: (index: number) => void;
+  shouldShowImg?: boolean;
 }
 
 const FilesUpload = (props: IFilesUpload) => {
   //! State
-  const { label, dropzoneProps, files, handleDeleteFile } = props;
+  const { label, dropzoneProps, files, handleDeleteFile,shouldShowImg } = props;
   const theme = useTheme();
   const { onDrop, onDragEnter, onDragLeave, ...otherDropzoneProps } =
     dropzoneProps || {};
@@ -113,6 +114,10 @@ const FilesUpload = (props: IFilesUpload) => {
           <CommonStyles.Typography type="bold14" color={"#4e40e5"}>
             Release and start uploading
           </CommonStyles.Typography>
+        )}
+
+        {shouldShowImg && files?.[0] && (
+          <img src={URL.createObjectURL(files[0] as File)} alt="preview" className="mt-3 rounded-lg max-w-full"/>
         )}
       </Box>
     </div>

@@ -129,7 +129,7 @@ export const configures = [
     title: "Chat experience",
     type: ConfigureEnum.ChatExperience,
     items: [
-      {title: 'Background',
+      {title: 'Background image',
       content: 'Choose a background image for the chat interface',}
     ]
   }
@@ -180,11 +180,13 @@ export const configures = [
 
 export interface Configure {
   title: string;
-  items: {
-    title: string;
-    content: string;
-  }[];
+  items: ConfigureItem[];
   type?: ConfigureEnum;
+}
+
+export interface ConfigureItem {
+  title: string;
+  content: string;
 }
 
 export const chartData = {

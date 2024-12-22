@@ -98,7 +98,7 @@ const Configure = ({ system_prompt }: { system_prompt: string }) => {
       </CommonStyles.CollapseArea>
       {configures.map((conf) => {
         return (
-          <Section title={conf.title} items={conf.items} key={conf.title} />
+          <Section title={conf.title} items={conf.items} key={conf.title} type={conf.type}/>
         );
       })}
     </Box>

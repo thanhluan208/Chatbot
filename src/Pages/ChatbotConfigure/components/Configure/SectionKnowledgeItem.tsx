@@ -9,7 +9,7 @@ import useToggleDialog from "../../../../Hooks/useToggleDialog";
 import KnowledgeListDialog from "./Knowledge/KnowledgeListDialog";
 import { KnowledgeStorageID } from "@/Hooks/Bot/useGetBotData";
 
-interface ISectionItem {
+interface ISectionKnowledgeItem {
   content: string;
   title: string;
   isAutoAwesome?: boolean;
@@ -17,7 +17,7 @@ interface ISectionItem {
   list: KnowledgeStorageID[];
 }
 
-function SectionItem(props: ISectionItem) {
+function SectionKnowledgeItem(props: ISectionKnowledgeItem) {
   //! State
   const { content, title, isAutoAwesome, sectionTitle, list } = props;
   const [open, setOpen] = useState(false);
@@ -129,4 +129,4 @@ function SectionItem(props: ISectionItem) {
   );
 }
 
-export default SectionItem;
+export default SectionKnowledgeItem;

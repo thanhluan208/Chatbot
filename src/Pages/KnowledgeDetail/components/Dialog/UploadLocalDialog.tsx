@@ -1,6 +1,12 @@
 import { useCallback, useMemo } from "react";
 import { FastField, Form, Formik } from "formik";
-import { Box, DialogActions, DialogContent, DialogTitle, useTheme } from "@mui/material";
+import {
+  Box,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  useTheme,
+} from "@mui/material";
 import CommonStyles from "../../../../Components/CommonStyles";
 import CommonIcons from "../../../../Components/CommonIcons";
 import CommonField from "../../../../Components/CommonFields";
@@ -24,7 +30,7 @@ interface UploadValue {
 const UploadLocalDialog = (props: IUploadLocalDialog) => {
   //! State
   const { toggle } = props;
-  const theme = useTheme()
+  const theme = useTheme();
   const params = useParams();
   const userId = params.id;
   const knowledgeId = params.knowledgeId;
@@ -57,7 +63,7 @@ const UploadLocalDialog = (props: IUploadLocalDialog) => {
         formdata.append("file_input", values.file_input[0]);
         formdata.append("metadata_input", JSON.stringify({}));
 
-         await httpServices.axios.post(uploadFile, formdata);
+        await httpServices.axios.post(uploadFile, formdata);
 
         refectListFile && (await refectListFile());
 
@@ -68,7 +74,7 @@ const UploadLocalDialog = (props: IUploadLocalDialog) => {
           autoClose: 3000,
         });
 
-        toggle()
+        toggle();
       } catch (error) {
         console.log("Error upload knowledge file:", error);
         toast.update(toastId, {
@@ -133,7 +139,6 @@ const UploadLocalDialog = (props: IUploadLocalDialog) => {
                   files={values.file_input}
                   dropzoneProps={{
                     onDrop: (acceptedFiles) => {
-                      console.log("acceptedFiles", acceptedFiles);
                       setFieldValue("file_input", acceptedFiles);
                     },
                   }}
@@ -159,7 +164,7 @@ const UploadLocalDialog = (props: IUploadLocalDialog) => {
                       "&:hover": {
                         background: theme.colors.custom.backgroundCardHover,
                       },
-                      color:'unset'
+                      color: "unset",
                     }}
                     onClick={toggle}
                     disabled={isSubmitting}

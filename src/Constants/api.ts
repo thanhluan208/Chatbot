@@ -56,6 +56,7 @@ export const updatePrompt = baseAPI + "/bot/update_system_prompt_to_bot";
 export const changeBotMode = baseAPI + "/bot/change_bot_mode";
 export const duplicateBot = baseAPI + "/bot/duplicate_bot";
 export const changeCurrentNode = baseAPI + "/bot/change_current_node";
+export const uploadBotBackground = baseAPI + "/bot/upload_background";
 
 export const getBotNode = baseAPI + "/node/get_node_data";
 export const deleteBotNode = baseAPI + "/node/delete_node";

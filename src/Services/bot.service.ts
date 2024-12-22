@@ -6,6 +6,7 @@ import {
   getBotNode,
   getBotsStore,
   getListBot,
+  uploadBotBackground,
 } from "../Constants/api";
 import httpServices from "./httpServices";
 import { ListBotResponse } from "@/Types/Bot";
@@ -46,6 +47,19 @@ class BotServices {
 
   getNode(payload: { bot_id: string; node_id: string }) {
     return httpServices.post(getBotNode, payload);
+  }
+
+  uploadBackground(payload: {
+    bot_id: string;
+    file_input: File;
+    user_id: string;
+  }) {
+    const formdata = new FormData();
+    formdata.append("bot_id", payload.bot_id);
+    formdata.append("file_input", payload.file_input);
+    formdata.append("user_id", payload.user_id);
+
+    return httpServices.post(uploadBotBackground, formdata);
   }
 }
 
