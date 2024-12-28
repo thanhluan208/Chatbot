@@ -93,6 +93,7 @@ const Configure = ({ system_prompt }: { system_prompt: string }) => {
               },
             }}
             afterOnchange={afterOnChangePrompt}
+            maxChar={2048}
           />
         </Box>
       </CommonStyles.CollapseArea>

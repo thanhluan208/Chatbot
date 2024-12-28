@@ -181,7 +181,7 @@ function ChatbotConfigure() {
             }}
             onClick={() => setTab("develop")}
           >
-            Develop
+            Studio
           </CommonStyles.Typography>
         </Box>
       </Box>

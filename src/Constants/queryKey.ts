@@ -4,6 +4,7 @@ export default {
 
     //! Knowledge
     KNOWLEDGE_FOLDER_LIST: "KNOWLEDGE_FOLDER_LIST",
+    KNOWLEDGE_LIST: "KNOWLEDGE_LIST",
 
     //! WORKFLOW
     WORKFLOW: "WORKFLOW",

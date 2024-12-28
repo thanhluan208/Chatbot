@@ -1,10 +1,11 @@
+import useMutateKnowledgeFolder from "@/Hooks/Knowledges/useMutateKnowledgeFolder";
+import { useAuth } from "@/Providers/AuthenticationProvider";
 import { Box, useTheme } from "@mui/material";
-import CommonStyles from "../../../../Components/CommonStyles";
 import { memo, useState } from "react";
-import CommonIcons from "../../../../Components/CommonIcons";
-import DeleteKnowledge from "./Knowledge/DeleteKnowledge";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import CommonIcons from "../../../../Components/CommonIcons";
+import CommonStyles from "../../../../Components/CommonStyles";
 
 interface ISectionButtonItem {
   title: string;
@@ -18,24 +19,17 @@ function SectionButtonItem(props: ISectionButtonItem) {
   const theme = useTheme();
   const navigate = useNavigate();
   const pathname = useLocation().pathname;
+  const {botId} = useParams()
+  const {userId} = useAuth()
 
   const isOwner = permission_level.toLowerCase() === "owner";
   const [showAction, setShowAction] = useState(false);
+
+  const { handleAddOrRemoveFolderKnowledge } = useMutateKnowledgeFolder();
+
   //! Function
 
-  //! Render
-  const renderDeleteButton = (toggle: () => void) => {
-    return (
-      <CommonStyles.Button
-        isIcon
-        onClick={toggle}
-        tooltip="Delete"
-        isRound={false}
-      >
-        <CommonIcons.DeleteOutlined />
-      </CommonStyles.Button>
-    );
-  };
+  
 
   const handleNavigate = () => {
     navigate(`${pathname}/knowledge/${id}?isOwner=${isOwner}`);
@@ -53,6 +47,23 @@ function SectionButtonItem(props: ISectionButtonItem) {
       toast.error("Failed to copy to clipboard");
     }
   };
+
+  const handleRemoveKnowledge = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    if(!userId || !botId) return
+
+    handleAddOrRemoveFolderKnowledge.mutate({
+      knowledge_storage_ids: [id],
+      user_id: userId,
+      bot_id: botId,
+      isAdd: true,
+    })
+  }
+
+
+  //! Render
 
   return (
     <CommonStyles.Button
@@ -130,15 +141,15 @@ function SectionButtonItem(props: ISectionButtonItem) {
         >
           <CommonIcons.ContentCopyOutlined />
         </CommonStyles.Button>
-        <DeleteKnowledge
-          data={{
-            id: props.id,
-            size: "0 Byte",
-            quantity: "0",
-            createdAt: "2021-10-10T00:00:00.000Z",
-          }}
-          deleteButton={renderDeleteButton}
-        />
+        <CommonStyles.Button
+          isIcon
+          hasBorder={false}
+          tooltip="Remove"
+          isRound={false}
+          onClick={handleRemoveKnowledge}
+        >
+          <CommonIcons.Remove />
+        </CommonStyles.Button>
       </Box>
     </CommonStyles.Button>
   );

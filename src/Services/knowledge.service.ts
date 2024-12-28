@@ -1,3 +1,6 @@
+import { KnowledgeDetailResponse } from "@/Hooks/Knowledges/useGetKnowledgeDetail";
+import { KnowledgeFolderResponse } from "@/Hooks/Knowledges/useGetListFolderKnowledge";
+import { AddOrRemoveKnowledgeFromBotPayload } from "@/Types/knowledge";
 import {
   getFileData,
   getFileRaw,
@@ -5,9 +8,10 @@ import {
   getKnowledgeDetail,
   getListKnowledgeFile,
   getSegments,
+  removeKnowledgeFromBot,
+  updateKnowledgeToBot,
 } from "../Constants/api";
 import httpServices from "./httpServices";
-import { KnowledgeFolderResponse } from "@/Hooks/Knowledges/useGetListFolderKnowledge";
 
 interface GetListFilter {
   user_id: string;
@@ -44,8 +48,16 @@ class KnowledgeServices {
   getDataFile(payload: PayloadSegment) {
     return httpServices.post(getFileData, payload);
   }
-  getDetail(payload: PayloadKnowledgeDetail) {
-    return httpServices.post(getKnowledgeDetail, payload);
+  getDetail(payload?: PayloadKnowledgeDetail): Promise<KnowledgeDetailResponse> {
+    return httpServices.post(getKnowledgeDetail, payload).then((response) => response.data);
+  }
+
+  removeKnowledgeFromBot(payload: Omit<AddOrRemoveKnowledgeFromBotPayload, "isAdd">) {
+    return httpServices.post(removeKnowledgeFromBot, payload);
+  }
+
+  addKnowledgeToBot(payload: Omit<AddOrRemoveKnowledgeFromBotPayload, "isAdd">) {
+    return httpServices.post(updateKnowledgeToBot, payload);
   }
 }
 

@@ -1,18 +1,11 @@
-import { Box, useTheme } from "@mui/material";
-import CommonStyles from "../../../../../Components/CommonStyles";
-import moment from "moment";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import DeleteKnowledge from "./DeleteKnowledge";
-import { toast } from "react-toastify";
-import httpServices from "../../../../../Services/httpServices";
-import {
-  removeKnowledgeFromBot,
-  updateKnowledgeToBot,
-} from "../../../../../Constants/api";
-import { useMemo } from "react";
+import useMutateKnowledgeFolder from "@/Hooks/Knowledges/useMutateKnowledgeFolder";
 import { useAuth } from "@/Providers/AuthenticationProvider";
-import { useQueryClient } from "react-query";
-import queryKey from "@/Constants/queryKey";
+import { Box, CircularProgress, useTheme } from "@mui/material";
+import moment from "moment";
+import { useMemo } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import CommonStyles from "../../../../../Components/CommonStyles";
+import DeleteKnowledge from "./DeleteKnowledge";
 
 export interface IKnowledgeFolder {
   id?: string;
@@ -46,7 +39,7 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
     avatar,
     enableButton,
     handleMutate,
-    isAdded
+    isAdded,
   } = props;
   const navigate = useNavigate();
   const theme = useTheme();
@@ -54,7 +47,7 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
   const params = useParams();
   const botId = params.botId;
   const { userId } = useAuth();
-  const queryClient = useQueryClient();
+  const { handleAddOrRemoveFolderKnowledge } = useMutateKnowledgeFolder();
 
   const isOwner = useMemo(() => {
     if (userId === owner_id) {
@@ -69,86 +62,22 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
       return true;
     }
 
-    if(isAdded) return true
+    if (isAdded) return true;
 
     return false;
   }, [botId, sharingWithBots, isAdded]);
 
   //! Function
-  const handleAddKnowledgeToBot = async (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    event.stopPropagation();
+  const handleAddOrRemove = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation()
     if (!botId || !id || !userId) return;
 
-    const toastId = toast.loading("Adding knowledge to bot...", {
-      isLoading: true,
-      autoClose: false,
+    handleAddOrRemoveFolderKnowledge.mutate({
+      user_id: userId,
+      knowledge_storage_ids: [id],
+      bot_id: botId,
+      isAdd: isSharing,
     });
-
-    try {
-      await httpServices.axios.post(updateKnowledgeToBot, {
-        user_id: userId,
-        bot_id: botId,
-        knowledge_storage_ids: [id],
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: [queryKey.KNOWLEDGE_FOLDER_LIST],
-      });
-
-      toast.update(toastId, {
-        render: "Added knowledge to bot successfully!",
-        type: "success",
-        isLoading: false,
-        autoClose: 2000,
-      });
-    } catch (error) {
-      toast.update(toastId, {
-        render: "Failed to add knowledge to bot!",
-        type: "error",
-        isLoading: false,
-        autoClose: 2000,
-      });
-    }
-  };
-
-  const handleRemoveKnowledgeFromBot = async (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    event.stopPropagation();
-    if (!botId || !id || !userId) return;
-
-    const toastId = toast.loading("Removing knowledge from bot...", {
-      isLoading: true,
-      autoClose: false,
-    });
-
-    try {
-      await httpServices.axios.post(removeKnowledgeFromBot, {
-        user_id: userId,
-        bot_id: botId,
-        knowledge_storage_ids: [id],
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: [queryKey.KNOWLEDGE_FOLDER_LIST],
-      });
-
-      toast.update(toastId, {
-        render: "Removed knowledge from bot successfully!",
-        type: "success",
-        isLoading: false,
-        autoClose: 2000,
-      });
-    } catch (error) {
-      toast.update(toastId, {
-        render: "Failed to remove knowledge from bot!",
-        type: "error",
-        isLoading: false,
-        autoClose: 2000,
-      });
-    }
   };
 
   //! Render
@@ -218,12 +147,10 @@ const KnowledgeFolder = (props: IKnowledgeFolder) => {
                     e.stopPropagation();
                     handleMutate(id || "");
                   }
-                : isSharing
-                ? handleRemoveKnowledgeFromBot
-                : handleAddKnowledgeToBot
+                : handleAddOrRemove
             }
           >
-            {isSharing ? "Remove" : "Add"}
+            {handleAddOrRemoveFolderKnowledge?.isLoading ? <CircularProgress size={16} /> : isSharing ? "Remove" : "Add"}
           </CommonStyles.Button>
         )}
         {isOwner && <DeleteKnowledge data={props} />}

@@ -77,6 +77,8 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
 
         const response = await httpServices.axios.post(createBot, formData);
         refetchListBot && (await refetchListBot());
+
+        console.log("Create bot response: ", response);
         if (response.data.status_code === 200) {
           toast.update(toastId, {
             render: `Bot ${values.name} created successfully!`,
@@ -84,8 +86,8 @@ export const CreateBotDialog = (props: ICreateBotDialog) => {
             isLoading: false,
             autoClose: 3000,
           });
-          if (id && response.data.bot_id) {
-            navigate(`/workspace/${id}/bot/${response.data.bot_id}`);
+          if (userId && response.data.bot_id) {
+            navigate(`/workspace/${userId}/bot/${response.data.bot_id}`);
           }
         } else {
           throw new Error(response.data.message);

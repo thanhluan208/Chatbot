@@ -1,22 +1,20 @@
-import { Box, useTheme } from "@mui/material";
-import CommonStyles from "../../Components/CommonStyles";
-import { useNavigate, useParams } from "react-router-dom";
-import { Fragment, useEffect, useMemo } from "react";
-import { useSave } from "../../Stores/useStore";
-import cachedKeys from "../../Constants/cachedKeys";
-import CommonIcons from "../../Components/CommonIcons";
-import AddContentButton from "./components/AddContentButton";
-import { useAuth } from "../../Providers/AuthenticationProvider";
+import useGetKnowledgeDetail from "@/Hooks/Knowledges/useGetKnowledgeDetail";
+import useMutateKnowledgeFolder from "@/Hooks/Knowledges/useMutateKnowledgeFolder";
+import { Box, CircularProgress, useTheme } from "@mui/material";
 import { isEmpty } from "lodash";
+import { Fragment, useEffect, useMemo } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import CommonIcons from "../../Components/CommonIcons";
+import CommonStyles from "../../Components/CommonStyles";
+import cachedKeys from "../../Constants/cachedKeys";
+import { useAuth } from "../../Providers/AuthenticationProvider";
+import { useSave } from "../../Stores/useStore";
+import AddContentButton from "./components/AddContentButton";
 import EditKnowledge from "./components/EditKnowledge";
 import PublicButton from "./components/PublicButton";
-import httpServices from "@/Services/httpServices";
-import { updateKnowledgeToBot } from "@/Constants/api";
-import { toast } from "react-toastify";
 import SegmentDetail from "./components/Segment/SegmentDetail";
 import SegmentList from "./components/Segment/SegmentList";
 import SegmentRawFile from "./components/Segment/SegmentRawFile";
-import useGetKnowledgeDetail from "@/Hooks/Knowledges/useGetKnowledgeDetail";
 
 const KnowledgeDetail = () => {
   //! State
@@ -43,6 +41,7 @@ const KnowledgeDetail = () => {
     isLoading,
     refetch,
   } = useGetKnowledgeDetail(payload, !!payload);
+  const { handleAddOrRemoveFolderKnowledge } = useMutateKnowledgeFolder();
 
   const isOwner = userId === knowledgeDetail?.owner_id;
 
@@ -58,39 +57,23 @@ const KnowledgeDetail = () => {
         return acc + cur.n_points;
       }, 0);
 
+  const isAddedToBot = useMemo(() => {
+    if (!knowledgeDetail?.sharing_with_bots || !botId) return false;
+
+    return knowledgeDetail?.sharing_with_bots.includes(botId);
+  }, [knowledgeDetail?.sharing_with_bots, botId]);
+
   //! Function
-  const handleAddKnowledgeToBot = async (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    event.stopPropagation();
+  const handleAddOrRemove = () => {
     if (!botId || !knowledgeId || !userId) return;
+    
 
-    const toastId = toast.loading("Adding knowledge to bot...", {
-      isLoading: true,
-      autoClose: false,
+    handleAddOrRemoveFolderKnowledge.mutate({
+      user_id: userId,
+      knowledge_storage_ids: [knowledgeId],
+      bot_id: botId,
+      isAdd: isAddedToBot,
     });
-
-    try {
-      await httpServices.axios.post(updateKnowledgeToBot, {
-        user_id: userId,
-        bot_id: botId,
-        knowledge_storage_ids: [knowledgeId],
-      });
-
-      toast.update(toastId, {
-        render: "Added knowledge to bot successfully!",
-        type: "success",
-        isLoading: false,
-        autoClose: 2000,
-      });
-    } catch (error) {
-      toast.update(toastId, {
-        render: "Failed to add knowledge to bot!",
-        type: "error",
-        isLoading: false,
-        autoClose: 2000,
-      });
-    }
   };
 
   //! Effect
@@ -187,9 +170,15 @@ const KnowledgeDetail = () => {
                   {botId && (
                     <CommonStyles.Button
                       variant="contained"
-                      onClick={handleAddKnowledgeToBot}
+                      onClick={handleAddOrRemove}
                     >
-                      Add to bot
+                      {handleAddOrRemoveFolderKnowledge.isLoading ? (
+                        <CircularProgress size={16} />
+                      ) : !isAddedToBot ? (
+                        "Add to bot"
+                      ) : (
+                        "Remove from bot"
+                      )}
                     </CommonStyles.Button>
                   )}
                 </Fragment>

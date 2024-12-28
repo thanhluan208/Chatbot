@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
+import queryKey from "@/Constants/queryKey";
+import { useAuth } from "@/Providers/AuthenticationProvider";
+import { useQuery } from "react-query";
 import knowledgeService, {
   PayloadKnowledgeDetail,
 } from "../../Services/knowledge.service";
-import { AxiosResponse } from "axios";
 import { FileData } from "./useGetListFolderKnowledge";
 
 export interface KnowledgeDetailResponse {
@@ -19,7 +20,7 @@ export interface KnowledgeStorageData {
   created_at: Date;
   user_name: string;
   visibility: string;
-  sharing_with_bots: any[];
+  sharing_with_bots: string[];
   list_files: ListFiles;
   avatar_url: string;
 }
@@ -28,70 +29,25 @@ export interface ListFiles {
   [key: string]: FileData;
 }
 
-
-
 const useGetKnowledgeDetail = (
-  payload?: PayloadKnowledgeDetail,
-  isTrigger = true
+  filters?: PayloadKnowledgeDetail,
+  enabled?: boolean
 ) => {
-  const [data, setData] = useState<KnowledgeStorageData | null>(null);
-  const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState();
+  const { userId } = useAuth();
 
-  const callApi = useCallback(() => {
-    if (!payload) return;
-    return knowledgeService.getDetail(payload);
-  }, [payload]);
-
-  const transformResponse = useCallback(
-    (response?: AxiosResponse<KnowledgeDetailResponse>) => {
-      if (response && response?.data?.status_code === 200) {
-        setData(response.data.knowledge_storage_data);
-      }
+  const {data, ...rest} = useQuery({
+    queryKey: [queryKey.KNOWLEDGE_FOLDER_LIST, filters],
+    queryFn: () => {
+      return knowledgeService.getDetail(filters)
     },
-    []
-  );
+    enabled: !!userId && enabled,
+  });
 
-  const refetch = useCallback(async () => {
-    try {
-      const response = await callApi();
-      transformResponse(response);
-    } catch (error: any) {
-      setError(error);
-    }
-  }, [callApi]);
-
-  useEffect(() => {
-    let shouldSetData = true;
-    console.log("trigger", isTrigger);
-    if (isTrigger) {
-      (async () => {
-        try {
-          setLoading(true);
-          const response = await callApi();
-
-          if (shouldSetData) {
-            transformResponse(response);
-          }
-        } catch (error: any) {
-          setError(error);
-        } finally {
-          setLoading(false);
-        }
-      })();
-
-      return () => {
-        shouldSetData = false;
-      };
-    }
-  }, [isTrigger, callApi]);
 
   return {
-    data,
-    isLoading,
-    error,
-    refetch,
-  };
+    data: data?.knowledge_storage_data,
+    ...rest
+  }
 };
 
 export default useGetKnowledgeDetail;
