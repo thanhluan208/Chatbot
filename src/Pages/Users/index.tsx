@@ -1,4 +1,4 @@
-import { Box, useTheme,  } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import CommonStyles from "../../Components/CommonStyles";
 import CreateBotPersonal from "./Components/CreateBotPersonal";
 import { useCallback, useState } from "react";
@@ -6,15 +6,16 @@ import ListBot from "./Components/ListBot";
 import CreateKnowledgeButton from "./Components/CreateKnowledgeButton";
 import ListKnowledge from "./Components/ListKnowledge";
 import { useAuth } from "@/Providers/AuthenticationProvider";
+import Workflow from "../Workflow";
+import CreateWorkFlowButton from "../Workflow/Components/misc/CreatWorkflowButton";
 
-
-const sectionList = ["Bots","Knowledge" ];
+const sectionList = ["Bots", "Knowledge", "Workflows"];
 
 function Users() {
   //! State
   const [personalSection, setPersonalSection] = useState("Bots");
-  const theme = useTheme()
-  const {userData} = useAuth()
+  const theme = useTheme();
+  const { userData } = useAuth();
 
   //! Function
 
@@ -25,7 +26,7 @@ function Users() {
       case "Plugins":
         return <div>Plugins</div>;
       case "Workflows":
-        return <div>Workflows</div>;
+        return <Workflow />;
       case "Knowledge":
         return <ListKnowledge />;
       case "Cards":
@@ -39,20 +40,22 @@ function Users() {
     switch (personalSection) {
       case "Bots":
         return <CreateBotPersonal />;
-      case "Knowledge": 
-        return <CreateKnowledgeButton />
+      case "Knowledge":
+        return <CreateKnowledgeButton />;
+      case "Workflows":
+        return <CreateWorkFlowButton />;
       default:
-        return null
+        return null;
     }
-  },[personalSection])
+  }, [personalSection]);
 
   //! Render
   return (
     <Box
       sx={{
         padding: "24px",
-        maxWidth:'100%',
-        overflow: 'hidden'
+        maxWidth: "100%",
+        overflow: "hidden",
       }}
     >
       <Box
@@ -91,7 +94,7 @@ function Users() {
             <CommonStyles.Button
               key={item}
               onClick={() => setPersonalSection(item)}
-              variant={isActive ? "contained" : 'outlined'}
+              variant={isActive ? "contained" : "outlined"}
               sx={{
                 "&:hover": {
                   "& p": {
@@ -111,7 +114,7 @@ function Users() {
         })}
       </Box>
 
-      <Box mt={"24px"} >{renderPersonalSection()}</Box>
+      <Box mt={"24px"}>{renderPersonalSection()}</Box>
     </Box>
   );
 }

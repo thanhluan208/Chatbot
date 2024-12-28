@@ -62,6 +62,8 @@ const Advance = () => {
   //! Function
 
   //! Render
+  if (!model) return null;
+
   return (
     <div
       onClick={(e) => {

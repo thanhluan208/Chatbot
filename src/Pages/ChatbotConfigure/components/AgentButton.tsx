@@ -1,15 +1,14 @@
-import React, { Dispatch, Fragment, SetStateAction, useId } from "react";
-import CommonIcons from "../../../Components/CommonIcons";
-import CommonStyles from "../../../Components/CommonStyles";
-import { Box, Paper, Popover, useTheme } from "@mui/material";
-import { Mode } from "./Develop";
-import httpServices from "@/Services/httpServices";
 import { changeBotMode, createMultiAgent } from "@/Constants/api";
-import { useParams } from "react-router-dom";
-import { useAuth } from "@/Providers/AuthenticationProvider";
-import { toast } from "react-toastify";
-import { useGet, useSave } from "@/Stores/useStore";
 import cachedKeys from "@/Constants/cachedKeys";
+import { useAuth } from "@/Providers/AuthenticationProvider";
+import httpServices from "@/Services/httpServices";
+import { useGet, useSave } from "@/Stores/useStore";
+import { Box, Paper, Popover, useTheme } from "@mui/material";
+import React, { Dispatch, Fragment, SetStateAction, useId } from "react";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import CommonStyles from "../../../Components/CommonStyles";
+import { Mode } from "./Develop";
 
 const AgentButton = ({
   setMode,
@@ -119,7 +118,6 @@ const AgentButton = ({
           height: "40px",
         }}
       >
-        <CommonIcons.LooksOne sx={{ width: 16, height: 16 }} />
         <CommonStyles.Typography type="normal12">
           {isSingle ? "Single agent mode" : "Multi agent mode"}
         </CommonStyles.Typography>

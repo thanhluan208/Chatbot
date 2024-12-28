@@ -81,17 +81,24 @@ export const CreateOrEditWorkflowDialog = (
         }
 
         if (!isEdit) {
-            const {data} = await createWorkflow(formData);
-            if(data?.status_code === 200) {
-                toast.update(toastId, {
-                    render: data?.message || t('WF_mutate_dialog.create.created'),
-                    type: "success",
-                    autoClose: 2000,
-                    isLoading: false,
-                });
-                // navigate(`/workflow/${data?.workflow_id}`);
-                toggle();
-            }
+          const { data } = await createWorkflow(formData);
+          if (data?.status_code === 200) {
+            toast.update(toastId, {
+              render: data?.message || t("WF_mutate_dialog.create.created"),
+              type: "success",
+              autoClose: 2000,
+              isLoading: false,
+            });
+            // navigate(`/workflow/${data?.workflow_id}`);
+            toggle();
+          } else {
+            toast.update(toastId, {
+              render: data?.message || "Create bot failed",
+              type: "error",
+              autoClose: 2000,
+              isLoading: false,
+            });
+          }
         }
       } catch (error: any) {
         console.log("Create bot error: ", error);

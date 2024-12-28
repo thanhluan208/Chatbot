@@ -1,16 +1,14 @@
-import { Box, useTheme } from "@mui/material";
-import ConfigurationItem, { ConfigurationItemEnum } from "./ConfigurationItem";
-import PerfectScrollbar from "react-perfect-scrollbar";
-import CommonStyles from "@/Components/CommonStyles";
 import CommonIcons from "@/Components/CommonIcons";
-import { formatNumber, mockDescription } from "@/Helpers";
-import { Fragment, useState } from "react";
-import ViewmoreConfig from "./ViewmoreConfig";
-import AddComment from "./AddComment";
-import Community from "./Community/Community";
-import CommunityDetail from "./Community/CommunityDetail";
-import { useSave } from "@/Stores/useStore";
+import CommonStyles from "@/Components/CommonStyles";
 import cachedKeys from "@/Constants/cachedKeys";
+import { formatNumber, mockDescription } from "@/Helpers";
+import { useSave } from "@/Stores/useStore";
+import { Box, useTheme } from "@mui/material";
+import { Fragment, useState } from "react";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import CommunityDetail from "./Community/CommunityDetail";
+import ConfigurationItem, { ConfigurationItemEnum } from "./ConfigurationItem";
+import ViewmoreConfig from "./ViewmoreConfig";
 
 const Description = ({ text }: { text: string }) => {
   //! State
@@ -274,54 +272,6 @@ export const RightSide = ({
                   })}
                 </Box>
               </Box>
-
-              <CommonStyles.Typography
-                type="semiBold16"
-                sx={{
-                  marginTop: "24px",
-                }}
-              >
-                Open in
-              </CommonStyles.Typography>
-
-              <Box
-                sx={{
-                  marginTop: "24px",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    svg: {
-                      width: 14,
-                      height: 14,
-                    },
-                  }}
-                >
-                  <CommonStyles.Typography type="semiBold16">
-                    Community
-                  </CommonStyles.Typography>
-                  <CommonStyles.Button
-                    sx={{
-                      padding: "5px 5px 0",
-                      width: "24px",
-                      height: "24px",
-                      minWidth: "unset",
-                      color: "#060709",
-                      borderRadius: "8px",
-                    }}
-                  >
-                    <CommonIcons.Refresh />
-                  </CommonStyles.Button>
-                </Box>
-                <AddComment />
-              </Box>
-              <Community />
             </Box>
           </Fragment>
         )}

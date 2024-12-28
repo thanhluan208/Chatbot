@@ -101,7 +101,7 @@ const ChatField = (props: IChatField) => {
         return (
           <ChatBox
             id={item.id}
-            avatar={item.avatar}
+            avatar={item?.avatar}
             name={item.name}
             key={item.id}
             type={item.type}

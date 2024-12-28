@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import CommonStyles from "../../../Components/CommonStyles";
 import SlideAndNumField from "./GenerateDiversity/components/SlideAndNumField";
-import {  useFormikContext } from "formik";
+import { useFormikContext } from "formik";
 import { initialValueEngine } from "./EngineButton";
 
 const HintDialogRound = () => {
@@ -48,7 +48,6 @@ const HintReponseMaxLength = () => {
 //   );
 // };
 
-
 const InputAndOutputSettings = () => {
   //! State
   const { values } = useFormikContext<initialValueEngine>();
@@ -57,27 +56,33 @@ const InputAndOutputSettings = () => {
   //! Render
   return (
     <Box onClick={(e) => e.stopPropagation()}>
-      <CommonStyles.Typography type="semiBold16" mt={"16px"} >
+      <CommonStyles.Typography type="semiBold16" mt={"16px"}>
         Input and output settings
       </CommonStyles.Typography>
 
       <div className="pb-5 px-2">
-        <SlideAndNumField
-          title="Dialog round"
-          hintContent={<HintDialogRound />}
-          min={model ? model.history_turn?.min : 1}
-          max={model ? model.history_turn?.max : 100}
-          step={1}  
-          name="history_turn"
-        />
-        <SlideAndNumField
-          title="Response max length"
-          hintContent={<HintReponseMaxLength />}
-          min={model ? model.max_tokens?.min : 1}
-          max={model ? model.max_tokens?.max : 8192}
-          name="max_tokens"
-          step={1}
-        />
+        {model.history_turn?.min !== undefined &&
+          model.history_turn?.max !== undefined && (
+            <SlideAndNumField
+              title="Dialog round"
+              hintContent={<HintDialogRound />}
+              min={model ? model.history_turn?.min : 1}
+              max={model ? model.history_turn?.max : 100}
+              step={1}
+              name="history_turn"
+            />
+          )}
+        {model.max_tokens?.min !== undefined &&
+          model.max_tokens?.max !== undefined && (
+            <SlideAndNumField
+              title="Response max length"
+              hintContent={<HintReponseMaxLength />}
+              min={model ? model.max_tokens?.min : 1}
+              max={model ? model.max_tokens?.max : 8192}
+              name="max_tokens"
+              step={1}
+            />
+          )}
       </div>
     </Box>
   );

@@ -1,17 +1,16 @@
-import { Box } from "@mui/material";
-import { useAuth } from "@/Providers/AuthenticationProvider";
-import CommonStyles from "@/Components/CommonStyles";
-import CreateWorkFlowButton from "./Components/misc/CreatWorkflowButton";
-import useGetWorkflows from "@/Hooks/workflow/useGetWorkFlow";
-import { queryWorkflow, VisualOption } from "@/Types/workflow";
-import { useEffect, useMemo } from "react";
-import { useSave } from "@/Stores/useStore";
 import cachedKeys from "@/Constants/cachedKeys";
+import useGetWorkflows from "@/Hooks/workflow/useGetWorkFlow";
+import { useAuth } from "@/Providers/AuthenticationProvider";
+import { useSave } from "@/Stores/useStore";
+import { queryWorkflow, VisualOption } from "@/Types/workflow";
+import { Box } from "@mui/material";
+import { useEffect, useMemo } from "react";
 import EachWorkflow from "./Components/misc/EachWorkflow";
+import Mansory from "@mui/lab/Masonry";
 
 const Workflow = () => {
   //! State
-  const { userData, userId } = useAuth();
+  const { userId } = useAuth();
   const save = useSave();
   const queryWorkflow = useMemo<queryWorkflow>(() => {
     return {
@@ -35,35 +34,24 @@ const Workflow = () => {
         overflow: "hidden",
       }}
     >
-      <Box
+      <Mansory
+        columns={{
+          sm: 1,
+          md: 1,
+          xmd: 2,
+          xl: 3,
+        }}
+        spacing={2}
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+          maxWidth: "1600px",
+          margin: "auto",
         }}
       >
-        <Box display={"flex"} gap="8px">
-          <img
-            src={userData?.avatar_url}
-            style={{
-              height: "32px",
-              width: "32px",
-              borderRadius: "50%",
-            }}
-          />
-          <CommonStyles.Typography type="semiBold20">
-            Workflow
-          </CommonStyles.Typography>
-        </Box>
-        <CreateWorkFlowButton />
-      </Box>
-
-      <Box mt={"24px"}>
-        {data &&
+        {!!data &&
           data?.list_workflows?.map((workflow) => {
             return <EachWorkflow key={workflow.workflow_id} {...workflow} />;
           })}
-      </Box>
+      </Mansory>
     </Box>
   );
 };

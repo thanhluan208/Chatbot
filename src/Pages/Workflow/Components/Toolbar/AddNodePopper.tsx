@@ -51,6 +51,7 @@ const AddNodePopper = (props: IAddNodePopper) => {
   const [filter, setFilter] = useState("");
 
   const { data } = useGetListTool();
+  console.log("data", data);
 
   const theme = useTheme();
 
@@ -62,8 +63,7 @@ const AddNodePopper = (props: IAddNodePopper) => {
     return newListNode.filter((node) => {
       return node.label?.toLowerCase()?.includes(filter.toLowerCase());
     });
-  }, [listNode, filter, type]);
-
+  }, [listNode, filter, type, data]);
 
   const ListToolFiltered = useMemo(() => {
     if (type !== TypeEnum.TOOL || !data) return [];

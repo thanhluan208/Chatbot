@@ -1,18 +1,19 @@
 import CustomizeSelectField from "@/Components/CommonFields/CustomizeSelectField";
+import CommonStyles from "@/Components/CommonStyles";
+import { DropdownMenuItem } from "@/Components/ui/dropdown-menu";
 import { modelOptions } from "@/Constants/options";
+import { Box, useTheme } from "@mui/material";
 import { Field } from "formik";
+import { Check } from "lucide-react";
 import { Fragment, memo } from "react";
 import { ModelOption } from "../CustomNodes/WF_LlmNode/type";
-import { DropdownMenuItem } from "@/Components/ui/dropdown-menu";
-import { Box, useTheme } from "@mui/material";
-import { Check } from "lucide-react";
-import CommonStyles from "@/Components/CommonStyles";
 
 interface ModelConfigurationProps {
   afterOnChange?: (value: string) => void;
+  onChangeCustomize?: (value: string) => void;
 }
 
-const ModelConfiguration = ({ afterOnChange }: ModelConfigurationProps) => {
+const ModelConfiguration = ({ afterOnChange,onChangeCustomize }: ModelConfigurationProps) => {
   const theme = useTheme();
 
   const customizeOptions = (
@@ -87,6 +88,8 @@ const ModelConfiguration = ({ afterOnChange }: ModelConfigurationProps) => {
   };
 
   const customizeValue = (currentValue: ModelOption) => {
+
+    console.log(currentValue)
     return (
       <button
         className="px-3 py-1.5 rounded-md flex items-center w-full cursor-pointer"
@@ -100,7 +103,7 @@ const ModelConfiguration = ({ afterOnChange }: ModelConfigurationProps) => {
           width={16}
           height={16}
           style={{ borderRadius: "12px" }}
-          src={`${currentValue.img}`}
+          src={`${currentValue?.img}`}
           alt=""
         />
         <CommonStyles.Typography type="bold14" mx={2}>
@@ -119,6 +122,7 @@ const ModelConfiguration = ({ afterOnChange }: ModelConfigurationProps) => {
       classNameMenuContent="w-[400px]"
       customizeValue={customizeValue}
       afterOnChange={afterOnChange}
+      onChangeCustomize={onChangeCustomize}
     />
   );
 };

@@ -30,9 +30,9 @@ const ChatBox = ({
   const avatarRender = useMemo(() => {
     if (avatar && !isByRole) return avatar;
     if (name === Role.User)
-      return "https://www.w3schools.com/w3images/avatar2.png";
+      return userData?.avatar_url || "https://www.w3schools.com/w3images/avatar2.png";
     return (
-      modelOptions.find((elm) => elm.value === botData?.llm?.model)?.img ||
+      botData?.avatar_url || modelOptions.find((elm) => elm.value === botData?.llm?.model)?.img ||
       "https://www.w3schools.com/w3images/avatar2.png"
     );
   }, [botData, isByRole, name]);

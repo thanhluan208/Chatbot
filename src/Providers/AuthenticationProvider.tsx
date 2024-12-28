@@ -228,7 +228,7 @@ const AuthenticationProvider = ({
       changePass,
       userData: userData ? JSON.parse(userData) : data,
     };
-  }, [signIn]);
+  }, [signIn,data, logout, userId, signUp, changePass, userData]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

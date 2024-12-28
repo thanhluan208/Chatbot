@@ -17,20 +17,27 @@ interface ISlideAndNumField {
 
 const SlideAndNumField = (props: ISlideAndNumField) => {
   //! State
-  const { hintContent,  max, min, name, title, step } = props;
+  const { hintContent, max, min, name, title, step } = props;
   const { setFieldValue } = useFormikContext();
 
   const marks = useMemo(() => {
-    return [
-      {
+    const arr = [];
+
+    if (min) {
+      arr.push({
         value: min,
         label: min.toString(),
-      },
-      {
+      });
+    }
+
+    if (max) {
+      arr.push({
         value: max,
         label: max.toString(),
-      },
-    ];
+      });
+    }
+
+    return arr;
   }, [min, max]);
 
   //! Function
@@ -48,11 +55,13 @@ const SlideAndNumField = (props: ISlideAndNumField) => {
 
   //! Render
   return (
-    <Box sx={{
-      display:"grid",
-      gridTemplateColumns:'2fr 3fr',
-      gap:'16px'
-    }}>
+    <Box
+      sx={{
+        display: "grid",
+        gridTemplateColumns: "2fr 3fr",
+        gap: "16px",
+      }}
+    >
       <Box display="flex" alignItems={"center"}>
         <CommonStyles.Typography type="semiBold16">
           {title}
