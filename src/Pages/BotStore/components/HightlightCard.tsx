@@ -1,28 +1,24 @@
 import { Box, Tooltip } from "@mui/material";
 import CommonStyles from "../../../Components/CommonStyles";
 
-const NameTag = (props: { name: string; avatar: string; tooltip?: string, round?:boolean }) => {
+const NameTag = (props: {
+  name: string;
+  avatar: string;
+  tooltip?: string;
+  round?: boolean;
+}) => {
   return (
-    <Box
-      sx={{
-        display: "flex",
-        gap: "4px",
-      }}
-    >
+    <div className="flex gap-4 justify-center">
       <Tooltip title={props.tooltip}>
         <img
+          className="min-w-7 min-h-7 w-7 h-7 rounded-full"
           src={props.avatar}
-          style={{
-            aspectRatio: "1",
-            width: "14px",
-            borderRadius: props?.round ? '50%' : '0',
-          }}
         />
       </Tooltip>
       <CommonStyles.Typography type="normal12" color={"#ffffffc9"}>
         {props.name}
       </CommonStyles.Typography>
-    </Box>
+    </div>
   );
 };
 
@@ -73,14 +69,6 @@ const HighlightCard = (props: HighlightCardProps) => {
           gap: "16px",
         }}
       >
-        <img
-          src="https://p16-flow-product-sign-sg.ibyteimg.com/tos-alisg-i-bfte7mpw5s-sg/d17352f1338b46e8b7059a9fb45b6d69~tplv-bfte7mpw5s-resize:128:128.image?rk3s=2e2596fd&x-expires=1727591357&x-signature=nbhz8wQHiXAhpNnvq8DdpCBiT4M%3D"
-          style={{
-            aspectRatio: "1",
-            width: "64px",
-            borderRadius: "8px",
-          }}
-        />
         <Box
           sx={{
             color: "#fff",
@@ -92,16 +80,11 @@ const HighlightCard = (props: HighlightCardProps) => {
           <CommonStyles.Typography type="semiBold18">
             {name}
           </CommonStyles.Typography>
-          <Box sx={{display:'flex',gap:'4px'}}>
+          <Box sx={{ display: "flex", gap: "4px" }}>
             <NameTag
               name={space}
               round
               avatar="https://sf16-passport-sg.ibytedtos.com/img/user-avatar-alisg/88b9207c15f5deb3ebda52eb369b85a8~300x300.image"
-            />
-            <NameTag
-              name={creator}
-              tooltip="Top developer"
-              avatar="https://sf16-bot-platform-tos-sign.coze.com/obj/bot-studio-bot-platform-sg/FileBizType.BIZ_LABEL_ICON/0_1721634266433275972_F2UPYqurVT.image/png?lk3s=50ccb0c5&x-expires=1725085757&x-signature=40FhpKKdH20O6DdYFJI%2BoExHRfA%3D"
             />
           </Box>
         </Box>

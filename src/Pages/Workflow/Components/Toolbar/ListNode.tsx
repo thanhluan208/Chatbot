@@ -180,7 +180,7 @@ const ListNode = ({
                         {node.description}
                       </CommonStyles.Typography>
                     </div>
-                    <CommonStyles.Button
+                    {/* <CommonStyles.Button
                       variant="outlined"
                       startIcon={<CommonIcons.Add />}
                       sx={{
@@ -195,7 +195,7 @@ const ListNode = ({
                       >
                         Add
                       </CommonStyles.Typography>
-                    </CommonStyles.Button>
+                    </CommonStyles.Button> */}
                   </div>
                 </CommandItem>
               );

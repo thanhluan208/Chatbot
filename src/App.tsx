@@ -44,6 +44,15 @@ function App() {
         return null;
       },
     },
+    // {
+    //   element: <DefaultLayout />,
+    //   children: [
+    //     {
+    //       path: "*",
+    //       element: <BotStore />,
+    //     },
+    //   ],
+    // },
     {
       element: <DefaultLayout />,
       loader: () => {

@@ -212,6 +212,7 @@ const BotCard = (props: BotCardProps) => {
             display: "-webkit-box",
             padding: "0 20px",
             textAlign: "justify",
+            minHeight: "63px",
           }}
         >
           {description || "..."}
@@ -238,7 +239,9 @@ const BotCard = (props: BotCardProps) => {
           >
             <Stats icon={<CommonIcons.People />} value={users} />
           </Box>
-          <CommonStyles.Button variant="outlined">Try it now</CommonStyles.Button>
+          <CommonStyles.Button variant="outlined">
+            Try it now
+          </CommonStyles.Button>
         </Box>
 
         {/* <CommonStyles.Button

@@ -1,13 +1,30 @@
 import CollapseArea from "@/Components/CommonStyles/CollapseArea";
-import { Form, Formik } from "formik";
-import { useCallback, useMemo } from "react";
+import { modelOptions } from "@/Constants/options";
+import SlideAndNumField from "@/Pages/ChatbotConfigure/components/GenerateDiversity/components/SlideAndNumField";
+import { Form, Formik, FormikProps, useFormikContext } from "formik";
+import { useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
+import { Memory, Model } from "../CustomNodes/WF_LlmNode/type";
 import ModelConfiguration from "./ModelConfiguration";
 import ModelStatsConfig from "./ModelStatsConfig";
-import { Memory, Model } from "../CustomNodes/WF_LlmNode/type";
-import SlideAndNumField from "@/Pages/ChatbotConfigure/components/GenerateDiversity/components/SlideAndNumField";
-import { modelOptions } from "@/Constants/options";
 
+const FormikEffect = () => {
+  const { values, dirty, submitForm } = useFormikContext<any>();
+  const debounceRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+
+    debounceRef.current = setTimeout(() => {
+      if (!dirty) return;
+
+      submitForm();
+    }, 500);
+  }, [values, dirty]);
+  return null;
+};
 interface FormModelProps {
   nodeId: string;
   model: Model;
@@ -22,6 +39,7 @@ const FormModel = ({
   memory,
 }: FormModelProps) => {
   const { t } = useTranslation("node");
+  const formikRef = useRef<FormikProps<any> | null>(null);
 
   const initialValues = useMemo(() => {
     const foundModel = modelOptions.find((elm) => {
@@ -39,35 +57,51 @@ const FormModel = ({
     };
   }, [model, memory]);
 
-  const handleChangeModel = useCallback(
-    (value: string) => {
-      const modelFound = modelOptions.find((elm) => elm.value === value);
-      if (!modelFound) return;
-      const payload: any = {
-        model: {
-          ...model,
-          name: modelFound.value,
-          completion_params: {
-            temperature: Number(modelFound.temperature.default),
-            top_p: Number(modelFound.top_p?.default),
-            history_turn: Number(modelFound.history_turn?.default),
-            max_tokens: Number(modelFound.max_tokens?.default),
-            frequency_penalty: Number(modelFound.frequency_penalty?.default),
-            presence_penalty: Number(modelFound.presence_penalty?.default),
-          },
-        },
-      };
+  const handleChangeModel = (value: string) => {
+    const modelFound = modelOptions.find((elm) => {
+      return elm.value === value;
+    });
 
-      handleUpdateNodeData(nodeId, payload);
-    },
-    [model]
-  );
+    if (!modelFound) return;
+
+    formikRef.current?.setValues({
+      model: modelFound,
+      temperature: Number(modelFound.temperature.default),
+      top_p: Number(modelFound.top_p?.default),
+      history_turn: Number(modelFound.history_turn?.default),
+      max_tokens: Number(modelFound.max_tokens?.default),
+      frequency_penalty: Number(modelFound.frequency_penalty?.default),
+      presence_penalty: Number(modelFound.presence_penalty?.default),
+    });
+  };
+
+  const handleSubmit = (values: any) => {
+    const payload: any = {
+      model: {
+        name: values.model.value,
+        completion_params: {
+          temperature: Number(values.temperature),
+          top_p: Number(values.top_p),
+          history_turn: Number(values.history_turn),
+          max_tokens: Number(values.max_tokens),
+          frequency_penalty: Number(values.frequency_penalty),
+          presence_penalty: Number(values.presence_penalty),
+        },
+      },
+      memory: {
+        history_turn: values.memory_history_turn,
+      },
+    };
+
+    nodeId && handleUpdateNodeData && handleUpdateNodeData(nodeId, payload);
+  };
 
   return (
     <Formik
       initialValues={initialValues}
       enableReinitialize
-      onSubmit={() => {}}
+      onSubmit={handleSubmit}
+      formikRef={formikRef}
     >
       {() => {
         return (
@@ -78,11 +112,9 @@ const FormModel = ({
               label={t("WF_Startnode.model_configuration")}
             >
               <div className="px-2 flex gap-2">
+                <FormikEffect />
                 <ModelConfiguration afterOnChange={handleChangeModel} />
-                <ModelStatsConfig
-                  nodeId={nodeId}
-                  handleUpdateNodeData={handleUpdateNodeData}
-                />
+                <ModelStatsConfig />
               </div>
             </CollapseArea>
             {memory && (
