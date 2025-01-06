@@ -98,7 +98,11 @@ const CommonSelect = (props: ISelect & SelectProps) => {
           }
           return (
             <div key={op?.value}>
-              {op?.group && <ListSubheader>{op?.group}</ListSubheader>}
+              <div style={{
+                marginLeft: "-0.65rem",
+              }}>
+                {op?.group && <ListSubheader>{op?.group}</ListSubheader>}
+              </div>
               <MenuItem
                 value={op?.value}
                 onClick={() => {

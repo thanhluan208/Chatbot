@@ -6,6 +6,7 @@ import LLMNodeDrawer from "../WF_LlmNode/LLMNodeDrawer";
 import { NodeProps } from "@xyflow/react";
 import VarAggNodeDrawer from "../WF_VariableAggregator/VarAggNodeDrawer";
 import { useCallback } from "react";
+import CodeNodeDrawer from "../WF_CodeNode/components/CodeNodeDrawer";
 import KnowledgeNodeDrawer from "../WF_Knowledge/KnowledgeNodeDrawer";
 import ConditionNodeDrawer from "../WF_ConditionNode/ConditionNodeDrawer";
 import ParamExtractorDrawer from "../WF_ParamExtractor/ParamExtractorDrawer";
@@ -51,6 +52,8 @@ export default function WF_EditDrawer({
         return <LLMNodeDrawer node={node} />;
       case NodeTypeWorkflow.VARIABLE_AGGREGATOR:
         return <VarAggNodeDrawer node={node} />;
+      case NodeTypeWorkflow.CODE:
+        return <CodeNodeDrawer node={node} />;
       case NodeTypeWorkflow.KNOWLEDGE_RETRIEVAL:
         return <KnowledgeNodeDrawer node={node} />;
       case NodeTypeWorkflow.IF_ELSE:
@@ -65,6 +68,8 @@ export default function WF_EditDrawer({
         return <VariableAssignerNodeDrawer node={node} />;
       case NodeTypeWorkflow.HTTP_REQUEST:
         return <HTTPNodeDrawer node={node} />;
+      case NodeTypeWorkflow.CODE:
+        return <CodeNodeDrawer node={node} />;
       case NodeTypeWorkflow.TOOL:
         return <ToolNodeDrawer node={node} />;
       case NodeTypeWorkflow.END:

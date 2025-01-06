@@ -16,8 +16,12 @@ const WindowSizeControl : React.FC<WindowSizeControlProps> = ({ min, max, handle
   };
 
   const handleSliderChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    var value = parseInt(e.target.value, 10);
+    var value = parseInt((e.target as HTMLInputElement).value, 10);
     setSliderValue(value);
+  }
+
+  const handleCallUpdate = async (e: React.MouseEvent<HTMLInputElement> | React.TouchEvent<HTMLInputElement>) => {
+    var value = parseInt((e.target as HTMLInputElement).value, 10);
 
     if (handleUpdate) {
       await handleUpdate(value);
@@ -31,16 +35,19 @@ const WindowSizeControl : React.FC<WindowSizeControlProps> = ({ min, max, handle
 
       <label style={{marginLeft: "-9px"}}>WINDOW SIZE</label>
 
-      <input
+      <input className='nodrag'
         type="range"
         min={min}
         max={max}
         value={sliderValue}
         onChange={handleSliderChange}
+        onMouseUp={handleCallUpdate}
+        onTouchEnd={handleCallUpdate}
         disabled={!isOn}
         style={{
           opacity: isOn ? 1 : 0.5,
           cursor: isOn ? 'pointer' : 'not-allowed',
+          outline: 'none'
         }}
       />
 

@@ -1,4 +1,6 @@
-export interface NodeDataCode {
+import { UUID } from "crypto";
+
+export interface CodeNodeData {
   name?: string;
   type: string;
   title: string;
@@ -12,14 +14,28 @@ export interface NodeDataCode {
 }
 
 export interface Outputs {
-  result: Result;
+  [key: string]: Output;
 }
 
-export interface Result {
+export interface Output {
   type: string;
 }
 
 export interface Variable {
   variable: string;
   value_selector: any[];
+}
+
+export enum CodeLanguage{
+  Python = "python3",
+  Javascript = "javascript"
+}
+
+export enum VariablesType{
+  String = "String",
+  Number = "Number",
+  Object = "Object",
+  "Array[String]" = "Array[String]",
+  "Array[Number]" = "Array[Number]",
+  "Array[Object]" = "Array[Object]"
 }

@@ -1,5 +1,6 @@
 import queryKey from "@/Constants/queryKey";
 import { NodeDataAnswer } from "@/Pages/Workflow/Components/CustomNodes/WF_AnswerNode/type";
+import { CodeNodeData } from "@/Pages/Workflow/Components/CustomNodes/WF_CodeNode/type";
 import { ConditionNodeData } from "@/Pages/Workflow/Components/CustomNodes/WF_ConditionNode/type";
 import { NodeDataEnd } from "@/Pages/Workflow/Components/CustomNodes/WF_Endnode/type";
 import { NodeDataHTTPRequest } from "@/Pages/Workflow/Components/CustomNodes/WF_HttpRequestNode/type";
@@ -866,6 +867,65 @@ export default function useWorkflowMutate() {
     ]
   );
 
+  //! WF_CodeNode
+  const handleUpdateCodeNodeData = useCallback(
+    (
+      nodeId: string,
+      payload: Partial<CodeNodeData>,
+      onSuccess?: () => void,
+      onFailed?: () => void
+    ) => {
+      if (!workflowId || !userId || !nodeId) return;
+
+      const nodeData = getNode(nodeId)?.data as unknown as CodeNodeData;
+
+      const updatePayload: Partial<CodeNodeData> = {
+        name: nodeId,
+        desc: nodeData.desc,
+        position: nodeData.position,
+        code_language: payload?.code_language ?? nodeData.code_language,
+        code: payload?.code ?? nodeData.code,
+        variables: nodeData?.variables,
+        ...payload,
+        outputs: {
+          ...nodeData.outputs,
+          ...payload?.outputs,
+        },
+      };
+
+      updateNode &&
+        updateNode(nodeId, {
+          data: {
+            ...nodeData,
+            ...updatePayload,
+          },
+        });
+
+      handleUpdateNodeData.mutate(
+        {
+          workflow_id: workflowId,
+          user_id: userId,
+          node_id: nodeId,
+          node_data: updatePayload,
+        },
+        {
+          onSuccess: (response) => {
+            if (response?.status_code !== 200) {
+              toast.error(response?.message);
+              onFailed && onFailed();
+            }
+
+            onSuccess && onSuccess();
+          },
+          onError: () => {
+            onFailed && onFailed();
+          },
+        }
+      );
+    },
+    [workflowId, userId]
+  );
+
   return {
     handleCreateWorkflow,
     handleDeleteWorkflow,
@@ -883,6 +943,7 @@ export default function useWorkflowMutate() {
     handleUpdateNodeDataAnswer,
     handleUpdateNodeDataVariable,
     handleUpdateNodeDataHttpRequest,
+    handleUpdateCodeNodeData,
     handleUpdateNodeDataTool,
     handleUpdateNodeDataEnd,
     handleCheckWorkflowValid,
