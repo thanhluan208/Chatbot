@@ -7,13 +7,14 @@ import DefaultLayout from "./Components/DefaultLayout";
 import { ListRoutes } from "./Constants/routes";
 import useRoutes from "./Constants/routes";
 import { useAuth } from "./Providers/AuthenticationProvider";
-import { lazy, Suspense } from "react";
+import { Fragment, lazy, Suspense } from "react";
 import CommonStyles from "./Components/CommonStyles";
 
 import "./App.css";
 import PublishPage from "./Pages/Publish";
 import AppThemeProvider from "./Providers/AppTheme.provider";
 import ToolStore from "./Pages/ToolStore";
+import WorkflowStore from "./Pages/WorkflowStore";
 
 const KnowledgeDetail = lazy(() => import("./Pages/KnowledgeDetail"));
 const Login = lazy(() => import("./Pages/Login"));
@@ -84,6 +85,10 @@ function App() {
         {
           path: ListRoutes.toolStore,
           element: <ToolStore />,
+        },
+        {
+          path: ListRoutes.workflowShop,
+          element: <WorkflowStore />
         },
       ],
     },
