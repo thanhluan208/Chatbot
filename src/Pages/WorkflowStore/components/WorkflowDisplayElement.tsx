@@ -1,7 +1,8 @@
 import { cn } from "@/lib/utils";
+import { Workflow } from "@/Types/workflow";
 import { MouseEvent } from "react";
 
-interface Props {
+interface Props extends Workflow {
   itemCount: number;
 }
 
@@ -18,12 +19,9 @@ const mockOption: DisplayOption[] = [
     value: 0,
   },
 ];
-export default function WorkflowDisplayElement({ itemCount }: Props) {
+export default function WorkflowDisplayElement({ itemCount, ...workflow }: Props) {
   function formatNumber(inputNumber: number): string {
     return "0K";
-  }
-  function handleAuthorClick(e: MouseEvent<HTMLDivElement, MouseEvent>) {
-    e.stopPropagation();
   }
 
   return (
@@ -44,7 +42,7 @@ export default function WorkflowDisplayElement({ itemCount }: Props) {
       }}
     >
       <img
-        src="https://random.imagecdn.app/500/500"
+        src={workflow.background_url}
         className="w-[100%] h-[100%]"
       />
       <div
@@ -65,18 +63,20 @@ export default function WorkflowDisplayElement({ itemCount }: Props) {
       >
         <div className="flex w-[100%] gap-[.5rem]">
           <img
-            src="https://i.pravatar.cc/500"
+            src={workflow.avatar_url}
             className="ava-display flex-shrink-0 w-[50px] h-[50px] rounded-[.25rem] overflow-hidden"
           />
           <div className="flex-1 text-wrap font-bold flex flex-col overflow-hidden">
             <div className="text-ellipsis whitespace-nowrap overflow-hidden select-none">
-              Workflowstore title
+              {workflow.workflow_name}
             </div>
             <div
               className="text-ellipsis whitespace-nowrap overflow-hidden select-none font-normal text-[.75rem] text-[rgb(150,150,150)] hover:underline"
-              onClick={handleAuthorClick}
+              onClick={(e) => {
+                e.stopPropagation()
+              }}
             >
-              Author name
+              {workflow.user_name}
             </div>
           </div>
         </div>
@@ -85,19 +85,7 @@ export default function WorkflowDisplayElement({ itemCount }: Props) {
             className="absolute top-0 left-0 right-0 bottom-0 overflow-auto"
             style={{ scrollbarWidth: "thin" }}
           >
-            This is supper long description This is supper long description This
-            is supper long description This is supper long description This is
-            supper long description This is supper long description This is
-            supper long description This is supper long description This is
-            supper long description This is supper long description This is
-            supper long description This is supper long description This is
-            supper long description This is supper long description This is
-            supper long description This is supper long description This is
-            supper long description This is supper long description This is
-            supper long description This is supper long description This is
-            supper long description This is supper long description This is
-            supper long description This is supper long description This is
-            supper long description This is supper long description
+            {workflow.description}
           </div>
         </div>
         <div className="flex h-[1.5rem] w-[100%] items-center justify-end gap-[1rem]">
