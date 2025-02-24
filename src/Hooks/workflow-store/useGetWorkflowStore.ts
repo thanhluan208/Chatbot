@@ -1,3 +1,4 @@
+import { getWorkFlowsAPI } from "@/Constants/api";
 import httpServices from "@/Services/httpServices";
 import { Workflow } from "@/Types/workflow";
 import type { AxiosRequestConfig } from "axios";
@@ -8,7 +9,7 @@ interface UseGetWorkflowStoreParams {
 }
 
 export const useGetWorkflowStore = ({ payload }: UseGetWorkflowStoreParams) => {
-  let url = `/workflow/list_workflows`;
+  let url = getWorkFlowsAPI;
   const queryKey = ["get-option-scenario", payload] as const;
 
   const config: AxiosRequestConfig = {

@@ -56,11 +56,11 @@ function App() {
     // },
     {
       element: <DefaultLayout />,
-      loader: () => {
-        if (!userId) return redirect("/login");
+      // loader: () => {
+      //   if (!userId) return redirect("/login");
 
-        return null;
-      },
+      //   return null;
+      // },
       children: [
         {
           path: "*",

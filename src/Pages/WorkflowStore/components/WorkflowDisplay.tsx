@@ -12,8 +12,8 @@ export default function WorkflowDisplay() {
   const [getSearchParam] = useSearchParams();
   const [_, { data: getWorkflowStoreResponse }] = useGetWorkflowStore({
     payload: {
-      user_id: "invalid-id",
-      visual_option: "invalid-id-visual",
+      user_id: "all",
+      visual_option: "public",
       search_filter: getSearchParam.get("search") ?? "",
       catafories_filter: getSearchParam.get("filter") ?? "",
     },
@@ -39,7 +39,9 @@ export default function WorkflowDisplay() {
   }, [containerEle.current]);
 
   useEffect(() => {
-    setData(getWorkflowStoreResponse?.list_workflows ?? []);
+    setData((prev) => {
+      return [...prev,...getWorkflowStoreResponse?.list_workflows ?? []]
+    });
   }, [getWorkflowStoreResponse]);
 
   return (
